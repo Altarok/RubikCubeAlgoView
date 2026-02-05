@@ -16,7 +16,13 @@ This exact image is created by writing the following codeblock (named 'twistyCub
 dimension:3,3
 arrows:4+8,3+9
 ```
+## Where to start?
+Use this command and fiddle with the inserted template:
+<img width="742" height="110" alt="image" src="https://github.com/user-attachments/assets/24c2fe64-5ca0-4b8a-b03b-81039861dcf0" />
 
+---
+
+# Configuration
 ## Possible configuration
 - the cube's size, width and height from 2 to 10
 - the cube's color, 3- or 6- digit hex-value
