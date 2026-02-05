@@ -57,7 +57,12 @@ arrows:1-2
 ```
 Would create the same, but with a red arrow on a green cube.
 
+## Things that will come
+- OLL visualization
+- F2L visualization
+- plugin settings
 
 
 This is my first public repository and plugin, please be gentle :)
 Feedback welcome
+
