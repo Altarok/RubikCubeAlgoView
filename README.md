@@ -37,12 +37,14 @@ arrowColor:08f // sky blue arrows
 - the cubes' default color, 3- or 6- digit hex-value
 - the arrows' default color, 3- or 6- digit hex-value
 
+---
 
 # Things that will come
 - OLL visualization
 - F2L visualization
 - size configuration
 
+---
 
 This is my first public repository and plugin, please be gentle :)
 
@@ -56,14 +58,18 @@ dimension:2,2 // width, height
 arrows:1.1-1.2
 ```
 Would create a 2x2 Cube with a fixed-coordinates arrow from the first to the second rectangle in the first row.
+
 Arrow coordinates go from top-left to bottom-right. First integer is row, second integer is column.
+
 Arrows with fixed coordinates do not change position when resizing the cube.
 ```
 dimension:2,2
 arrows:1-2 // "lazy" coordinates
 ```
 Would create the same. Notice the "lazy" arrow coordinates.
-It just gives each rectangle an integer. 
+
+It just gives each rectangle an integer.
+
 Arrows with lazy coordinates do change position when resizing the cube.
 ```
 dimension:2,2
