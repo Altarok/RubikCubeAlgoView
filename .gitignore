@@ -1,0 +1,14 @@
+/node_modules
+/src
+.editorconfig
+.npmrc
+AGENTS.md
+data.json
+esbuild.config.mjs
+eslint.config.mts
+LICENSE
+package-lock.json
+package.json
+tsconfig.json
+version-bump.mjs
+versions.json
