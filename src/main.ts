@@ -1,7 +1,9 @@
 import { App, Editor, MarkdownView, Plugin } from 'obsidian';
 import { DEFAULT_SETTINGS, RubikCubeAlgoSettings, RubikCubeAlgoSettingsTab } from "./RubikCubeAlgoSettings";
-import { PLL } from "./RubikCubeAlgoCoordinatesPLL";
-import { RCA_RerenderMarkdownRenderChild } from "./RCA_MarkdownPostProcessor";
+import { OLL } from "./RCA-OLL-Calculations";
+import { PLL } from "./RCA-PLL-Calculations";
+import { OLLview } from "./RCA-OLL-MarkdownPostProcessor";
+import { PLLview } from "./RCA-PLL-MarkdownPostProcessor";
 
 export default class RubikCubeAlgos extends Plugin {
 
@@ -10,14 +12,15 @@ export default class RubikCubeAlgos extends Plugin {
 	async onload() {
 		await this.loadSettings(); 
 
-		this.registerMarkdownCodeBlockProcessor(
-			'rubikCubePLL',
-			(source:string, el, ctx) => {
-				ctx.addChild(new RCA_RerenderMarkdownRenderChild(source, this, el));	
-			}
-		);
+		this.registerMarkdownCodeBlockProcessor( 'rubikCubeOLL', (source:string, el, ctx) => {
+			ctx.addChild(new OLLview(source, this, el));	
+		});
+		
+		this.registerMarkdownCodeBlockProcessor( 'rubikCubePLL', (source:string, el, ctx) => {
+			ctx.addChild(new PLLview(source, this, el));	
+		});
 
-		// Add command: inserts a Rubik Cube codeblock template
+		// Add command: inserts codeblock template for 3x3 PLL
 		this.addCommand({
 			id: 'RubikCubeAlgo-add-codeblock-template-3x3-PLL',	
 			name: 'Add codeblock template: 3x3 PLL',
@@ -25,6 +28,16 @@ export default class RubikCubeAlgos extends Plugin {
 				editor.replaceSelection(PLL.get3by3CodeBlockTemplate());
 			}
 		});
+		
+		// Add command: inserts codeblock template for 3x3 OLL
+		this.addCommand({
+			id: 'RubikCubeAlgo-add-codeblock-template-3x3-OLL',	
+			name: 'Add codeblock template: 3x3 OLL',
+			editorCallback: (editor: Editor, view: MarkdownView) => {
+				editor.replaceSelection(OLL.get3by3CodeBlockTemplate());
+			}
+		});
+		
 
 		// Add settings tab so the user can configure default colors
 		this.addSettingTab(
