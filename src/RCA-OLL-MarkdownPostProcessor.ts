@@ -115,11 +115,7 @@ export class OLLView extends MarkdownRenderChild {
 		//}
 		//console.log('<< rubikCubeOLL');
 	}
-	/**
-	 * neg. value -> black 
-	 * 0 -> grey
-	 * 1 -> default cube color of plugin
-	 */
+
 	private getColor(colorIndex:string):string {
 		let c:string = '#000'; 
 		if (!colorIndex) {
