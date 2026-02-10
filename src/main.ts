@@ -5,26 +5,24 @@ import { OLLView } from "./RCA-OLL-MarkdownPostProcessor";
 import { PLLView } from "./RCA-PLL-MarkdownPostProcessor";
 import { DEFAULT_SETTINGS, RubikCubeAlgoSettingsTab } from "./RubikCubeAlgoSettings";
 
-// src/main.ts
 export default class RubikCubeAlgos extends Plugin {
-	
+
 	async onload() {
-	 
+
 		await this.loadSettings();
 
-	
 		this.registerMarkdownCodeBlockProcessor( "rubikCubeOLL",
 			(source, el, ctx) => {
 				ctx.addChild(new OLLView(source, this, el));
 			}
 		);
-	
+
 		this.registerMarkdownCodeBlockProcessor( "rubikCubePLL",
 			(source, el, ctx) => {
 				ctx.addChild(new PLLView(source, this, el));
 			}
 		);
-		
+
 		this.addCommand({
 			id: "RubikCubeAlgo-add-codeblock-template-3x3-OLL",
 			name: "Add codeblock template: 3x3 OLL",
@@ -32,7 +30,7 @@ export default class RubikCubeAlgos extends Plugin {
 				editor.replaceSelection(OLL.get3by3CodeBlockTemplate());
 			}
 		});
-	
+
 		this.addCommand({
 			id: "RubikCubeAlgo-add-codeblock-template-3x3-PLL",
 			name: "Add codeblock template: 3x3 PLL",
@@ -40,17 +38,13 @@ export default class RubikCubeAlgos extends Plugin {
 				editor.replaceSelection(PLL.get3by3CodeBlockTemplate());
 			}
 		});
-		
-		
-		
-	
+
 		this.addSettingTab(
 			new RubikCubeAlgoSettingsTab(
 				this.app,
 				this
 			)
 		);
-	
 	}
 	
 	onunload() {
