@@ -36,26 +36,7 @@ export class OLL extends ArrowCalculations {
       this.cubeColor = DEFAULT_SETTINGS.CUBE_COLOR;
     }
   }
-  private setDimension(w:number,h:number):void {
-    this.width=w;
-    this.height=h;
-    //console.log("new dimensions: "+w+","+h);
-  }
-  private setCubeColor(s:string):void {
-    this.cubeColor = '#'+s;
-    //console.log("new cube color: '"+s+"'");
-  }
-  private setArrowColor(s:string):void {
-    this.arrowColor = '#'+s;
-    //console.log("new arrow color: '"+s+"'");
-  }
-  private setArrows(s:string):void {
-    this.arrows = s;
-    //console.log("new arrows: '"+s+"'");
-  }
-  toString():string {
-    return "pll[cubeClr'"+this.cubeColor+"',arrowColor'"+this.arrowColor+"',arrows'"+this.arrows+"']"
-  }
+
   interpretCodeBlock(rows:string[]):Array {
     if (rows.length < 4){
       return super.errorInThisLine("[no input]","Input for OLL should contain at least 4 lines!");
@@ -84,10 +65,11 @@ export class OLL extends ArrowCalculations {
       }
       this.cells[this.cells.length] = parsedRow;
     }  
-    //this.calculateCoordinates();
+    this.setupCubeRectangleCenterCoordinates();
     this.logCellsTable();
     return this.cells;
   }
+
   private logCellsTable() {
     let log:string = 'logCellsTable:\n'
     for (let i = 0; i < this.cells.length; i++) {
@@ -95,21 +77,28 @@ export class OLL extends ArrowCalculations {
     }
     console.log(log);
   }
-  //private calculateCoordinates(){
-  //  this.COORDINATES[0] = [];
-  //  let index:number=1;
-  //  /* reverse loop order to give x coordinates more priority */
-  //  for (let h = 0; h < this.height; h++) {
-  //    for (let w = 0; w < this.width; w++) {
-  //      this.COORDINATES[index++] = [w*100 + 50, h*100 + 50];
-  //    }
-  //  }
-  //}
+
+  private setupCubeRectangleCenterCoordinates(){
+    this.rectangleCoordinates[0] = []; /* unused first entry to start arrows with 1 instead of 0 */
+    let index:number=1;
+    /* reverse loop order to give x coordinates more priority */
+    for (let h = 0; h < this.height; h++) {
+      for (let w = 0; w < this.width; w++) {
+        this.rectangleCoordinates[index++] = [w*100 + 50, h*100 + 50];
+      }
+    }
+  }
+
   getDimensions(){
     let wXh = [this.width*100 + 100, this.height*100 + 100];
     return wXh;
   }
+
   static get3by3CodeBlockTemplate():string {
     return DEFAULT.CODE_BLOCK_TEMPLATE;
+  }
+
+  toString():string {
+    return "pll[cubeClr'"+this.cubeColor+"',arrowColor'"+this.arrowColor+"',arrows'"+this.arrows+"']"
   }
 }

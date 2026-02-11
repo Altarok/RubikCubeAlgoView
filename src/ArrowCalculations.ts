@@ -3,6 +3,7 @@ import { BaseCodeBlockInterpreter } from "./BaseCodeBlockInterpreter";
 
 export class ArrowCalculations extends BaseCodeBlockInterpreter {
   arrowColor:string;
+  arrowsLine:string;
   arrows:string;
 
   constructor(rows:string[], settings:RubikCubeAlgosSettings) {
@@ -24,14 +25,15 @@ export class ArrowCalculations extends BaseCodeBlockInterpreter {
       // console.log("new arrow color: '"+newAroClr+"'");
       this.arrowColor = '#' + newAroClr;
     } else {
-      super.errorInThisLine(row, 'arrow color value should match "arrowColor:" + [3 (or 6) lowercase hex digits (0-9/a-f)]');
+      super.errorInThisLine(row, 'invalid, expected: "arrowColor:[3 (or 6) lowercase hex digits (0-9/a-f)] // optional comment goes here"');
     }
   }
 
   /**
    * @param row string starting with 'arrows:'
    */
-  public handleArrowsInput(row:string):void {
+  handleArrowsInput(row:string):void {
+    this.arrowsLine = row;
     if (row.match('^arrows:\\d+(\\.\\d+)?(-|\\+)\\d+(\\.\\d+)?(,\\d+(\\.\\d+)?(-|\\+)\\d+(\\.\\d+)?)*( //.*)?')) {
       /* do not parse yet, another line may still brake the input which makes the calculation obsolete */
       let arrowInput = row.split(' ')[0].trim().replace('arrows:','');

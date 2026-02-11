@@ -1,4 +1,6 @@
+
 export class BaseCodeBlockInterpreter {
+
   codeBlockContent:string[];
   codeBlockInterpretationSuccessful:boolean;
   lastNonInterpretableLine:string;

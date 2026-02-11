@@ -36,14 +36,13 @@ export class PLLView extends MarkdownRenderChild {
     let pllData = new PLL(rows, this.plugin.settings); 
     // pllData.interpretCodeBlock(rows); 
     let widthXheight = pllData.getCubeSize();
-    let ARROWS = pllData.getArrowCoordinates();
 
     if (pllData.codeBlockInterpretationFailed()){
       this.element.createEl('div', { text: "--- Rubik Cube PLL pattern interpretation failed ---" , cls:'rubik-cube-warning-text-orange' });
       this.element.createEl('div', { text: "```rubikCubePLL" });
       if (rows.length === 0) {
         this.element.createEl('b', { text: "[empty]" , cls:'rubik-cube-warning-text-red' });
-        this.element.createEl('text', { text: ' => reason: ' + pllData.reasonForFailure } );
+        this.element.createEl('text', { text: ' => ' + pllData.reasonForFailure } );
       } else {
         for (let r:number = 0; r < rows.length; r++) {
           let row = rows[r];
@@ -51,7 +50,7 @@ export class PLLView extends MarkdownRenderChild {
             this.element.createEl('div', { text: row } );
           } else {
             this.element.createEl('b', { text: row , cls:'rubik-cube-warning-text-red' });
-            this.element.createEl('text', { text: ' => reason: ' + pllData.reasonForFailure  } );
+            this.element.createEl('text', { text: ' => ' + pllData.reasonForFailure  } );
           }
         }
       }
@@ -82,6 +81,7 @@ export class PLLView extends MarkdownRenderChild {
       mainSvg.createSvg('line', { attr: { x1:0, x2:w, y1:y, y2:y }, cls: "rubik-cube-pll-line-grid" });
     }
 
+    let ARROWS = pllData.getArrowCoordinates();
     for (let i = 0; i < ARROWS.length; i++) {
       let arrow = ARROWS[i];
       let arrowStartCoord = arrow[0];
