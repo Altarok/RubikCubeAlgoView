@@ -68,9 +68,9 @@ export class OLL {
   }
   interpretCodeBlock(rows:string[]):Array {
     if (rows.length < 4){
-      return this.fuckThisShitUp("[no input]","Input for OLL should contain at least 4 lines!");
+      return super.errorInThisLine("[no input]","Input for OLL should contain at least 4 lines!");
     } else if (false === rows[0].match('^\\..+?\\.$') || false === rows[rows.length-1].match('^\\..+?\\.$') ) {
-      return this.fuckThisShitUp(rows[0],"First and last line should start and end on a dot ('.')!");
+      return super.errorInThisLine(rows[0],"First and last line should start and end on a dot ('.')!");
     }
     let expectedRowLength:number = rows[0].length;
     this.width = rows[0].length - 2;
@@ -78,7 +78,7 @@ export class OLL {
     for (let r = 0; r < rows.length; r++) {
       let row = rows[r];
       if (row.length != expectedRowLength) {
-        return this.fuckThisShitUp(row,'Inconsistent row length. Expected: '+expectedRowLength);
+        return super.errorInThisLine(row,'Inconsistent row length. Expected: '+expectedRowLength);
       }
       let parsedRow:number[] = new Array();
       for (let i = 0; i < row.length; i++) { 
@@ -115,18 +115,6 @@ export class OLL {
   //    }
   //  }
   //}
-  private fuckThisShitUp(mandatoryLastLineNotInterpretable:string, optionalReasonForFailure:string):void{
-    this.codeBlockInterpretationSuccessful=false;
-    this.lastNonInterpretableLine=mandatoryLastLineNotInterpretable;
-    if (optionalReasonForFailure) {
-      this.reasonForFailure=optionalReasonForFailure;
-      console.log('Unexpected OLL input: "'+mandatoryLastLineNotInterpretable+'" ('
-      +optionalReasonForFailure+
-      ')');
-    } else {
-      console.log('Unexpected OLL input: "'+mandatoryLastLineNotInterpretable+'" ');
-    }
-  }
   getDimensions(){
     let wXh = [this.width*100 + 100, this.height*100 + 100];
     return wXh;

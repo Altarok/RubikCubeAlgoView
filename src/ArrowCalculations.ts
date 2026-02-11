@@ -67,21 +67,21 @@ export class ArrowCalculations {
   }
   interpretCodeBlock(rows:string[]):void {
     if (rows.length ===0){
-      return this.fuckThisShitUp("[no input]","at least 1 parameter needed: 'dimension/cubeColor/arrowColor/arrows'");
+      return super.errorInThisLine("[no input]","at least 1 parameter needed: 'dimension/cubeColor/arrowColor/arrows'");
     }
     // console.log('pll before: '+this.toString());    
     for (let r = 0; r < rows.length; r++) {
       let row = rows[r];
       if (row.startsWith('dimension:')) {
         if (!row.match('^dimension:\\d+,\\d+( //.*)?')) {
-          return this.fuckThisShitUp(row,'invalid dimension, expected "dimension:[2-10],[2-10]" // optional comment goes here');
+          return super.errorInThisLine(row,'invalid dimension, expected "dimension:[2-10],[2-10]" // optional comment goes here');
         }
         let wXh = row.split(' ')[0].trim().replace('dimension:','');
         let wXhSplit = wXh.split(',');
         let w= wXhSplit[0];
         let h= wXhSplit[1];
         if (w<2||h<2||w>10||h>10){
-          return this.fuckThisShitUp(row,'invalid dimensions - expected: 2 < width/height < 10');
+          return super.errorInThisLine(row,'invalid dimensions - expected: 2 < width/height < 10');
         }
         this.setDimension(w,h);
       } else if (row.match('^cubeColor:([a-f0-9]{3}){1,2}( //.*)?')) {
@@ -94,7 +94,7 @@ export class ArrowCalculations {
         let newArrows = row.split(' ')[0].trim().replace('arrows:','')
         this.setArrows(newArrows);
       } else {
-        return this.fuckThisShitUp(row, "unexpected input, expected: 'dimension', 'cubeColor', 'arrowColor' or 'arrows'");
+        return super.errorInThisLine(row, "unexpected input, expected: 'dimension', 'cubeColor', 'arrowColor' or 'arrows'");
       }
     }  
     this.calculateCoordinates();
@@ -108,14 +108,6 @@ export class ArrowCalculations {
         this.COORDINATES[index++] = [w*100 + 50, h*100 + 50];
       }
     }
-  }
-  private fuckThisShitUp(mandatoryLastLineNotInterpretable:string, optionalReasonForFailure:string){
-    this.codeBlockInterpretationSuccessful=false;
-    this.lastNonInterpretableLine=mandatoryLastLineNotInterpretable;
-    if (optionalReasonForFailure) {
-      this.reasonForFailure=optionalReasonForFailure;
-    }
-    console.log('Unexpected PLL input: "'+mandatoryLastLineNotInterpretable+'"');
   }
   getCubeSize(){
     let wXh = [this.width*100, this.height*100];
@@ -147,7 +139,7 @@ export class ArrowCalculations {
 
       if (singleArrowCoordsFrom===singleArrowCoordsTo){
         // console.log("Skip arrow pointing to itself: "+singleArrowCoordsFrom);
-        this.fuckThisShitUp(singleArrowCoords,'arrow is pointing to its starting point');
+        super.errorInThisLine(singleArrowCoords,'arrow is pointing to its starting point');
         continue;
       }
 
