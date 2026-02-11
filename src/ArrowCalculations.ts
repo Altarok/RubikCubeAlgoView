@@ -1,5 +1,5 @@
 import { DEFAULT_SETTINGS, RubikCubeAlgosSettings } from "./RubikCubeAlgoSettings";
-import { ArrowCalculations } from "./ArrowCalculations";
+import { BaseCodeBlockInterpreter } from "./BaseCodeBlockInterpreter";
 
 
 const DEFAULT = {
@@ -15,7 +15,7 @@ const DEFAULT = {
 } as const; 
 
 
-export class PLL extends ArrowCalculations {
+export class ArrowCalculations {
   COORDINATES;
   width:number;
   height:number;
@@ -23,12 +23,10 @@ export class PLL extends ArrowCalculations {
   arrowColor:string;
   arrows:string;
   codeBlockInterpretationSuccessful:boolean;
-  lastNonInterpretableLine:string;  
+  lastNonInterpretableLine:string; 
   reasonForFailure:string;
 
-  //constructor(settings:RubikCubeAlgosSettings) {
   constructor(rows:string[], settings:RubikCubeAlgosSettings) {
-    super(rows, settings);
     this.COORDINATES = new Array();
     this.width = DEFAULT.WIDTH;
     this.height = DEFAULT.HEIGHT;
