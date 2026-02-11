@@ -23,10 +23,9 @@ export class OLL extends ArrowCalculations {
   width:number;
   height:number;
   cubeColor:string;
-  arrowColor:string;
-  arrows:string;
 
-  constructor(settings:RubikCubeAlgosSettings) {
+  constructor(rows:string[], settings:RubikCubeAlgosSettings) {
+    super(rows, settings);
     this.cells = new Array();
     this.width = DEFAULT.WIDTH;
     this.height = DEFAULT.HEIGHT;
@@ -36,13 +35,6 @@ export class OLL extends ArrowCalculations {
     } else {
       this.cubeColor = DEFAULT_SETTINGS.CUBE_COLOR;
     }
-    if (settings.arrowColor){
-      this.arrowColor = settings.arrowColor;
-    } else {
-      this.arrowColor = DEFAULT_SETTINGS.ARROW_COLOR;
-    }
-    
-    this.arrows = "";
   }
   private setDimension(w:number,h:number):void {
     this.width=w;

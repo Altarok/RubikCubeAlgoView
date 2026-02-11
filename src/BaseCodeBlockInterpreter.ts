@@ -19,10 +19,13 @@ export class BaseCodeBlockInterpreter {
     this.reasonForFailure=reason;
     console.log('Unexpected input: "'+lineWithError+'" ('+reason+')');
   }
+
   codeBlockInterpretationFailed():boolean {
     return !this.codeBlockInterpretationSuccessful;
   }
+
   isRowInterpretable(row:string):boolean {
     return !(row === this.lastNonInterpretableLine);
   }
+
 }

@@ -1,9 +1,9 @@
-import { DEFAULT_SETTINGS, RubikCubeAlgosSettings } from "./RubikCubeAlgoSettings";
-import { ArrowCalculations } from "./ArrowCalculations";
-import { BaseCodeBlockInterpreter } from "./BaseCodeBlockInterpreter";
+//import { DEFAULT_SETTINGS, RubikCubeAlgosSettings } from "./RubikCubeAlgoSettings";
+//import { ArrowCalculations } from "./ArrowCalculations";
+//import { BaseCodeBlockInterpreter } from "./BaseCodeBlockInterpreter";
 
 
-const DEFAULT = {
+const DEFAULT = { 
   WIDTH: 3, /* default rubik cube width */
   HEIGHT: 3, /* default rubik cube height */
   CODE_BLOCK_TEMPLATE:
@@ -11,18 +11,16 @@ const DEFAULT = {
 'dimension:3,3 // width,height\n'+
 'cubeColor:ff0 // yellow cube, optional parameter\n'+
 'arrowColor:08f // sky blue arrows, optional parameter\n'+
-'arrows:1.1-1.3,7+9\n'+
+'arrows:1.1-1.3,7+9 // arrow from top left (1.1 or 1) to top right (1.3 or 3), double-sided arrow from/to lower left (3.1 or 7) from/to lower right (3.3 or 9) \n'+
 '```'
 } as const; 
-
+ 
 
 export class PLL extends ArrowCalculations {
   COORDINATES;
   width:number;
   height:number;
   cubeColor:string;
-  arrowColor:string;
-  arrows:string;
 
   constructor(rows:string[], settings:RubikCubeAlgosSettings) {
     super(rows, settings);
@@ -35,13 +33,6 @@ export class PLL extends ArrowCalculations {
     } else {
       this.cubeColor = DEFAULT_SETTINGS.CUBE_COLOR;
     }
-    if (settings.arrowColor){
-      this.arrowColor = settings.arrowColor;
-    } else {
-      this.arrowColor = DEFAULT_SETTINGS.ARROW_COLOR;
-    }
-    
-    this.arrows = "";
     this.interpretCodeBlock(rows);
   }
   private setDimension(w:number,h:number):void {
@@ -53,14 +44,6 @@ export class PLL extends ArrowCalculations {
     this.cubeColor = '#'+s;
     //console.log("new cube color: '"+s+"'");
   }
-  private setArrowColor(s:string):void {
-    this.arrowColor = '#'+s;
-    //console.log("new arrow color: '"+s+"'");
-  }
-  private setArrows(s:string):void {
-    this.arrows = s;
-    //console.log("new arrows: '"+s+"'");
-  }
   toString():string {
     return "pll[cubeClr'"+this.cubeColor+"',arrowColor'"+this.arrowColor+"',arrows'"+this.arrows+"']"
   }
@@ -68,7 +51,7 @@ export class PLL extends ArrowCalculations {
     if (rows.length ===0){
       return super.errorInThisLine("[empty]","at least 1 parameter needed: 'dimension/cubeColor/arrowColor/arrows'");
     }
-    console.log('pll before: '+this.toString());    
+    // console.log('pll before: '+this.toString());    
     for (let r = 0; r < rows.length; r++) {
       let row = rows[r];
       if (row.startsWith('dimension:')) {
@@ -86,12 +69,10 @@ export class PLL extends ArrowCalculations {
       } else if (row.match('^cubeColor:([a-f0-9]{3}){1,2}( //.*)?')) {
         let newCubClr = row.split(' ')[0].trim().replace('cubeColor:','');
         this.setCubeColor(newCubClr);
-      } else if (row.match('^arrowColor:([a-f0-9]{3}){1,2}( //.*)?')) {
-        let newAroClr = row.split(' ')[0].trim().replace('arrowColor:','')
-        this.setArrowColor(newAroClr);
-      } else if (row.match('^arrows:\\d+(\\.\\d+)?(-|\\+)\\d+(\\.\\d+)?(,\\d+(\\.\\d+)?(-|\\+)\\d+(\\.\\d+)?)*( //.*)?')) {
-        let newArrows = row.split(' ')[0].trim().replace('arrows:','')
-        this.setArrows(newArrows);
+      } else if (row.startsWith('arrowColor:')) {
+        super.handleArrowColorInput(row);
+      } else if (row.startsWith('arrows:')) {
+        super.handleArrowsInput(row);
       } else {
         console.log('Un-interpretable: ' + row);
         return super.errorInThisLine(row, "unexpected data, valid: 'dimension/cubeColor/arrowColor/arrows'");

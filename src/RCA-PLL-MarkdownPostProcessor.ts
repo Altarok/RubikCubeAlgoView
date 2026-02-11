@@ -39,10 +39,10 @@ export class PLLView extends MarkdownRenderChild {
     let ARROWS = pllData.getArrowCoordinates();
 
     if (pllData.codeBlockInterpretationFailed()){
-      this.element.createEl('div', { text: "--- Rubik Cube PLL pattern interpretation failed ---" , cls:'rubik-cube-warning-text' });
+      this.element.createEl('div', { text: "--- Rubik Cube PLL pattern interpretation failed ---" , cls:'rubik-cube-warning-text-orange' });
       this.element.createEl('div', { text: "```rubikCubePLL" });
       if (rows.length === 0) {
-        this.element.createEl('b', { text: "[empty]" , cls:'rubik-cube-warning-text' });
+        this.element.createEl('b', { text: "[empty]" , cls:'rubik-cube-warning-text-red' });
         this.element.createEl('text', { text: ' => reason: ' + pllData.reasonForFailure } );
       } else {
         for (let r:number = 0; r < rows.length; r++) {
@@ -50,7 +50,7 @@ export class PLLView extends MarkdownRenderChild {
           if (pllData.isRowInterpretable(row)) {
             this.element.createEl('div', { text: row } );
           } else {
-            this.element.createEl('b', { text: row , cls:'rubik-cube-warning-text' });
+            this.element.createEl('b', { text: row , cls:'rubik-cube-warning-text-red' });
             this.element.createEl('text', { text: ' => reason: ' + pllData.reasonForFailure  } );
           }
         }

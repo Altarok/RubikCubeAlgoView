@@ -13,7 +13,11 @@
 .rubik-cube-pll-line-arrow {
     stroke-width: 2px;
 }
-.rubik-cube-warning-text {
+.rubik-cube-warning-text-red {
     background-color: #f00;
+    color: #fff;
+}
+.rubik-cube-warning-text-orange {
+    background-color: #ff6400;
     color: #fff;
 }
