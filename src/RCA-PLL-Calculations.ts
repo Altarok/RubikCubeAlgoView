@@ -1,5 +1,6 @@
 import { DEFAULT_SETTINGS, RubikCubeAlgosSettings } from "./RubikCubeAlgoSettings";
 import { ArrowCalculations } from "./ArrowCalculations";
+import { BaseCodeBlockInterpreter } from "./BaseCodeBlockInterpreter";
 
 
 const DEFAULT = {
@@ -22,11 +23,7 @@ export class PLL extends ArrowCalculations {
   cubeColor:string;
   arrowColor:string;
   arrows:string;
-  codeBlockInterpretationSuccessful:boolean;
-  lastNonInterpretableLine:string;  
-  reasonForFailure:string;
 
-  //constructor(settings:RubikCubeAlgosSettings) {
   constructor(rows:string[], settings:RubikCubeAlgosSettings) {
     super(rows, settings);
     this.COORDINATES = new Array();
@@ -45,7 +42,7 @@ export class PLL extends ArrowCalculations {
     }
     
     this.arrows = "";
-    this.codeBlockInterpretationSuccessful=true;
+    this.interpretCodeBlock(rows);
   }
   private setDimension(w:number,h:number):void {
     this.width=w;
@@ -69,9 +66,9 @@ export class PLL extends ArrowCalculations {
   }
   interpretCodeBlock(rows:string[]):void {
     if (rows.length ===0){
-      return super.errorInThisLine("[no input]","at least 1 parameter needed: 'dimension/cubeColor/arrowColor/arrows'");
+      return super.errorInThisLine("[empty]","at least 1 parameter needed: 'dimension/cubeColor/arrowColor/arrows'");
     }
-    // console.log('pll before: '+this.toString());    
+    console.log('pll before: '+this.toString());    
     for (let r = 0; r < rows.length; r++) {
       let row = rows[r];
       if (row.startsWith('dimension:')) {
@@ -96,7 +93,8 @@ export class PLL extends ArrowCalculations {
         let newArrows = row.split(' ')[0].trim().replace('arrows:','')
         this.setArrows(newArrows);
       } else {
-        return super.errorInThisLine(row, "unexpected input, expected: 'dimension', 'cubeColor', 'arrowColor' or 'arrows'");
+        console.log('Un-interpretable: ' + row);
+        return super.errorInThisLine(row, "unexpected data, valid: 'dimension/cubeColor/arrowColor/arrows'");
       }
     }  
     this.calculateCoordinates();

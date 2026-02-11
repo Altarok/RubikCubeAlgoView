@@ -1,4 +1,6 @@
 import { DEFAULT_SETTINGS, RubikCubeAlgosSettings } from "./RubikCubeAlgoSettings";
+import { ArrowCalculations } from "./ArrowCalculations";
+import { BaseCodeBlockInterpreter } from "./BaseCodeBlockInterpreter";
 
 const DEFAULT = {
   WIDTH: 3, /* default rubik cube width */
@@ -16,16 +18,13 @@ const DEFAULT = {
 const light:number = 1;
 const dark:number = 0;
 
-export class OLL {
+export class OLL extends ArrowCalculations {
   cells:number[];
   width:number;
   height:number;
   cubeColor:string;
   arrowColor:string;
   arrows:string;
-  codeBlockInterpretationSuccessful:boolean;
-  lastNonInterpretableLine:string; 
-  reasonForFailure:string;
 
   constructor(settings:RubikCubeAlgosSettings) {
     this.cells = new Array();
@@ -44,7 +43,6 @@ export class OLL {
     }
     
     this.arrows = "";
-    this.codeBlockInterpretationSuccessful=true;
   }
   private setDimension(w:number,h:number):void {
     this.width=w;
@@ -122,4 +120,4 @@ export class OLL {
   static get3by3CodeBlockTemplate():string {
     return DEFAULT.CODE_BLOCK_TEMPLATE;
   }
-};
+}
