@@ -1,30 +1,31 @@
-import { DEFAULT_SETTINGS, RubikCubeAlgosSettings } from "./RubikCubeAlgoSettings";
-import { BaseCodeBlockInterpreter } from "./BaseCodeBlockInterpreter";
+import {DEFAULT_SETTINGS, RubikCubeAlgoSettingsTab} from "./RubikCubeAlgoSettings";
+import {BaseCodeBlockInterpreter} from "./BaseCodeBlockInterpreter";
+import {ArrowCoordinates} from "./ArrowCoordinates";
 
 export abstract class ArrowCalculations extends BaseCodeBlockInterpreter {
-  arrowColor:string;
-  arrowsLine:string;
-  arrows:string;
+  arrowColor: string;
+  arrowsLine: string;
+  arrows: string;
   /** Nested array of coordinates. Contains start and end coordinates of arrow in pixels. */
-  arrowCoordinates;
+  arrowCoordinates: ArrowCoordinates[];
 
-  constructor(rows:string[], settings:RubikCubeAlgosSettings) {
+  protected constructor(rows: string[], settings: RubikCubeAlgoSettingsTab) {
     super(rows);
-    if (settings.arrowColor){
+    if (settings.arrowColor) {
       this.arrowColor = settings.arrowColor;
     } else {
       this.arrowColor = DEFAULT_SETTINGS.ARROW_COLOR;
     }
     this.arrows = "";
-    this.arrowCoordinates = new Array();
+    this.arrowCoordinates = new Array<ArrowCoordinates>();
   }
 
   /**
-   * @param row - string starting with 'arrowColor:'
-   */ 
-  handleArrowColorInput(row:string):void {
+   * @param {string} row - string starting with 'arrowColor:'
+   */
+  handleArrowColorInput(row: string): void {
     if (row.match('^arrowColor:([a-f0-9]{3}){1,2}( //.*)?')) {
-      let newAroClr = row.split(' ')[0].trim().replace('arrowColor:','')
+      let newAroClr = row.split(' ')[0].trim().replace('arrowColor:', '')
       // console.log("new arrow color: '"+newAroClr+"'");
       this.arrowColor = '#' + newAroClr;
     } else {
@@ -33,21 +34,20 @@ export abstract class ArrowCalculations extends BaseCodeBlockInterpreter {
   }
 
   /**
-   * @param row - string starting with 'arrows:'
+   * @param {string} row - string starting with 'arrows:'
    */
-  handleArrowsInput(row:string):void {
+  handleArrowsInput(row: string): void {
     this.arrowsLine = row;
     if (row.match('^arrows:\\d+(\\.\\d+)?(-|\\+)\\d+(\\.\\d+)?(,\\d+(\\.\\d+)?(-|\\+)\\d+(\\.\\d+)?)*( //.*)?')) {
       /* do not parse yet, another line may still brake the input which makes the calculation obsolete */
-      let arrowInput = row.split(' ')[0].trim().replace('arrows:','');
-      // console.log("new arrows: '" + arrowInput + "'");
-      this.arrows = arrowInput;
+      this.arrows = row.split(' ')[0].trim().replace('arrows:', '');
+      // console.log("new arrows: '" + this.arrows + "'");
     } else {
       super.errorInThisLine(row, 'arrow color value should match "arrowColor:" + [3 (or 6) lowercase hex digits (0-9/a-f)]');
     }
   }
 
-  getArrowCoordinates() {
+  getArrowCoordinates()  {
     return this.arrowCoordinates;
   }
 }

@@ -1,6 +1,8 @@
 import { MarkdownRenderChild } from "obsidian";
 import RubikCubeAlgos from "./main";
 import { PLL } from "./RCA-PLL-Calculations";
+import {ArrowCoordinates} from "./ArrowCoordinates";
+import {Coordinates} from "./Coordinates";
 
 
 export class PLLView extends MarkdownRenderChild {
@@ -17,19 +19,18 @@ export class PLLView extends MarkdownRenderChild {
     this.element = element;
     this.display();
   }
-  
+
   onload() {
     /*
      * Register listener which instantly redraws rubik cubes while changing plugin settings.
      */
     this.registerEvent(
-      this.plugin.app.workspace.on(
-        "rubik:rerender-markdown-code-block-processors",
+      this.plugin.app.workspace.on("rubik:rerender-markdown-code-block-processors",
         this.display.bind(this)
       )
     );
   }
-  
+
   display() {
     this.element.empty();
     const rows = this.source.split('\n').filter((row) => row.length > 0);
@@ -55,21 +56,21 @@ export class PLLView extends MarkdownRenderChild {
           }
         }
       }
-      
-      this.element.createEl('div', { text: "```" });   
-      return; 
+
+      this.element.createEl('div', { text: "```" });
+      return;
     }
-    
-    let w = widthXheight[0]; 
-    let h = widthXheight[1]; 
+
+    let w:number = widthXheight[0];
+    let h:number = widthXheight[1];
     let mainSvg = this.element.createSvg('svg', { attr: { viewBox:'0 0 '+w+' '+h, width:w, height:h }, cls: "rubik-cube-pll" });
     let defs = mainSvg.createSvg('defs');
     let marker = defs.createSvg('marker', { attr: {id:"arrowhead"+pllData.arrowColor, markerWidth:"10", markerHeight:"7", refX:"9", refY:"3.5", orient:"auto"}});
     marker.createSvg('polygon', { attr: {points:"0 0, 10 3.5, 0 7" , fill:pllData.arrowColor}});
-    
+
     /* Yellow base rect */
-    mainSvg.createSvg('rect', { attr: { fill:pllData.cubeColor }, cls: "rubik-cube-pll-rect" }); 
-    
+    mainSvg.createSvg('rect', { attr: { fill:pllData.cubeColor }, cls: "rubik-cube-pll-rect" });
+
     /*
      * Background grid; static, unresponsive, black rectangular lines
      */
@@ -77,20 +78,20 @@ export class PLLView extends MarkdownRenderChild {
     for (let x:number = 100; x < w; x+=100) {
       mainSvg.createSvg('line', { attr: { x1:x, x2:x, y1:0, y2:h }, cls: "rubik-cube-pll-line-grid" });
     }
-    /* Horizontal lines */ 
+    /* Horizontal lines */
     for (let y:number = 100; y < h; y+=100) {
       mainSvg.createSvg('line', { attr: { x1:0, x2:w, y1:y, y2:y }, cls: "rubik-cube-pll-line-grid" });
     }
 
-    let ARROWS = pllData.getArrowCoordinates();
-    for (let i = 0; i < ARROWS.length; i++) {
-      let arrow = ARROWS[i];
-      let arrowStartCoord = arrow[0];
-      let arrowEndCoord = arrow[1];
+    let arrows: ArrowCoordinates[] = pllData.getArrowCoordinates();
+    for (let i = 0; i < arrows.length; i++) {
+      let arrow: ArrowCoordinates = arrows[i];
+      let arrStart: Coordinates = arrow.start();
+      let arrEnd: Coordinates = arrow.end();
       //console.log("Arrow goes from "+arrowStartCoord+" to "+arrowEndCoord);
-      mainSvg.createSvg('line', { attr: { x1:arrowStartCoord[0], x2:arrowEndCoord[0], y1:arrowStartCoord[1], y2:arrowEndCoord[1],
-            'marker-end':'url(#arrowhead'+pllData.arrowColor+')', stroke:pllData.arrowColor,  },
-      cls: "rubik-cube-pll-line-arrow" });
+      mainSvg.createSvg('line', { attr: { x1: arrStart.x, x2: arrEnd.x, y1: arrStart.y, y2: arrEnd.y, 'marker-end': 'url(#arrowhead' + pllData.arrowColor + ')', stroke: pllData.arrowColor },
+        cls: "rubik-cube-pll-line-arrow"
+      });
     }
     //console.log('<< rubikCubePLL');
   }

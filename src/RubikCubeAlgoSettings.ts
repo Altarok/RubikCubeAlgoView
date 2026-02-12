@@ -7,19 +7,22 @@ export const DEFAULT_SETTINGS = {
 };
 
 export class RubikCubeAlgoSettingsTab extends PluginSettingTab {
-  
-  constructor(app, plugin) {
+  plugin: RubikCubeAlgos;
+  cubeColor: string;
+  arrowColor: string;
+
+  constructor(app: App, plugin: RubikCubeAlgos) {
     super(app, plugin);
     this.plugin = plugin;
   }
    
-  display() {
+  display(): void  {
     
     const { containerEl } = this;
   
     containerEl.empty();
   
-    new import_obsidian.Setting(containerEl)
+    new Setting(containerEl)
       .setName("Default cube color")
       .setDesc("Starting value: #ff0 (yellow)")
       .addText((text) => text
@@ -33,7 +36,7 @@ export class RubikCubeAlgoSettingsTab extends PluginSettingTab {
         }
     ));
   
-    new import_obsidian.Setting(containerEl)
+    new Setting(containerEl)
       .setName("Default arrow color")
       .setDesc("Starting value: #08f (sky blue)")
       .addText((text) => text

@@ -6,6 +6,7 @@ import { PLLView } from "./RCA-PLL-MarkdownPostProcessor";
 import { DEFAULT_SETTINGS, RubikCubeAlgoSettingsTab } from "./RubikCubeAlgoSettings";
 
 export default class RubikCubeAlgos extends Plugin {
+  settings: RubikCubeAlgoSettingsTab;
 
   async onload() {
 

@@ -1,6 +1,7 @@
-import { DEFAULT_SETTINGS, RubikCubeAlgosSettings } from "./RubikCubeAlgoSettings";
+import { DEFAULT_SETTINGS, RubikCubeAlgoSettingsTab } from "./RubikCubeAlgoSettings";
 import { ArrowCalculations } from "./ArrowCalculations";
-import { BaseCodeBlockInterpreter } from "./BaseCodeBlockInterpreter";
+import {ArrowCoordinates} from "./ArrowCoordinates";
+import {Coordinates} from "./Coordinates";
 
 const CODE_BLOCK_TEMPLATE =
 '\n```rubikCubePLL\n'+
@@ -8,15 +9,15 @@ const CODE_BLOCK_TEMPLATE =
 'cubeColor:ff0 // yellow cube, optional parameter\n'+
 'arrowColor:08f // sky blue arrows, optional parameter\n'+
 'arrows:1.1-1.3,7+9 // normal arrow in top row, double-sided arrow in lower row\n'+
-'```\n'; 
+'```\n';
 
 export class PLL extends ArrowCalculations {
-  rectangleCoordinates;
+  rectangleCoordinates: Coordinates[];
   cubeColor:string;
 
-  constructor(rows:string[], settings:RubikCubeAlgosSettings) {
+  constructor(rows:string[], settings:RubikCubeAlgoSettingsTab) {
     super(rows, settings);
-    this.rectangleCoordinates = new Array();
+    this.rectangleCoordinates = new Array<Coordinates>();
 
     
     if (settings.cubeColor){
@@ -33,18 +34,18 @@ export class PLL extends ArrowCalculations {
       } else if (row.startsWith('cubeColor:' )) {  this.handleCubeColorInput(row);
       } else if (row.startsWith('arrowColor:')) { super.handleArrowColorInput(row);
       } else if (row.startsWith('arrows:'    )) { super.handleArrowsInput(row);
-      } else {                             return super.errorInThisLine(row, "invalid, expected: 'dimension/cubeColor/arrowColor/arrows'");
+      } else { return super.errorInThisLine(row, "invalid, expected: 'dimension/cubeColor/arrowColor/arrows'");
       }
     }
   }
 
   setupCubeRectangleCenterCoordinates() : void {
-    this.rectangleCoordinates[0] = []; /* unused first entry to start arrows with 1 instead of 0 */
+    this.rectangleCoordinates[0] = new Coordinates(-1,-1); /* unused first entry to start arrows with 1 instead of 0 */
     let index:number = 1;
     /* reverse loop order to give x coordinates priority */
     for (let h = 0; h < this.cubeHeight; h++) {
       for (let w = 0; w < this.cubeWidth; w++) {
-        this.rectangleCoordinates[index++] = [w*100 + 50, h*100 + 50];
+        this.rectangleCoordinates[index++] = new Coordinates(w*100 + 50, h*100 + 50);
       }
     }
   }
@@ -56,16 +57,18 @@ export class PLL extends ArrowCalculations {
 
   setupArrowCoordinates() : void {
     //console.log('>> getArrowCoordinates, ' + this.rectangleCoordinates);
-    this.arrowCoordinates = new Array();
-    let allArrowCoords = this.arrows.split(',').filter((x) => x.length > 0);
-    let index:number = 0;
+    this.arrowCoordinates = new Array<ArrowCoordinates>();
+    let allArrowCoords: string[] = this.arrows.split(',').filter((x) => x.length > 0);
+    let index: number = 0;
     //console.log("Arrows to interpret: "+allArrowCoords);
     let isDoubleSided:boolean = false;
+
     for (let i = 0; i < allArrowCoords.length; i++) {
       isDoubleSided = false;
-      let singleArrowCoords:string = allArrowCoords[i];
+      let singleArrowCoords: string = allArrowCoords[i];
       
-      let singleArrowCoordsSplit;
+      let singleArrowCoordsSplit: string[];
+
       if (singleArrowCoords.match('\\d-\\d')) {
         singleArrowCoordsSplit = singleArrowCoords.split('-');
       } else {
@@ -77,8 +80,8 @@ export class PLL extends ArrowCalculations {
       let singleArrowCoordsTo:string   = singleArrowCoordsSplit[1];
       //console.log("-- Arrow goes from '"+singleArrowCoordsFrom+"' to '"+singleArrowCoordsTo+"'");
 
-      let arrowStart;
-      let arrowEnd;
+      let arrowStart: number[];
+      let arrowEnd: number[];
       
       if (singleArrowCoordsFrom.match('^[0-9]+$')){
         //console.log('-- d: ' + singleArrowCoordsFrom);
@@ -113,14 +116,13 @@ export class PLL extends ArrowCalculations {
         continue;
       }
       
-      this.arrowCoordinates[index++] = [ arrowStart, arrowEnd ];
+      this.arrowCoordinates[index++] = new ArrowCoordinates( arrowStart, arrowEnd );
       
       if (isDoubleSided) { // add reverse copy
-        this.arrowCoordinates[index++] = [ arrowEnd, arrowStart ];
+        this.arrowCoordinates[index++] = new ArrowCoordinates( arrowEnd, arrowStart );
       }
     }
     //console.log('<< getArrowCoordinates, ' + this.arrowCoordinates);
-    return this.arrowCoordinates;
   }
 
 
