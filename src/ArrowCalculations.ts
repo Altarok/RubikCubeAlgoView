@@ -1,10 +1,12 @@
 import { DEFAULT_SETTINGS, RubikCubeAlgosSettings } from "./RubikCubeAlgoSettings";
 import { BaseCodeBlockInterpreter } from "./BaseCodeBlockInterpreter";
 
-export class ArrowCalculations extends BaseCodeBlockInterpreter {
+export abstract class ArrowCalculations extends BaseCodeBlockInterpreter {
   arrowColor:string;
   arrowsLine:string;
   arrows:string;
+  /** Nested array of coordinates. Contains start and end coordinates of arrow in pixels. */
+  arrowCoordinates;
 
   constructor(rows:string[], settings:RubikCubeAlgosSettings) {
     super(rows);
@@ -14,10 +16,11 @@ export class ArrowCalculations extends BaseCodeBlockInterpreter {
       this.arrowColor = DEFAULT_SETTINGS.ARROW_COLOR;
     }
     this.arrows = "";
+    this.arrowCoordinates = new Array();
   }
 
   /**
-   * @param row string starting with 'arrowColor:'
+   * @param row - string starting with 'arrowColor:'
    */ 
   handleArrowColorInput(row:string):void {
     if (row.match('^arrowColor:([a-f0-9]{3}){1,2}( //.*)?')) {
@@ -30,7 +33,7 @@ export class ArrowCalculations extends BaseCodeBlockInterpreter {
   }
 
   /**
-   * @param row string starting with 'arrows:'
+   * @param row - string starting with 'arrows:'
    */
   handleArrowsInput(row:string):void {
     this.arrowsLine = row;
@@ -43,5 +46,8 @@ export class ArrowCalculations extends BaseCodeBlockInterpreter {
       super.errorInThisLine(row, 'arrow color value should match "arrowColor:" + [3 (or 6) lowercase hex digits (0-9/a-f)]');
     }
   }
-  
+
+  getArrowCoordinates() {
+    return this.arrowCoordinates;
+  }
 }

@@ -33,8 +33,9 @@ export class PLLView extends MarkdownRenderChild {
   display() {
     this.element.empty();
     const rows = this.source.split('\n').filter((row) => row.length > 0);
-    let pllData = new PLL(rows, this.plugin.settings); 
-    // pllData.interpretCodeBlock(rows); 
+    let pllData = new PLL(rows, this.plugin.settings);
+    pllData.setup();
+
     let widthXheight = pllData.getCubeSize();
 
     if (pllData.codeBlockInterpretationFailed()){

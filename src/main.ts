@@ -23,16 +23,14 @@ export default class RubikCubeAlgos extends Plugin {
       }
     );
 
-    this.addCommand({
-      id: "RubikCubeAlgo-add-codeblock-template-3x3-OLL",
+    this.addCommand({ id: "RubikCubeAlgo-add-codeblock-template-3x3-OLL",
       name: "Add codeblock template: 3x3 OLL",
       editorCallback: (editor, view) => {
         editor.replaceSelection(OLL.get3by3CodeBlockTemplate());
       }
     });
 
-    this.addCommand({
-      id: "RubikCubeAlgo-add-codeblock-template-3x3-PLL",
+    this.addCommand({ id: "RubikCubeAlgo-add-codeblock-template-3x3-PLL",
       name: "Add codeblock template: 3x3 PLL",
       editorCallback: (editor, view) => {
         editor.replaceSelection(PLL.get3by3CodeBlockTemplate());

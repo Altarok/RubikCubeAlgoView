@@ -2,110 +2,59 @@ import { DEFAULT_SETTINGS, RubikCubeAlgosSettings } from "./RubikCubeAlgoSetting
 import { ArrowCalculations } from "./ArrowCalculations";
 import { BaseCodeBlockInterpreter } from "./BaseCodeBlockInterpreter";
 
-const DEFAULT = { 
-  WIDTH: 3, /* default rubik cube width */
-  HEIGHT: 3, /* default rubik cube height */
-  CODE_BLOCK_TEMPLATE:
+const CODE_BLOCK_TEMPLATE =
 '\n```rubikCubePLL\n'+
 'dimension:3,3 // width,height\n'+
 'cubeColor:ff0 // yellow cube, optional parameter\n'+
 'arrowColor:08f // sky blue arrows, optional parameter\n'+
-'arrows:1.1-1.3,7+9 // arrow from top left (1.1 or 1) to top right (1.3 or 3), double-sided arrow from/to lower left (3.1 or 7) from/to lower right (3.3 or 9) \n'+
-'```'
-} as const; 
+'arrows:1.1-1.3,7+9 // normal arrow in top row, double-sided arrow in lower row\n'+
+'```\n'; 
 
 export class PLL extends ArrowCalculations {
   rectangleCoordinates;
-  arrowCoordinates;
-  width:number;
-  height:number;
   cubeColor:string;
 
   constructor(rows:string[], settings:RubikCubeAlgosSettings) {
     super(rows, settings);
     this.rectangleCoordinates = new Array();
-    this.width = DEFAULT.WIDTH;
-    this.height = DEFAULT.HEIGHT;
+
     
     if (settings.cubeColor){
       this.cubeColor = settings.cubeColor;
-    } else {
+    } else { 
       this.cubeColor = DEFAULT_SETTINGS.CUBE_COLOR;
     }
-    this.interpretCodeBlock(rows);
   }
 
-  /**
-   * @param row string starting with 'dimension:'
-   */ 
-  private handleDimensionsInput(row:string):void {
-    if (!row.match('^dimension:\\d+,\\d+ *?(//.*)?')) {
-      return super.errorInThisLine(row, 'invalid, expected: "dimension:[2-10],[2-10] // optional comment goes here"');
-    }
-    let widthCommaHeight = row.split(' ')[0].trim().replace('dimension:','');
-    let widthCommaHeightSplit = widthCommaHeight.split(',');
-    let w = widthCommaHeightSplit[0];
-    let h = widthCommaHeightSplit[1];
-    if (w<2||h<2){
-      return super.errorInThisLine(row, 'too low, expected: "dimension:[2-10],[2-10] // optional comment goes here"');
-    } else if (w>10||h>10){
-      return super.errorInThisLine(row, 'too high, expected: "dimension:[2-10],[2-10] // optional comment goes here"');
-    } 
-    //console.log("new dimensions: "+w+","+h);
-    this.width  = w;
-    this.height = h;
-  }
-
-  /**
-   * @param row string starting with 'cubeColor:'
-   */
-  private handleCubeColorInput(row:string):void {
-    if (!row.match('^cubeColor:([a-f0-9]{3}){1,2} *?(//.*)?')) {
-      return super.errorInThisLine(row, 'invalid, expected: "cubeColor:[3 (or 6) lowercase hex digits (0-9/a-f)] // optional comment goes here"');
-    }
-    let newCubClr = row.split(' ')[0].trim().replace('cubeColor:','');
-    //console.log("new cube color: '"+newCubClr+"'");
-    this.cubeColor = '#' + newCubClr;
-  }
-
-  private interpretCodeBlock(rows:string[]):void {
-    if (rows.length === 0){
-      return super.errorInThisLine("[empty]","at least 1 parameter needed: 'dimension/cubeColor/arrowColor/arrows'");
-    }
+  interpretCodeBlock(rows:string[]):void {
     for (let r = 0; r < rows.length; r++) { 
-      let row = rows[r];
-             if (row.startsWith('dimension:')) {   this.handleDimensionsInput(row);
-      } else if (row.startsWith('cubeColor:')) {   this.handleCubeColorInput(row);
+      let row = rows[r]; //console.log('interpret row: ' + row);
+             if (row.startsWith('dimension:' )) {  this.handleDimensionsInput(row);
+      } else if (row.startsWith('cubeColor:' )) {  this.handleCubeColorInput(row);
       } else if (row.startsWith('arrowColor:')) { super.handleArrowColorInput(row);
-      } else if (row.startsWith('arrows:')) {     super.handleArrowsInput(row);
+      } else if (row.startsWith('arrows:'    )) { super.handleArrowsInput(row);
       } else {                             return super.errorInThisLine(row, "invalid, expected: 'dimension/cubeColor/arrowColor/arrows'");
       }
     }
-    this.setupCubeRectangleCenterCoordinates();
-    this.setupArrowCoordinates();
   }
 
-  private setupCubeRectangleCenterCoordinates(){
+  setupCubeRectangleCenterCoordinates() : void {
     this.rectangleCoordinates[0] = []; /* unused first entry to start arrows with 1 instead of 0 */
-    let index:number=1;
-    /* reverse loop order to give x coordinates more priority */
-    for (let h = 0; h < this.height; h++) {
-      for (let w = 0; w < this.width; w++) {
+    let index:number = 1;
+    /* reverse loop order to give x coordinates priority */
+    for (let h = 0; h < this.cubeHeight; h++) {
+      for (let w = 0; w < this.cubeWidth; w++) {
         this.rectangleCoordinates[index++] = [w*100 + 50, h*100 + 50];
       }
     }
   }
 
   getCubeSize(){
-    let wXh = [this.width*100, this.height*100];
+    let wXh = [this.cubeWidth*100, this.cubeHeight*100];
     return wXh;
   }
 
-  getArrowCoordinates() {
-    return this.arrowCoordinates;
-  }
-
-  setupArrowCoordinates() {
+  setupArrowCoordinates() : void {
     //console.log('>> getArrowCoordinates, ' + this.rectangleCoordinates);
     this.arrowCoordinates = new Array();
     let allArrowCoords = this.arrows.split(',').filter((x) => x.length > 0);
@@ -126,18 +75,8 @@ export class PLL extends ArrowCalculations {
 
       let singleArrowCoordsFrom:string = singleArrowCoordsSplit[0];
       let singleArrowCoordsTo:string   = singleArrowCoordsSplit[1];
-
-      //if (singleArrowCoordsFrom===singleArrowCoordsTo){
-      //  // console.log("Skip arrow pointing to itself: "+singleArrowCoordsFrom);
-      //  /**
-      //   * TODO this one does not work
-      //   */
-      //  super.errorInThisLine(this.arrowsLine, "arrow '" + singleArrowCoords + "' is pointing to itself");
-      //  continue;
-      //}
-
       //console.log("-- Arrow goes from '"+singleArrowCoordsFrom+"' to '"+singleArrowCoordsTo+"'");
-      
+
       let arrowStart;
       let arrowEnd;
       
@@ -148,7 +87,7 @@ export class PLL extends ArrowCalculations {
         let semanticVersion = singleArrowCoordsFrom.split('.');
         let major:number = +semanticVersion[0];
         let minor:number = +semanticVersion[1];
-        let c:number = (major-1)*this.width + minor;
+        let c:number = (major-1)*this.cubeWidth + minor;
         //console.log('-- c: ' + c);
         arrowStart = this.rectangleCoordinates[c];
       }
@@ -160,7 +99,7 @@ export class PLL extends ArrowCalculations {
         let semanticVersion = singleArrowCoordsTo.split('.');
         let major:number = +semanticVersion[0];
         let minor:number = +semanticVersion[1];
-        let c:number = (major-1)*this.width + minor;
+        let c:number = (major-1)*this.cubeWidth + minor;
         //console.log('-- c: ' + c);
         arrowEnd = this.rectangleCoordinates[c];
       }
@@ -184,12 +123,48 @@ export class PLL extends ArrowCalculations {
     return this.arrowCoordinates;
   }
 
-  static get3by3CodeBlockTemplate():string {
-    return DEFAULT.CODE_BLOCK_TEMPLATE;
+
+
+  /**
+   * @param row string starting with 'dimension:'
+   */ 
+  private handleDimensionsInput(row:string):void {
+    if (!row.match('^dimension:\\d+,\\d+ *?(//.*)?')) {
+      return super.errorInThisLine(row, 'invalid, expected: "dimension:[2-10],[2-10] // optional comment goes here"');
+    }
+    let widthCommaHeight = row.split(' ')[0].trim().replace('dimension:','');
+    let widthCommaHeightSplit = widthCommaHeight.split(',');
+    let w = widthCommaHeightSplit[0];
+    let h = widthCommaHeightSplit[1];
+    if (w<2||h<2){
+      return super.errorInThisLine(row, 'too low, expected: "dimension:[2-10],[2-10] // optional comment goes here"');
+    } else if (w>10||h>10){
+      return super.errorInThisLine(row, 'too high, expected: "dimension:[2-10],[2-10] // optional comment goes here"');
+    } 
+    //console.log("new dimensions: "+w+","+h);
+    super.cubeWidth  = w;
+    super.cubeHeight = h;
+  }
+
+  /**
+   * @param row string starting with 'cubeColor:'
+   */
+  private handleCubeColorInput(row:string):void {
+    if (!row.match('^cubeColor:([a-f0-9]{3}){1,2} *?(//.*)?')) {
+      return super.errorInThisLine(row, 'invalid, expected: "cubeColor:[3 (or 6) lowercase hex digits (0-9/a-f)] // optional comment goes here"');
+    }
+    let newCubClr = row.split(' ')[0].trim().replace('cubeColor:','');
+    //console.log("new cube color: '"+newCubClr+"'");
+    this.cubeColor = '#' + newCubClr;
   }
 
   toString():string {
     return "pll[cubeClr'"+this.cubeColor+"',arrowColor'"+this.arrowColor+"',arrows'"+this.arrows+"']"
   }
+
+  static get3by3CodeBlockTemplate():string {
+    return CODE_BLOCK_TEMPLATE;
+  }
+
 
 }

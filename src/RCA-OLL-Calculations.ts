@@ -3,8 +3,6 @@ import { ArrowCalculations } from "./ArrowCalculations";
 import { BaseCodeBlockInterpreter } from "./BaseCodeBlockInterpreter";
 
 const DEFAULT = {
-  WIDTH: 3, /* default rubik cube width */
-  HEIGHT: 3, /* default rubik cube height */
   CODE_BLOCK_TEMPLATE:
 '\n```rubikCubeOLL\n'+
 '.000.\n'+
@@ -12,7 +10,7 @@ const DEFAULT = {
 '10101\n'+
 '01101\n'+
 '.000.\n'+
-'```'
+'```\n'
 } as const; 
 
 const light:number = 1;
@@ -20,16 +18,11 @@ const dark:number = 0;
 
 export class OLL extends ArrowCalculations {
   cells:number[];
-  width:number;
-  height:number;
   cubeColor:string;
 
   constructor(rows:string[], settings:RubikCubeAlgosSettings) {
     super(rows, settings);
-    this.cells = new Array();
-    this.width = DEFAULT.WIDTH;
-    this.height = DEFAULT.HEIGHT;
-    
+    this.cells = new Array();    
     if (settings.cubeColor){
       this.cubeColor = settings.cubeColor;
     } else {
@@ -44,8 +37,8 @@ export class OLL extends ArrowCalculations {
       return super.errorInThisLine(rows[0],"First and last line should start and end on a dot ('.')!");
     }
     let expectedRowLength:number = rows[0].length;
-    this.width = rows[0].length - 2;
-    this.height = rows.length - 2;
+    this.cubeWidth = rows[0].length - 2;
+    this.cubeHeight = rows.length - 2;
     for (let r = 0; r < rows.length; r++) {
       let row = rows[r];
       if (row.length != expectedRowLength) {
@@ -82,15 +75,15 @@ export class OLL extends ArrowCalculations {
     this.rectangleCoordinates[0] = []; /* unused first entry to start arrows with 1 instead of 0 */
     let index:number=1;
     /* reverse loop order to give x coordinates more priority */
-    for (let h = 0; h < this.height; h++) {
-      for (let w = 0; w < this.width; w++) {
+    for (let h = 0; h < this.cubeHeight; h++) {
+      for (let w = 0; w < this.cubeWidth; w++) {
         this.rectangleCoordinates[index++] = [w*100 + 50, h*100 + 50];
       }
     }
   }
 
   getDimensions(){
-    let wXh = [this.width*100 + 100, this.height*100 + 100];
+    let wXh = [this.cubeWidth*100 + 100, this.cubeHeight*100 + 100];
     return wXh;
   }
 

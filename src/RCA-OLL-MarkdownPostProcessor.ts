@@ -34,7 +34,9 @@ export class OLLView extends MarkdownRenderChild {
     this.element.empty();
     const rows = this.source.split('\n').filter((row) => row.length > 0);
     let ollData = new OLL(rows, this.plugin.settings); 
+    ollData.setup();
     let cells = ollData.interpretCodeBlock(rows);
+
     let widthXheight = ollData.getDimensions();
 
     if (false === ollData.codeBlockInterpretationSuccessful){
