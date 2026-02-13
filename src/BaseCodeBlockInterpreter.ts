@@ -14,7 +14,7 @@ export abstract class BaseCodeBlockInterpreter {
   reasonForFailure: string;
 
 
-  constructor(codeBlockContent: string[]) {
+  protected constructor(codeBlockContent: string[]) {
     this.cubeWidth = DEFAULT.WIDTH;
     this.cubeHeight = DEFAULT.HEIGHT;
     this.codeBlockContent = codeBlockContent;

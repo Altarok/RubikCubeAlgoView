@@ -1,6 +1,5 @@
-import { DEFAULT_SETTINGS, RubikCubeAlgoSettingsTab } from "./RubikCubeAlgoSettings";
-import { ArrowCalculations } from "./ArrowCalculations";
-import {ArrowCoordinates} from "./ArrowCoordinates";
+import {DEFAULT_SETTINGS, RubikCubeAlgoSettingsTab} from "./RubikCubeAlgoSettings";
+import {ArrowCalculations} from "./ArrowCalculations";
 import {Coordinates} from "./Coordinates";
 
 const CODE_BLOCK_TEMPLATE =
@@ -12,14 +11,10 @@ const CODE_BLOCK_TEMPLATE =
 '```\n';
 
 export class PLL extends ArrowCalculations {
-  rectangleCoordinates: Coordinates[];
   cubeColor:string;
 
   constructor(rows:string[], settings:RubikCubeAlgoSettingsTab) {
     super(rows, settings);
-    this.rectangleCoordinates = new Array<Coordinates>();
-
-    
     if (settings.cubeColor){
       this.cubeColor = settings.cubeColor;
     } else { 
@@ -28,8 +23,8 @@ export class PLL extends ArrowCalculations {
   }
 
   interpretCodeBlock(rows:string[]):void {
-    for (let r = 0; r < rows.length; r++) { 
-      let row = rows[r]; //console.log('interpret row: ' + row);
+    for (let r: number = 0; r < rows.length; r++) {
+      let row: string = rows[r]; //console.log('interpret row: ' + row);
              if (row.startsWith('dimension:' )) {  this.handleDimensionsInput(row);
       } else if (row.startsWith('cubeColor:' )) {  this.handleCubeColorInput(row);
       } else if (row.startsWith('arrowColor:')) { super.handleArrowColorInput(row);
@@ -39,13 +34,12 @@ export class PLL extends ArrowCalculations {
     }
   }
 
-  setupCubeRectangleCenterCoordinates() : void {
-    this.rectangleCoordinates[0] = new Coordinates(-1,-1); /* unused first entry to start arrows with 1 instead of 0 */
-    let index:number = 1;
+  setupCubeRectangleCenterCoordinates(): void {
+    this.addCoordinates(new Coordinates(-1,-1)); /* unused first entry to start arrows with 1 instead of 0 */
     /* reverse loop order to give x coordinates priority */
     for (let h = 0; h < this.cubeHeight; h++) {
       for (let w = 0; w < this.cubeWidth; w++) {
-        this.rectangleCoordinates[index++] = new Coordinates(w*100 + 50, h*100 + 50);
+        this.addCoordinates(new Coordinates(w * 100 + 50, h * 100 + 50));
       }
     }
   }
@@ -53,76 +47,6 @@ export class PLL extends ArrowCalculations {
   getCubeSize(){
     let wXh = [this.cubeWidth*100, this.cubeHeight*100];
     return wXh;
-  }
-
-  setupArrowCoordinates() : void {
-    //console.log('>> getArrowCoordinates, ' + this.rectangleCoordinates);
-    this.arrowCoordinates = new Array<ArrowCoordinates>();
-    let completeArrowsInput: string[] = this.arrows.split(',').filter((x) => x.length > 0);
-    let index: number = 0;
-    //console.log("Arrows to interpret: "+completeArrowsInput);
-    let isDoubleSided:boolean = false;
-
-    for (let i = 0; i < completeArrowsInput.length; i++) {
-      isDoubleSided = false;
-      let singleArrowCoords: string = completeArrowsInput[i];
-      
-      let singleArrowCoordsSplit: string[];
-
-      if (singleArrowCoords.match('\\d-\\d')) {
-        singleArrowCoordsSplit = singleArrowCoords.split('-');
-      } else {
-        isDoubleSided = true;
-        singleArrowCoordsSplit = singleArrowCoords.split('+');
-      }
-
-      let singleArrowCoordsFrom:string = singleArrowCoordsSplit[0];
-      let singleArrowCoordsTo  :string = singleArrowCoordsSplit[1];
-      //console.log("-- Arrow goes from '"+singleArrowCoordsFrom+"' to '"+singleArrowCoordsTo+"'");
-
-      let arrowStart: Coordinates;
-      let arrowEnd: Coordinates;
-      
-      if (singleArrowCoordsFrom.match('^[0-9]+$')){
-        //console.log('-- d: ' + singleArrowCoordsFrom);
-        arrowStart = this.rectangleCoordinates[singleArrowCoordsFrom];
-      } else {
-        let semanticVersion = singleArrowCoordsFrom.split('.');
-        let major:number = +semanticVersion[0];
-        let minor:number = +semanticVersion[1];
-        let c:number = (major-1)*this.cubeWidth + minor;
-        //console.log('-- c: ' + c);
-        arrowStart = this.rectangleCoordinates[c];
-      }
-      
-      if (singleArrowCoordsTo.match('^[0-9]+$')){
-        //console.log('-- d: ' + singleArrowCoordsTo);
-        arrowEnd = this.rectangleCoordinates[singleArrowCoordsTo];
-      } else {
-        let semanticVersion = singleArrowCoordsTo.split('.');
-        let major:number = +semanticVersion[0];
-        let minor:number = +semanticVersion[1];
-        let c:number = (major-1)*this.cubeWidth + minor;
-        //console.log('-- c: ' + c);
-        arrowEnd = this.rectangleCoordinates[c];
-      }
-      
-      if (arrowStart===arrowEnd){
-        // console.log("Skip arrow pointing to itself: "+singleArrowCoordsFrom);
-        /**
-         * TODO this one does not work
-         */
-        super.errorInThisLine(this.arrowsLine, "arrow '" + singleArrowCoords + "' is pointing to its starting point");
-        continue;
-      }
-
-      this.arrowCoordinates[index++] = new ArrowCoordinates(arrowStart, arrowEnd);
-
-      if (isDoubleSided) { // add reverse copy
-        this.arrowCoordinates[index++] = new ArrowCoordinates(arrowEnd, arrowStart);
-      }
-    }
-    //console.log('<< getArrowCoordinates, ' + this.arrowCoordinates);
   }
 
 

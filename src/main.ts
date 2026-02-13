@@ -12,27 +12,29 @@ export default class RubikCubeAlgos extends Plugin {
 
     await this.loadSettings();
 
-    this.registerMarkdownCodeBlockProcessor( "rubikCubeOLL",
+    this.registerMarkdownCodeBlockProcessor("rubikCubeOLL",
       (source, el, ctx) => {
         ctx.addChild(new OLLView(source, this, el));
       }
     );
 
-    this.registerMarkdownCodeBlockProcessor( "rubikCubePLL",
+    this.registerMarkdownCodeBlockProcessor("rubikCubePLL",
       (source, el, ctx) => {
         ctx.addChild(new PLLView(source, this, el));
       }
     );
 
-    this.addCommand({ id: "RubikCubeAlgo-add-codeblock-template-3x3-OLL",
-      name: "Add codeblock template: 3x3 OLL",
+    this.addCommand({
+      id: "RubikCubeAlgo-add-codeblock-template-3x3-OLL",
+      name: "Add codeblock template for 3x3 OLL.",
       editorCallback: (editor, view) => {
         editor.replaceSelection(OLL.get3by3CodeBlockTemplate());
       }
     });
 
-    this.addCommand({ id: "RubikCubeAlgo-add-codeblock-template-3x3-PLL",
-      name: "Add codeblock template: 3x3 PLL",
+    this.addCommand({
+      id: "RubikCubeAlgo-add-codeblock-template-3x3-PLL",
+      name: "Add codeblock template for 3x3 PLL.",
       editorCallback: (editor, view) => {
         editor.replaceSelection(PLL.get3by3CodeBlockTemplate());
       }
@@ -45,14 +47,14 @@ export default class RubikCubeAlgos extends Plugin {
       )
     );
   }
-  
+
   onunload() {
   }
-  
+
   async loadSettings() {
     this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
   }
-  
+
   async saveSettings() {
     await this.saveData(this.settings);
     this.app.workspace.trigger(

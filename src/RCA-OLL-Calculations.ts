@@ -1,6 +1,7 @@
-import { DEFAULT_SETTINGS, RubikCubeAlgosSettings } from "./RubikCubeAlgoSettings";
-import { ArrowCalculations } from "./ArrowCalculations";
-import { BaseCodeBlockInterpreter } from "./BaseCodeBlockInterpreter";
+import {DEFAULT_SETTINGS, RubikCubeAlgoSettingsTab} from "./RubikCubeAlgoSettings";
+import {ArrowCalculations} from "./ArrowCalculations";
+import {OllFieldInput} from "./OllFieldInput";
+import {Coordinates} from "./Coordinates";
 
 const DEFAULT = {
   CODE_BLOCK_TEMPLATE:
@@ -13,85 +14,105 @@ const DEFAULT = {
 '```\n'
 } as const; 
 
-const light:number = 1;
-const dark:number = 0;
+const light: number = 1;
+const dark: number = 0;
 
 export class OLL extends ArrowCalculations {
-  cells:number[];
-  cubeColor:string;
+  cubeColor: string;
+  ollFieldInput: OllFieldInput;
 
-  constructor(rows:string[], settings:RubikCubeAlgosSettings) {
+  constructor(rows: string[], settings: RubikCubeAlgoSettingsTab) {
     super(rows, settings);
-    this.cells = new Array();    
-    if (settings.cubeColor){
+    if (settings.cubeColor) {
       this.cubeColor = settings.cubeColor;
     } else {
       this.cubeColor = DEFAULT_SETTINGS.CUBE_COLOR;
     }
   }
 
-  interpretCodeBlock(rows:string[]):Array {
+  getOllFieldInput(): OllFieldInput {
+    return this.ollFieldInput;
+  }
+
+  private removeNonCubeFieldInput (rows:string[]): string[] {
+    let copyOfRows:string[] = new Array<string>();
+    for (let i: number = 0; i < rows.length; i++) {
+      let row: string = rows[i];
+      if (row.startsWith('arrows:')) {
+        super.handleArrowsInput(row);
+      } else {
+        copyOfRows[copyOfRows.length] = row;
+      }
+    }
+    return copyOfRows;
+  }
+
+  interpretCodeBlock(rows:string[]): void {
     if (rows.length < 4){
-      return super.errorInThisLine("[no input]","Input for OLL should contain at least 4 lines!");
+      return super.errorInThisLine("[not enough input]","Input for OLL should contain at least 4 lines!");
     } else if (false === rows[0].match('^\\..+?\\.$') || false === rows[rows.length-1].match('^\\..+?\\.$') ) {
       return super.errorInThisLine(rows[0],"First and last line should start and end on a dot ('.')!");
     }
-    let expectedRowLength:number = rows[0].length;
-    this.cubeWidth = rows[0].length - 2;
-    this.cubeHeight = rows.length - 2;
-    for (let r = 0; r < rows.length; r++) {
-      let row = rows[r];
-      if (row.length != expectedRowLength) {
-        return super.errorInThisLine(row,'Inconsistent row length. Expected: '+expectedRowLength);
-      }
-      let parsedRow:number[] = new Array();
-      for (let i = 0; i < row.length; i++) { 
-        
-        let c:string = row[i];
-        if (c==='.') {
-          parsedRow[parsedRow.length] = -1;
-        } else if (i === 0 || r === 0 || r === rows.length-1 || i === row.length-1) {
-          parsedRow[parsedRow.length] = c.toLowerCase();
+
+    // console.log('rows: ' + rows);
+
+    let rawOllInput: string[] = this.removeNonCubeFieldInput(rows);
+
+    // console.log('rawOllInput: ' + rawOllInput);
+
+    let expectedOllFieldInputWidth: number = rawOllInput[0].length;
+    this.ollFieldInput = new OllFieldInput(expectedOllFieldInputWidth);
+
+    this.cubeWidth = rawOllInput[0].length - 2;
+    this.cubeHeight = rawOllInput.length - 2;
+
+    for (let rowIndex: number = 0; rowIndex < rawOllInput.length; rowIndex++) {
+      let row: string = rawOllInput[rowIndex];
+
+      // console.log('parse row: ' + row);
+
+      let parsedRow: string[] = new Array<string>();
+      let index: number = 0;
+      for (let i: number = 0; i < row.length; i++) {
+        let clr: string = row[i];
+        if (clr === '.') {
+          parsedRow[index++] = '-1';
+        } else if (i === 0 || rowIndex === 0 || rowIndex === rawOllInput.length-1 || i === row.length-1) {
+          parsedRow[index++] = clr.toLowerCase();
         } else {
-          parsedRow[parsedRow.length] = c.toUpperCase();
+          parsedRow[index++] = clr.toUpperCase();
         }
       }
-      this.cells[this.cells.length] = parsedRow;
-    }  
-    this.setupCubeRectangleCenterCoordinates();
+      this.ollFieldInput.addRow(parsedRow);
+    }
     this.logCellsTable();
-    return this.cells;
   }
 
   private logCellsTable() {
-    let log:string = 'logCellsTable:\n'
-    for (let i = 0; i < this.cells.length; i++) {
-      log = log + this.cells[i] + '\n';
-    }
-    console.log(log);
+    let msg:string = 'logCellsTable:\n' + this.ollFieldInput.toString();
+    console.log(msg);
   }
 
-  private setupCubeRectangleCenterCoordinates(){
-    this.rectangleCoordinates[0] = []; /* unused first entry to start arrows with 1 instead of 0 */
-    let index:number=1;
+  setupCubeRectangleCenterCoordinates(): void {
+    this.addCoordinates(new Coordinates(-1,-1)); /* unused first entry to start arrows with 1 instead of 0 */
     /* reverse loop order to give x coordinates more priority */
     for (let h = 0; h < this.cubeHeight; h++) {
       for (let w = 0; w < this.cubeWidth; w++) {
-        this.rectangleCoordinates[index++] = [w*100 + 50, h*100 + 50];
+        this.addCoordinates(new Coordinates(w * 100 + 50, h*100 + 50));
       }
     }
   }
 
-  getDimensions(){
-    let wXh = [this.cubeWidth*100 + 100, this.cubeHeight*100 + 100];
+  getDimensions(): number[] {
+    let wXh: number[] = [this.cubeWidth*100 + 100, this.cubeHeight*100 + 100];
     return wXh;
   }
 
-  static get3by3CodeBlockTemplate():string {
+  static get3by3CodeBlockTemplate(): string {
     return DEFAULT.CODE_BLOCK_TEMPLATE;
   }
 
-  toString():string {
+  toString(): string {
     return "pll[cubeClr'"+this.cubeColor+"',arrowColor'"+this.arrowColor+"',arrows'"+this.arrows+"']"
   }
 }

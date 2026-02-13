@@ -1,8 +1,10 @@
 import {DEFAULT_SETTINGS, RubikCubeAlgoSettingsTab} from "./RubikCubeAlgoSettings";
 import {BaseCodeBlockInterpreter} from "./BaseCodeBlockInterpreter";
 import {ArrowCoordinates} from "./ArrowCoordinates";
+import {Coordinates} from "./Coordinates";
 
 export abstract class ArrowCalculations extends BaseCodeBlockInterpreter {
+  rectangleCoordinates: Coordinates[];
   arrowColor: string;
   arrowsLine: string;
   arrows: string;
@@ -11,6 +13,7 @@ export abstract class ArrowCalculations extends BaseCodeBlockInterpreter {
 
   protected constructor(rows: string[], settings: RubikCubeAlgoSettingsTab) {
     super(rows);
+    this.rectangleCoordinates = new Array<Coordinates>();
     if (settings.arrowColor) {
       this.arrowColor = settings.arrowColor;
     } else {
@@ -18,6 +21,10 @@ export abstract class ArrowCalculations extends BaseCodeBlockInterpreter {
     }
     this.arrows = "";
     this.arrowCoordinates = new Array<ArrowCoordinates>();
+  }
+
+  protected addCoordinates(coords: Coordinates) : void {
+    this.rectangleCoordinates.push(coords);
   }
 
   /**
@@ -52,4 +59,76 @@ export abstract class ArrowCalculations extends BaseCodeBlockInterpreter {
   getArrowCoordinates(): ArrowCoordinates[] {
     return this.arrowCoordinates;
   }
+
+
+  setupArrowCoordinates() : void {
+    //console.log('>> getArrowCoordinates, ' + this.rectangleCoordinates);
+    this.arrowCoordinates = new Array<ArrowCoordinates>();
+    let completeArrowsInput: string[] = this.arrows.split(',').filter((x) => x.length > 0);
+    let index: number = 0;
+    //console.log("Arrows to interpret: "+completeArrowsInput);
+    let isDoubleSided:boolean = false;
+
+    for (let i = 0; i < completeArrowsInput.length; i++) {
+      isDoubleSided = false;
+      let singleArrowCoords: string = completeArrowsInput[i];
+
+      let singleArrowCoordsSplit: string[];
+
+      if (singleArrowCoords.match('\\d-\\d')) {
+        singleArrowCoordsSplit = singleArrowCoords.split('-');
+      } else {
+        isDoubleSided = true;
+        singleArrowCoordsSplit = singleArrowCoords.split('+');
+      }
+
+      let singleArrowCoordsFrom:string = singleArrowCoordsSplit[0];
+      let singleArrowCoordsTo  :string = singleArrowCoordsSplit[1];
+      //console.log("-- Arrow goes from '"+singleArrowCoordsFrom+"' to '"+singleArrowCoordsTo+"'");
+
+      let arrowStart: Coordinates;
+      let arrowEnd: Coordinates;
+
+      if (singleArrowCoordsFrom.match('^[0-9]+$')){
+        //console.log('-- d: ' + singleArrowCoordsFrom);
+        arrowStart = this.rectangleCoordinates[singleArrowCoordsFrom];
+      } else {
+        let semanticVersion = singleArrowCoordsFrom.split('.');
+        let major:number = +semanticVersion[0];
+        let minor:number = +semanticVersion[1];
+        let c:number = (major-1)*this.cubeWidth + minor;
+        //console.log('-- c: ' + c);
+        arrowStart = this.rectangleCoordinates[c];
+      }
+
+      if (singleArrowCoordsTo.match('^[0-9]+$')){
+        //console.log('-- d: ' + singleArrowCoordsTo);
+        arrowEnd = this.rectangleCoordinates[singleArrowCoordsTo];
+      } else {
+        let semanticVersion = singleArrowCoordsTo.split('.');
+        let major:number = +semanticVersion[0];
+        let minor:number = +semanticVersion[1];
+        let c:number = (major-1)*this.cubeWidth + minor;
+        //console.log('-- c: ' + c);
+        arrowEnd = this.rectangleCoordinates[c];
+      }
+
+      if (arrowStart===arrowEnd){
+        // console.log("Skip arrow pointing to itself: "+singleArrowCoordsFrom);
+        /**
+         * TODO this one does not work
+         */
+        super.errorInThisLine(this.arrowsLine, "arrow '" + singleArrowCoords + "' is pointing to its starting point");
+        continue;
+      }
+
+      this.arrowCoordinates[index++] = new ArrowCoordinates(arrowStart, arrowEnd);
+
+      if (isDoubleSided) { // add reverse copy
+        this.arrowCoordinates[index++] = new ArrowCoordinates(arrowEnd, arrowStart);
+      }
+    }
+    //console.log('<< getArrowCoordinates, ' + this.arrowCoordinates);
+  }
+
 }

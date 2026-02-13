@@ -1,11 +1,13 @@
 import { MarkdownRenderChild } from "obsidian";
 import RubikCubeAlgos from "./main";
 import { OLL } from "./RCA-OLL-Calculations";
+import {OllFieldInput} from "./OllFieldInput";
 
 
 export class OLLView extends MarkdownRenderChild {
   source: string;
   plugin: RubikCubeAlgos;
+  element: HTMLElement;
   constructor(
     source: string,
     plugin: RubikCubeAlgos,
@@ -35,9 +37,9 @@ export class OLLView extends MarkdownRenderChild {
     const rows = this.source.split('\n').filter((row) => row.length > 0);
     let ollData = new OLL(rows, this.plugin.settings); 
     ollData.setup();
-    let cells = ollData.interpretCodeBlock(rows);
+    let cells: OllFieldInput = ollData.getOllFieldInput();
 
-    let widthXheight = ollData.getDimensions();
+    let widthXheight: number[] = ollData.getDimensions();
 
     if (false === ollData.codeBlockInterpretationSuccessful){
       this.element.createEl('div', { text: "--- Rubik Cube OLL pattern interpretation failed ---" });
@@ -50,8 +52,8 @@ export class OLLView extends MarkdownRenderChild {
       return; 
     }
     
-    let w = widthXheight[0]; 
-    let h = widthXheight[1]; 
+    let w: number = widthXheight[0];
+    let h: number = widthXheight[1];
     console.log('rubikCubeOLL: w='+w+',h='+h);
     let mainSvg = this.element.createSvg('svg', { attr: { width:200, height:200, viewBox:'0 0 '+w+' '+h }, cls: "rubik-cube-pll" });
     //let defs = mainSvg.createSvg('defs');
@@ -69,19 +71,19 @@ export class OLLView extends MarkdownRenderChild {
      
     /* upper row border */
     for (let x:number = 0; x < cubeWidth-2; x++) {
-      mainSvg.createSvg('rect', { attr: { x:50+x*100, y:0, width:'100', height:'50', fill:this.getColor(cells[0][x+1]) }, cls: "rubik-cube-rect" }); 
+      mainSvg.createSvg('rect', { attr: { x:50+x*100, y:0, width:'100', height:'50', fill:cells.getColor(0, x+1) }, cls: "rubik-cube-rect" });
     }
     /* lower row border */
     for (let x:number = 0; x < cubeWidth-2; x++) {
-      mainSvg.createSvg('rect', { attr: { x:50+x*100, y:h-50, width:'100', height:'50', fill:this.getColor(cells[cells.length-1][x+1]) }, cls: "rubik-cube-rect" }); 
+      mainSvg.createSvg('rect', { attr: { x:50+x*100, y:h-50, width:'100', height:'50', fill:cells.getColor(cells.length()-1, x+1) }, cls: "rubik-cube-rect" });
     }
     /* left column border */
     for (let y:number = 0; y < cubeHeight-2; y++) {
-      mainSvg.createSvg('rect', { attr: { x:0, y:50+y*100, width:50, height:100, fill:this.getColor(cells[y+1][0]) }, cls: "rubik-cube-rect" }); 
+      mainSvg.createSvg('rect', { attr: { x:0, y:50+y*100, width:50, height:100, fill:cells.getColor(y+1, 0) }, cls: "rubik-cube-rect" });
     }
     /* right column border */
     for (let y:number = 0; y < cubeHeight-2; y++) {
-      mainSvg.createSvg('rect', { attr: { x:w-50, y:50+y*100, width:50, height:100, fill:this.getColor(cells[y+1][cells.length-1]) }, cls: "rubik-cube-rect" }); 
+      mainSvg.createSvg('rect', { attr: { x:w-50, y:50+y*100, width:50, height:100, fill:cells.getColor(y+1, cells.length()-1) }, cls: "rubik-cube-rect" });
     }
 
     /*
@@ -90,7 +92,7 @@ export class OLLView extends MarkdownRenderChild {
     /* Vertical lines */
     for (let y:number = 0; y < cubeHeight-2; y++) {
       for (let x:number = 0; x < cubeWidth-2; x++) {
-        mainSvg.createSvg('rect', { attr: { x:50+x*100, y:50+y*100, width:100, height:100, fill:this.getColor(cells[y+1][x+1]) }, cls: "rubik-cube-pll-line-grid" });
+        mainSvg.createSvg('rect', { attr: { x:50+x*100, y:50+y*100, width:100, height:100, fill:cells.getColor(y+1, x+1) }, cls: "rubik-cube-pll-line-grid" });
       }
     }
 
@@ -116,41 +118,6 @@ export class OLLView extends MarkdownRenderChild {
     //  cls: "rubik-cube-pll-line-arrow" });
     //}
     //console.log('<< rubikCubeOLL');
-  }
-
-  private getColor(colorIndex:string):string {
-    let c:string = '#000';
-    if (!colorIndex) {
-      c = '#f00';
-    } else {
-      switch (colorIndex) {
-
-        case 'r': c = '#aa0000'; break; // darker red (80%)
-        case 'R': c = '#ff0000'; break; // red
-
-        case 'o': c = '#aa4000'; break; // darker orange
-        case 'O': c = '#ff6400'; break; // orange
-
-        case 'b': c = '#000070'; break; // darker blue
-        case 'B': c = '#0000bb'; break; // blue
-
-        case 'g': c = '#007000'; break; // darker green
-        case 'G': c = '#00bb00'; break; // green
-
-        case 'y': c = '#aaaa00'; break; // darker yellow
-        case 'Y': c = '#ffff00'; break; // yellow
-
-        case 'W': c = '#ffffff'; break; // white
-        case 'w': c = '#cccccc'; break; // grey (80%)
-
-        case '.': c = '#444'; break;
-        case '0': c = '#444'; break;
-        case '1': c = '#ff0'; break;
-        default:  c = '#000'; break;
-      }
-    }
-    console.log("getColor() '"+colorIndex+"' => '"+c+"'")
-    return c;
   }
 
 }
