@@ -5,9 +5,9 @@ const DEFAULT = {
 
 export abstract class BaseCodeBlockInterpreter {
   /** cube width (rectangles, not pixels) */
-  cubeWidth: number;
+  protected cubeWidth: number;
   /** cube height (rectangles, not pixels) */
-  cubeHeight: number;
+  protected cubeHeight: number;
   codeBlockContent: string[];
   codeBlockInterpretationSuccessful: boolean;
   lastNonInterpretableLine: string;

@@ -80,8 +80,8 @@ export class PLL extends ArrowCalculations {
       let singleArrowCoordsTo:string   = singleArrowCoordsSplit[1];
       //console.log("-- Arrow goes from '"+singleArrowCoordsFrom+"' to '"+singleArrowCoordsTo+"'");
 
-      let arrowStart: number[];
-      let arrowEnd: number[];
+      let arrowStart: Coordinates;
+      let arrowEnd: Coordinates;
       
       if (singleArrowCoordsFrom.match('^[0-9]+$')){
         //console.log('-- d: ' + singleArrowCoordsFrom);
@@ -115,11 +115,11 @@ export class PLL extends ArrowCalculations {
         super.errorInThisLine(this.arrowsLine, "arrow '" + singleArrowCoords + "' is pointing to its starting point");
         continue;
       }
-      
-      this.arrowCoordinates[index++] = new ArrowCoordinates( arrowStart, arrowEnd );
-      
+
+      this.arrowCoordinates[index++] = new ArrowCoordinates(arrowStart, arrowEnd);
+
       if (isDoubleSided) { // add reverse copy
-        this.arrowCoordinates[index++] = new ArrowCoordinates( arrowEnd, arrowStart );
+        this.arrowCoordinates[index++] = new ArrowCoordinates(arrowEnd, arrowStart);
       }
     }
     //console.log('<< getArrowCoordinates, ' + this.arrowCoordinates);
@@ -134,10 +134,11 @@ export class PLL extends ArrowCalculations {
     if (!row.match('^dimension:\\d+,\\d+ *?(//.*)?')) {
       return super.errorInThisLine(row, 'invalid, expected: "dimension:[2-10],[2-10] // optional comment goes here"');
     }
+    // @ts-ignore checked with regex
     let widthCommaHeight = row.split(' ')[0].trim().replace('dimension:','');
     let widthCommaHeightSplit = widthCommaHeight.split(',');
-    let w = widthCommaHeightSplit[0];
-    let h = widthCommaHeightSplit[1];
+    let w:number = +widthCommaHeightSplit[0];
+    let h:number = +widthCommaHeightSplit[1];
     if (w<2||h<2){
       return super.errorInThisLine(row, 'too low, expected: "dimension:[2-10],[2-10] // optional comment goes here"');
     } else if (w>10||h>10){
@@ -155,6 +156,7 @@ export class PLL extends ArrowCalculations {
     if (!row.match('^cubeColor:([a-f0-9]{3}){1,2} *?(//.*)?')) {
       return super.errorInThisLine(row, 'invalid, expected: "cubeColor:[3 (or 6) lowercase hex digits (0-9/a-f)] // optional comment goes here"');
     }
+    // @ts-ignore checked with regex
     let newCubClr = row.split(' ')[0].trim().replace('cubeColor:','');
     //console.log("new cube color: '"+newCubClr+"'");
     this.cubeColor = '#' + newCubClr;
