@@ -49,7 +49,7 @@ export abstract class ArrowCalculations extends BaseCodeBlockInterpreter {
     }
   }
 
-  getArrowCoordinates() : ArrowCoordinates[]  {
+  getArrowCoordinates(): ArrowCoordinates[] {
     return this.arrowCoordinates;
   }
 }
