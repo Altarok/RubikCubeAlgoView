@@ -31,8 +31,10 @@ export class RubikCubeAlgoSettingsTab extends PluginSettingTab {
         .onChange(async (value) => {
           if (value.match("^#([a-f0-9]{3}){1,2}$")) {
             this.plugin.settings.cubeColor = value;
-            await this.plugin.saveSettings();
+          } else {
+            this.plugin.settings.cubeColor = DEFAULT_SETTINGS.CUBE_COLOR;
           }
+          await this.plugin.saveSettings();
         }
     ));
   
@@ -45,9 +47,11 @@ export class RubikCubeAlgoSettingsTab extends PluginSettingTab {
         .onChange(async (value) => {
           if (value.match("^#([a-f0-9]{3}){1,2}$")) {
             this.plugin.settings.arrowColor = value;
-            await this.plugin.saveSettings();
+          } else {
+            this.plugin.settings.arrowColor = DEFAULT_SETTINGS.ARROW_COLOR;
           }
+          await this.plugin.saveSettings();
         }
     ));
   }
-};
+}

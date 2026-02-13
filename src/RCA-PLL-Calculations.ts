@@ -58,14 +58,14 @@ export class PLL extends ArrowCalculations {
   setupArrowCoordinates() : void {
     //console.log('>> getArrowCoordinates, ' + this.rectangleCoordinates);
     this.arrowCoordinates = new Array<ArrowCoordinates>();
-    let allArrowCoords: string[] = this.arrows.split(',').filter((x) => x.length > 0);
+    let completeArrowsInput: string[] = this.arrows.split(',').filter((x) => x.length > 0);
     let index: number = 0;
-    //console.log("Arrows to interpret: "+allArrowCoords);
+    //console.log("Arrows to interpret: "+completeArrowsInput);
     let isDoubleSided:boolean = false;
 
-    for (let i = 0; i < allArrowCoords.length; i++) {
+    for (let i = 0; i < completeArrowsInput.length; i++) {
       isDoubleSided = false;
-      let singleArrowCoords: string = allArrowCoords[i];
+      let singleArrowCoords: string = completeArrowsInput[i];
       
       let singleArrowCoordsSplit: string[];
 
@@ -77,7 +77,7 @@ export class PLL extends ArrowCalculations {
       }
 
       let singleArrowCoordsFrom:string = singleArrowCoordsSplit[0];
-      let singleArrowCoordsTo:string   = singleArrowCoordsSplit[1];
+      let singleArrowCoordsTo  :string = singleArrowCoordsSplit[1];
       //console.log("-- Arrow goes from '"+singleArrowCoordsFrom+"' to '"+singleArrowCoordsTo+"'");
 
       let arrowStart: Coordinates;
