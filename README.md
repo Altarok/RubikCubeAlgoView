@@ -8,8 +8,9 @@ A normal usecase would look like this image.
 A cube with some arrows, followed by your favourite algorithm to solve it:
 
 <img width="381" height="356" alt="image" src="https://github.com/user-attachments/assets/768f0602-750f-4a62-93f2-3b44b513e6ac" />
+<img width="343" height="292" alt="image" src="https://github.com/user-attachments/assets/3ca9e76c-17f4-4c20-9354-a17f230e01e6" />
 
-This exact image is created by writing the following codeblock (named 'rubikCubePLL'):
+The left image is created by writing the following codeblock (named 'rubikCubePLL'):
 ```
 dimension:3,3
 arrows:4+8,3+9
