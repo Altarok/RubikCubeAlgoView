@@ -1,5 +1,5 @@
 import {MarkdownRenderChild} from "obsidian";
-import {RubikCubeAlgos} from "./main";
+import RubikCubeAlgos from "./main";
 import {PLL} from "./RCA-PLL-Calculations";
 import {ArrowCoordinates} from "./ArrowCoordinates";
 import {Coordinates} from "./Coordinates";
@@ -58,8 +58,8 @@ export class PLLView extends MarkdownRenderChild {
       return;
     }
 
-    let w:number = widthXheight[0];
-    let h:number = widthXheight[1];
+    let w: number = widthXheight[0];
+    let h: number = widthXheight[1];
     let mainSvg = this.element.createSvg('svg', { attr: { viewBox:'0 0 '+w+' '+h, width:w, height:h }, cls: 'rubik-cube-pll' });
     let defs = mainSvg.createSvg('defs');
     let marker = defs.createSvg('marker', { attr: {id:'arrowhead'+pllData.arrowColor, markerWidth:'10', markerHeight:'7', refX:'9', refY:'3.5', orient:'auto'}});
@@ -81,12 +81,13 @@ export class PLLView extends MarkdownRenderChild {
     }
 
     let arrows: ArrowCoordinates[] = pllData.getArrowCoordinates();
-    for (let i = 0; i < arrows.length; i++) {
+    for (let i: number = 0; i < arrows.length; i++) {
       let arrow: ArrowCoordinates = arrows[i];
       let arrStart: Coordinates = arrow.start();
       let arrEnd: Coordinates = arrow.end();
       //console.log("Arrow goes from "+arrowStartCoord+" to "+arrowEndCoord);
-      mainSvg.createSvg('line', { attr: { x1: arrStart.x, x2: arrEnd.x, y1: arrStart.y, y2: arrEnd.y, 'marker-end': 'url(#arrowhead' + pllData.arrowColor + ')', stroke: pllData.arrowColor },
+      mainSvg.createSvg('line', {
+        attr: { x1: arrStart.x, y1: arrStart.y, x2: arrEnd.x, y2: arrEnd.y, 'marker-end': 'url(#arrowhead' + pllData.arrowColor + ')', stroke: pllData.arrowColor },
         cls: 'rubik-cube-pll-line-arrow'
       });
     }

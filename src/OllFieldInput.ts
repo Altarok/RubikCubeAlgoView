@@ -9,7 +9,7 @@ export class OllFieldInput {
   }
 
   addRow(parsedRow: string[]): void {
-    console.log('add row: ', parsedRow);
+    // console.log('add row: ', parsedRow);
     this.parsedRows[this.parsedRows.length] = parsedRow;
   }
 
@@ -27,7 +27,7 @@ export class OllFieldInput {
     for (let i: number = 0; i < this.parsedRows.length; i++) {
       let row: string[] = this.parsedRows[i];
       for (let ii: number = 0; ii < row.length; ii++) {
-        s = s + row[ii] + '\n';
+        s = s + row[ii];
       }
       s = s + '\n';
     }

@@ -12,10 +12,7 @@ const DEFAULT = {
 '01101\n'+
 '.000.\n'+
 '```\n'
-} as const; 
-
-const light: number = 1;
-const dark: number = 0;
+} as const;
 
 export class OLL extends ArrowCalculations {
   cubeColor: string;
@@ -89,8 +86,8 @@ export class OLL extends ArrowCalculations {
   }
 
   private logCellsTable() {
-    let msg:string = 'logCellsTable:\n' + this.ollFieldInput.toString();
-    console.log(msg);
+    // let msg:string = 'logCellsTable:\n' + this.ollFieldInput.toString();
+    // console.log(msg);
   }
 
   setupCubeRectangleCenterCoordinates(): void {
@@ -98,14 +95,13 @@ export class OLL extends ArrowCalculations {
     /* reverse loop order to give x coordinates more priority */
     for (let h = 0; h < this.cubeHeight; h++) {
       for (let w = 0; w < this.cubeWidth; w++) {
-        this.addCoordinates(new Coordinates(w * 100 + 50, h*100 + 50));
+        this.addCoordinates(new Coordinates(w * 100 + 100, h*100 + 100));
       }
     }
   }
 
   getDimensions(): number[] {
-    let wXh: number[] = [this.cubeWidth*100 + 100, this.cubeHeight*100 + 100];
-    return wXh;
+    return [this.cubeWidth*100 + 100, this.cubeHeight*100 + 100];
   }
 
   static get3by3CodeBlockTemplate(): string {

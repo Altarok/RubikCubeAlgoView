@@ -2,17 +2,16 @@ import { MarkdownRenderChild } from "obsidian";
 import RubikCubeAlgos from "./main";
 import { OLL } from "./RCA-OLL-Calculations";
 import {OllFieldInput} from "./OllFieldInput";
+import {ArrowCoordinates} from "./ArrowCoordinates";
+import {Coordinates} from "./Coordinates";
 
 
 export class OLLView extends MarkdownRenderChild {
   source: string;
   plugin: RubikCubeAlgos;
   element: HTMLElement;
-  constructor(
-    source: string,
-    plugin: RubikCubeAlgos,
-    element: HTMLElement
-  ) {
+
+  constructor(source: string, plugin: RubikCubeAlgos, element: HTMLElement) {
     super(element);
     this.source = source;
     this.plugin = plugin;
@@ -41,7 +40,7 @@ export class OLLView extends MarkdownRenderChild {
 
     let widthXheight: number[] = ollData.getDimensions();
 
-    if (false === ollData.codeBlockInterpretationSuccessful){
+    if (ollData.codeBlockInterpretationFailed()){
       this.element.createEl('div', { text: "--- Rubik Cube OLL pattern interpretation failed ---" });
       this.element.createEl('div', { text: 'Faulty input:' });
       let explanationDiv = this.element.createEl('div');
@@ -54,12 +53,12 @@ export class OLLView extends MarkdownRenderChild {
     
     let w: number = widthXheight[0];
     let h: number = widthXheight[1];
-    console.log('rubikCubeOLL: w='+w+',h='+h);
+    // console.log('rubikCubeOLL: w='+w+',h='+h);
     let mainSvg = this.element.createSvg('svg', { attr: { width:200, height:200, viewBox:'0 0 '+w+' '+h }, cls: "rubik-cube-pll" });
-    //let defs = mainSvg.createSvg('defs');
-    //let marker = defs.createSvg('marker', { attr: {id:"arrowhead"+ollData.arrowColor, markerWidth:"10", markerHeight:"7", refX:"9", refY:"3.5", orient:"auto"}});
-    //marker.createSvg('polygon', { attr: {points:"0 0, 10 3.5, 0 7" , fill:ollData.arrowColor}});
-    
+    let defs = mainSvg.createSvg('defs');
+    let marker = defs.createSvg('marker', { attr: {id:'arrowhead' + ollData.arrowColor, markerWidth:'10', markerHeight:'7', refX:'9', refY:'3.5', orient:'auto'}});
+    marker.createSvg('polygon', { attr: {points:'0 0, 10 3.5, 0 7' , fill:ollData.arrowColor}});
+
     /* Black base rect */
     //mainSvg.createSvg('rect', { attr: { fill:'#0' }, cls: "rubik-cube-pll-rect" }); 
     
@@ -107,16 +106,18 @@ export class OLLView extends MarkdownRenderChild {
     for (let y:number = 50; y < h; y+=100) {
       mainSvg.createSvg('line', { attr: { x1:0, x2:w, y1:y, y2:y }, cls: "rubik-cube-pll-line-grid" });
     }
-  
-    //for (let i = 0; i < ARROWS.length; i++) {
-    //  let arrow = ARROWS[i];
-    //  let arrowStartCoord = arrow[0];
-    //  let arrowEndCoord = arrow[1];
-    //  //console.log("Arrow goes from "+arrowStartCoord+" to "+arrowEndCoord);
-    //  mainSvg.createSvg('line', { attr: { x1:arrowStartCoord[0], x2:arrowEndCoord[0], y1:arrowStartCoord[1], y2:arrowEndCoord[1],
-    //        'marker-end':'url(#arrowhead'+ollData.arrowColor+')', stroke:ollData.arrowColor,  },
-    //  cls: "rubik-cube-pll-line-arrow" });
-    //}
+
+    let arrows: ArrowCoordinates[] = ollData.getArrowCoordinates();
+    for (let i: number = 0; i < arrows.length; i++) {
+      let arrow: ArrowCoordinates = arrows[i];
+      let arrStart: Coordinates = arrow.start();
+      let arrEnd: Coordinates = arrow.end();
+      //console.log("Arrow goes from "+arrowStartCoord+" to "+arrowEndCoord);
+      mainSvg.createSvg('line', {
+        attr: { x1: arrStart.x, y1: arrStart.y, x2: arrEnd.x, y2: arrEnd.y, 'marker-end': 'url(#arrowhead' + ollData.arrowColor + ')', stroke: ollData.arrowColor },
+        cls: 'rubik-cube-pll-line-arrow'
+      });
+    }
     //console.log('<< rubikCubeOLL');
   }
 
