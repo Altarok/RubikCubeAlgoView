@@ -1,12 +1,13 @@
-import { MarkdownRenderChild } from "obsidian";
 import RubikCubeAlgos from "./main";
 import { OLL } from "./RCA-OLL-Calculations";
 import {OllFieldInput} from "./OllFieldInput";
 import {ArrowCoordinates} from "./ArrowCoordinates";
 import {Coordinates} from "./Coordinates";
+import {Dimensions} from "./Dimensions";
+import {MarkdownPostProcessorBase} from "./MarkdownPostProcessorBase";
 
 
-export class OLLView extends MarkdownRenderChild {
+export class RCAOLLMarkdownPostProcessor extends MarkdownPostProcessorBase {
   source: string;
   plugin: RubikCubeAlgos;
   element: HTMLElement;
@@ -20,15 +21,14 @@ export class OLLView extends MarkdownRenderChild {
   }
   
   onload() {
-  //  /*
-  //   * Register listener which instantly redraws rubik cubes while changing plugin settings.
-  //   */
-  //  this.registerEvent(
-  //    this.plugin.app.workspace.on(
-  //      "rubik:rerender-markdown-code-block-processors",
-  //      this.display.bind(this)
-  //    )
-  //  );
+   /*
+    * Register listener which instantly redraws rubik cubes while changing plugin settings.
+    */
+   this.registerEvent(
+     this.plugin.app.workspace.on("rubik:rerender-markdown-code-block-processors",
+       this.display.bind(this)
+     )
+   );
   }
   
   display() {
@@ -39,26 +39,17 @@ export class OLLView extends MarkdownRenderChild {
     let cells: OllFieldInput = ollData.getOllFieldInput();
 
     if (ollData.codeBlockInterpretationFailed()){
-
-      // eslint-disable-next-line obsidianmd/ui/sentence-case
-      this.element.createEl('div', { text: "--- Rubik Cube OLL pattern interpretation failed ---" });
-      this.element.createEl('div', { text: 'Faulty input:' });
-      let explanationDiv = this.element.createEl('div');
-      explanationDiv.createEl('b', { text: '"'+ollData.lastNonInterpretableLine+'"', cls:'rubik-cube-warning-text'  });
-      if (ollData.reasonForFailure) {
-        explanationDiv.createEl('div', { text: 'Reason: '+ollData.reasonForFailure});
-      }
+      super.showWarningForNonsenseCodeBlock(rows, ollData);
       return;
     }
 
-    let widthXheight: number[] = ollData.getDimensions();
-    let w: number = widthXheight[0];
-    let h: number = widthXheight[1];
+    let imageDimensions: Dimensions = ollData.getDrawDimensions();
+    let w: number = imageDimensions.width;
+    let h: number = imageDimensions.height;
 
-    // console.log('rubikCubeOLL: w='+w+',h='+h);
-    let mainSvg = this.element.createSvg('svg', { attr: { width:200, height:200, viewBox:'0 0 '+w+' '+h }, cls: "rubik-cube-pll" });
-    let defs = mainSvg.createSvg('defs');
-    let marker = defs.createSvg('marker', { attr: {id:'arrowhead' + ollData.arrowColor, markerWidth:'10', markerHeight:'7', refX:'9', refY:'3.5', orient:'auto'}});
+    let mainSvg: SVGSVGElement = this.element.createSvg('svg', { attr: { width:200, height:200, viewBox:'0 0 '+w+' '+h }, cls: "rubik-cube-pll" });
+    let defs: SVGDefsElement = mainSvg.createSvg('defs');
+    let marker: SVGMarkerElement = defs.createSvg('marker', { attr: {id:'arrowhead' + ollData.arrowColor, markerWidth:'10', markerHeight:'7', refX:'9', refY:'3.5', orient:'auto'}});
     marker.createSvg('polygon', { attr: {points:'0 0, 10 3.5, 0 7' , fill:ollData.arrowColor}});
 
     /* Black base rect */

@@ -63,9 +63,10 @@ export abstract class ArrowCalculations extends BaseCodeBlockInterpreter {
 
   setupArrowCoordinates(): void {
     //console.log('>> getArrowCoordinates, ' + this.rectangleCoordinates);
-    this.arrowCoordinates = new Array<ArrowCoordinates>();
+
+
     let completeArrowsInput: string[] = this.arrows.split(',').filter((x) => x.length > 0);
-    let index: number = 0;
+
     //console.log("Arrows to interpret: "+completeArrowsInput);
     let isDoubleSided: boolean = false;
 
@@ -123,10 +124,10 @@ export abstract class ArrowCalculations extends BaseCodeBlockInterpreter {
         continue;
       }
 
-      this.arrowCoordinates[index++] = new ArrowCoordinates(arrowStart, arrowEnd);
+      this.arrowCoordinates.push(new ArrowCoordinates(arrowStart, arrowEnd));
 
       if (isDoubleSided) { // add reverse copy
-        this.arrowCoordinates[index++] = new ArrowCoordinates(arrowEnd, arrowStart);
+        this.arrowCoordinates.push(new ArrowCoordinates(arrowEnd, arrowStart));
       }
     }
     //console.log('<< getArrowCoordinates, ' + this.arrowCoordinates);

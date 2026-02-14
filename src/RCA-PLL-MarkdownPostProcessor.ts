@@ -1,11 +1,12 @@
-import {MarkdownRenderChild} from "obsidian";
 import RubikCubeAlgos from "./main";
 import {PLL} from "./RCA-PLL-Calculations";
 import {ArrowCoordinates} from "./ArrowCoordinates";
 import {Coordinates} from "./Coordinates";
+import {Dimensions} from "./Dimensions";
+import {MarkdownPostProcessorBase} from "./MarkdownPostProcessorBase";
 
 
-export class PLLView extends MarkdownRenderChild {
+export class RCAPLLMarkdownPostProcessor extends MarkdownPostProcessorBase {
   source: string;
   plugin: RubikCubeAlgos;
   element: HTMLElement;
@@ -31,35 +32,19 @@ export class PLLView extends MarkdownRenderChild {
 
   display() {
     this.element.empty();
-    const rows = this.source.split('\n').filter((row) => row.length > 0);
-    let pllData = new PLL(rows, this.plugin.settings);
+    const rows: string[] = this.source.split('\n').filter((row) => row.length > 0);
+    let pllData: PLL = new PLL(rows, this.plugin.settings);
     pllData.setup();
 
-    let widthXheight = pllData.getCubeSize();
-
-    if (pllData.codeBlockInterpretationFailed()){
-      this.element.createEl('div', { text: 'Rubik Cube PLL pattern interpretation failed.' , cls:'rubik-cube-warning-text-orange' });
-      this.element.createEl('div', { text: '```rubikCubePLL' });
-      if (rows.length === 0) {
-        this.element.createEl('b', { text: '[empty]' , cls:'rubik-cube-warning-text-red' });
-        this.element.createEl('text', { text: ' => ' + pllData.reasonForFailure } );
-      } else {
-        for (let r:number = 0; r < rows.length; r++) {
-          let row = rows[r];
-          if (pllData.isRowInterpretable(row)) {
-            this.element.createEl('div', { text: row } );
-          } else {
-            this.element.createEl('b', { text: row , cls:'rubik-cube-warning-text-red' });
-            this.element.createEl('text', { text: ' => ' + pllData.reasonForFailure  } );
-          }
-        }
-      }
-      this.element.createEl('div', { text: '```' });
+    if (pllData.codeBlockInterpretationFailed()) {
+      super.showWarningForNonsenseCodeBlock(rows, pllData);
       return;
     }
 
-    let w: number = widthXheight[0];
-    let h: number = widthXheight[1];
+    let imageDimensions: Dimensions = pllData.getDrawDimensions();
+    let w: number = imageDimensions.width;
+    let h: number = imageDimensions.height;
+
     let mainSvg = this.element.createSvg('svg', { attr: { viewBox:'0 0 '+w+' '+h, width:w, height:h }, cls: 'rubik-cube-pll' });
     let defs = mainSvg.createSvg('defs');
     let marker = defs.createSvg('marker', { attr: {id:'arrowhead'+pllData.arrowColor, markerWidth:'10', markerHeight:'7', refX:'9', refY:'3.5', orient:'auto'}});

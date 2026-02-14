@@ -1,3 +1,5 @@
+import {Dimensions} from "./Dimensions";
+
 const DEFAULT = {
   WIDTH: 3, /* default rubik cube width  */
   HEIGHT: 3 /* default rubik cube height */
@@ -46,6 +48,17 @@ export abstract class BaseCodeBlockInterpreter {
   abstract setupCubeRectangleCenterCoordinates(): void;
 
   abstract setupArrowCoordinates(): void;
+
+  /**
+   * @return {Dimensions} dimensions of cube (squares, not pixels; e.g. 3x3)
+   */
+  getCubeDimensions(): Dimensions {
+    return new Dimensions(this.cubeWidth, this.cubeHeight);
+  }
+  /**
+   * @return {Dimensions} dimensions of cube image (pixels, not squares; e.g. 300x300)
+   */
+  abstract getDrawDimensions(): Dimensions;
 
   /**
    * Called when the interpretation of a code block failed.

@@ -2,6 +2,7 @@ import {DEFAULT_SETTINGS, RubikCubeAlgoSettingsTab} from "./RubikCubeAlgoSetting
 import {ArrowCalculations} from "./ArrowCalculations";
 import {OllFieldInput} from "./OllFieldInput";
 import {Coordinates} from "./Coordinates";
+import {Dimensions} from "./Dimensions";
 
 const DEFAULT = {
   CODE_BLOCK_TEMPLATE:
@@ -54,7 +55,7 @@ export class OLL extends ArrowCalculations {
   interpretCodeBlock(rows:string[]): void {
     if (rows.length < 4){
       return super.errorInThisLine("[not enough input]","Input for OLL should contain at least 4 lines!");
-    } else if (!rows[0]!.match('^\\..+?\\.$') || !rows[rows.length-1]!.match('^\\..+?\\.$') ) {
+    } else if (false === rows[0]!.match('^\\..+?\\.$') || false === rows[rows.length-1]!.match('^\\..+?\\.$') ) {
       return super.errorInThisLine(rows[0]!,"First and last line should start and end on a dot ('.')!");
     }
 
@@ -107,8 +108,8 @@ export class OLL extends ArrowCalculations {
     }
   }
 
-  getDimensions(): number[] {
-    return [this.cubeWidth*100 + 100, this.cubeHeight*100 + 100];
+  getDrawDimensions(): Dimensions {
+    return new Dimensions(this.cubeWidth * 100 + 100, this.cubeHeight * 100 + 100);
   }
 
   static get3by3CodeBlockTemplate(): string {

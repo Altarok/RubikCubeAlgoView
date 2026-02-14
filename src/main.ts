@@ -1,8 +1,8 @@
 import {Plugin} from "obsidian";
 import {OLL} from "./RCA-OLL-Calculations";
 import {PLL} from "./RCA-PLL-Calculations";
-import {OLLView} from "./RCA-OLL-MarkdownPostProcessor";
-import {PLLView} from "./RCA-PLL-MarkdownPostProcessor";
+import {RCAOLLMarkdownPostProcessor} from "./RCA-OLL-MarkdownPostProcessor";
+import {RCAPLLMarkdownPostProcessor} from "./RCA-PLL-MarkdownPostProcessor";
 import {DEFAULT_SETTINGS, RubikCubeAlgoSettingsTab} from "./RubikCubeAlgoSettings";
 
 export default class RubikCubeAlgos extends Plugin {
@@ -14,13 +14,13 @@ export default class RubikCubeAlgos extends Plugin {
 
     this.registerMarkdownCodeBlockProcessor("rubikCubeOLL",
       (source, el, ctx) => {
-        ctx.addChild(new OLLView(source, this, el));
+        ctx.addChild(new RCAOLLMarkdownPostProcessor(source, this, el));
       }
     );
 
     this.registerMarkdownCodeBlockProcessor("rubikCubePLL",
       (source, el, ctx) => {
-        ctx.addChild(new PLLView(source, this, el));
+        ctx.addChild(new RCAPLLMarkdownPostProcessor(source, this, el));
       }
     );
 

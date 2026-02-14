@@ -1,6 +1,7 @@
 import {DEFAULT_SETTINGS, RubikCubeAlgoSettingsTab} from "./RubikCubeAlgoSettings";
 import {ArrowCalculations} from "./ArrowCalculations";
 import {Coordinates} from "./Coordinates";
+import {Dimensions} from "./Dimensions";
 
 const CODE_BLOCK_TEMPLATE =
 '\n```rubikCubePLL\n'+
@@ -44,12 +45,9 @@ export class PLL extends ArrowCalculations {
     }
   }
 
-  getCubeSize(){
-    let wXh = [this.cubeWidth*100, this.cubeHeight*100];
-    return wXh;
+  getDrawDimensions(): Dimensions {
+    return new Dimensions(this.cubeWidth * 100, this.cubeHeight * 100);
   }
-
-
 
   /**
    * @param row string starting with 'dimension:'
