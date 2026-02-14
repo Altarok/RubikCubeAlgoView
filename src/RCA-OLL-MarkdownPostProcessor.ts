@@ -33,26 +33,28 @@ export class OLLView extends MarkdownRenderChild {
   
   display() {
     this.element.empty();
-    const rows = this.source.split('\n').filter((row) => row.length > 0);
-    let ollData = new OLL(rows, this.plugin.settings); 
+    const rows: string[] = this.source.split('\n').filter((row) => row.length > 0);
+    let ollData: OLL = new OLL(rows, this.plugin.settings);
     ollData.setup();
     let cells: OllFieldInput = ollData.getOllFieldInput();
 
-    let widthXheight: number[] = ollData.getDimensions();
-
     if (ollData.codeBlockInterpretationFailed()){
+
+      // eslint-disable-next-line obsidianmd/ui/sentence-case
       this.element.createEl('div', { text: "--- Rubik Cube OLL pattern interpretation failed ---" });
       this.element.createEl('div', { text: 'Faulty input:' });
       let explanationDiv = this.element.createEl('div');
       explanationDiv.createEl('b', { text: '"'+ollData.lastNonInterpretableLine+'"', cls:'rubik-cube-warning-text'  });
       if (ollData.reasonForFailure) {
         explanationDiv.createEl('div', { text: 'Reason: '+ollData.reasonForFailure});
-      }        
-      return; 
+      }
+      return;
     }
-    
+
+    let widthXheight: number[] = ollData.getDimensions();
     let w: number = widthXheight[0];
     let h: number = widthXheight[1];
+
     // console.log('rubikCubeOLL: w='+w+',h='+h);
     let mainSvg = this.element.createSvg('svg', { attr: { width:200, height:200, viewBox:'0 0 '+w+' '+h }, cls: "rubik-cube-pll" });
     let defs = mainSvg.createSvg('defs');
@@ -65,7 +67,7 @@ export class OLLView extends MarkdownRenderChild {
     /*
      * Edge rows/columns
      */
-    let cubeWidth = rows[0].length;
+    let cubeWidth = rows[0]!.length;
     let cubeHeight = rows.length;
      
     /* upper row border */
