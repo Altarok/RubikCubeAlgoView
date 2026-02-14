@@ -1,11 +1,10 @@
 # Visualization of Rubik Cube algorithms: OLL & PLL
-Obsidian plugin one can use to visualize Rubik Cubes algorithms.
+Obsidian plugin you can use to visualize Rubik Cubes algorithms.
 
-Right now, it is able to show PLL algorithms only.
-Working on OLL right now. F2L to come.
+Ever wondered how an algorithm would look like after turning a cube?
+Well with this you will be able to once finished.
 
-A normal usecase would look like this image.
-A cube with some arrows, followed by your favourite algorithm to solve it:
+Right now, it is able to show PLL and OLL algorithms only. F2L to come.
 
 <img width="381" height="356" alt="image" src="https://github.com/user-attachments/assets/768f0602-750f-4a62-93f2-3b44b513e6ac" />
 <img width="343" height="292" alt="image" src="https://github.com/user-attachments/assets/3ca9e76c-17f4-4c20-9354-a17f230e01e6" />
@@ -16,8 +15,8 @@ dimension:3,3
 arrows:4+8,3+9
 ```
 ## Where to start?
-Use this command and fiddle with the inserted template:
-<img width="742" height="110" alt="image" src="https://github.com/user-attachments/assets/24c2fe64-5ca0-4b8a-b03b-81039861dcf0" />
+Use Obsidian commands to insert some OLL or PLLL code block templates. The rest is up to you.
+
 
 # Configuration
 ## Code block configuration
