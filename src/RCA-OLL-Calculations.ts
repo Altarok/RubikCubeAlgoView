@@ -5,13 +5,20 @@ import {Coordinates} from "./Coordinates";
 
 const DEFAULT = {
   CODE_BLOCK_TEMPLATE:
-'\n```rubikCubeOLL\n'+
-'.000.\n'+
-'01101\n'+
-'10101\n'+
-'01101\n'+
-'.000.\n'+
-'```\n'
+    '\n```rubikCubeOLL\n' +
+    '.000.\n' +
+    '01101\n' +
+    '10101\n' +
+    '01101\n' +
+    '.000.\n' +
+    '```\n\n' +
+    '```rubikCubeOLL\n' +
+    '.rrg.\n' +
+    'bwwrw\n' +
+    'wgwbw\n' +
+    'owwbw\n' +
+    '.goo.\n' +
+    '```\n'
 } as const;
 
 export class OLL extends ArrowCalculations {
@@ -34,7 +41,7 @@ export class OLL extends ArrowCalculations {
   private removeNonCubeFieldInput (rows:string[]): string[] {
     let copyOfRows:string[] = new Array<string>();
     for (let i: number = 0; i < rows.length; i++) {
-      let row: string = rows[i];
+      let row: string = rows[i]!;
       if (row.startsWith('arrows:')) {
         super.handleArrowsInput(row);
       } else {
@@ -47,8 +54,8 @@ export class OLL extends ArrowCalculations {
   interpretCodeBlock(rows:string[]): void {
     if (rows.length < 4){
       return super.errorInThisLine("[not enough input]","Input for OLL should contain at least 4 lines!");
-    } else if (false === rows[0].match('^\\..+?\\.$') || false === rows[rows.length-1].match('^\\..+?\\.$') ) {
-      return super.errorInThisLine(rows[0],"First and last line should start and end on a dot ('.')!");
+    } else if (!rows[0]!.match('^\\..+?\\.$') || !rows[rows.length-1]!.match('^\\..+?\\.$') ) {
+      return super.errorInThisLine(rows[0]!,"First and last line should start and end on a dot ('.')!");
     }
 
     // console.log('rows: ' + rows);
@@ -57,21 +64,21 @@ export class OLL extends ArrowCalculations {
 
     // console.log('rawOllInput: ' + rawOllInput);
 
-    let expectedOllFieldInputWidth: number = rawOllInput[0].length;
+    let expectedOllFieldInputWidth: number = rawOllInput[0]!.length;
     this.ollFieldInput = new OllFieldInput(expectedOllFieldInputWidth);
 
-    this.cubeWidth = rawOllInput[0].length - 2;
+    this.cubeWidth = rawOllInput[0]!.length - 2;
     this.cubeHeight = rawOllInput.length - 2;
 
     for (let rowIndex: number = 0; rowIndex < rawOllInput.length; rowIndex++) {
-      let row: string = rawOllInput[rowIndex];
+      let row: string = rawOllInput[rowIndex]!;
 
       // console.log('parse row: ' + row);
 
       let parsedRow: string[] = new Array<string>();
       let index: number = 0;
       for (let i: number = 0; i < row.length; i++) {
-        let clr: string = row[i];
+        let clr: string = row[i]!;
         if (clr === '.') {
           parsedRow[index++] = '-1';
         } else if (i === 0 || rowIndex === 0 || rowIndex === rawOllInput.length-1 || i === row.length-1) {

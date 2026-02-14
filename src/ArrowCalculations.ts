@@ -23,7 +23,7 @@ export abstract class ArrowCalculations extends BaseCodeBlockInterpreter {
     this.arrowCoordinates = new Array<ArrowCoordinates>();
   }
 
-  protected addCoordinates(coords: Coordinates) : void {
+  protected addCoordinates(coords: Coordinates): void {
     this.rectangleCoordinates.push(coords);
   }
 
@@ -50,7 +50,7 @@ export abstract class ArrowCalculations extends BaseCodeBlockInterpreter {
       /* do not parse yet, another line may still brake the input which makes the calculation obsolete */
       // @ts-ignore checked with regex
       this.arrows = row.split(' ')[0].trim().replace('arrows:', '');
-      // console.log("new arrows: '" + this.arrows + "'");
+      // console.log("new arrows: " + this.arrows);
     } else {
       super.errorInThisLine(row, 'arrow color value should match "arrowColor:" + [3 (or 6) lowercase hex digits (0-9/a-f)]');
     }
@@ -61,17 +61,17 @@ export abstract class ArrowCalculations extends BaseCodeBlockInterpreter {
   }
 
 
-  setupArrowCoordinates() : void {
+  setupArrowCoordinates(): void {
     //console.log('>> getArrowCoordinates, ' + this.rectangleCoordinates);
     this.arrowCoordinates = new Array<ArrowCoordinates>();
     let completeArrowsInput: string[] = this.arrows.split(',').filter((x) => x.length > 0);
     let index: number = 0;
     //console.log("Arrows to interpret: "+completeArrowsInput);
-    let isDoubleSided:boolean = false;
+    let isDoubleSided: boolean = false;
 
     for (let i = 0; i < completeArrowsInput.length; i++) {
       isDoubleSided = false;
-      let singleArrowCoords: string = completeArrowsInput[i];
+      let singleArrowCoords: string = completeArrowsInput[i]!;
 
       let singleArrowCoordsSplit: string[];
 
@@ -82,39 +82,40 @@ export abstract class ArrowCalculations extends BaseCodeBlockInterpreter {
         singleArrowCoordsSplit = singleArrowCoords.split('+');
       }
 
-      let singleArrowCoordsFrom:string = singleArrowCoordsSplit[0];
-      let singleArrowCoordsTo  :string = singleArrowCoordsSplit[1];
+      let singleArrowCoordsFrom: string = singleArrowCoordsSplit[0]!;
+      let singleArrowCoordsTo: string = singleArrowCoordsSplit[1]!;
       //console.log("-- Arrow goes from '"+singleArrowCoordsFrom+"' to '"+singleArrowCoordsTo+"'");
 
       let arrowStart: Coordinates;
       let arrowEnd: Coordinates;
 
-      if (singleArrowCoordsFrom.match('^[0-9]+$')){
+      let arrowStartRectIndex: number = -1;
+      if (singleArrowCoordsFrom.match('^[0-9]+$')) {
         //console.log('-- d: ' + singleArrowCoordsFrom);
-        arrowStart = this.rectangleCoordinates[singleArrowCoordsFrom];
+        arrowStartRectIndex = +singleArrowCoordsFrom;
       } else {
         let semanticVersion = singleArrowCoordsFrom.split('.');
-        let major:number = +semanticVersion[0];
-        let minor:number = +semanticVersion[1];
-        let c:number = (major-1)*this.cubeWidth + minor;
-        //console.log('-- c: ' + c);
-        arrowStart = this.rectangleCoordinates[c];
+        let major: number = +semanticVersion[0]!;
+        let minor: number = +semanticVersion[1]!;
+        arrowStartRectIndex = (major - 1) * this.cubeWidth + minor;
       }
+      //console.log('-- arrowStartRectIndex: ' + arrowStartRectIndex);
+      arrowStart = this.rectangleCoordinates[arrowStartRectIndex]!;
 
-      if (singleArrowCoordsTo.match('^[0-9]+$')){
-        //console.log('-- d: ' + singleArrowCoordsTo);
-        arrowEnd = this.rectangleCoordinates[singleArrowCoordsTo];
+      let arrowEndRectIndex: number = -1;
+      if (singleArrowCoordsTo.match('^[0-9]+$')) {
+        arrowEndRectIndex = +singleArrowCoordsTo;
       } else {
         let semanticVersion = singleArrowCoordsTo.split('.');
-        let major:number = +semanticVersion[0];
-        let minor:number = +semanticVersion[1];
-        let c:number = (major-1)*this.cubeWidth + minor;
-        //console.log('-- c: ' + c);
-        arrowEnd = this.rectangleCoordinates[c];
+        let major: number = +semanticVersion[0]!;
+        let minor: number = +semanticVersion[1]!;
+        arrowEndRectIndex = (major - 1) * this.cubeWidth + minor;
       }
+      //console.log('-- arrowEndRectIndex: ' + arrowEndRectIndex);
+      arrowEnd = this.rectangleCoordinates[arrowEndRectIndex]!;
 
-      if (arrowStart===arrowEnd){
-        // console.log("Skip arrow pointing to itself: "+singleArrowCoordsFrom);
+      if (arrowStart === arrowEnd) {
+        // console.log("Skip arrow pointing to itself: " + singleArrowCoordsFrom);
         /**
          * TODO this one does not work
          */

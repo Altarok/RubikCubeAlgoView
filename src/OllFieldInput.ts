@@ -14,18 +14,18 @@ export class OllFieldInput {
   }
 
   getColor(xRow: number, yCol: number): string {
-    let colorIndex: string = this.parsedRows[xRow][yCol];
+    let colorIndex: string = this.parsedRows[xRow]![yCol]!;
     return this.getColorHex(colorIndex);
   }
 
   length(): number {
-    return this.parsedRows[0].length;
+    return this.parsedRows[0]!.length;
   }
 
   toString(): string {
     let s: string = '';
     for (let i: number = 0; i < this.parsedRows.length; i++) {
-      let row: string[] = this.parsedRows[i];
+      let row: string[] = this.parsedRows[i]!;
       for (let ii: number = 0; ii < row.length; ii++) {
         s = s + row[ii];
       }
@@ -34,10 +34,10 @@ export class OllFieldInput {
     return s;
   }
 
-  private getColorHex(colorIndex:string):string {
-    let c:string = '#000';
+  private getColorHex(colorIndex: string): string {
+    let c: string;
     if (!colorIndex) {
-      c = '#f00';
+      c = '#000';
     } else {
       switch (colorIndex) {
 
