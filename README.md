@@ -1,84 +1,60 @@
 # Visualization of Rubik Cube algorithms: OLL & PLL
-Obsidian plugin one can use to visualize Rubik Cubes algorithms.
+Obsidian plugin you can use to visualize Rubik Cubes algorithms.
+The plugin interprets code blocks and visualizes Rubik Cubes and some errors, defined by you.
 
-Right now, it is able to show PLL algorithms only.
-Working on OLL right now. F2L to come.
+Ever wondered how an algorithm would look like after turning a cube?
+Well with this you will be able to once finished.
 
-A normal usecase would look like this image.
-A cube with some arrows, followed by your favourite algorithm to solve it:
+Right now, it is able to show changs done by PLL and OLL algorithms only. F2L to come.
 
 <img width="381" height="356" alt="image" src="https://github.com/user-attachments/assets/768f0602-750f-4a62-93f2-3b44b513e6ac" />
+<img width="260" height="270" alt="image" src="https://github.com/user-attachments/assets/d3499efc-5142-4b95-9b18-317fa641d939" />
 
-This exact image is created by writing the following codeblock (named 'rubikCubePLL'):
+
+The left image is created by writing the following codeblock (named 'rubikCubePLL'):
 ```
 dimension:3,3
 arrows:4+8,3+9
 ```
 ## Where to start?
-Use this command and fiddle with the inserted template:
-<img width="742" height="110" alt="image" src="https://github.com/user-attachments/assets/24c2fe64-5ca0-4b8a-b03b-81039861dcf0" />
+Use Obsidian commands to insert some OLL or PLLL code block templates. The rest is up to you.
+
+---
 
 # Configuration
-## Code block configuration
-- the cube's size, width and height from 2 to 10
-- the cube's color, 3- or 6- digit hex-value
-- the arrows' color, 3- or 6- digit hex-value
-- arrow coordinates
-### Default values
-```rubikCubePLL
-dimension:3,3 // width, height
-cubeColor:ff0 // yellow background 
-arrowColor:08f // sky blue arrows
-// no arrows
-```
-## Plugin configuration
+## Single Code Block Configuration
+- this cube's size, width and height from 2 to 10, independently
+- this cube's color, 3- or 6- digit hex-value
+- this arrows' color, 3- or 6- digit hex-value
+- this cube's arrow
+## General Plugin Configuration
 - the cubes' default color, 3- or 6- digit hex-value
 - the arrows' default color, 3- or 6- digit hex-value
 
 ---
 
-# Things that will come
-- OLL visualization
+# Things to come
 - F2L visualization
 - size configuration
+- turning of cubes inclufing auto-change of algorithms
 
----
-
-This is my first public repository and plugin, please be gentle :)
-
-Feedback welcome
-
----
 
 ## Some Examples
 ```
-dimension:2,2 // width, height
-arrows:1.1-1.2
+dimension:2,2 // comments are allowed
+cubeColor:0f0 // no "#" for hex value
+arrowColor:f00 // red; "ff0000" is also possible
+arrows:1.1-1.2 // arrow from row1-column1 to row1-column2
 ```
 Would create a 2x2 Cube with a fixed-coordinates arrow from the first to the second rectangle in the first row.
-
 Arrow coordinates go from top-left to bottom-right. First integer is row, second integer is column.
-
 Arrows with fixed coordinates do not change position when resizing the cube.
 ```
-dimension:2,2
 arrows:1-2 // "lazy" coordinates
 ```
-Would create the same. Notice the "lazy" arrow coordinates.
-
-It just gives each rectangle an integer.
-
+Would create the same. Notice the "lazy" arrow coordinates. It just gives each rectangle an integer. 
 Arrows with lazy coordinates do change position when resizing the cube.
 ```
-dimension:2,2
 arrows:1+2 // "+" makes this a double-sided arrow
 ```
 Would create the same, but with a double-sided arrow.
-```
-dimension:2,2
-cubeColor:0f0 // green, no "#" for hex value
-arrowColor:f00 // red, "ff0000" is also possible
-arrows:1-2
-```
-Would create the same, but with a red arrow on a green cube.
-
