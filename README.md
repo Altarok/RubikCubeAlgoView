@@ -8,7 +8,7 @@ Well with this you will be able to once finished.
 Right now, it is able to show changs done by PLL and OLL algorithms only. F2L to come.
 
 <img width="381" height="356" alt="image" src="https://github.com/user-attachments/assets/768f0602-750f-4a62-93f2-3b44b513e6ac" />
-<img width="239" height="279" alt="image" src="https://github.com/user-attachments/assets/ede80fe4-8d1e-4281-873b-3d22b33a69db" />
+<img width="260" height="270" alt="image" src="https://github.com/user-attachments/assets/d3499efc-5142-4b95-9b18-317fa641d939" />
 
 
 The left image is created by writing the following codeblock (named 'rubikCubePLL'):
