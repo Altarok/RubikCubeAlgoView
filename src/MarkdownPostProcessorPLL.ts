@@ -6,7 +6,7 @@ import {Dimensions} from "./Dimensions";
 import {MarkdownPostProcessorBase} from "./MarkdownPostProcessorBase";
 
 
-export class RCAPLLMarkdownPostProcessor extends MarkdownPostProcessorBase {
+export class MarkdownPostProcessorPLL extends MarkdownPostProcessorBase {
   source: string;
   plugin: RubikCubeAlgos;
   element: HTMLElement;
