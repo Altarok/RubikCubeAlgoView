@@ -56,7 +56,7 @@ export abstract class BaseCodeBlockInterpreter {
     this.codeBlockInterpretationSuccessful = false;
     this.lastNonInterpretableLine = lineWithError;
     this.reasonForFailure = reason;
-    console.log('Unexpected input: "' + lineWithError + '" (' + reason + ')');
+    // console.log('Unexpected input: "' + lineWithError + '" (' + reason + ')');
   }
 
   codeBlockInterpretationFailed(): boolean {
