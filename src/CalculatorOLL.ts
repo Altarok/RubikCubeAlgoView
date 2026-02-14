@@ -55,7 +55,7 @@ export class OLL extends ArrowCalculations {
   interpretCodeBlock(rows:string[]): void {
     if (rows.length < 4){
       return super.errorInThisLine("[not enough input]","Input for OLL should contain at least 4 lines!");
-    } else if (false === rows[0]!.match('^\\..+?\\.$') || false === rows[rows.length-1]!.match('^\\..+?\\.$') ) {
+    } else if (null === rows[0]!.match('^\\..+?\\.$') || null === rows[rows[0]!.length-1]!.match('^\\..+?\\.$') ) {
       return super.errorInThisLine(rows[0]!,"First and last line should start and end on a dot ('.')!");
     }
 
@@ -90,13 +90,13 @@ export class OLL extends ArrowCalculations {
       }
       this.ollFieldInput.addRow(parsedRow);
     }
-    this.logCellsTable();
+    // this.logCellsTable();
   }
 
-  private logCellsTable() {
-    // let msg:string = 'logCellsTable:\n' + this.ollFieldInput.toString();
-    // console.log(msg);
-  }
+  // private logCellsTable() {
+  //   let msg:string = 'logCellsTable:\n' + this.ollFieldInput.toString();
+  //   console.log(msg);
+  // }
 
   setupCubeRectangleCenterCoordinates(): void {
     this.addCoordinates(new Coordinates(-1,-1)); /* unused first entry to start arrows with 1 instead of 0 */

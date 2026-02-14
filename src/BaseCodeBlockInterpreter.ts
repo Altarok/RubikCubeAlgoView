@@ -55,6 +55,12 @@ export abstract class BaseCodeBlockInterpreter {
   getCubeDimensions(): Dimensions {
     return new Dimensions(this.cubeWidth, this.cubeHeight);
   }
+
+  isDefaultCubeSize(): boolean {
+    return this.cubeWidth === this.cubeHeight && this.cubeWidth === 3;
+  }
+
+
   /**
    * @return {Dimensions} dimensions of cube image (pixels, not squares; e.g. 300x300)
    */

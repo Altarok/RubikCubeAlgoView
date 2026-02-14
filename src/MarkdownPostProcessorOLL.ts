@@ -30,7 +30,7 @@ export class MarkdownPostProcessorOLL extends MarkdownPostProcessorBase {
      )
    );
   }
-  
+
   display() {
     this.element.empty();
     const rows: string[] = this.source.split('\n').filter((row) => row.length > 0);
@@ -39,21 +39,29 @@ export class MarkdownPostProcessorOLL extends MarkdownPostProcessorBase {
     let cells: OllFieldInput = ollData.getOllFieldInput();
 
     if (ollData.codeBlockInterpretationFailed()){
-      super.showWarningForNonsenseCodeBlock(rows, ollData);
+      super.paintWarningForNonsenseCodeBlock(rows, ollData);
       return;
     }
 
-    let imageDimensions: Dimensions = ollData.getDrawDimensions();
-    let w: number = imageDimensions.width;
-    let h: number = imageDimensions.height;
+    let viewBoxDimensions: Dimensions = ollData.getDrawDimensions();
+    let viewBoxWidth: number = viewBoxDimensions.width;
+    let viewBoxHeight: number = viewBoxDimensions.height;
 
-    let mainSvg: SVGSVGElement = this.element.createSvg('svg', { attr: { width:200, height:200, viewBox:'0 0 '+w+' '+h }, cls: "rubik-cube-pll" });
+    let imageWidth: number = viewBoxWidth;
+    let imageHeight: number = viewBoxHeight;
+    if (ollData.isDefaultCubeSize()) {
+      imageWidth = 200;
+      imageHeight = 200;
+    }
+
+
+    let mainSvg: SVGSVGElement = this.element.createSvg('svg', { attr: { width:imageWidth, height:imageHeight, viewBox:'0 0 '+viewBoxWidth+' '+viewBoxHeight }, cls: "rubik-cube-pll" });
     let defs: SVGDefsElement = mainSvg.createSvg('defs');
     let marker: SVGMarkerElement = defs.createSvg('marker', { attr: {id:'arrowhead' + ollData.arrowColor, markerWidth:'10', markerHeight:'7', refX:'9', refY:'3.5', orient:'auto'}});
     marker.createSvg('polygon', { attr: {points:'0 0, 10 3.5, 0 7' , fill:ollData.arrowColor}});
 
     /* Black base rect */
-    //mainSvg.createSvg('rect', { attr: { fill:'#0' }, cls: "rubik-cube-pll-rect" }); 
+    mainSvg.createSvg('rect', { attr: { fill:'#0' }, cls: "rubik-cube-pll-rect" });
     
     /*
      * Edge rows/columns
@@ -67,7 +75,7 @@ export class MarkdownPostProcessorOLL extends MarkdownPostProcessorBase {
     }
     /* lower row border */
     for (let x:number = 0; x < cubeWidth-2; x++) {
-      mainSvg.createSvg('rect', { attr: { x:50+x*100, y:h-50, width:'100', height:'50', fill:cells.getColor(cells.length()-1, x+1) }, cls: "rubik-cube-rect" });
+      mainSvg.createSvg('rect', { attr: { x:50+x*100, y:viewBoxHeight-50, width:'100', height:'50', fill:cells.getColor(cells.length()-1, x+1) }, cls: "rubik-cube-rect" });
     }
     /* left column border */
     for (let y:number = 0; y < cubeHeight-2; y++) {
@@ -75,13 +83,12 @@ export class MarkdownPostProcessorOLL extends MarkdownPostProcessorBase {
     }
     /* right column border */
     for (let y:number = 0; y < cubeHeight-2; y++) {
-      mainSvg.createSvg('rect', { attr: { x:w-50, y:50+y*100, width:50, height:100, fill:cells.getColor(y+1, cells.length()-1) }, cls: "rubik-cube-rect" });
+      mainSvg.createSvg('rect', { attr: { x:viewBoxWidth-50, y:50+y*100, width:50, height:100, fill:cells.getColor(y+1, cells.length()-1) }, cls: "rubik-cube-rect" });
     }
 
     /*
      * Center rows/columns
      */
-    /* Vertical lines */
     for (let y:number = 0; y < cubeHeight-2; y++) {
       for (let x:number = 0; x < cubeWidth-2; x++) {
         mainSvg.createSvg('rect', { attr: { x:50+x*100, y:50+y*100, width:100, height:100, fill:cells.getColor(y+1, x+1) }, cls: "rubik-cube-pll-line-grid" });
@@ -92,17 +99,17 @@ export class MarkdownPostProcessorOLL extends MarkdownPostProcessorBase {
      * Background grid; static, unresponsive, black rectangular lines
      */
     /* Vertical lines */
-    for (let x:number = 50; x < w; x+=100) {
-      mainSvg.createSvg('line', { attr: { x1:x, x2:x, y1:0, y2:h }, cls: "rubik-cube-pll-line-grid" });
+    for (let x:number = 50; x < viewBoxWidth; x+=100) {
+      mainSvg.createSvg('line', { attr: { x1:x, x2:x, y1:0, y2:viewBoxHeight }, cls: "rubik-cube-pll-line-grid" });
     }
     /* Horizontal lines */ 
-    for (let y:number = 50; y < h; y+=100) {
-      mainSvg.createSvg('line', { attr: { x1:0, x2:w, y1:y, y2:y }, cls: "rubik-cube-pll-line-grid" });
+    for (let y:number = 50; y < viewBoxHeight; y+=100) {
+      mainSvg.createSvg('line', { attr: { x1:0, x2:viewBoxWidth, y1:y, y2:y }, cls: "rubik-cube-pll-line-grid" });
     }
 
     let arrows: ArrowCoordinates[] = ollData.getArrowCoordinates();
     for (let i: number = 0; i < arrows.length; i++) {
-      let arrow: ArrowCoordinates = arrows[i];
+      let arrow: ArrowCoordinates = arrows[i]!;
       let arrStart: Coordinates = arrow.start();
       let arrEnd: Coordinates = arrow.end();
       //console.log("Arrow goes from "+arrowStartCoord+" to "+arrowEndCoord);

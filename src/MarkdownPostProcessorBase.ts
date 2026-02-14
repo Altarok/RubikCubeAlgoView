@@ -13,7 +13,7 @@ export abstract class MarkdownPostProcessorBase extends MarkdownRenderChild {
    * @param {string[]} rows - code block content
    * @param {BaseCodeBlockInterpreter[]} cubeData - container of erronous code block input
    */
-  showWarningForNonsenseCodeBlock(rows: string[], cubeData: BaseCodeBlockInterpreter): void {
+  paintWarningForNonsenseCodeBlock(rows: string[], cubeData: BaseCodeBlockInterpreter): void {
 
     this.element.createEl('div', {text: 'Code block interpretation failed:', cls: 'rubik-cube-warning-text-orange'});
 

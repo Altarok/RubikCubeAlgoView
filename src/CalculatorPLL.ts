@@ -25,7 +25,7 @@ export class PLL extends ArrowCalculations {
 
   interpretCodeBlock(rows:string[]):void {
     for (let r: number = 0; r < rows.length; r++) {
-      let row: string = rows[r]; //console.log('interpret row: ' + row);
+      let row: string = rows[r]!; //console.log('interpret row: ' + row);
              if (row.startsWith('dimension:' )) {  this.handleDimensionsInput(row);
       } else if (row.startsWith('cubeColor:' )) {  this.handleCubeColorInput(row);
       } else if (row.startsWith('arrowColor:')) { super.handleArrowColorInput(row);
@@ -59,16 +59,16 @@ export class PLL extends ArrowCalculations {
     // @ts-ignore checked with regex
     let widthCommaHeight = row.split(' ')[0].trim().replace('dimension:','');
     let widthCommaHeightSplit = widthCommaHeight.split(',');
-    let w:number = +widthCommaHeightSplit[0];
-    let h:number = +widthCommaHeightSplit[1];
+    let w:number = +widthCommaHeightSplit[0]!;
+    let h:number = +widthCommaHeightSplit[1]!;
     if (w<2||h<2){
       return super.errorInThisLine(row, 'too low, expected: "dimension:[2-10],[2-10] // optional comment goes here"');
     } else if (w>10||h>10){
       return super.errorInThisLine(row, 'too high, expected: "dimension:[2-10],[2-10] // optional comment goes here"');
     } 
     //console.log("new dimensions: "+w+","+h);
-    super.cubeWidth  = w;
-    super.cubeHeight = h;
+    this.cubeWidth  = w;
+    this.cubeHeight = h;
   }
 
   /**
