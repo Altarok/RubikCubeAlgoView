@@ -1,5 +1,5 @@
 import RubikCubeAlgos from "./main";
-import {PLL} from "./RCA-PLL-Calculations";
+import {PLL} from "./CalculatorPLL";
 import {ArrowCoordinates} from "./ArrowCoordinates";
 import {Coordinates} from "./Coordinates";
 import {Dimensions} from "./Dimensions";

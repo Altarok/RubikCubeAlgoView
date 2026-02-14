@@ -1,5 +1,5 @@
 import RubikCubeAlgos from "./main";
-import { OLL } from "./RCA-OLL-Calculations";
+import { OLL } from "./CalculatorOLL";
 import {OllFieldInput} from "./OllFieldInput";
 import {ArrowCoordinates} from "./ArrowCoordinates";
 import {Coordinates} from "./Coordinates";

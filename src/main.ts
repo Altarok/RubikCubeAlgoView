@@ -1,6 +1,6 @@
 import {Plugin} from "obsidian";
-import {OLL} from "./RCA-OLL-Calculations";
-import {PLL} from "./RCA-PLL-Calculations";
+import {OLL} from "./CalculatorOLL";
+import {PLL} from "./CalculatorPLL";
 import {MarkdownPostProcessorOLL} from "./MarkdownPostProcessorOLL";
 import {MarkdownPostProcessorPLL} from "./MarkdownPostProcessorPLL";
 import {DEFAULT_SETTINGS, RubikCubeAlgoSettingsTab} from "./RubikCubeAlgoSettings";
