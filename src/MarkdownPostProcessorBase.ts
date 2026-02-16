@@ -1,5 +1,8 @@
 import {MarkdownRenderChild} from "obsidian";
 import {BaseCodeBlockInterpreter} from "./BaseCodeBlockInterpreter";
+import {ArrowCoordinates} from "./ArrowCoordinates";
+import {Coordinates} from "./Coordinates";
+import {ArrowCalculations} from "./ArrowCalculations";
 
 export abstract class MarkdownPostProcessorBase extends MarkdownRenderChild {
   element: HTMLElement;
@@ -13,7 +16,7 @@ export abstract class MarkdownPostProcessorBase extends MarkdownRenderChild {
    * @param {string[]} rows - code block content
    * @param {BaseCodeBlockInterpreter[]} cubeData - container of erronous code block input
    */
-  paintWarningForNonsenseCodeBlock(rows: string[], cubeData: BaseCodeBlockInterpreter): void {
+  displayWarningForNonsenseCodeBlock(rows: string[], cubeData: BaseCodeBlockInterpreter): void {
 
     this.element.createEl('div', {text: 'Code block interpretation failed:', cls: 'rubik-cube-warning-text-orange'});
 
@@ -30,6 +33,27 @@ export abstract class MarkdownPostProcessorBase extends MarkdownRenderChild {
           this.element.createEl('span', {text: ' => ' + cubeData.reasonForFailure});
         }
       }
+    }
+  }
+
+  displayArrows(mainSvg: SVGSVGElement, cubeData: ArrowCalculations) : void {
+    let arrows: ArrowCoordinates[] = cubeData.getArrowCoordinates();
+    for (let i: number = 0; i < arrows.length; i++) {
+      let arrow: ArrowCoordinates = arrows[i]!;
+      let arrStart: Coordinates = arrow.start();
+      let arrEnd: Coordinates = arrow.end();
+      //console.log('Arrow goes from ' + arrowStartCoord + ' to ' + arrowEndCoord);
+      mainSvg.createSvg('line', {
+        attr: {
+          x1: arrStart.x,
+          y1: arrStart.y,
+          x2: arrEnd.x,
+          y2: arrEnd.y,
+          'marker-end': 'url(#arrowhead' + cubeData.arrowColor + ')',
+          stroke: cubeData.arrowColor
+        },
+        cls: 'rubik-cube-arrow'
+      });
     }
   }
 

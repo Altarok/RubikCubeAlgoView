@@ -1,10 +1,7 @@
 import RubikCubeAlgos from "./main";
 import {PLL} from "./CalculatorPLL";
-import {ArrowCoordinates} from "./ArrowCoordinates";
-import {Coordinates} from "./Coordinates";
 import {Dimensions} from "./Dimensions";
 import {MarkdownPostProcessorBase} from "./MarkdownPostProcessorBase";
-
 
 export class MarkdownPostProcessorPLL extends MarkdownPostProcessorBase {
   source: string;
@@ -21,7 +18,7 @@ export class MarkdownPostProcessorPLL extends MarkdownPostProcessorBase {
 
   onload() {
     /*
-     * Register listener which instantly redraws rubik cubes while changing plugin settings.
+     * Register listener which instantly redraws Rubik's Cubes while changing plugin settings.
      */
     this.registerEvent(
       this.plugin.app.workspace.on('rubik:rerender-markdown-code-block-processors',
@@ -37,7 +34,7 @@ export class MarkdownPostProcessorPLL extends MarkdownPostProcessorBase {
     pllData.setup();
 
     if (pllData.codeBlockInterpretationFailed()) {
-      super.paintWarningForNonsenseCodeBlock(rows, pllData);
+      super.displayWarningForNonsenseCodeBlock(rows, pllData);
       return;
     }
 
@@ -72,18 +69,7 @@ export class MarkdownPostProcessorPLL extends MarkdownPostProcessorBase {
       mainSvg.createSvg('line', { attr: { x1:0, x2:viewBoxWidth, y1:y, y2:y }, cls: 'rubik-cube-pll-line-grid' });
     }
 
-    let arrows: ArrowCoordinates[] = pllData.getArrowCoordinates();
-    for (let i: number = 0; i < arrows.length; i++) {
-      let arrow: ArrowCoordinates = arrows[i]!;
-      let arrStart: Coordinates = arrow.start();
-      let arrEnd: Coordinates = arrow.end();
-      //console.log("Arrow goes from "+arrowStartCoord+" to "+arrowEndCoord);
-      mainSvg.createSvg('line', {
-        attr: { x1: arrStart.x, y1: arrStart.y, x2: arrEnd.x, y2: arrEnd.y, 'marker-end': 'url(#arrowhead' + pllData.arrowColor + ')', stroke: pllData.arrowColor },
-        cls: 'rubik-cube-pll-line-arrow'
-      });
-    }
-    //console.log('<< rubikCubePLL');
+    super.displayArrows(mainSvg, pllData);
   }
 
 
