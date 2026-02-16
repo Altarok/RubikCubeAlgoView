@@ -10,11 +10,11 @@ export class OllFieldInput {
 
   addRow(parsedRow: string[]): void {
     // console.log('add row: ', parsedRow);
-    this.parsedRows[this.parsedRows.length] = parsedRow;
+    this.parsedRows.push(parsedRow);
   }
 
-  getColor(xRow: number, yCol: number): string {
-    let colorIndex: string = this.parsedRows[xRow]![yCol]!;
+  getColor(yRow: number, xCol: number): string {
+    let colorIndex: string = this.parsedRows[yRow]![xCol]!;
     return this.getColorHex(colorIndex);
   }
 

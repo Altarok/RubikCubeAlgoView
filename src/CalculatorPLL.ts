@@ -36,7 +36,7 @@ export class PLL extends ArrowCalculations {
   }
 
   setupCubeRectangleCenterCoordinates(): void {
-    this.addCoordinates(new Coordinates(-1,-1)); /* unused first entry to start arrows with 1 instead of 0 */
+    this.addCoordinates(new Coordinates(-1, -1)); /* unused first entry to start arrows with 1 instead of 0 */
     /* reverse loop order to give x coordinates priority */
     for (let h = 0; h < this.cubeHeight; h++) {
       for (let w = 0; w < this.cubeWidth; w++) {
