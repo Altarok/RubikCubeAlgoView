@@ -1,8 +1,8 @@
 import {DEFAULT_SETTINGS, RubikCubeAlgoSettingsTab} from "./RubikCubeAlgoSettings";
 import {ArrowCalculations} from "./ArrowCalculations";
 import {OllFieldInput} from "./OllFieldInput";
-import {Coordinates} from "./Coordinates";
-import {Dimensions} from "./Dimensions";
+import {Coordinates} from "./model/Coordinates";
+import {Dimensions} from "./model/Dimensions";
 
 const DEFAULT = {
   CODE_BLOCK_TEMPLATE:

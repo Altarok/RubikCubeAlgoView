@@ -1,7 +1,9 @@
 import RubikCubeAlgos from "./main";
 import {PLL} from "./CalculatorPLL";
-import {Dimensions} from "./Dimensions";
+import {Dimensions} from "./model/Dimensions";
 import {MarkdownPostProcessorBase} from "./MarkdownPostProcessorBase";
+import {CubeRendererPLL} from "./view/CubeRendererPLL";
+import {CubeStatePLL} from "./model/CubeStatePLL";
 
 export class MarkdownPostProcessorPLL extends MarkdownPostProcessorBase {
   source: string;
@@ -16,7 +18,7 @@ export class MarkdownPostProcessorPLL extends MarkdownPostProcessorBase {
     this.display();
   }
 
-  onload() {
+  onload(): void {
     /*
      * Register listener which instantly redraws Rubik's Cubes while changing plugin settings.
      */
@@ -31,45 +33,38 @@ export class MarkdownPostProcessorPLL extends MarkdownPostProcessorBase {
     this.element.empty();
     const rows: string[] = this.source.split('\n').filter((row) => row.length > 0);
     let pllData: PLL = new PLL(rows, this.plugin.settings);
-    pllData.setup();
 
-    if (pllData.codeBlockInterpretationFailed()) {
-      super.displayWarningForNonsenseCodeBlock(rows, pllData);
-      return;
-    }
+    let cubeState: CubeStatePLL = pllData.setupPll();
 
-    let viewBoxDimensions: Dimensions = pllData.getDrawDimensions();
-    let viewBoxWidth: number = viewBoxDimensions.width;
-    let viewBoxHeight: number = viewBoxDimensions.height;
+    new CubeRendererPLL(cubeState).display(this.element);
 
-    let imageWidth: number = viewBoxWidth;
-    let imageHeight: number = viewBoxHeight;
-    if (pllData.isDefaultCubeSize()) {
-      imageWidth = 200;
-      imageHeight = 200;
-    }
+    // if (pllData.codeBlockInterpretationFailed()) {
+    //   super.displayWarningForNonsenseCodeBlock(rows, pllData);
+    //   return;
+    // }
 
-    let mainSvg: SVGSVGElement = this.element.createSvg('svg', { attr: { width:imageWidth, height:imageHeight, viewBox:'0 0 '+viewBoxWidth+' '+viewBoxHeight }, cls: 'rubik-cube-pll' });
-    let defs: SVGDefsElement = mainSvg.createSvg('defs');
-    let marker: SVGMarkerElement = defs.createSvg('marker', { attr: {id:'arrowhead'+pllData.arrowColor, markerWidth:'10', markerHeight:'7', refX:'9', refY:'3.5', orient:'auto'}});
-    marker.createSvg('polygon', { attr: {points:'0 0, 10 3.5, 0 7' , fill:pllData.arrowColor}});
+    // let viewBoxDimensions: Dimensions = pllData.getDrawDimensions();
+    // let viewBoxWidth: number = viewBoxDimensions.width;
+    // let viewBoxHeight: number = viewBoxDimensions.height;
+    //
+    // let imageWidth: number = viewBoxWidth;
+    // let imageHeight: number = viewBoxHeight;
+    // if (pllData.isDefaultCubeSize()) {
+    //   imageWidth = 200;
+    //   imageHeight = 200;
+    // }
 
-    /* Yellow base rect */
-    mainSvg.createSvg('rect', { attr: { fill:pllData.cubeColor }, cls: 'rubik-cube-pll-rect' });
+    // let mainSvg: SVGSVGElement = this.element.createSvg('svg', { attr: { width:imageWidth, height:imageHeight, viewBox:'0 0 '+viewBoxWidth+' '+viewBoxHeight }, cls: 'rubik-cube-pll' });
+    // let defs: SVGDefsElement = mainSvg.createSvg('defs');
+    // let marker: SVGMarkerElement = defs.createSvg('marker', { attr: {id:'arrowhead'+pllData.arrowColor, markerWidth:'10', markerHeight:'7', refX:'9', refY:'3.5', orient:'auto'}});
+    // marker.createSvg('polygon', { attr: {points:'0 0, 10 3.5, 0 7' , fill:pllData.arrowColor}});
+    //
+    // /* Yellow base rect */
+    // mainSvg.createSvg('rect', { attr: { fill:pllData.cubeColor }, cls: 'rubik-cube-pll-rect' });
 
-    /*
-     * Background grid; static, unresponsive, black, rectangular lines
-     */
-    /* Vertical lines */
-    for (let x:number = 100; x < viewBoxWidth; x+=100) {
-      mainSvg.createSvg('line', { attr: { x1:x, x2:x, y1:0, y2:viewBoxHeight }, cls: 'rubik-cube-pll-line-grid' });
-    }
-    /* Horizontal lines */
-    for (let y:number = 100; y < viewBoxHeight; y+=100) {
-      mainSvg.createSvg('line', { attr: { x1:0, x2:viewBoxWidth, y1:y, y2:y }, cls: 'rubik-cube-pll-line-grid' });
-    }
 
-    super.displayArrows(mainSvg, pllData);
+
+    // super.displayArrows(mainSvg, pllData);
   }
 
 

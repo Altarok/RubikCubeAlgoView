@@ -1,7 +1,7 @@
 import {MarkdownRenderChild} from "obsidian";
 import {BaseCodeBlockInterpreter} from "./BaseCodeBlockInterpreter";
-import {ArrowCoordinates} from "./ArrowCoordinates";
-import {Coordinates} from "./Coordinates";
+import {ArrowCoordinates} from "./model/ArrowCoordinates";
+import {Coordinates} from "./model/Coordinates";
 import {ArrowCalculations} from "./ArrowCalculations";
 
 export abstract class MarkdownPostProcessorBase extends MarkdownRenderChild {

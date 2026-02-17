@@ -1,7 +1,7 @@
 import {DEFAULT_SETTINGS, RubikCubeAlgoSettingsTab} from "./RubikCubeAlgoSettings";
 import {BaseCodeBlockInterpreter} from "./BaseCodeBlockInterpreter";
-import {ArrowCoordinates} from "./ArrowCoordinates";
-import {Coordinates} from "./Coordinates";
+import {ArrowCoordinates} from "./model/ArrowCoordinates";
+import {Coordinates} from "./model/Coordinates";
 
 export abstract class ArrowCalculations extends BaseCodeBlockInterpreter {
   rectangleCoordinates: Coordinates[];
@@ -117,9 +117,6 @@ export abstract class ArrowCalculations extends BaseCodeBlockInterpreter {
 
       if (arrowStart === arrowEnd) {
         // console.log("Skip arrow pointing to itself: " + singleArrowCoordsFrom);
-        /**
-         * TODO this one does not work
-         */
         super.errorInThisLine(this.arrowsLine, "arrow '" + singleArrowCoords + "' is pointing to its starting point");
         continue;
       }

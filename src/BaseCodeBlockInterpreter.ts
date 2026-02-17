@@ -1,4 +1,4 @@
-import {Dimensions} from "./Dimensions";
+import {Dimensions} from "./model/Dimensions";
 
 const DEFAULT = {
   WIDTH: 3, /* default rubik cube width  */
@@ -35,6 +35,8 @@ export abstract class BaseCodeBlockInterpreter {
     this.interpretCodeBlock(this.codeBlockContent);
     this.setupCubeRectangleCenterCoordinates();
     this.setupArrowCoordinates();
+
+
   }
 
 
