@@ -1,3 +1,22 @@
+.rubik-cube-div-main-container {
+  display: flex;
+}
+.rubik-cube-div-left-column {
+  display: flex;
+  flex-direction: column;
+}
+.rubik-cube-div-right-column {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 20px;
+}
+.rubik-cube-div-buttons {
+  display: flex;
+  justify-content: center;
+}
+.rubik-cube-main-container {
+  display: flex;
+}
 .rubik-cube-pll {
     display: flex;
     border: 2px solid #666;
@@ -21,13 +40,32 @@
     background-color: #ff6400;
     color: #fff;
 }
+.rubik-cube-button {
+/*  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+  transition: background-color 0.2s;*/
+  width: 24px;
+  height: 24px;
+  stroke: white;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  /*viewBox: 0 0 24 24;*/
+}
+.div /* debug-div-red-border */ {
+  outline: 1px solid red !important;
+}
 .button-container {
   display: flex;
   gap: 10px; /* Space between buttons */
   justify-content: center; /* Centers buttons horizontally */
   padding: 20px;
 }
-button {
+.button {
   padding: 10px 20px;
   font-size: 16px;
   cursor: pointer;
@@ -36,6 +74,6 @@ button {
   background-color: #f9f9f9;
   transition: background-color 0.2s;
 }
-button:hover {
+.button:hover {
   background-color: #e0e0e0;
 }

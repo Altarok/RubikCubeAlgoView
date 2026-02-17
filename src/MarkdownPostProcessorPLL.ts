@@ -29,7 +29,7 @@ export class MarkdownPostProcessorPLL extends MarkdownRenderChild {
     );
   }
 
-  display() {
+  display(): void {
     this.element.empty();
     const rows: string[] = this.source.split('\n').filter((row) => row.length > 0);
 
@@ -37,7 +37,6 @@ export class MarkdownPostProcessorPLL extends MarkdownRenderChild {
     let cubeState: CubeStatePLL = interpreter.setupPll();
 
     new CubeRendererPLL(cubeState).display(this.element);
-
   }
 
 }
