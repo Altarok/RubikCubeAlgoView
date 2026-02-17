@@ -3,6 +3,9 @@ import {ArrowCalculations} from "./ArrowCalculations";
 import {OllFieldInput} from "./OllFieldInput";
 import {Coordinates} from "./model/Coordinates";
 import {Dimensions} from "./model/Dimensions";
+import {CubeStatePLL} from "./model/CubeStatePLL";
+import {InvalidInputContainer} from "./model/InvalidInputContainer";
+import {CubeStateOLL} from "./model/CubeStateOLL";
 
 const DEFAULT = {
   CODE_BLOCK_TEMPLATE:
@@ -33,6 +36,26 @@ export class OLL extends ArrowCalculations {
     } else {
       this.cubeColor = DEFAULT_SETTINGS.CUBE_COLOR;
     }
+  }
+
+  setupOll(): CubeStateOLL {
+    super.setup();
+
+    let cubeState: CubeStateOLL = new CubeStateOLL(this.codeBlockContent);
+
+    if (this.codeBlockInterpretationSuccessful) {
+      cubeState.cubeWidth = this.cubeWidth;
+      cubeState.cubeHeight = this.cubeHeight;
+      cubeState.backgroundColor = this.cubeColor;
+      cubeState.arrowColor = this.arrowColor;
+      cubeState.arrowCoordinates = this.arrowCoordinates;
+      cubeState.ollFieldInput = this.ollFieldInput;
+      cubeState.viewBoxDimensions = new Dimensions(this.cubeWidth * 100 + 100, this.cubeHeight * 100 + 100);
+    } else {
+      cubeState.invalidInputContainer = new InvalidInputContainer(this.lastNonInterpretableLine, this.reasonForFailure);
+    }
+
+    return cubeState;
   }
 
   getOllFieldInput(): OllFieldInput {

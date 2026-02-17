@@ -1,6 +1,6 @@
 export class Dimensions {
-  width: number;
-  height: number;
+  width!: number;
+  height!: number;
 
   /**
    * @param {number} w - width

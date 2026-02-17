@@ -9,7 +9,6 @@ export abstract class CubeRenderer {
 
   constructor(cubeState: CubeState) {
     this.cubeState = cubeState;
-
   }
 
   /**
@@ -21,7 +20,7 @@ export abstract class CubeRenderer {
       this.displayWarningForInvalidInput(element);
     } else {
 
-      let viewBoxDimensions: Dimensions = this.cubeState.getDrawDimensions();
+      let viewBoxDimensions: Dimensions = this.cubeState.viewBoxDimensions;
       let viewBoxWidth: number = viewBoxDimensions.width;
       let viewBoxHeight: number = viewBoxDimensions.height;
 
@@ -34,6 +33,8 @@ export abstract class CubeRenderer {
 
   /**
    * @param {HTMLElement} element - HTML element to draw on
+   * @param {number} viewBoxWidth - width of image part to zoom in to
+   * @param {number} viewBoxHeight - height of image part to zoom in to
    */
   displayCubeBackground(element: HTMLElement, viewBoxWidth: number, viewBoxHeight: number): SVGSVGElement {
     let imageWidth: number = viewBoxWidth;

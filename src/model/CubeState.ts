@@ -4,7 +4,7 @@ import { ArrowCoordinates } from "model/ArrowCoordinates";
 
 export abstract class CubeState {
   /** Code block content */
-  codeBlockContent: string[];
+  codeBlockContent!: string[];
   /** Container for invalid code block content */
   invalidInputContainer?: InvalidInputContainer;
   /** cube width (rectangles, not pixels) */
@@ -16,23 +16,21 @@ export abstract class CubeState {
   /** the background's color */
   backgroundColor: string;
   arrowCoordinates: ArrowCoordinates[];
+  viewBoxDimensions: Dimensions;
 
   protected constructor(codeBlockContent: string[]) {
     this.codeBlockContent = codeBlockContent;
   }
 
-  abstract getDrawDimensions(): Dimensions;
-
+  /**
+   * @return true if cube size equals 3 by 3
+   */
   isDefaultCubeSize(): boolean {
     return this.cubeWidth === this.cubeHeight && this.cubeWidth === 3;
   }
 
   codeBlockInterpretationFailed(): boolean {
     return this.invalidInputContainer != undefined;
-  }
-
-  getInvalidInputContainer(): InvalidInputContainer | undefined {
-    return this.invalidInputContainer;
   }
 
 }

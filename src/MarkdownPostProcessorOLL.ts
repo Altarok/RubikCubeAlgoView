@@ -3,6 +3,10 @@ import { OLL } from "./CalculatorOLL";
 import {OllFieldInput} from "./OllFieldInput";
 import {Dimensions} from "./model/Dimensions";
 import {MarkdownPostProcessorBase} from "./MarkdownPostProcessorBase";
+import {CubeStatePLL} from "./model/CubeStatePLL";
+import {CubeRendererPLL} from "./view/CubeRendererPLL";
+import {CubeStateOLL} from "./model/CubeStateOLL";
+import {CubeRendererOLL} from "./view/CubeRendererOLL";
 
 export class MarkdownPostProcessorOLL extends MarkdownPostProcessorBase {
   source: string;
@@ -32,13 +36,17 @@ export class MarkdownPostProcessorOLL extends MarkdownPostProcessorBase {
     this.element.empty();
     const rows: string[] = this.source.split('\n').filter((row) => row.length > 0);
     let ollData: OLL = new OLL(rows, this.plugin.settings);
-    ollData.setup();
+
+    let cubeState: CubeStateOLL = ollData.setupOll();
+
+    new CubeRendererOLL(cubeState).display(this.element);
+
     // let cells: OllFieldInput = ollData.getOllFieldInput();
 
-    if (ollData.codeBlockInterpretationFailed()){
-      super.displayWarningForNonsenseCodeBlock(rows, ollData);
-      return;
-    }
+    // if (ollData.codeBlockInterpretationFailed()){
+    //   super.displayWarningForNonsenseCodeBlock(rows, ollData);
+    //   return;
+    // }
 
     // let viewBoxDimensions: Dimensions = ollData.getDrawDimensions();
     // let viewBoxWidth: number = viewBoxDimensions.width;
@@ -59,8 +67,6 @@ export class MarkdownPostProcessorOLL extends MarkdownPostProcessorBase {
     //
     // /* Black base rect */
     // mainSvg.createSvg('rect', { attr: { fill:'#000' }, cls: "rubik-cube-pll-rect" });
-    
-
 
     // super.displayArrows(mainSvg, ollData);
   }

@@ -37,6 +37,7 @@ export class PLL extends ArrowCalculations {
       cubeState.backgroundColor = this.cubeColor;
       cubeState.arrowColor = this.arrowColor;
       cubeState.arrowCoordinates = this.arrowCoordinates;
+      cubeState.viewBoxDimensions = new Dimensions(this.cubeWidth * 100, this.cubeHeight * 100);
     } else {
       cubeState.invalidInputContainer = new InvalidInputContainer(this.lastNonInterpretableLine, this.reasonForFailure);
     }
