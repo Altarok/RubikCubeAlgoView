@@ -1,10 +1,9 @@
 import {DEFAULT_SETTINGS, RubikCubeAlgoSettingsTab} from "./RubikCubeAlgoSettings";
-import {ArrowCalculations} from "./ArrowCalculations";
 import {Coordinates} from "./model/Coordinates";
 import {Dimensions} from "./model/Dimensions";
 import {CubeStatePLL} from "./model/CubeStatePLL";
-import {ArrowCoordinates} from "./model/ArrowCoordinates";
 import {InvalidInputContainer} from "./model/InvalidInputContainer";
+import {CodeBlockInterpreterBase} from "./CodeBlockInterpreterBase";
 
 const CODE_BLOCK_TEMPLATE =
   '\n```rubikCubePLL\n' +
@@ -14,7 +13,7 @@ const CODE_BLOCK_TEMPLATE =
   'arrows:1.1-1.3,7+9 // normal arrow in top row, double-sided arrow in lower row\n' +
   '```\n';
 
-export class PLL extends ArrowCalculations {
+export class CodeBlockInterpreterPLL extends CodeBlockInterpreterBase {
   cubeColor: string;
 
   constructor(rows: string[], settings: RubikCubeAlgoSettingsTab) {
@@ -72,10 +71,6 @@ export class PLL extends ArrowCalculations {
     }
   }
 
-  getDrawDimensions(): Dimensions {
-    return new Dimensions(this.cubeWidth * 100, this.cubeHeight * 100);
-  }
-
   /**
    * @param row string starting with 'dimension:'
    */
@@ -111,13 +106,8 @@ export class PLL extends ArrowCalculations {
     this.cubeColor = '#' + newCubClr;
   }
 
-  toString(): string {
-    return "pll[cubeClr'" + this.cubeColor + "',arrowColor'" + this.arrowColor + "',arrows'" + this.arrows + "']"
-  }
-
   static get3by3CodeBlockTemplate(): string {
     return CODE_BLOCK_TEMPLATE;
   }
-
 
 }

@@ -1,7 +1,6 @@
-export class OllFieldInput {
+export class OllFieldColors {
   ollFieldInputWidth: number;
   parsedRows: string[][];
-
 
   constructor(ollFieldInputWidth: number) {
     this.ollFieldInputWidth = ollFieldInputWidth;
@@ -11,11 +10,6 @@ export class OllFieldInput {
   addRow(parsedRow: string[]): void {
     // console.log('add row: ', parsedRow);
     this.parsedRows.push(parsedRow);
-  }
-
-  getColor(yRow: number, xCol: number): string {
-    let colorIndex: string = this.parsedRows[yRow]![xCol]!;
-    return this.getColorHex(colorIndex);
   }
 
   length(): number {
@@ -34,9 +28,14 @@ export class OllFieldInput {
     return s;
   }
 
+  getColor(yRow: number, xCol: number): string {
+    let colorIndex: string = this.parsedRows[yRow]![xCol]!;
+    return this.getColorHex(colorIndex);
+  }
+
   private getColorHex(colorIndex: string): string {
     let c: string;
-    if (!colorIndex) {
+    if (colorIndex === undefined) {
       c = '#000';
     } else {
       switch (colorIndex) {
@@ -65,7 +64,7 @@ export class OllFieldInput {
         default:  c = '#000'; break;
       }
     }
-    // console.log("getColor() '"+colorIndex+"' => '"+c+"'")
+    // console.log("getColor() '" + colorIndex + "' => '" + c + "'")
     return c;
   }
 

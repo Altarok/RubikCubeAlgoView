@@ -1,14 +1,10 @@
 import RubikCubeAlgos from "./main";
-import { OLL } from "./CalculatorOLL";
-import {OllFieldInput} from "./OllFieldInput";
-import {Dimensions} from "./model/Dimensions";
-import {MarkdownPostProcessorBase} from "./MarkdownPostProcessorBase";
-import {CubeStatePLL} from "./model/CubeStatePLL";
-import {CubeRendererPLL} from "./view/CubeRendererPLL";
+import { CodeBlockInterpreterOLL } from "./CodeBlockInterpreterOLL";
 import {CubeStateOLL} from "./model/CubeStateOLL";
 import {CubeRendererOLL} from "./view/CubeRendererOLL";
+import {MarkdownRenderChild} from "obsidian";
 
-export class MarkdownPostProcessorOLL extends MarkdownPostProcessorBase {
+export class MarkdownPostProcessorOLL extends MarkdownRenderChild {
   source: string;
   plugin: RubikCubeAlgos;
   element: HTMLElement;
@@ -25,7 +21,8 @@ export class MarkdownPostProcessorOLL extends MarkdownPostProcessorBase {
    /*
     * Register listener which instantly redraws Rubik's Cubes while changing plugin settings.
     */
-   this.registerEvent(
+   // @ts-ignore
+    this.registerEvent(
      this.plugin.app.workspace.on("rubik:rerender-markdown-code-block-processors",
        this.display.bind(this)
      )
@@ -35,9 +32,9 @@ export class MarkdownPostProcessorOLL extends MarkdownPostProcessorBase {
   display() {
     this.element.empty();
     const rows: string[] = this.source.split('\n').filter((row) => row.length > 0);
-    let ollData: OLL = new OLL(rows, this.plugin.settings);
 
-    let cubeState: CubeStateOLL = ollData.setupOll();
+    let interpreter: CodeBlockInterpreterOLL = new CodeBlockInterpreterOLL(rows, this.plugin.settings);
+    let cubeState: CubeStateOLL = interpreter.setupOll();
 
     new CubeRendererOLL(cubeState).display(this.element);
 

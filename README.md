@@ -1,6 +1,6 @@
-# Visualization of Rubik Cube algorithms: OLL & PLL
-Obsidian plugin you can use to visualize Rubik Cubes algorithms.
-The plugin interprets code blocks and visualizes Rubik Cubes and some errors, defined by you.
+# Visualization of Rubik's Cube algorithms: OLL & PLL
+Obsidian plugin you can use to visualize Rubik's Cubes algorithms.
+The plugin interprets code blocks and visualizes Rubik's Cubes and some errors, defined by you.
 
 Ever wondered how an algorithm would look like after turning a cube?
 Well with this you will be able to once finished.

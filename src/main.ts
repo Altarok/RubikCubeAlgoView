@@ -1,6 +1,6 @@
 import {Plugin} from "obsidian";
-import {OLL} from "./CalculatorOLL";
-import {PLL} from "./CalculatorPLL";
+import {CodeBlockInterpreterOLL} from "./CodeBlockInterpreterOLL";
+import {CodeBlockInterpreterPLL} from "./CodeBlockInterpreterPLL";
 import {MarkdownPostProcessorOLL} from "./MarkdownPostProcessorOLL";
 import {MarkdownPostProcessorPLL} from "./MarkdownPostProcessorPLL";
 import {DEFAULT_SETTINGS, RubikCubeAlgoSettingsTab} from "./RubikCubeAlgoSettings";
@@ -26,17 +26,17 @@ export default class RubikCubeAlgos extends Plugin {
 
     this.addCommand({
       id: "RubikCubeAlgo-add-code-block-template-3x3-OLL",
-      name: "Add code block template for 3x3 cube; OLL.",
+      name: "Add code block template for 3x3 cube: OLL.",
       editorCallback: (editor, view) => {
-        editor.replaceSelection(OLL.get3by3CodeBlockTemplate());
+        editor.replaceSelection(CodeBlockInterpreterOLL.get3by3CodeBlockTemplate());
       }
     });
 
     this.addCommand({
       id: "RubikCubeAlgo-add-code-block-template-3x3-PLL",
-      name: "Add code block template for 3x3 cube; PLL.",
+      name: "Add code block template for 3x3 cube: PLL.",
       editorCallback: (editor, view) => {
-        editor.replaceSelection(PLL.get3by3CodeBlockTemplate());
+        editor.replaceSelection(CodeBlockInterpreterPLL.get3by3CodeBlockTemplate());
       }
     });
 
@@ -52,6 +52,7 @@ export default class RubikCubeAlgos extends Plugin {
   }
 
   async loadSettings() {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
   }
 

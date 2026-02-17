@@ -1,11 +1,10 @@
 import {DEFAULT_SETTINGS, RubikCubeAlgoSettingsTab} from "./RubikCubeAlgoSettings";
-import {ArrowCalculations} from "./ArrowCalculations";
-import {OllFieldInput} from "./OllFieldInput";
+import {OllFieldColors} from "./OllFieldColors";
 import {Coordinates} from "./model/Coordinates";
 import {Dimensions} from "./model/Dimensions";
-import {CubeStatePLL} from "./model/CubeStatePLL";
 import {InvalidInputContainer} from "./model/InvalidInputContainer";
 import {CubeStateOLL} from "./model/CubeStateOLL";
+import {CodeBlockInterpreterBase} from "./CodeBlockInterpreterBase";
 
 const DEFAULT = {
   CODE_BLOCK_TEMPLATE:
@@ -15,7 +14,8 @@ const DEFAULT = {
     '10101\n' +
     '01101\n' +
     '.000.\n' +
-    '```\n\n' +
+    '```\n' +
+    '\n' +
     '```rubikCubeOLL\n' +
     '.rrg.\n' +
     'bwwrw\n' +
@@ -25,9 +25,9 @@ const DEFAULT = {
     '```\n'
 } as const;
 
-export class OLL extends ArrowCalculations {
+export class CodeBlockInterpreterOLL extends CodeBlockInterpreterBase {
   cubeColor: string;
-  ollFieldInput: OllFieldInput;
+  ollFieldInput: OllFieldColors;
 
   constructor(rows: string[], settings: RubikCubeAlgoSettingsTab) {
     super(rows, settings);
@@ -46,10 +46,10 @@ export class OLL extends ArrowCalculations {
     if (this.codeBlockInterpretationSuccessful) {
       cubeState.cubeWidth = this.cubeWidth;
       cubeState.cubeHeight = this.cubeHeight;
-      cubeState.backgroundColor = this.cubeColor;
+      cubeState.backgroundColor = '#000';
       cubeState.arrowColor = this.arrowColor;
       cubeState.arrowCoordinates = this.arrowCoordinates;
-      cubeState.ollFieldInput = this.ollFieldInput;
+      cubeState.ollFieldColors = this.ollFieldInput;
       cubeState.viewBoxDimensions = new Dimensions(this.cubeWidth * 100 + 100, this.cubeHeight * 100 + 100);
     } else {
       cubeState.invalidInputContainer = new InvalidInputContainer(this.lastNonInterpretableLine, this.reasonForFailure);
@@ -58,9 +58,6 @@ export class OLL extends ArrowCalculations {
     return cubeState;
   }
 
-  getOllFieldInput(): OllFieldInput {
-    return this.ollFieldInput;
-  }
 
   private removeNonCubeFieldInput (rows:string[]): string[] {
     let copyOfRows:string[] = new Array<string>();
@@ -82,14 +79,10 @@ export class OLL extends ArrowCalculations {
       return super.errorInThisLine(rows[0]!,"First and last line should start and end on a dot ('.')!");
     }
 
-    // console.log('rows: ' + rows);
-
     let rawOllInput: string[] = this.removeNonCubeFieldInput(rows);
 
-    // console.log('rawOllInput: ' + rawOllInput);
-
     let expectedOllFieldInputWidth: number = rawOllInput[0]!.length;
-    this.ollFieldInput = new OllFieldInput(expectedOllFieldInputWidth);
+    this.ollFieldInput = new OllFieldColors(expectedOllFieldInputWidth);
 
     this.cubeWidth = rawOllInput[0]!.length - 2;
     this.cubeHeight = rawOllInput.length - 2;
@@ -113,33 +106,20 @@ export class OLL extends ArrowCalculations {
       }
       this.ollFieldInput.addRow(parsedRow);
     }
-    // this.logCellsTable();
   }
-
-  // private logCellsTable() {
-  //   let msg:string = 'logCellsTable:\n' + this.ollFieldInput.toString();
-  //   console.log(msg);
-  // }
 
   setupCubeRectangleCenterCoordinates(): void {
     this.addCoordinates(new Coordinates(-1,-1)); /* unused first entry to start arrows with 1 instead of 0 */
     /* reverse loop order to give x coordinates more priority */
-    for (let h = 0; h < this.cubeHeight; h++) {
-      for (let w = 0; w < this.cubeWidth; w++) {
+    for (let h: number = 0; h < this.cubeHeight; h++) {
+      for (let w: number = 0; w < this.cubeWidth; w++) {
         this.addCoordinates(new Coordinates(w * 100 + 100, h*100 + 100));
       }
     }
-  }
-
-  getDrawDimensions(): Dimensions {
-    return new Dimensions(this.cubeWidth * 100 + 100, this.cubeHeight * 100 + 100);
   }
 
   static get3by3CodeBlockTemplate(): string {
     return DEFAULT.CODE_BLOCK_TEMPLATE;
   }
 
-  toString(): string {
-    return "pll[cubeClr'"+this.cubeColor+"',arrowColor'"+this.arrowColor+"',arrows'"+this.arrows+"']"
-  }
 }

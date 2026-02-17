@@ -1,8 +1,8 @@
 import {CubeState} from "./CubeState";
-import {OllFieldInput} from "../OllFieldInput";
+import {OllFieldColors} from "../OllFieldColors";
 
 export class CubeStateOLL extends CubeState {
-  ollFieldInput: OllFieldInput;
+  ollFieldColors: OllFieldColors;
 
   constructor(codeBlockContent: string[]) {
     super(codeBlockContent);
