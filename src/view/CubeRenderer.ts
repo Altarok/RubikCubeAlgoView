@@ -146,7 +146,7 @@ export abstract class CubeRenderer {
   }
 
   /**
-   * @param {number} degreeChange - +90 or -90
+   * @param {number} degreeChange - Usually +90 or -90, but everything works
    */
   rotateCube(degreeChange: number): void {
     // Change current cube rotation
@@ -161,14 +161,14 @@ export abstract class CubeRenderer {
     let buttonRight: HTMLButtonElement = buttonDiv.createEl('button', {'title': 'Rotate right 90 degrees'});
 
     buttonLeft.addEventListener('click', () => {
-      this.rotateCube(+90);
+      this.rotateCube(+90); // clock-wise quarter rotation
     });
 
     buttonRight.addEventListener('click', () => {
-      this.rotateCube(-90);
+      this.rotateCube(-90); // anti-clock-wise quarter rotation
     });
 
-    let turnLeftSvg: SVGSVGElement = buttonLeft.createSvg('svg', { attr: {'stroke-width': 1}, cls: 'rubik-cube-button'});
+    let turnLeftSvg: SVGSVGElement = buttonLeft.createSvg('svg', {attr: {'stroke-width': 1}, cls: 'rubik-cube-button'});
     turnLeftSvg.createSvg('rect', {attr: {x: 10, y: 2, width: 12, height: 12, rx: 2, ry: 2}});
     turnLeftSvg.createSvg('line', {attr: {x1: 14, y1:  2, x2: 14, y2: 14}});
     turnLeftSvg.createSvg('line', {attr: {x1: 18, y1:  2, x2: 18, y2: 14}});
