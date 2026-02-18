@@ -3,15 +3,13 @@ Obsidian plugin you can use to visualize Rubik's Cubes algorithms.
 The plugin interprets code blocks and visualizes Rubik's Cubes and some errors, defined by you.
 
 Ever wondered how an algorithm would look like after turning a cube?
-Well with this you will be able to once finished.
+Well with this you will be able to.
 
-Right now, it is able to show changs done by PLL and OLL algorithms only. F2L to come.
+Right now, it is able to show changes done by PLL and OLL algorithms. F2L to come.
 
-<img width="381" height="356" alt="image" src="https://github.com/user-attachments/assets/768f0602-750f-4a62-93f2-3b44b513e6ac" />
-<img width="260" height="270" alt="image" src="https://github.com/user-attachments/assets/d3499efc-5142-4b95-9b18-317fa641d939" />
+<img width="550" height="639" alt="image" src="https://github.com/user-attachments/assets/b086de19-16d7-456b-a753-79d7dc5c3d40" />
 
-
-The left image is created by writing the following codeblock (named 'rubikCubePLL'):
+The image's lower cube is created by writing the following codeblock (named 'rubikCubePLL'):
 ```
 dimension:3,3
 arrows:4+8,3+9
