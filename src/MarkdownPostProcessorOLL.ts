@@ -36,7 +36,23 @@ export class MarkdownPostProcessorOLL extends MarkdownRenderChild {
     let interpreter: CodeBlockInterpreterOLL = new CodeBlockInterpreterOLL(rows, this.plugin.settings);
     let cubeState: CubeStateOLL = interpreter.setupOll();
 
-    new CubeRendererOLL(cubeState).display(this.element);
+    let cubeRenderer = new CubeRendererOLL(cubeState);
+    cubeRenderer.display(this.element);
+
+    if (!cubeState.codeBlockInterpretationFailed()) {
+      this.addButtonFunctions(cubeRenderer, cubeState);
+    }
+
   }
 
+  private addButtonFunctions(cubeRenderer: CubeRendererOLL, cubeState: CubeStateOLL) {
+
+    cubeRenderer.buttonLeft.addEventListener('click', () => {
+      cubeRenderer.rotateLeft();
+    });
+
+    cubeRenderer.buttonRight.addEventListener('click', () => {
+      cubeRenderer.rotateRight();
+    });
+  }
 }

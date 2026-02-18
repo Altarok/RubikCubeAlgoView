@@ -10,6 +10,8 @@ export abstract class CubeRenderer {
   cubeRotation: number;
   /** Pointer to cube SVG image */
   cubeDiv: HTMLDivElement;
+  /** Pointer to algorithms container  */
+  algorithmsDiv: HTMLDivElement
 
   buttonLeft: HTMLButtonElement;
   buttonCopy: HTMLButtonElement;
@@ -46,11 +48,11 @@ export abstract class CubeRenderer {
 
     this.cubeDiv = leftSide.createEl('div', {attr: {id: 'cubeDiv'}, cls: 'rotatable'});
     let buttonDiv: HTMLDivElement = leftSide.createEl('div', {attr: {id: 'buttonDiv'}, cls: 'button-container'});
-    let algorithmsDiv: HTMLDivElement = textSide.createEl('div', {attr: {id: 'algorithmsDiv'}});
+    this.algorithmsDiv = textSide.createEl('div', {attr: {id: 'algorithmsDiv'}});
 
     this.displayCube(this.cubeDiv);
     this.displayButtons(buttonDiv);
-    this.displayAlgorithms(algorithmsDiv);
+    this.displayAlgorithms(this.algorithmsDiv);
   }
 
   displayCube(element: HTMLDivElement): void {
@@ -154,9 +156,23 @@ export abstract class CubeRenderer {
   }
 
   /**
+   * Clock-wise quarter rotation
+   */
+  rotateLeft(): void {
+    this.rotateCube(+90);
+  }
+
+  /**
+   * Anti-clock-wise quarter rotation
+   */
+  rotateRight(): void {
+    this.rotateCube(-90);
+  }
+
+  /**
    * @param {number} degreeChange - Usually +90 or -90, but everything works
    */
-  rotateCube(degreeChange: number): void {
+  private rotateCube(degreeChange: number): void {
     // Change current cube rotation
     this.cubeRotation += degreeChange;
     this.cubeDiv.style.transform = `rotate(${this.cubeRotation}deg)`;
@@ -167,14 +183,6 @@ export abstract class CubeRenderer {
     this.buttonLeft = buttonDiv.createEl('button', {'title': 'Rotate left 90 degrees'});
     this.buttonCopy = buttonDiv.createEl('button', {'title': 'Copy code block at current state'});
     this.buttonRight = buttonDiv.createEl('button', {'title': 'Rotate right 90 degrees'});
-
-    this.buttonLeft.addEventListener('click', () => {
-      this.rotateCube(+90); // clock-wise quarter rotation
-    });
-
-    this.buttonRight.addEventListener('click', () => {
-      this.rotateCube(-90); // anti-clock-wise quarter rotation
-    });
 
     let turnLeftSvg: SVGSVGElement = this.buttonLeft.createSvg('svg', {attr: {'stroke-width': 1}, cls: 'rubik-cube-button'});
     turnLeftSvg.createSvg('rect', {attr: {x: 10, y: 2, width: 12, height: 12, rx: 2, ry: 2}});

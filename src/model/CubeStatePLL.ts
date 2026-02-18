@@ -1,11 +1,10 @@
 import {CubeState} from "./CubeState";
-import {Algorithm} from "./Algorithm";
+import {Algorithms} from "./Algorithm";
 
 export class CubeStatePLL extends CubeState {
-  algorithms: Algorithm[];
+  algorithms: Algorithms;
 
   constructor(codeBlockContent: string[]) {
     super(codeBlockContent);
   }
-
 }

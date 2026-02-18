@@ -3,6 +3,7 @@ import {CodeBlockInterpreterPLL} from "./CodeBlockInterpreterPLL";
 import {CubeRendererPLL} from "./view/CubeRendererPLL";
 import {CubeStatePLL} from "./model/CubeStatePLL";
 import {MarkdownRenderChild} from "obsidian";
+import {CubeRendererOLL} from "./view/CubeRendererOLL";
 
 export class MarkdownPostProcessorPLL extends MarkdownRenderChild {
   source: string;
@@ -36,13 +37,26 @@ export class MarkdownPostProcessorPLL extends MarkdownRenderChild {
     let interpreter: CodeBlockInterpreterPLL = new CodeBlockInterpreterPLL(rows, this.plugin.settings);
     let cubeState: CubeStatePLL = interpreter.setupPll();
 
-    let cubeRendererPLL: CubeRendererPLL = new CubeRendererPLL(cubeState);
-    cubeRendererPLL.display(this.element);
+    let cubeRenderer: CubeRendererPLL = new CubeRendererPLL(cubeState);
+    cubeRenderer.display(this.element);
 
-
-
-
-
+    if (!cubeState.codeBlockInterpretationFailed()) {
+      this.addButtonFunctions(cubeRenderer, cubeState);
+    }
   }
 
-}
+  private addButtonFunctions(cubeRenderer: CubeRendererPLL, cubeState: CubeStatePLL) {
+
+      cubeRenderer.buttonLeft.addEventListener('click', () => {
+        cubeRenderer.rotateLeft();
+        cubeState.algorithms.rotateLeft();
+        cubeRenderer.redrawAlgorithms();
+      });
+
+      cubeRenderer.buttonRight.addEventListener('click', () => {
+        cubeRenderer.rotateRight();
+        cubeState.algorithms.rotateRight();
+        cubeRenderer.redrawAlgorithms();
+      });
+    }
+  }

@@ -24,6 +24,15 @@ export class CubeRendererPLL extends CubeRenderer {
     }
   }
 
+  redrawAlgorithms(): void {
+
+    if (this.algorithmsDiv === undefined) return;
+
+    this.algorithmsDiv.empty();
+    this.displayAlgorithms(this.algorithmsDiv);
+
+  }
+
   displayAlgorithms(container: HTMLDivElement): void {
 
     let algorithms: Algorithm[]  = this.cubeState.algorithms;
@@ -34,14 +43,7 @@ export class CubeRendererPLL extends CubeRenderer {
     let ul: HTMLUListElement = container.createEl('ul');
 
     for (let i: number = 0; i < algorithms.length; i++) {
-
-      let a: Algorithm  = algorithms[i]!;
-
-      ul.createEl('li', {text: a.toString()});
-
+      ul.createEl('li', {text: algorithms[i]!.toString()});
     }
-
-
   }
-
 }

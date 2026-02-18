@@ -4,7 +4,7 @@ import {Dimensions} from "./model/Dimensions";
 import {CubeStatePLL} from "./model/CubeStatePLL";
 import {InvalidInputContainer} from "./model/InvalidInputContainer";
 import {CodeBlockInterpreterBase} from "./CodeBlockInterpreterBase";
-import {Algorithm} from "./model/Algorithm";
+import {Algorithm, Algorithms, AlgorithmStep, possibleSteps} from "./model/Algorithm";
 
 const CODE_BLOCK_TEMPLATE =
   '\n```rubikCubePLL\n' +
@@ -14,13 +14,13 @@ const CODE_BLOCK_TEMPLATE =
   'arrows:1.1-1.3,7+9 // normal arrow in top row, double-sided arrow in lower row\n' +
   '```\n';
 
-const possibleStepsPattern: string = "[RrLlFfBbUuDdxyzMSE](|'|2)";
-const algorithmPattern: string = possibleStepsPattern + '( ?' + possibleStepsPattern + ')*';
+const possibleStepsPattern: string = "[xyzRrLlFfBbUuDdMSE](|'|2)";
+const algorithmPattern: string =  possibleStepsPattern + '( ?' + possibleStepsPattern + ')*';
 
 
 export class CodeBlockInterpreterPLL extends CodeBlockInterpreterBase {
   cubeColor: string;
-  algorithms: Algorithm[];
+  algorithms: Algorithms;
 
   constructor(rows: string[], settings: RubikCubeAlgoSettingsTab) {
     super(rows, settings);
@@ -29,7 +29,7 @@ export class CodeBlockInterpreterPLL extends CodeBlockInterpreterBase {
     } else {
       this.cubeColor = DEFAULT_SETTINGS.CUBE_COLOR;
     }
-    this.algorithms = new Array<Algorithm>();
+    this.algorithms = new Algorithms();
   }
 
   setupPll(): CubeStatePLL {
@@ -126,30 +126,46 @@ export class CodeBlockInterpreterPLL extends CodeBlockInterpreterBase {
 
 
 
-    if (!rowCleaned.match(algorithmPattern)) {
+    if (!rowCleaned.match('^' + algorithmPattern + '$')) {
       return super.errorInThisLine(row, "invalid, expected algorithm  like: alg:R' U2 R U2 R' F R U R' U' R' F' R2 U' (spaces not optional, no comments in this line)");
     }
 
     // console.log('step input: ' + rowCleaned);
 
-    let separator = " ";
+    let separator: string = ' ';
     let splitSteps: string[] = rowCleaned.split(separator);
-    let steps: string[] = new Array<string>();
+    let steps: AlgorithmStep[] = new Array<AlgorithmStep>();
 
-    // console.log('step count: ' + splitSteps.length);
     for (let i: number = 0; i < splitSteps.length; i++) {
-      // console.log("step: '" + splitSteps[i] + '"');
-      steps.push(splitSteps[i]!);
+      if (isAlgorithmStep(splitSteps[i]!)) {
+        let val: AlgorithmStep | null = parseAlgorithmStep(splitSteps[i]!);
+        if (val != null) {
+          steps.push(val);
+        }
+      } else {
+        console.error(`Invalid AlgorithmStep: ${splitSteps[i]}`);
+      }
     }
 
     this.algorithms.push(new Algorithm(steps));
   }
 
-
-
-
   static get3by3CodeBlockTemplate(): string {
     return CODE_BLOCK_TEMPLATE;
   }
 
+}
+
+/**
+ * Validates if a string is a member of the Step union
+ */
+function isAlgorithmStep(value: string): value is AlgorithmStep {
+  return (possibleSteps as readonly string[]).includes(value);
+}
+
+function parseAlgorithmStep(input: string): AlgorithmStep | null {
+  if (isAlgorithmStep(input)) {
+    return input;
+  }
+  return null;
 }
