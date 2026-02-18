@@ -6,9 +6,14 @@ import {Coordinates} from "../model/Coordinates";
 
 export abstract class CubeRenderer {
   cubeState: CubeState;
+  /** Rotation of cube, degrees */
+  cubeRotation: number;
+  /** Pointer to cube SVG image */
+  cubeDiv: HTMLDivElement;
 
   protected constructor(cubeState: CubeState) {
     this.cubeState = cubeState;
+    this.cubeRotation = 0;
   }
 
   /**
@@ -31,11 +36,11 @@ export abstract class CubeRenderer {
     let leftSide: HTMLDivElement = mainContainer.createEl('div', { cls: 'rubik-cube-div-left-column'});
     let textSide: HTMLDivElement = mainContainer.createEl('div', { cls: 'rubik-cube-div-right-column'});
 
-    let cubeDiv: HTMLDivElement = leftSide.createEl('div', {attr: {id: 'cubeDiv'}});
+    this.cubeDiv = leftSide.createEl('div', {attr: {id: 'cubeDiv'}, cls: 'rotatable'});
     let buttonDiv: HTMLDivElement = leftSide.createEl('div', {attr: {id: 'buttonDiv'}, cls: 'button-container'});
     let algorithmsDiv: HTMLDivElement = textSide.createEl('div', {attr: {id: 'algorithmsDiv'}});
 
-    this.displayCube(cubeDiv);
+    this.displayCube(this.cubeDiv);
     this.displayButtons(buttonDiv);
     this.displayAlgorithms(algorithmsDiv);
   }
@@ -140,13 +145,28 @@ export abstract class CubeRenderer {
     }
   }
 
-  displayButtons(element: HTMLDivElement): void {
+  /**
+   * @param {number} degreeChange - +90 or -90
+   */
+  rotateCube(degreeChange: number): void {
+    // Change current cube rotation
+    this.cubeRotation += degreeChange;
+    this.cubeDiv.style.transform = `rotate(${this.cubeRotation}deg)`;
+  }
 
-    let buttonLeft: HTMLButtonElement = element.createEl('button', {'title': 'Rotate left 90 degrees'});
-    let buttonCopy: HTMLButtonElement = element.createEl('button', {'title': 'Copy code block at current state'});
-    let buttonRight: HTMLButtonElement = element.createEl('button', {'title': 'Rotate right 90 degrees'});
+  displayButtons(buttonDiv: HTMLDivElement): void {
 
+    let buttonLeft: HTMLButtonElement = buttonDiv.createEl('button', {'title': 'Rotate left 90 degrees'});
+    let buttonCopy: HTMLButtonElement = buttonDiv.createEl('button', {'title': 'Copy code block at current state'});
+    let buttonRight: HTMLButtonElement = buttonDiv.createEl('button', {'title': 'Rotate right 90 degrees'});
 
+    buttonLeft.addEventListener('click', () => {
+      this.rotateCube(+90);
+    });
+
+    buttonRight.addEventListener('click', () => {
+      this.rotateCube(-90);
+    });
 
     let turnLeftSvg: SVGSVGElement = buttonLeft.createSvg('svg', { attr: {'stroke-width': 1}, cls: 'rubik-cube-button'});
     turnLeftSvg.createSvg('rect', {attr: {x: 10, y: 2, width: 12, height: 12, rx: 2, ry: 2}});

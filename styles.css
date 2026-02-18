@@ -1,3 +1,8 @@
+.rotatable {
+  /* Ensure it rotates around its own center */
+  transform-origin: center;
+  transition: transform 0.5s ease-in-out;
+}
 .rubik-cube-div-main-container {
   display: flex;
 }
