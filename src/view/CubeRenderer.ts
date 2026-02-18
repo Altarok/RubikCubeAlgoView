@@ -14,7 +14,7 @@ export abstract class CubeRenderer {
   algorithmsDiv: HTMLDivElement
 
   buttonLeft: HTMLButtonElement;
-  buttonCopy: HTMLButtonElement;
+  // buttonCopy: HTMLButtonElement;
   buttonRight: HTMLButtonElement;
 
   protected constructor(cubeState: CubeState) {
@@ -181,7 +181,7 @@ export abstract class CubeRenderer {
   displayButtons(buttonDiv: HTMLDivElement): void {
 
     this.buttonLeft = buttonDiv.createEl('button', {'title': 'Rotate left 90 degrees'});
-    this.buttonCopy = buttonDiv.createEl('button', {'title': 'Copy code block at current state'});
+    // this.buttonCopy = buttonDiv.createEl('button', {'title': 'Copy code block at current state'});
     this.buttonRight = buttonDiv.createEl('button', {'title': 'Rotate right 90 degrees'});
 
     let turnLeftSvg: SVGSVGElement = this.buttonLeft.createSvg('svg', {attr: {'stroke-width': 1}, cls: 'rubik-cube-button'});
@@ -193,9 +193,9 @@ export abstract class CubeRenderer {
     turnLeftSvg.createSvg('path', {attr: {d: 'M13 22a10 10 0 0 1 -10 -10v-2', 'stroke-width': 1.5}});
     turnLeftSvg.createSvg('polyline', {attr: {points: '0,13 3,10 6,13', 'stroke-width': 1.5}});
 
-    let copySvg: SVGSVGElement = this.buttonCopy.createSvg('svg', {attr: {'stroke-width': 2}, cls: 'rubik-cube-button'});
-    copySvg.createSvg('rect', {attr: {x: 9, y: 9, width: 13, height: 13, rx: 2, ry: 2}});
-    copySvg.createSvg('path', {attr: {d: 'M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1'}});
+    // let copySvg: SVGSVGElement = this.buttonCopy.createSvg('svg', {attr: {'stroke-width': 2}, cls: 'rubik-cube-button'});
+    // copySvg.createSvg('rect', {attr: {x: 9, y: 9, width: 13, height: 13, rx: 2, ry: 2}});
+    // copySvg.createSvg('path', {attr: {d: 'M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1'}});
 
     let turnRightSvg: SVGSVGElement = this.buttonRight.createSvg('svg', { attr: {'stroke-width': 1}, cls: 'rubik-cube-button'});
     turnRightSvg.createSvg('rect', {attr: {x: 2, y: 2, width: 12, height: 12, rx: 2, ry: 2}});
