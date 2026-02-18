@@ -32,8 +32,8 @@ export abstract class CubeRenderer {
     let textSide: HTMLDivElement = mainContainer.createEl('div', { cls: 'rubik-cube-div-right-column'});
 
     let cubeDiv: HTMLDivElement = leftSide.createEl('div', {attr: {id: 'cubeDiv'}});
-    let buttonDiv: HTMLDivElement = leftSide.createEl('div', {attr: {id: 'cubeDiv'}, cls: 'button-container'});
-    let algorithmsDiv: HTMLDivElement = textSide.createEl('div', {attr: {id: 'cubeDiv'}});
+    let buttonDiv: HTMLDivElement = leftSide.createEl('div', {attr: {id: 'buttonDiv'}, cls: 'button-container'});
+    let algorithmsDiv: HTMLDivElement = textSide.createEl('div', {attr: {id: 'algorithmsDiv'}});
 
     this.displayCube(cubeDiv);
     this.displayButtons(buttonDiv);
@@ -142,9 +142,11 @@ export abstract class CubeRenderer {
 
   displayButtons(element: HTMLDivElement): void {
 
-    let buttonLeft: HTMLButtonElement = element.createEl('button'/*, {'aria-label': 'Rotate left 90 degrees'}*/);
-    let buttonCopy: HTMLButtonElement = element.createEl('button'/*, {'aria-label': 'Copy'}*/);
-    let buttonRight: HTMLButtonElement = element.createEl('button'/*, {'aria-label': 'Rotate right 90 degrees'}*/);
+    let buttonLeft: HTMLButtonElement = element.createEl('button', {'title': 'Rotate left 90 degrees'});
+    let buttonCopy: HTMLButtonElement = element.createEl('button', {'title': 'Copy code block at current state'});
+    let buttonRight: HTMLButtonElement = element.createEl('button', {'title': 'Rotate right 90 degrees'});
+
+
 
     let turnLeftSvg: SVGSVGElement = buttonLeft.createSvg('svg', { attr: {'stroke-width': 1}, cls: 'rubik-cube-button'});
     turnLeftSvg.createSvg('rect', {attr: {x: 10, y: 2, width: 12, height: 12, rx: 2, ry: 2}});
