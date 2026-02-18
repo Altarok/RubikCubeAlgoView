@@ -9,6 +9,8 @@ Right now, it is able to show changes done by PLL and OLL algorithms. F2L to com
 
 <img width="550" height="639" alt="image" src="https://github.com/user-attachments/assets/b086de19-16d7-456b-a753-79d7dc5c3d40" />
 
+[GIF of cube rotation with algorithm changes!](https://github.com/user-attachments/assets/c1324ae8-e120-4b4d-a99f-9f82d01d8159)
+
 The image's lower cube is created by writing the following codeblock (named 'rubikCubePLL'):
 ```
 dimension:3,3
