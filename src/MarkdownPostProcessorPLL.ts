@@ -36,7 +36,13 @@ export class MarkdownPostProcessorPLL extends MarkdownRenderChild {
     let interpreter: CodeBlockInterpreterPLL = new CodeBlockInterpreterPLL(rows, this.plugin.settings);
     let cubeState: CubeStatePLL = interpreter.setupPll();
 
-    new CubeRendererPLL(cubeState).display(this.element);
+    let cubeRendererPLL: CubeRendererPLL = new CubeRendererPLL(cubeState);
+    cubeRendererPLL.display(this.element);
+
+
+
+
+
   }
 
 }

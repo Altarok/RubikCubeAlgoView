@@ -4,6 +4,7 @@ import {Dimensions} from "./model/Dimensions";
 import {CubeStatePLL} from "./model/CubeStatePLL";
 import {InvalidInputContainer} from "./model/InvalidInputContainer";
 import {CodeBlockInterpreterBase} from "./CodeBlockInterpreterBase";
+import {Algorithm} from "./model/Algorithm";
 
 const CODE_BLOCK_TEMPLATE =
   '\n```rubikCubePLL\n' +
@@ -13,8 +14,13 @@ const CODE_BLOCK_TEMPLATE =
   'arrows:1.1-1.3,7+9 // normal arrow in top row, double-sided arrow in lower row\n' +
   '```\n';
 
+const possibleStepsPattern: string = "[RrLlFfBbUuDdxyzMSE](|'|2)";
+const algorithmPattern: string = possibleStepsPattern + '( ?' + possibleStepsPattern + ')*';
+
+
 export class CodeBlockInterpreterPLL extends CodeBlockInterpreterBase {
   cubeColor: string;
+  algorithms: Algorithm[];
 
   constructor(rows: string[], settings: RubikCubeAlgoSettingsTab) {
     super(rows, settings);
@@ -23,6 +29,7 @@ export class CodeBlockInterpreterPLL extends CodeBlockInterpreterBase {
     } else {
       this.cubeColor = DEFAULT_SETTINGS.CUBE_COLOR;
     }
+    this.algorithms = new Array<Algorithm>();
   }
 
   setupPll(): CubeStatePLL {
@@ -37,6 +44,7 @@ export class CodeBlockInterpreterPLL extends CodeBlockInterpreterBase {
       cubeState.arrowColor = this.arrowColor;
       cubeState.arrowCoordinates = this.arrowCoordinates;
       cubeState.viewBoxDimensions = new Dimensions(this.cubeWidth * 100, this.cubeHeight * 100);
+      cubeState.algorithms = this.algorithms;
     } else {
       cubeState.invalidInputContainer = new InvalidInputContainer(this.lastNonInterpretableLine, this.reasonForFailure);
     }
@@ -44,28 +52,29 @@ export class CodeBlockInterpreterPLL extends CodeBlockInterpreterBase {
     return cubeState;
   }
 
+  /* @formatter:off */
+
   interpretCodeBlock(rows: string[]): void {
     for (let r: number = 0; r < rows.length; r++) {
       let row: string = rows[r]!; //console.log('interpret row: ' + row);
-      if (row.startsWith('dimension:')) {
-        this.handleDimensionsInput(row);
-      } else if (row.startsWith('cubeColor:')) {
-        this.handleCubeColorInput(row);
-      } else if (row.startsWith('arrowColor:')) {
-        super.handleArrowColorInput(row);
-      } else if (row.startsWith('arrows:')) {
-        super.handleArrowsInput(row);
-      } else {
-        return super.errorInThisLine(row, "invalid, expected: 'dimension/cubeColor/arrowColor/arrows'");
+      if (row.startsWith('dimension:')) {          this.handleDimensionsInput(row);
+      } else if (row.startsWith('cubeColor:')) {   this.handleCubeColorInput(row);
+      } else if (row.startsWith('arrowColor:')) { super.handleArrowColorInput(row);
+      } else if (row.startsWith('arrows:')) {     super.handleArrowsInput(row);
+      } else if (row.startsWith('alg:')) {         this.handleAlgorithmInput(row);
+      } else if (row.startsWith('//')) { // ignore line
+      } else {                                        return super.errorInThisLine(row, "invalid, expected: 'dimension/cubeColor/arrowColor/arrows'");
       }
     }
   }
 
+  /* @formatter:on */
+
   setupCubeRectangleCenterCoordinates(): void {
     this.addCoordinates(new Coordinates(-1, -1)); /* unused first entry to start arrows with 1 instead of 0 */
     /* reverse loop order to give x coordinates priority */
-    for (let h = 0; h < this.cubeHeight; h++) {
-      for (let w = 0; w < this.cubeWidth; w++) {
+    for (let h: number = 0; h < this.cubeHeight; h++) {
+      for (let w: number = 0; w < this.cubeWidth; w++) {
         this.addCoordinates(new Coordinates(w * 100 + 50, h * 100 + 50));
       }
     }
@@ -94,7 +103,7 @@ export class CodeBlockInterpreterPLL extends CodeBlockInterpreterBase {
   }
 
   /**
-   * @param row string starting with 'cubeColor:'
+   * @param {string} row - string starting with 'cubeColor:'
    */
   private handleCubeColorInput(row: string): void {
     if (!row.match('^cubeColor:([a-f0-9]{3}){1,2}( //.*)?')) {
@@ -105,6 +114,39 @@ export class CodeBlockInterpreterPLL extends CodeBlockInterpreterBase {
     //console.log("new cube color: '"+newCubClr+"'");
     this.cubeColor = '#' + newCubClr;
   }
+
+
+
+
+  /**
+   * @param {string} row - string starting with 'alg:'
+   */
+  private handleAlgorithmInput(row: string): void {
+    let rowCleaned: string = row.trim().replace('alg:', '');
+
+
+
+    if (!rowCleaned.match(algorithmPattern)) {
+      return super.errorInThisLine(row, "invalid, expected algorithm  like: alg:R' U2 R U2 R' F R U R' U' R' F' R2 U' (spaces not optional, no comments in this line)");
+    }
+
+    // console.log('step input: ' + rowCleaned);
+
+    let separator = " ";
+    let splitSteps: string[] = rowCleaned.split(separator);
+    let steps: string[] = new Array<string>();
+
+    // console.log('step count: ' + splitSteps.length);
+    for (let i: number = 0; i < splitSteps.length; i++) {
+      // console.log("step: '" + splitSteps[i] + '"');
+      steps.push(splitSteps[i]!);
+    }
+
+    this.algorithms.push(new Algorithm(steps));
+  }
+
+
+
 
   static get3by3CodeBlockTemplate(): string {
     return CODE_BLOCK_TEMPLATE;

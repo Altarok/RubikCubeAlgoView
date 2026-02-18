@@ -57,4 +57,16 @@ export class CubeRendererOLL extends CubeRenderer {
     }
   }
 
+  displayAlgorithms(container: HTMLDivElement): void {
+
+    let ul: HTMLUListElement = container.createEl('ul');
+
+    /*
+     * TODO replace with user input
+     */
+    ul.createEl('li', {text: "Fake algorithms"});
+    ul.createEl('li', {text: "For now"});
+
+  }
+
 }

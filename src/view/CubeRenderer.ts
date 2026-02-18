@@ -11,6 +11,10 @@ export abstract class CubeRenderer {
   /** Pointer to cube SVG image */
   cubeDiv: HTMLDivElement;
 
+  buttonLeft: HTMLButtonElement;
+  buttonCopy: HTMLButtonElement;
+  buttonRight: HTMLButtonElement;
+
   protected constructor(cubeState: CubeState) {
     this.cubeState = cubeState;
     this.cubeRotation = 0;
@@ -29,9 +33,13 @@ export abstract class CubeRenderer {
 
   }
 
-  displayCubeButtonAlgorithms(element: HTMLElement): void {
+  abstract displayCubeForeground(container: SVGSVGElement, viewBoxWidth: number, viewBoxHeight: number): void;
 
-    let mainContainer: HTMLDivElement = element.createEl('div', { cls: 'rubik-cube-div-main-container'});
+  abstract displayAlgorithms(container: HTMLDivElement): void;
+
+  displayCubeButtonAlgorithms(container: HTMLElement): void {
+
+    let mainContainer: HTMLDivElement = container.createEl('div', { cls: 'rubik-cube-div-main-container'});
 
     let leftSide: HTMLDivElement = mainContainer.createEl('div', { cls: 'rubik-cube-div-left-column'});
     let textSide: HTMLDivElement = mainContainer.createEl('div', { cls: 'rubik-cube-div-right-column'});
@@ -96,7 +104,7 @@ export abstract class CubeRenderer {
     return mainSvg;
   }
 
-  abstract displayCubeForeground(svgElement: SVGSVGElement, viewBoxWidth: number, viewBoxHeight: number): void;
+
 
   displayArrows(mainSvg: SVGSVGElement): void {
     let arrows: ArrowCoordinates[] = this.cubeState.arrowCoordinates;
@@ -156,19 +164,19 @@ export abstract class CubeRenderer {
 
   displayButtons(buttonDiv: HTMLDivElement): void {
 
-    let buttonLeft: HTMLButtonElement = buttonDiv.createEl('button', {'title': 'Rotate left 90 degrees'});
-    let buttonCopy: HTMLButtonElement = buttonDiv.createEl('button', {'title': 'Copy code block at current state'});
-    let buttonRight: HTMLButtonElement = buttonDiv.createEl('button', {'title': 'Rotate right 90 degrees'});
+    this.buttonLeft = buttonDiv.createEl('button', {'title': 'Rotate left 90 degrees'});
+    this.buttonCopy = buttonDiv.createEl('button', {'title': 'Copy code block at current state'});
+    this.buttonRight = buttonDiv.createEl('button', {'title': 'Rotate right 90 degrees'});
 
-    buttonLeft.addEventListener('click', () => {
+    this.buttonLeft.addEventListener('click', () => {
       this.rotateCube(+90); // clock-wise quarter rotation
     });
 
-    buttonRight.addEventListener('click', () => {
+    this.buttonRight.addEventListener('click', () => {
       this.rotateCube(-90); // anti-clock-wise quarter rotation
     });
 
-    let turnLeftSvg: SVGSVGElement = buttonLeft.createSvg('svg', {attr: {'stroke-width': 1}, cls: 'rubik-cube-button'});
+    let turnLeftSvg: SVGSVGElement = this.buttonLeft.createSvg('svg', {attr: {'stroke-width': 1}, cls: 'rubik-cube-button'});
     turnLeftSvg.createSvg('rect', {attr: {x: 10, y: 2, width: 12, height: 12, rx: 2, ry: 2}});
     turnLeftSvg.createSvg('line', {attr: {x1: 14, y1:  2, x2: 14, y2: 14}});
     turnLeftSvg.createSvg('line', {attr: {x1: 18, y1:  2, x2: 18, y2: 14}});
@@ -177,11 +185,11 @@ export abstract class CubeRenderer {
     turnLeftSvg.createSvg('path', {attr: {d: 'M13 22a10 10 0 0 1 -10 -10v-2', 'stroke-width': 1.5}});
     turnLeftSvg.createSvg('polyline', {attr: {points: '0,13 3,10 6,13', 'stroke-width': 1.5}});
 
-    let copySvg: SVGSVGElement = buttonCopy.createSvg('svg', {attr: {'stroke-width': 2}, cls: 'rubik-cube-button'});
+    let copySvg: SVGSVGElement = this.buttonCopy.createSvg('svg', {attr: {'stroke-width': 2}, cls: 'rubik-cube-button'});
     copySvg.createSvg('rect', {attr: {x: 9, y: 9, width: 13, height: 13, rx: 2, ry: 2}});
     copySvg.createSvg('path', {attr: {d: 'M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1'}});
 
-    let turnRightSvg: SVGSVGElement = buttonRight.createSvg('svg', { attr: {'stroke-width': 1}, cls: 'rubik-cube-button'});
+    let turnRightSvg: SVGSVGElement = this.buttonRight.createSvg('svg', { attr: {'stroke-width': 1}, cls: 'rubik-cube-button'});
     turnRightSvg.createSvg('rect', {attr: {x: 2, y: 2, width: 12, height: 12, rx: 2, ry: 2}});
     turnRightSvg.createSvg('line', {attr: {x1:  6, y1:  2, x2:  6, y2: 14}});
     turnRightSvg.createSvg('line', {attr: {x1: 10, y1:  2, x2: 10, y2: 14}});
@@ -192,18 +200,5 @@ export abstract class CubeRenderer {
 
   }
 
-  displayAlgorithms(container: HTMLDivElement): void {
-
-    let ul: HTMLUListElement = container.createEl('ul');
-
-    /*
-     * TODO replace with user input
-     */
-    ul.createEl('li', {text: "R' U' R' F R F' U R"});
-    ul.createEl('li', {text: "F R F' U R R' U' R'"});
-    ul.createEl('li', {text: "R' R' U' R' R' U' R' U' R' F R F' U R"});
-
-
-  }
 
 }

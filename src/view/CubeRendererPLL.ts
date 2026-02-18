@@ -1,5 +1,6 @@
 import {CubeRenderer} from "./CubeRenderer";
 import {CubeStatePLL} from "../model/CubeStatePLL";
+import {Algorithm} from "../model/Algorithm";
 
 export class CubeRendererPLL extends CubeRenderer {
   cubeState: CubeStatePLL;
@@ -21,6 +22,26 @@ export class CubeRendererPLL extends CubeRenderer {
     for (let y: number = 100; y < viewBoxHeight; y += 100) {
       svgElement.createSvg('line', {attr: {x1: 0, x2: viewBoxWidth, y1: y, y2: y}, cls: 'rubik-cube-pll-line-grid'});
     }
+  }
+
+  displayAlgorithms(container: HTMLDivElement): void {
+
+    let algorithms: Algorithm[]  = this.cubeState.algorithms;
+
+    /* Fail-safe */
+    if (algorithms === undefined || algorithms.length === 0) return;
+
+    let ul: HTMLUListElement = container.createEl('ul');
+
+    for (let i: number = 0; i < algorithms.length; i++) {
+
+      let a: Algorithm  = algorithms[i]!;
+
+      ul.createEl('li', {text: a.toString()});
+
+    }
+
+
   }
 
 }

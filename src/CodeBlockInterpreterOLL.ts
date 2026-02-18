@@ -65,6 +65,8 @@ export class CodeBlockInterpreterOLL extends CodeBlockInterpreterBase {
       let row: string = rows[i]!;
       if (row.startsWith('arrows:')) {
         super.handleArrowsInput(row);
+      } else if (row.startsWith('//')) {
+        // ignore line
       } else {
         copyOfRows[copyOfRows.length] = row;
       }

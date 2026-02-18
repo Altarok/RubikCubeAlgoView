@@ -23,27 +23,27 @@
   display: flex;
 }
 .rubik-cube-pll {
-    display: flex;
-    border: 2px solid #666;
+  display: flex;
+  border: 2px solid #666;
 }
 .rubik-cube-pll-rect {
-    width: 100%;
-    height: 100%;
+  width: 100%;
+  height: 100%;
 }
 .rubik-cube-pll-line-grid {
-    stroke-width: 3px;
-    stroke: #000;
+  stroke-width: 3px;
+  stroke: #000;
 }
 .rubik-cube-arrow {
-    stroke-width: 2px;
+  stroke-width: 2px;
 }
 .rubik-cube-warning-text-red {
-    background-color: #f00;
-    color: #fff;
+  background-color: #f00;
+  color: #fff;
 }
 .rubik-cube-warning-text-orange {
-    background-color: #ff6400;
-    color: #fff;
+  background-color: #ff6400;
+  color: #fff;
 }
 .rubik-cube-button {
 /*  padding: 10px 20px;
