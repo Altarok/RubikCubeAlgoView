@@ -11,13 +11,11 @@ export class CubeRendererOLL extends CubeRenderer {
   }
 
   displayCubeForeground(svgElement: SVGSVGElement, viewBoxWidth: number, viewBoxHeight: number): void {
+    let cells: OllFieldColors = this.cubeState.ollFieldColors;
+
     /*
      * Edge rows/columns
      */
-
-    let cells: OllFieldColors = this.cubeState.ollFieldColors;
-
-
     /* upper row border */
     for (let x:number = 0; x < this.cubeState.cubeWidth; x++) {
       svgElement.createSvg('rect', { attr: { x:50+x*100, y:0, width:'100', height:'50', fill:cells.getColor(0, x+1) }, cls: "rubik-cube-rect" });

@@ -40,17 +40,19 @@ export class OllFieldColors {
     } else {
       switch (colorIndex) {
 
-        case 'r': c = '#aa0000'; break; // darker red (80%)
+        /* @formatter:off */
+
+        case 'r': c = '#aa0000'; break; // darker red
         case 'R': c = '#ff0000'; break; // red
 
-        case 'o': c = '#aa4000'; break; // darker orange
+        case 'o': c = '#994000'; break; // darker orange
         case 'O': c = '#ff6400'; break; // orange
 
         case 'b': c = '#000070'; break; // darker blue
-        case 'B': c = '#0000bb'; break; // blue
+        case 'B': c = '#0000dd'; break; // blue
 
-        case 'g': c = '#007000'; break; // darker green
-        case 'G': c = '#00bb00'; break; // green
+        case 'g': c = '#006000'; break; // darker green
+        case 'G': c = '#00cc00'; break; // green
 
         case 'y': c = '#aaaa00'; break; // darker yellow
         case 'Y': c = '#ffff00'; break; // yellow
@@ -62,6 +64,8 @@ export class OllFieldColors {
         case '0': c = '#444'; break;
         case '1': c = '#ff0'; break;
         default:  c = '#000'; break;
+
+        /* @formatter:on */
       }
     }
     // console.log("getColor() '" + colorIndex + "' => '" + c + "'")

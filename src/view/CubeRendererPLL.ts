@@ -35,7 +35,7 @@ export class CubeRendererPLL extends CubeRenderer {
 
   displayAlgorithms(container: HTMLDivElement): void {
 
-    let algorithms: Algorithm[]  = this.cubeState.algorithms;
+    let algorithms: Algorithm[] = this.cubeState.algorithms;
 
     /* Fail-safe */
     if (algorithms === undefined || algorithms.length === 0) return;

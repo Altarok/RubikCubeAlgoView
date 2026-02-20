@@ -3,7 +3,7 @@ import {Coordinates} from "./Coordinates";
 export class ArrowCoordinates {
   /** x,y (pixel coordinates) */
   startCoordinates: Coordinates;
-  /** cube height (rectangles, not pixels) */
+  /** x,y (pixel coordinates) */
   endCoordinates: Coordinates;
 
   constructor(start: Coordinates, end: Coordinates) {

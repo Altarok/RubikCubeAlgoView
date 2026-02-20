@@ -59,26 +59,26 @@ export class CodeBlockInterpreterOLL extends CodeBlockInterpreterBase {
   }
 
 
-  private removeNonCubeFieldInput (rows:string[]): string[] {
-    let copyOfRows:string[] = new Array<string>();
+  private removeNonCubeFieldInput(rows: string[]): string[] {
+    let redactedCopyOfRows: string[] = new Array<string>();
     for (let i: number = 0; i < rows.length; i++) {
       let row: string = rows[i]!;
       if (row.startsWith('arrows:')) {
         super.handleArrowsInput(row);
       } else if (row.startsWith('//')) {
-        // ignore line
+        // ignore line starting with '//'
       } else {
-        copyOfRows[copyOfRows.length] = row;
+        redactedCopyOfRows[redactedCopyOfRows.length] = row;
       }
     }
-    return copyOfRows;
+    return redactedCopyOfRows;
   }
 
-  interpretCodeBlock(rows:string[]): void {
-    if (rows.length < 4){
-      return super.errorInThisLine("[not enough input]","Input for OLL should contain at least 4 lines!");
-    } else if (null === rows[0]!.match('^\\..+?\\.$') || null === rows[rows[0]!.length-1]!.match('^\\..+?\\.$') ) {
-      return super.errorInThisLine(rows[0]!,"First and last line should start and end on a dot ('.')!");
+  interpretCodeBlock(rows: string[]): void {
+    if (rows.length < 4) {
+      return super.errorInThisLine("[not enough input]", "Input for OLL should contain at least 4 lines!");
+    } else if (null === rows[0]!.match('^\\..+?\\.$') || null === rows[rows[0]!.length - 1]!.match('^\\..+?\\.$')) {
+      return super.errorInThisLine(rows[0]!, "First and last line should start and end on a dot ('.')!");
     }
 
     let rawOllInput: string[] = this.removeNonCubeFieldInput(rows);
@@ -100,7 +100,7 @@ export class CodeBlockInterpreterOLL extends CodeBlockInterpreterBase {
         let clr: string = row[i]!;
         if (clr === '.') {
           parsedRow[index++] = '-1';
-        } else if (i === 0 || rowIndex === 0 || rowIndex === rawOllInput.length-1 || i === row.length-1) {
+        } else if (i === 0 || rowIndex === 0 || rowIndex === rawOllInput.length - 1 || i === row.length - 1) {
           parsedRow[index++] = clr.toLowerCase();
         } else {
           parsedRow[index++] = clr.toUpperCase();
@@ -111,11 +111,11 @@ export class CodeBlockInterpreterOLL extends CodeBlockInterpreterBase {
   }
 
   setupCubeRectangleCenterCoordinates(): void {
-    this.addCoordinates(new Coordinates(-1,-1)); /* unused first entry to start arrows with 1 instead of 0 */
+    this.addCoordinates(new Coordinates(-1, -1)); /* unused first entry to start arrows with 1 instead of 0 */
     /* reverse loop order to give x coordinates more priority */
     for (let h: number = 0; h < this.cubeHeight; h++) {
       for (let w: number = 0; w < this.cubeWidth; w++) {
-        this.addCoordinates(new Coordinates(w * 100 + 100, h*100 + 100));
+        this.addCoordinates(new Coordinates(w * 100 + 100, h * 100 + 100));
       }
     }
   }

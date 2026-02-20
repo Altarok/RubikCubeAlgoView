@@ -173,12 +173,10 @@ export abstract class CodeBlockInterpreterBase {
       /* do not parse yet, another line may still brake the input which makes the calculation obsolete */
       // @ts-ignore checked with regex
       this.arrows = row.split(' ')[0].trim().replace('arrows:', '');
-      // console.log("new arrows: " + this.arrows);
     } else {
       this.errorInThisLine(row, 'arrow color value should match "arrowColor:" + [3 (or 6) lowercase hex digits (0-9/a-f)]');
     }
   }
-
 
 
 }

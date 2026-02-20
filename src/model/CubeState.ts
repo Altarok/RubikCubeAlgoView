@@ -1,6 +1,6 @@
 import {InvalidInputContainer} from "./InvalidInputContainer";
 import {Dimensions} from "./Dimensions";
-import { ArrowCoordinates } from "model/ArrowCoordinates";
+import {ArrowCoordinates} from "model/ArrowCoordinates";
 
 export abstract class CubeState {
   /** Code block content */
@@ -16,6 +16,7 @@ export abstract class CubeState {
   /** the background's color */
   backgroundColor: string;
   arrowCoordinates: ArrowCoordinates[];
+  /** SVG metadata */
   viewBoxDimensions: Dimensions;
 
   protected constructor(codeBlockContent: string[]) {
@@ -26,7 +27,7 @@ export abstract class CubeState {
    * @return true if cube size equals 3 by 3
    */
   isDefaultCubeSize(): boolean {
-    return this.cubeWidth === this.cubeHeight && this.cubeWidth === 3;
+    return this.cubeWidth === 3 && this.cubeHeight === 3;
   }
 
   codeBlockInterpretationFailed(): boolean {

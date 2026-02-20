@@ -18,7 +18,7 @@ export const possibleSteps = [
 
   "M", "M'", "M2", // vertical middle layer, around X axis, 90 degrees to the front (like L/R')
   "S", "S'", "S2", // vertical middle layer, around Z axis, 90 degrees to the right (like F/B')
-  "E", "E'", "E2" // horizontal middle layer, around Y axis, 90 degrees to the right (like D/U')
+  "E", "E'", "E2"  // horizontal middle layer, around Y axis, 90 degrees to the right (like D/U')
 ] as const;
 
 export type AlgorithmStep = (typeof possibleSteps)[number];
@@ -26,24 +26,24 @@ export type AlgorithmStep = (typeof possibleSteps)[number];
 type TurnCubeMap = Record<AlgorithmStep, AlgorithmStep>;
 
 const turnCubeLeftMap: TurnCubeMap = {
-    "R":"F", "R'":"F'", "R2":"F2",
-    "r":"f", "r'":"f'", "r2":"f2",
-    "L":"B", "L'":"B'", "L2":"B2",
-    "l":"b", "l'":"b'", "l2":"b2",
-    "F":"L", "F'":"L'", "F2":"L2",
-    "f":"l", "f'":"l'", "f2":"l2",
-    "B":"R", "B'":"R'", "B2":"R2",
-    "b":"r", "b'":"r'", "b2":"r2",
-    "U":"U", "U'":"U'", "U2":"U2",
-    "u":"u", "u'":"u'", "u2":"u2",
-    "D":"D", "D'":"D'", "D2":"D2",
-    "d":"d", "d'":"d'", "d2":"d2",
-    "x":"z", "x'":"z'", "x2":"z2", // !!
-    "y":"y", "y'":"y'", "y2":"y2",
-    "z":"x'", "z'":"x", "z2":"x2", // !!
-    "M":"S'", "M'":"S", "M2":"S2", // !!
-    "S":"M", "S'":"M'", "S2":"M2", // !!
-    "E":"E", "E'":"E'", "E2":"E2"
+  "R": "F", "R'": "F'", "R2": "F2",
+  "r": "f", "r'": "f'", "r2": "f2",
+  "L": "B", "L'": "B'", "L2": "B2",
+  "l": "b", "l'": "b'", "l2": "b2",
+  "F": "L", "F'": "L'", "F2": "L2",
+  "f": "l", "f'": "l'", "f2": "l2",
+  "B": "R", "B'": "R'", "B2": "R2",
+  "b": "r", "b'": "r'", "b2": "r2",
+  "U": "U", "U'": "U'", "U2": "U2",
+  "u": "u", "u'": "u'", "u2": "u2",
+  "D": "D", "D'": "D'", "D2": "D2",
+  "d": "d", "d'": "d'", "d2": "d2",
+  "x": "z", "x'": "z'", "x2": "z2", // !!
+  "y": "y", "y'": "y'", "y2": "y2",
+  "z": "x'", "z'": "x", "z2": "x2", // !!
+  "M": "S'", "M'": "S", "M2": "S2", // !!
+  "S": "M", "S'": "M'", "S2": "M2", // !!
+  "E": "E", "E'": "E'", "E2": "E2"
 };
 
 /**
@@ -109,17 +109,4 @@ export class Algorithms extends Array<Algorithm> {
   }
 }
 
-// /**
-//  * Validates if a string is a member of the Step union
-//  */
-// function isAlgorithmStep(value: string): value is AlgorithmStep {
-//   return (possibleSteps as readonly string[]).includes(value);
-// }
-//
-// function parseAlgorithmStep(input: string): AlgorithmStep | null {
-//   if (isAlgorithmStep(input)) {
-//     return input;
-//   }
-//   return null;
-// }
 

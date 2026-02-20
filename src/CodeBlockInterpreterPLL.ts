@@ -15,7 +15,7 @@ const CODE_BLOCK_TEMPLATE =
   '```\n';
 
 const possibleStepsPattern: string = "[xyzRrLlFfBbUuDdMSE](|'|2)";
-const algorithmPattern: string =  possibleStepsPattern + '( ?' + possibleStepsPattern + ')*';
+const algorithmPattern: string = possibleStepsPattern + '( ?' + possibleStepsPattern + ')*';
 
 
 export class CodeBlockInterpreterPLL extends CodeBlockInterpreterBase {
@@ -58,10 +58,10 @@ export class CodeBlockInterpreterPLL extends CodeBlockInterpreterBase {
     for (let r: number = 0; r < rows.length; r++) {
       let row: string = rows[r]!; //console.log('interpret row: ' + row);
       if (row.startsWith('dimension:')) {          this.handleDimensionsInput(row);
-      } else if (row.startsWith('cubeColor:')) {   this.handleCubeColorInput(row);
+      } else if (row.startsWith('cubeColor:')) {   this.handleCubeColorInput (row);
       } else if (row.startsWith('arrowColor:')) { super.handleArrowColorInput(row);
-      } else if (row.startsWith('arrows:')) {     super.handleArrowsInput(row);
-      } else if (row.startsWith('alg:')) {         this.handleAlgorithmInput(row);
+      } else if (row.startsWith('arrows:')) {     super.handleArrowsInput    (row);
+      } else if (row.startsWith('alg:')) {         this.handleAlgorithmInput (row);
       } else if (row.startsWith('//')) { // ignore line
       } else {                                        return super.errorInThisLine(row, "invalid, expected: 'dimension/cubeColor/arrowColor/arrows'");
       }
@@ -116,14 +116,11 @@ export class CodeBlockInterpreterPLL extends CodeBlockInterpreterBase {
   }
 
 
-
-
   /**
    * @param {string} row - string starting with 'alg:'
    */
   private handleAlgorithmInput(row: string): void {
     let rowCleaned: string = row.trim().replace('alg:', '');
-
 
 
     if (!rowCleaned.match('^' + algorithmPattern + '$')) {
