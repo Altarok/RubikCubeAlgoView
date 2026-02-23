@@ -1,3 +1,5 @@
+import {ArrowCoordinates} from "./ArrowCoordinates";
+
 export const possibleSteps = [
   "R", "R'", "R2", // right side
   "r", "r'", "r2", // right side, 2 layers deep ('r' is alternative to 'Rw')
@@ -57,12 +59,30 @@ export class Algorithm {
     this.steps = steps;
   }
 
+  rotate(quarterTurns: number): void {
+
+    for (let i: number = 0; i < this.steps.length; i++) {
+      let algStep: AlgorithmStep = this.steps[i]!;
+
+      for (let ii: number = 0; ii < quarterTurns; ii++) {
+        algStep = turnCubeLeftMap[algStep];
+      }
+
+      this.steps[i] = algStep;
+    }
+  }
+
+
   toString(): string {
     let s: string = ''
     for (const step of this.steps) {
       s += step + ' ';
     }
     return s.trim();
+  }
+
+  clone(): Algorithm {
+    return new Algorithm(Object.assign([], this.steps));
   }
 }
 
@@ -72,41 +92,36 @@ export class Algorithms extends Array<Algorithm> {
     super();
   }
 
-  /**
-   * Clock-wise quarter rotation
-   */
-  rotateLeft(): void {
-    this.rotate(1);
-  }
-
-  /**
-   * Anti-clock-wise quarter rotation
-   */
-  rotateRight(): void {
-    this.rotate(3);
-  }
-
-  private rotate(degreeChange: number): void {
-
+  rotate(quarterTurns: number): void {
     this.forEach(algorithm => {
-
-      for (let i: number = 0; i < algorithm.steps.length; i++) {
-        let algStep: AlgorithmStep = algorithm.steps[i]!;
-
-        for (let ii: number = 0; ii < degreeChange; ii++) {
-          algStep = turnCubeLeftMap[algStep];
-        }
-
-        algorithm.steps[i] = algStep;
-
-        // possibleSteps.forEach((posSteb: AlgorithmStep): void => {
-        //   if (posSteb === algStep) {
-        //     // TODO
-        //   }
-        // });
-      }
+      algorithm.rotate(quarterTurns)
     });
   }
 }
 
+export class MappedAlgorithm {
+  algorithm: Algorithm;
+  arrows: ArrowCoordinates[];
+
+  constructor(algorithm: Algorithm, arrows: ArrowCoordinates[]) {
+    this.algorithm = algorithm;
+    this.arrows = arrows;
+  }
+
+  rotate(quarterTurns: number): void {
+    this.algorithm.rotate(quarterTurns);
+  }
+}
+
+export class MappedAlgorithms extends Map<number, MappedAlgorithm> {
+  constructor() {
+    super();
+  }
+  rotate(quarterTurns: number): void {
+    for (const mappedAlgorithm of this.values()){
+      mappedAlgorithm.algorithm.rotate(quarterTurns);
+    }
+  }
+
+}
 

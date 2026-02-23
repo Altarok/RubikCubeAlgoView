@@ -21,8 +21,8 @@ export class MarkdownPostProcessorOLL extends MarkdownRenderChild {
     /*
      * Register listener which instantly redraws Rubik's Cubes while changing plugin settings.
      */
-    // @ts-ignore
     this.registerEvent(
+      // @ts-ignore
       this.plugin.app.workspace.on("rubik:rerender-markdown-code-block-processors",
         this.display.bind(this)
       )
@@ -47,12 +47,69 @@ export class MarkdownPostProcessorOLL extends MarkdownRenderChild {
 
   private addButtonFunctions(cubeRenderer: CubeRendererOLL, cubeState: CubeStateOLL) {
 
+    console.log('addButtonFunctions ' + cubeState.algorithmToArrows.size);
+
+    if (cubeState.algorithmToArrows.size > 1) {
+      let radioButtons: HTMLCollectionOf<HTMLInputElement> = cubeRenderer.radioDiv.getElementsByTagName('input');
+
+      console.log('tun');
+
+      for (let i: number = 0; i < radioButtons.length; i++) {
+        let radioButton: HTMLInputElement = radioButtons[i]!;
+        radioButton.addEventListener('click', () => {
+          if (cubeState.changeAlgorithm(+radioButton.id)) {
+            cubeRenderer.redrawArrows();
+          }
+        });
+      }
+    }
+
     cubeRenderer.buttonLeft.addEventListener('click', () => {
       cubeRenderer.rotateLeft();
+      cubeState.rotateLeft();
+      /*
+       * TODO instead change text of divs
+       */
+      // cubeRenderer.redrawAlgorithms();
+
+      // let radioButtons: HTMLCollectionOf<HTMLInputElement> = cubeRenderer.radioDiv.getElementsByTagName('input');
+
+      let elementsByTagName: HTMLCollectionOf<HTMLLabelElement> = cubeRenderer.radioDiv.getElementsByTagName('label');
+
+      console.log('turn left');
+
+      for (let i: number = 0; i < elementsByTagName.length; i++) {
+        let radioButton: HTMLLabelElement = elementsByTagName[i]!;
+        let radioButtonId: number = +radioButton.id;
+        // radioButton.setText(cubeState.algorithmToArrows.get(+radioButtonId)!.algorithm.toString());
+        let s: string = cubeState.algorithmToArrows.get(radioButtonId)!.algorithm.toString();
+        console.log('turn right: ' + radioButtonId + ' --> ' + s);
+        // radioButton.setAttribute('text', s);
+        radioButton.setText(s);
+      }
+
     });
 
     cubeRenderer.buttonRight.addEventListener('click', () => {
       cubeRenderer.rotateRight();
+      cubeState.rotateRight();
+      // cubeRenderer.redrawAlgorithms()
+
+      // let radioButtons: HTMLCollectionOf<HTMLInputElement> = cubeRenderer.radioDiv.getElementsByTagName('input');
+
+      let elementsByTagName: HTMLCollectionOf<HTMLLabelElement> = cubeRenderer.radioDiv.getElementsByTagName('label');
+
+      console.log('turn right');
+
+      for (let i: number = 0; i < elementsByTagName.length; i++) {
+
+        let radioButton: HTMLLabelElement = elementsByTagName[i]!;
+        let radioButtonId: number = +radioButton.id;
+        let s: string = cubeState.algorithmToArrows.get(radioButtonId)!.algorithm.toString();
+        console.log('turn right: ' + radioButtonId + ' --> ' + s);
+        // radioButton.setAttribute('text', s);
+        radioButton.setText(s);
+      }
     });
   }
 }

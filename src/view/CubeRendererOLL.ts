@@ -1,13 +1,20 @@
 import {CubeRenderer} from "./CubeRenderer";
 import {CubeStateOLL} from "../model/CubeStateOLL";
 import {OllFieldColors} from "../OllFieldColors";
+import {ArrowCoordinates} from "../model/ArrowCoordinates";
+import {Coordinates} from "../model/Coordinates";
+import {Algorithm} from "../model/Algorithm";
 
 export class CubeRendererOLL extends CubeRenderer {
   cubeState: CubeStateOLL;
+  radioDiv: HTMLDivElement;
+  // arrowSVG: SVGSVGElement;
+  // arrowSVGs: SVGLineElement[];
 
   constructor(cubeState: CubeStateOLL) {
     super(cubeState);
     this.cubeState = cubeState;
+    // this.arrowSVGs = new Array<SVGLineElement>();
   }
 
   displayCubeForeground(svgElement: SVGSVGElement, viewBoxWidth: number, viewBoxHeight: number): void {
@@ -55,16 +62,76 @@ export class CubeRendererOLL extends CubeRenderer {
     }
   }
 
+  redrawArrows(): void {
+    // for(const arr of this.arrowSVGs) {
+    //   // this.arrowSVG.remove(arr);
+    // }
+    // // this.arrowSVGs.length = 0; // clear array, yes really
+    // this.displayArrows(this.arrowSVG);
+    super.redrawCube();
+  }
+
+  displayArrows(mainSvg: SVGSVGElement): void {
+
+    // let algorithmIterator: MapIterator<Algorithm> = this.cubeState.algorithmToArrows.keys();
+
+    // this.arrowSVG = mainSvg;
+
+    let arrows: ArrowCoordinates[] = this.cubeState.currentArrowCoordinates();
+
+    for (let i: number = 0; i < arrows.length; i++) {
+      let arrow: ArrowCoordinates = arrows[i]!;
+      let arrStart: Coordinates = arrow.start();
+      let arrEnd: Coordinates = arrow.end();
+      // let arrowSVG: SVGLineElement =
+        mainSvg.createSvg('line', {
+        attr: {
+          x1: arrStart.x, y1: arrStart.y, x2: arrEnd.x, y2: arrEnd.y,
+          'marker-end': 'url(#arrowhead' + this.cubeState.arrowColor + ')',
+          stroke: this.cubeState.arrowColor
+        },
+        cls: 'rubik-cube-arrow'
+      });
+      // this.arrowSVGs.push(arrowSVG);
+    }
+  }
+
+  redrawAlgorithms(): void {
+
+    if (this.algorithmsDiv === undefined) return;
+
+    this.algorithmsDiv.empty();
+    this.displayAlgorithms(this.algorithmsDiv);
+  }
+
   displayAlgorithms(container: HTMLDivElement): void {
+
+    if (undefined === this.cubeState.currentAlgorithmIndex) return;
 
     let ul: HTMLUListElement = container.createEl('ul');
 
-    /*
-     * TODO replace with user input
-     */
-    ul.createEl('li', {text: "Fake algorithms"});
-    ul.createEl('li', {text: "For now"});
+    // let algorithmIterator: MapIterator<MappedAlgorithm> = this.cubeState.algorithmToArrows.values();
+
+    this.radioDiv = ul.createEl('div', {attr: { id:'radioButtons' }});
+
+    console.log('Draw algorithms. Current selection: ' + this.cubeState.currentAlgorithmIndex);
+
+    for (let i: number = 0; i < this.cubeState.algorithmToArrows.size; i++) {
+    // for (const algorithm of algorithmIterator) {
+      let algorithm: Algorithm = this.cubeState.algorithmToArrows.get(i)!.algorithm;
+
+      let checked: boolean = this.cubeState.currentAlgorithmIndex === i;
+
+      if (checked) {
+        this.radioDiv.createEl('input', {attr: {name:'algorithm-selection' + this.cubeState.id, type:'radio', id:''+i, value:''+i, checked}});
+      } else {
+        this.radioDiv.createEl('input', {attr: {name:'algorithm-selection' + this.cubeState.id, type:'radio', id:''+i, value:''+i}});
+      }
+      this.radioDiv.createEl('label', {attr: {id:''+i, for:''+i}, text: algorithm.toString()});
+      this.radioDiv.createEl('br');
+    }
 
   }
 
 }
+
