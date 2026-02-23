@@ -5,7 +5,7 @@ import {Dimensions} from "./model/Dimensions";
 import {InvalidInputContainer} from "./model/InvalidInputContainer";
 import {CubeStateOLL} from "./model/CubeStateOLL";
 import {CodeBlockInterpreterBase} from "./CodeBlockInterpreterBase";
-import {Algorithm, MappedAlgorithms} from "./model/Algorithm";
+import {Algorithm, MappedAlgorithm, MappedAlgorithms} from "./model/Algorithm";
 import {ArrowCoordinates} from "./model/ArrowCoordinates";
 import {AlgorithmParser} from "./parser/AlgorithmParser";
 
@@ -32,7 +32,7 @@ export class CodeBlockInterpreterOLL extends CodeBlockInterpreterBase {
   cubeColor: string;
   ollFieldInput: OllFieldColors;
   algorithmToArrowsInput: Array<string>;
-  startingAlgorithm: Algorithm;
+  startingAlgorithm: number;
 
   constructor(rows: string[], settings: RubikCubeAlgoSettingsTab) {
     super(rows, settings);
@@ -67,7 +67,7 @@ export class CodeBlockInterpreterOLL extends CodeBlockInterpreterBase {
        * OLL-only data:
        */
       cubeState.algorithmToArrows = algorithmToArrows;
-      cubeState.currentAlgorithm = this.startingAlgorithm;
+      cubeState.currentAlgorithmIndex = 0;
       cubeState.ollFieldColors = this.ollFieldInput;
 
       // let algBackupForReference: Map<Algorithm,Algorithm> = new Map<Algorithm,Algorithm>();
@@ -165,8 +165,7 @@ export class CodeBlockInterpreterOLL extends CodeBlockInterpreterBase {
     for (let i: number = 0; i < this.algorithmToArrowsInput.length; i++) {
       let row: string = this.algorithmToArrowsInput[i]!;
 
-      let splits: string[] = row.split(' == ')!;
-
+      let splits: string[] = row.split(' == ');
 
       // console.log('row: ' + row);
 
@@ -183,10 +182,9 @@ export class CodeBlockInterpreterOLL extends CodeBlockInterpreterBase {
         algorithm = data;
         matchingArrows = super.setupArrowCoordinates(splits[1]!);
 
-        map.set(algorithm, matchingArrows)
-        if (i === 0) {
-          this.startingAlgorithm = algorithm;
-        }
+        map.set(i, new MappedAlgorithm(algorithm, matchingArrows));
+          this.startingAlgorithm = 0;
+
       } else {
         // TODO df
       }

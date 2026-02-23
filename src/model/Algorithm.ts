@@ -100,8 +100,8 @@ export class Algorithms extends Array<Algorithm> {
 }
 
 export class MappedAlgorithm {
-  private algorithm: Algorithm;
-  private arrows: ArrowCoordinates[];
+  algorithm: Algorithm;
+  arrows: ArrowCoordinates[];
 
   constructor(algorithm: Algorithm, arrows: ArrowCoordinates[]) {
     this.algorithm = algorithm;

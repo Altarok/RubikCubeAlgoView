@@ -3,6 +3,7 @@ import {CubeStateOLL} from "../model/CubeStateOLL";
 import {OllFieldColors} from "../OllFieldColors";
 import {ArrowCoordinates} from "../model/ArrowCoordinates";
 import {Coordinates} from "../model/Coordinates";
+import {Algorithm} from "../model/Algorithm";
 
 export class CubeRendererOLL extends CubeRenderer {
   cubeState: CubeStateOLL;
@@ -105,46 +106,30 @@ export class CubeRendererOLL extends CubeRenderer {
 
   displayAlgorithms(container: HTMLDivElement): void {
 
-    if (undefined === this.cubeState.currentAlgorithm) return;
+    if (undefined === this.cubeState.currentAlgorithmIndex) return;
 
     let ul: HTMLUListElement = container.createEl('ul');
 
-    let algorithmIterator: MapIterator<Algorithm> = this.cubeState.algorithmToArrows.keys();
+    // let algorithmIterator: MapIterator<MappedAlgorithm> = this.cubeState.algorithmToArrows.values();
 
-    this.radioDiv = ul.createEl('div', {id:'radioButton'});
+    this.radioDiv = ul.createEl('div', {attr: { id:'radioButtons' }});
 
-    console.log('Draw algorithms. Current selection: ');
-    console.log(this.cubeState.currentAlgorithm.toString());
+    console.log('Draw algorithms. Current selection: ' + this.cubeState.currentAlgorithmIndex);
 
-    for (const algorithm of algorithmIterator) {
+    for (let i: number = 0; i < this.cubeState.algorithmToArrows.size; i++) {
+    // for (const algorithm of algorithmIterator) {
+      let algorithm: Algorithm = this.cubeState.algorithmToArrows.get(i)!.algorithm;
 
-      let checked: boolean = algorithm.toString() === this.cubeState.currentAlgorithm.toString();
+      let checked: boolean = this.cubeState.currentAlgorithmIndex === i;
 
       if (checked) {
-        this.radioDiv.createEl('input', {attr: {name:'algorithm-selection' + this.cubeState.id, type:'radio', id:algorithm.toString(), checked}});
+        this.radioDiv.createEl('input', {attr: {name:'algorithm-selection' + this.cubeState.id, type:'radio', id:''+i, value:''+i, checked}});
       } else {
-        this.radioDiv.createEl('input', {attr: {name:'algorithm-selection' + this.cubeState.id, type:'radio', id:algorithm.toString()}});
+        this.radioDiv.createEl('input', {attr: {name:'algorithm-selection' + this.cubeState.id, type:'radio', id:''+i, value:''+i}});
       }
-      this.radioDiv.createEl('label', {attr: {for:algorithm.toString()}, text: algorithm.toString()});
+      this.radioDiv.createEl('label', {attr: {id:''+i, for:''+i}, text: algorithm.toString()});
       this.radioDiv.createEl('br');
     }
-
-
-
-    // <input type="radio" id="html" name="fav_language" value="HTML">
-    //   <label for="html">HTML</label><br>
-    //   <input type="radio" id="css" name="fav_language" value="CSS">
-    //   <label for="css">CSS</label><br>
-    //   <input type="radio" id="javascript" name="fav_language" value="JavaScript">
-    //   <label for="javascript">JavaScript</label>
-
-    //   , {attr: {type:'radio', name:'nam', id:'1'}, text: '1'});
-    // ul.createEl('div', {attr: {type:'radio', name:'nam', id:'2'}, text: '2'});
-
-    // /*
-    //  * TODO replace with user input
-    //  */
-    // ul.createEl('li', {text: "For now"});
 
   }
 

@@ -14,7 +14,7 @@ let staticId: number = 1;
 export class CubeStateOLL extends CubeState {
   ollFieldColors: OllFieldColors;
   algorithmToArrows: MappedAlgorithms;
-  currentAlgorithm: Algorithm;
+  currentAlgorithmIndex: number;
   id: number;
 
   // /*
@@ -25,14 +25,15 @@ export class CubeStateOLL extends CubeState {
   constructor(codeBlockContent: string[]) {
     super(codeBlockContent);
     this.id = staticId++;
-    console.log(this.id);
+    // console.log(this.id);
+    this.currentAlgorithmIndex = 0;
   }
 
   currentArrowCoordinates(): ArrowCoordinates[] {
-    if (this.currentAlgorithm === undefined || this.currentAlgorithm === null) {
+    if (this.algorithmToArrows === undefined || this.algorithmToArrows.size === 0) {
       return new Array<ArrowCoordinates>()
     }
-    return this.algorithmToArrows.get(this.currentAlgorithm);
+    return this.algorithmToArrows.get(this.currentAlgorithmIndex)!.arrows;
   }
 
   /**
@@ -40,7 +41,6 @@ export class CubeStateOLL extends CubeState {
    */
   rotateLeft(): void {
     this.algorithmToArrows.rotate(1);
-    this.currentAlgorithm.rotate(1);
   }
 
   /**
@@ -48,17 +48,23 @@ export class CubeStateOLL extends CubeState {
    */
   rotateRight(): void {
     this.algorithmToArrows.rotate(3);
-    this.currentAlgorithm.rotate(3);
   }
 
-  changeAlgorithm(algorithmId: string): boolean {
-    if (this.currentAlgorithm.toString() === algorithmId) return false;
-    for (const algorithm of this.algorithmToArrows.keys()) {
-      if (algorithm.toString() === algorithmId) {
-        this.currentAlgorithm = algorithm; // this.algBackupForReference.get(algorithm);
-        return true;
-      }
+  changeAlgorithm(algorithmId: number): boolean {
+    // console.log(algorithmId);
+    if (this.currentAlgorithmIndex === algorithmId) {
+      // console.log('no change');
+      return false;
     }
-    return false;
+    this.currentAlgorithmIndex = algorithmId;
+    // console.log('changed to ' + this.currentAlgorithmIndex);
+    return true;
+    // for (const algorithm of this.algorithmToArrows.keys()) {
+    //   if (algorithm.toString() === algorithmId) {
+    //     this.currentAlgorithmIndex = +algorithm; // this.algBackupForReference.get(algorithm);
+    //     return true;
+    //   }
+    // }
+    // return false;
   }
 }

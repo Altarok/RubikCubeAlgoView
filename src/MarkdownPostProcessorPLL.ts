@@ -22,8 +22,8 @@ export class MarkdownPostProcessorPLL extends MarkdownRenderChild {
     /*
      * Register listener which instantly redraws Rubik's Cubes while changing plugin settings.
      */
-    // @ts-ignore
     this.registerEvent(
+      // @ts-ignore
       this.plugin.app.workspace.on('rubik:rerender-markdown-code-block-processors',
         this.display.bind(this)
       )
