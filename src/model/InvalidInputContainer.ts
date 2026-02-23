@@ -1,14 +1,17 @@
+/**
+ * Container for invalid user input.
+ */
 export class InvalidInputContainer {
-  lastNonInterpretableLine: string;
+  nonInterpretableLine: string;
   reasonForFailure: string;
 
   constructor(lastNonInterpretableLine: string, reasonForFailure: string) {
-    this.lastNonInterpretableLine = lastNonInterpretableLine;
+    this.nonInterpretableLine = lastNonInterpretableLine;
     this.reasonForFailure = reasonForFailure;
   }
 
   isInvalidRow(row: string): boolean {
-    return this.lastNonInterpretableLine === row;
+    return this.nonInterpretableLine === row;
   }
 
 }

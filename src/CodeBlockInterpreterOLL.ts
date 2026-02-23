@@ -5,6 +5,9 @@ import {Dimensions} from "./model/Dimensions";
 import {InvalidInputContainer} from "./model/InvalidInputContainer";
 import {CubeStateOLL} from "./model/CubeStateOLL";
 import {CodeBlockInterpreterBase} from "./CodeBlockInterpreterBase";
+import {Algorithm, MappedAlgorithms} from "./model/Algorithm";
+import {ArrowCoordinates} from "./model/ArrowCoordinates";
+import {AlgorithmParser} from "./parser/AlgorithmParser";
 
 const DEFAULT = {
   CODE_BLOCK_TEMPLATE:
@@ -28,6 +31,8 @@ const DEFAULT = {
 export class CodeBlockInterpreterOLL extends CodeBlockInterpreterBase {
   cubeColor: string;
   ollFieldInput: OllFieldColors;
+  algorithmToArrowsInput: Array<string>;
+  startingAlgorithm: Algorithm;
 
   constructor(rows: string[], settings: RubikCubeAlgoSettingsTab) {
     super(rows, settings);
@@ -36,21 +41,44 @@ export class CodeBlockInterpreterOLL extends CodeBlockInterpreterBase {
     } else {
       this.cubeColor = DEFAULT_SETTINGS.CUBE_COLOR;
     }
+
+    this.algorithmToArrowsInput = new Array<string>();
   }
 
   setupOll(): CubeStateOLL {
     super.setup();
 
+    let algorithmToArrows: MappedAlgorithms = this.setupAlgorithmArrowMap();
+
     let cubeState: CubeStateOLL = new CubeStateOLL(this.codeBlockContent);
 
     if (this.codeBlockInterpretationSuccessful) {
+      /*
+       * Generic data:
+       */
+
       cubeState.cubeWidth = this.cubeWidth;
       cubeState.cubeHeight = this.cubeHeight;
       cubeState.backgroundColor = '#000';
       cubeState.arrowColor = this.arrowColor;
-      cubeState.arrowCoordinates = this.arrowCoordinates;
-      cubeState.ollFieldColors = this.ollFieldInput;
       cubeState.viewBoxDimensions = new Dimensions(this.cubeWidth * 100 + 100, this.cubeHeight * 100 + 100);
+
+      /*
+       * OLL-only data:
+       */
+      cubeState.algorithmToArrows = algorithmToArrows;
+      cubeState.currentAlgorithm = this.startingAlgorithm;
+      cubeState.ollFieldColors = this.ollFieldInput;
+
+      // let algBackupForReference: Map<Algorithm,Algorithm> = new Map<Algorithm,Algorithm>();
+      // let algorithms: MapIterator<Algorithm> = algorithmToArrows.keys();
+      // for (const alg of algorithms) {
+      //   let algorithmClone: Algorithm = alg.clone();
+      //   algBackupForReference.set(algorithmClone, alg);
+      // }
+      //
+      // cubeState.algBackupForReference = algBackupForReference;
+
     } else {
       cubeState.invalidInputContainer = new InvalidInputContainer(this.lastNonInterpretableLine, this.reasonForFailure);
     }
@@ -63,11 +91,17 @@ export class CodeBlockInterpreterOLL extends CodeBlockInterpreterBase {
     let redactedCopyOfRows: string[] = new Array<string>();
     for (let i: number = 0; i < rows.length; i++) {
       let row: string = rows[i]!;
-      if (row.startsWith('arrows:')) {
-        super.handleArrowsInput(row);
+      // if (row.startsWith('arrows:')) {
+      //   super.handleArrowsInput(row);
+      // } else
+      if (row.startsWith('alg:')) {
+        this.algorithmToArrowsInput.push(row.replace('alg:', ''));
       } else if (row.startsWith('//')) {
         // ignore line starting with '//'
       } else {
+        /*
+         * TODO add regex
+         */
         redactedCopyOfRows[redactedCopyOfRows.length] = row;
       }
     }
@@ -124,4 +158,41 @@ export class CodeBlockInterpreterOLL extends CodeBlockInterpreterBase {
     return DEFAULT.CODE_BLOCK_TEMPLATE;
   }
 
+  private setupAlgorithmArrowMap(): MappedAlgorithms {
+    /* Method's return value: */
+    let map: MappedAlgorithms = new MappedAlgorithms();
+
+    for (let i: number = 0; i < this.algorithmToArrowsInput.length; i++) {
+      let row: string = this.algorithmToArrowsInput[i]!;
+
+      let splits: string[] = row.split(' == ')!;
+
+
+      // console.log('row: ' + row);
+
+      // console.log('splits: ' + splits);
+      let data: Algorithm | InvalidInputContainer = new AlgorithmParser().parse(splits[0]!);
+
+      let algorithm: Algorithm;
+      let matchingArrows: ArrowCoordinates[];
+
+      if (data instanceof InvalidInputContainer) {
+        super.errorWhileParsing(data);
+        return map;
+      } else if (data instanceof Algorithm) {
+        algorithm = data;
+        matchingArrows = super.setupArrowCoordinates(splits[1]!);
+
+        map.set(algorithm, matchingArrows)
+        if (i === 0) {
+          this.startingAlgorithm = algorithm;
+        }
+      } else {
+        // TODO df
+      }
+    }
+
+
+    return map;
+  }
 }

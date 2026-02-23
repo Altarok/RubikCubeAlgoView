@@ -1,8 +1,7 @@
 import {CubeState} from "../model/CubeState";
 import {InvalidInputContainer} from "../model/InvalidInputContainer";
 import {Dimensions} from "../model/Dimensions";
-import {ArrowCoordinates} from "../model/ArrowCoordinates";
-import {Coordinates} from "../model/Coordinates";
+
 
 export abstract class CubeRenderer {
   cubeState: CubeState;
@@ -16,6 +15,7 @@ export abstract class CubeRenderer {
   buttonLeft: HTMLButtonElement;
   // buttonCopy: HTMLButtonElement;
   buttonRight: HTMLButtonElement;
+  mainCubeSvg: SVGSVGElement;
 
   protected constructor(cubeState: CubeState) {
     this.cubeState = cubeState;
@@ -38,6 +38,8 @@ export abstract class CubeRenderer {
 
   abstract displayAlgorithms(container: HTMLDivElement): void;
 
+  abstract displayArrows(container: SVGSVGElement): void;
+
   displayCubeButtonAndAlgorithms(container: HTMLElement): void {
 
     let mainContainer: HTMLDivElement = container.createEl('div', {cls: 'rubik-cube-div-main-container'});
@@ -52,6 +54,12 @@ export abstract class CubeRenderer {
     this.displayCube(this.cubeDiv);
     this.displayButtons(buttonDiv);
     this.displayAlgorithms(this.algorithmsDiv);
+  }
+
+  redrawCube(): void{
+    this.cubeDiv.removeChild( this.mainCubeSvg);
+    // this.mainCubeSvg.detach();
+    this.displayCube(this.cubeDiv);
   }
 
   displayCube(element: HTMLDivElement): void {
@@ -78,13 +86,13 @@ export abstract class CubeRenderer {
       imageHeight = 200;
     }
 
-    let mainSvg: SVGSVGElement = element.createSvg('svg', {
+    this.mainCubeSvg = element.createSvg('svg', {
       attr: {
         width: imageWidth, height: imageHeight,
         viewBox: '0 0 ' + viewBoxWidth + ' ' + viewBoxHeight
       }, cls: 'rubik-cube-pll'
     });
-    let defs: SVGDefsElement = mainSvg.createSvg('defs');
+    let defs: SVGDefsElement =  this.mainCubeSvg.createSvg('defs');
     let marker: SVGMarkerElement = defs.createSvg('marker', {
       attr: {
         id: 'arrowhead' + this.cubeState.arrowColor,
@@ -100,26 +108,9 @@ export abstract class CubeRenderer {
     marker.createSvg('polygon', {attr: {points: '0,0 10,3.5 0,7', fill: this.cubeState.arrowColor}});
 
     /* Background rectangle */
-    mainSvg.createSvg('rect', {attr: {fill: this.cubeState.backgroundColor}, cls: "rubik-cube-pll-rect"});
+    this.mainCubeSvg.createSvg('rect', {attr: {fill: this.cubeState.backgroundColor}, cls: "rubik-cube-pll-rect"});
 
-    return mainSvg;
-  }
-
-  displayArrows(mainSvg: SVGSVGElement): void {
-    let arrows: ArrowCoordinates[] = this.cubeState.arrowCoordinates;
-    for (let i: number = 0; i < arrows.length; i++) {
-      let arrow: ArrowCoordinates = arrows[i]!;
-      let arrStart: Coordinates = arrow.start();
-      let arrEnd: Coordinates = arrow.end();
-      mainSvg.createSvg('line', {
-        attr: {
-          x1: arrStart.x, y1: arrStart.y, x2: arrEnd.x, y2: arrEnd.y,
-          'marker-end': 'url(#arrowhead' + this.cubeState.arrowColor + ')',
-          stroke: this.cubeState.arrowColor
-        },
-        cls: 'rubik-cube-arrow'
-      });
-    }
+    return  this.mainCubeSvg;
   }
 
   /**

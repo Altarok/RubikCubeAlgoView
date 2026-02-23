@@ -1,6 +1,7 @@
 import {Coordinates} from "./model/Coordinates";
 import {ArrowCoordinates} from "./model/ArrowCoordinates";
 import {DEFAULT_SETTINGS, RubikCubeAlgoSettingsTab} from "./RubikCubeAlgoSettings";
+import {InvalidInputContainer} from "./model/InvalidInputContainer";
 
 const DEFAULT = {
   WIDTH: 3, /* default rubik cube width  */
@@ -19,10 +20,6 @@ export abstract class CodeBlockInterpreterBase {
 
   protected rectangleCoordinates: Coordinates[];
   protected arrowColor: string;
-  protected arrowsLine: string;
-  protected arrows: string;
-  /** Nested array of coordinates. Contains start and end coordinates of arrows in pixels. */
-  protected arrowCoordinates: ArrowCoordinates[];
 
   protected constructor(codeBlockContent: string[], settings: RubikCubeAlgoSettingsTab) {
     this.codeBlockContent = codeBlockContent;
@@ -41,8 +38,7 @@ export abstract class CodeBlockInterpreterBase {
     } else {
       this.arrowColor = DEFAULT_SETTINGS.ARROW_COLOR;
     }
-    this.arrows = "";
-    this.arrowCoordinates = new Array<ArrowCoordinates>();
+    // this.arrows = "";
   }
 
   setup(): void {
@@ -52,7 +48,6 @@ export abstract class CodeBlockInterpreterBase {
     }
     this.interpretCodeBlock(this.codeBlockContent);
     this.setupCubeRectangleCenterCoordinates();
-    this.setupArrowCoordinates();
   }
 
 
@@ -84,9 +79,16 @@ export abstract class CodeBlockInterpreterBase {
     this.reasonForFailure = reason;
   }
 
-  setupArrowCoordinates(): void {
+  errorWhileParsing(errorData: InvalidInputContainer): void {
+    this.errorInThisLine(errorData.nonInterpretableLine, errorData.reasonForFailure);
+  }
 
-    let completeArrowsInput: string[] = this.arrows.split(',').filter((x) => x.length > 0);
+  setupArrowCoordinates(arrowInput: string): ArrowCoordinates[] {
+
+    /* Method's return value: */
+    let arrowCoordinates: ArrowCoordinates[] = new Array<ArrowCoordinates>();
+
+    let completeArrowsInput: string[] = arrowInput.split(',').filter((x) => x.length > 0);
     let isDoubleSided: boolean = false;
 
     for (let i: number = 0; i < completeArrowsInput.length; i++) {
@@ -104,7 +106,7 @@ export abstract class CodeBlockInterpreterBase {
 
       let singleArrowCoordsFrom: string = singleArrowCoordsSplit[0]!;
       let singleArrowCoordsTo: string = singleArrowCoordsSplit[1]!;
-      //console.log("-- Arrow goes from '"+singleArrowCoordsFrom+"' to '"+singleArrowCoordsTo+"'");
+      // console.log("-- Arrow goes from '"+singleArrowCoordsFrom+"' to '"+singleArrowCoordsTo+"'");
 
       let arrowStart: Coordinates;
       let arrowEnd: Coordinates;
@@ -119,7 +121,7 @@ export abstract class CodeBlockInterpreterBase {
         let minor: number = +semanticVersion[1]!;
         arrowStartRectIndex = (major - 1) * this.cubeWidth + minor;
       }
-      //console.log('-- arrowStartRectIndex: ' + arrowStartRectIndex);
+      // console.log('-- arrowStartRectIndex: ' + arrowStartRectIndex);
       arrowStart = this.rectangleCoordinates[arrowStartRectIndex]!;
 
       let arrowEndRectIndex: number = -1;
@@ -131,22 +133,28 @@ export abstract class CodeBlockInterpreterBase {
         let minor: number = +semanticVersion[1]!;
         arrowEndRectIndex = (major - 1) * this.cubeWidth + minor;
       }
-      //console.log('-- arrowEndRectIndex: ' + arrowEndRectIndex);
+      // console.log('-- arrowEndRectIndex: ' + arrowEndRectIndex);
       arrowEnd = this.rectangleCoordinates[arrowEndRectIndex]!;
 
       if (arrowStart === arrowEnd) {
         // console.log("Skip arrow pointing to itself: " + singleArrowCoordsFrom);
-        this.errorInThisLine(this.arrowsLine, "arrow '" + singleArrowCoords + "' is pointing to its starting point");
+        this.errorInThisLine(arrowInput, "arrow '" + singleArrowCoords + "' is pointing to its starting point");
         continue;
       }
 
-      this.arrowCoordinates.push(new ArrowCoordinates(arrowStart, arrowEnd));
+
+      let newArrow: ArrowCoordinates = new ArrowCoordinates(arrowStart, arrowEnd);
+      // console.log('new arrow: ' + newArrow.toString());
+      arrowCoordinates.push(newArrow);
 
       if (isDoubleSided) { // add reverse copy
-        this.arrowCoordinates.push(new ArrowCoordinates(arrowEnd, arrowStart));
+        let newArrowReversed: ArrowCoordinates = new ArrowCoordinates(arrowEnd, arrowStart);
+        // console.log('new arrow: ' + newArrowReversed.toString());
+        arrowCoordinates.push(newArrowReversed);
       }
     }
-    //console.log('<< getArrowCoordinates, ' + this.arrowCoordinates);
+    // console.log('<< getArrowCoordinates, ' + arrowCoordinates);
+    return arrowCoordinates;
   }
 
 
@@ -164,19 +172,7 @@ export abstract class CodeBlockInterpreterBase {
     }
   }
 
-  /**
-   * @param {string} row - string starting with 'arrows:'
-   */
-  handleArrowsInput(row: string): void {
-    this.arrowsLine = row;
-    if (row.match('^arrows:\\d+(\\.\\d+)?(-|\\+)\\d+(\\.\\d+)?(,\\d+(\\.\\d+)?(-|\\+)\\d+(\\.\\d+)?)*( //.*)?')) {
-      /* do not parse yet, another line may still brake the input which makes the calculation obsolete */
-      // @ts-ignore checked with regex
-      this.arrows = row.split(' ')[0].trim().replace('arrows:', '');
-    } else {
-      this.errorInThisLine(row, 'arrow color value should match "arrowColor:" + [3 (or 6) lowercase hex digits (0-9/a-f)]');
-    }
-  }
+
 
 
 }

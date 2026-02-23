@@ -1,6 +1,6 @@
 import {InvalidInputContainer} from "./InvalidInputContainer";
 import {Dimensions} from "./Dimensions";
-import {ArrowCoordinates} from "model/ArrowCoordinates";
+
 
 export abstract class CubeState {
   /** Code block content */
@@ -15,7 +15,6 @@ export abstract class CubeState {
   arrowColor: string;
   /** the background's color */
   backgroundColor: string;
-  arrowCoordinates: ArrowCoordinates[];
   /** SVG metadata */
   viewBoxDimensions: Dimensions;
 

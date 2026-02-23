@@ -1,5 +1,8 @@
 import {Coordinates} from "./Coordinates";
 
+/**
+ * Coordinates for -one- arrow.
+ */
 export class ArrowCoordinates {
   /** x,y (pixel coordinates) */
   startCoordinates: Coordinates;
@@ -19,4 +22,9 @@ export class ArrowCoordinates {
     return this.endCoordinates;
   }
 
+  toString(): string {
+    return "'Arrow[from'" + this.startCoordinates.toString() + "', to'" + this.endCoordinates.toString() + "']"
+  }
+
 }
+

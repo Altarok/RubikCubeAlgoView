@@ -1,6 +1,9 @@
 import {CubeRenderer} from "./CubeRenderer";
 import {CubeStatePLL} from "../model/CubeStatePLL";
 import {Algorithm} from "../model/Algorithm";
+import {InvalidInputContainer} from "../model/InvalidInputContainer";
+import {ArrowCoordinates} from "../model/ArrowCoordinates";
+import {Coordinates} from "../model/Coordinates";
 
 export class CubeRendererPLL extends CubeRenderer {
   cubeState: CubeStatePLL;
@@ -24,13 +27,29 @@ export class CubeRendererPLL extends CubeRenderer {
     }
   }
 
+  displayArrows(mainSvg: SVGSVGElement): void {
+    let arrows: ArrowCoordinates[] = this.cubeState.arrowCoordinates;
+    for (let i: number = 0; i < arrows.length; i++) {
+      let arrow: ArrowCoordinates = arrows[i]!;
+      let arrStart: Coordinates = arrow.start();
+      let arrEnd: Coordinates = arrow.end();
+      mainSvg.createSvg('line', {
+        attr: {
+          x1: arrStart.x, y1: arrStart.y, x2: arrEnd.x, y2: arrEnd.y,
+          'marker-end': 'url(#arrowhead' + this.cubeState.arrowColor + ')',
+          stroke: this.cubeState.arrowColor
+        },
+        cls: 'rubik-cube-arrow'
+      });
+    }
+  }
+
   redrawAlgorithms(): void {
 
     if (this.algorithmsDiv === undefined) return;
 
     this.algorithmsDiv.empty();
     this.displayAlgorithms(this.algorithmsDiv);
-
   }
 
   displayAlgorithms(container: HTMLDivElement): void {

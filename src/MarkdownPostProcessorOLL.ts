@@ -21,8 +21,8 @@ export class MarkdownPostProcessorOLL extends MarkdownRenderChild {
     /*
      * Register listener which instantly redraws Rubik's Cubes while changing plugin settings.
      */
-    // @ts-ignore
     this.registerEvent(
+      // @ts-ignore
       this.plugin.app.workspace.on("rubik:rerender-markdown-code-block-processors",
         this.display.bind(this)
       )
@@ -47,12 +47,31 @@ export class MarkdownPostProcessorOLL extends MarkdownRenderChild {
 
   private addButtonFunctions(cubeRenderer: CubeRendererOLL, cubeState: CubeStateOLL) {
 
+    // console.log('addButtonFunctions');
+
+    if (cubeState.algorithmToArrows.size > 1) {
+      let radioButtons: HTMLCollectionOf<HTMLInputElement> = cubeRenderer.radioDiv.getElementsByTagName('input');
+
+      for (let i: number = 0; i < radioButtons.length; i++) {
+        let radioButton: HTMLInputElement = radioButtons[i]!;
+        radioButton.addEventListener('click', () => {
+          if (cubeState.changeAlgorithm(radioButton.id)) {
+            cubeRenderer.redrawArrows();
+          }
+        });
+      }
+    }
+
     cubeRenderer.buttonLeft.addEventListener('click', () => {
       cubeRenderer.rotateLeft();
+      cubeState.rotateLeft();
+      cubeRenderer.redrawAlgorithms();
     });
 
     cubeRenderer.buttonRight.addEventListener('click', () => {
       cubeRenderer.rotateRight();
+      cubeState.rotateRight();
+      cubeRenderer.redrawAlgorithms()
     });
   }
 }

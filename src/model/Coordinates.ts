@@ -9,4 +9,8 @@ export class Coordinates {
     this.y = y;
   }
 
+  toString(): string {
+    return this.x + ',' + this.y
+  }
+
 }
