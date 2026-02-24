@@ -8,11 +8,11 @@ const stepSeparator: string = ' ';
 export class AlgorithmParser {
 
   /**
-   * @param {string} row - string starting with 'alg:'
+   * @param row - row containing algorithm steps, pre-trimmed and prefix 'alg:' removed
    */
   parse(row: string): Algorithm | InvalidInput {
     if (!row.match('^' + algorithmPattern + '$')) {
-      return new InvalidInput(row, "invalid, expected algorithm  like: alg:R' U2 R U2 R' F R U R' U' R' F' R2 U' (spaces not optional, no comments in this line)");
+      return new InvalidInput(row, "Invalid algorithm format. Example: alg:R' U2 R U2 R' F R U R' U' R' F' R2 U' (spaces not optional, no comments in this line)");
     }
     let splitSteps: string[] = row.split(stepSeparator);
     let steps: AlgorithmStep[] = new Array<AlgorithmStep>();

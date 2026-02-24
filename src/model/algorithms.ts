@@ -104,8 +104,7 @@ export class MappedAlgorithm {
 export class MappedAlgorithms {
   private map = new Map<number, MappedAlgorithm>();
 
-  constructor() {
-  }
+  size = () => this.map.size;
 
   add = (index: number, mappedAlgorithm: MappedAlgorithm) => this.map.set(index, mappedAlgorithm);
 

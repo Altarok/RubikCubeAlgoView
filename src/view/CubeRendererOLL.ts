@@ -1,8 +1,7 @@
 import {CubeRenderer} from "./CubeRenderer";
 import {CubeStateOLL} from "../model/cube-state";
 import {OllFieldColoring} from "../model/oll-field-coloring";
-import {Geometry, Coordinates} from "../model/geometry";
-import {Algorithms} from "../model/algorithms";
+import {ArrowCoords, Arrows, Coordinates} from "../model/geometry";
 
 export class CubeRendererOLL extends CubeRenderer {
   cubeState: CubeStateOLL;
@@ -76,10 +75,10 @@ export class CubeRendererOLL extends CubeRenderer {
 
     // this.arrowSVG = mainSvg;
 
-    let arrows: Geometry[] = this.cubeState.currentArrowCoordinates();
+    let arrows: Arrows = this.cubeState.currentArrowCoordinates();
 
     for (let i: number = 0; i < arrows.length; i++) {
-      let arrow: Geometry = arrows[i]!;
+      let arrow: ArrowCoords = arrows[i]!;
       let arrStart: Coordinates = arrow.start;
       let arrEnd: Coordinates = arrow.end;
       // let arrowSVG: SVGLineElement =
@@ -115,9 +114,9 @@ export class CubeRendererOLL extends CubeRenderer {
 
     console.log('Draw algorithms. Current selection: ' + this.cubeState.currentAlgorithmIndex);
 
-    for (let i: number = 0; i < this.cubeState.algorithmToArrows.size; i++) {
+    for (let i: number = 0; i < this.cubeState.algorithmToArrows.size(); i++) {
     // for (const algorithm of algorithmIterator) {
-      let algorithm: Algorithms = this.cubeState.algorithmToArrows.get(i)!.algorithm;
+      let algorithm: Algorithm = this.cubeState.algorithmToArrows.get(i)!.algorithm;
 
       let checked: boolean = this.cubeState.currentAlgorithmIndex === i;
 
