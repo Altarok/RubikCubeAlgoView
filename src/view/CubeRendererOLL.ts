@@ -1,6 +1,6 @@
 import {CubeRenderer} from "./CubeRenderer";
 import {CubeStateOLL} from "../model/cube-state";
-import {OllFieldColors} from "../model/OllFieldColors";
+import {OllFieldColoring} from "../model/oll-field-coloring";
 import {Geometry, Coordinates} from "../model/geometry";
 import {Algorithms} from "../model/algorithms";
 
@@ -17,7 +17,7 @@ export class CubeRendererOLL extends CubeRenderer {
   }
 
   displayCubeForeground(svgElement: SVGSVGElement, viewBoxWidth: number, viewBoxHeight: number): void {
-    let cells: OllFieldColors = this.cubeState.ollFieldColors;
+    let cells: OllFieldColoring = this.cubeState.ollFieldColors;
 
     /*
      * Edge rows/columns

@@ -1,11 +1,10 @@
 import {DEFAULT_SETTINGS, RubikCubeAlgoSettingsTab} from "./RubikCubeAlgoSettings";
-import {Dimensions} from "./model/Dimensions";
 import {CubeStatePLL} from "./model/cube-state";
 import {InvalidInput} from "./model/invalid-input";
 import {CodeBlockInterpreterBase} from "./CodeBlockInterpreterBase";
-import {Algorithms, Algorithms} from "./model/algorithms";
-import {Geometry, Coordinates} from "./model/geometry";
-import {AlgorithmParser} from "./parser/AlgorithmParser";
+import {Algorithm, Algorithms} from "./model/algorithms";
+import {Arrows, Coordinates} from "./model/geometry";
+import {AlgorithmParser} from "./parser/algorithm-parser";
 
 const CODE_BLOCK_TEMPLATE =
   '\n```rubikCubePLL\n' +
@@ -17,9 +16,9 @@ const CODE_BLOCK_TEMPLATE =
 
 export class CodeBlockInterpreterPLL extends CodeBlockInterpreterBase {
   cubeColor: string;
-  algorithms: Algorithms;
+  algorithms: Algorithms = new Algorithms();
   /** Nested array of coordinates. Contains start and end coordinates of arrows in pixels. */
-    // arrowCoordinates: Arrows[];
+  // arrowCoordinates: Arrows[];
   arrowsLine: string;
   arrows: string;
 
@@ -30,14 +29,13 @@ export class CodeBlockInterpreterPLL extends CodeBlockInterpreterBase {
     } else {
       this.cubeColor = DEFAULT_SETTINGS.CUBE_COLOR;
     }
-    this.algorithms = new Algorithms();
     // this.arrowCoordinates = new Array<Arrows>();
   }
 
   setupPll(): CubeStatePLL {
     super.setup();
 
-    let arrowCoordinates: Geometry[] = super.setupArrowCoordinates(this.arrows);
+    let arrowCoordinates: Arrows = super.setupArrowCoordinates(this.arrows);
 
 
     let cubeState: CubeStatePLL = new CubeStatePLL(this.codeBlockContent);
@@ -46,7 +44,6 @@ export class CodeBlockInterpreterPLL extends CodeBlockInterpreterBase {
       /*
        * Generic data:
        */
-
       cubeState.cubeWidth = this.cubeWidth;
       cubeState.cubeHeight = this.cubeHeight;
       cubeState.backgroundColor = this.cubeColor;
@@ -150,12 +147,12 @@ export class CodeBlockInterpreterPLL extends CodeBlockInterpreterBase {
    */
   private handleAlgorithmInput(row: string): void {
     let rowCleaned: string = row.trim().replace('alg:', '');
-    let data: Algorithms | InvalidInput = new AlgorithmParser().parse(rowCleaned);
+    let data: Algorithm | InvalidInput = new AlgorithmParser().parse(rowCleaned);
 
     if (data instanceof InvalidInput) {
       return super.errorWhileParsing(data);
     } else if (data instanceof Algorithms) {
-      this.algorithms.push(data);
+      this.algorithms.add(data);
     } else {
       // TODO df
     }

@@ -1,11 +1,11 @@
 import {DEFAULT_SETTINGS, RubikCubeAlgoSettingsTab} from "./RubikCubeAlgoSettings";
-import {OllFieldColors} from "./model/OllFieldColors";
+import {OllFieldColoring} from "./model/oll-field-coloring";
 import {InvalidInput} from "./model/invalid-input";
 import {CubeStateOLL} from "./model/cube-state";
 import {CodeBlockInterpreterBase} from "./CodeBlockInterpreterBase";
 import {Algorithm, Algorithms, MappedAlgorithm, MappedAlgorithms} from "./model/algorithms";
 import {Coordinates, Arrows} from "./model/geometry";
-import {AlgorithmParser} from "./parser/AlgorithmParser";
+import {AlgorithmParser} from "./parser/algorithm-parser";
 
 const DEFAULT = {
   CODE_BLOCK_TEMPLATE:
@@ -15,7 +15,7 @@ const DEFAULT = {
 
 export class CodeBlockInterpreterOLL extends CodeBlockInterpreterBase {
   cubeColor: string;
-  ollFieldInput: OllFieldColors;
+  ollFieldInput: OllFieldColoring;
   algorithmToArrowsInput: Array<string>;
   startingAlgorithm: number;
 
@@ -91,7 +91,7 @@ export class CodeBlockInterpreterOLL extends CodeBlockInterpreterBase {
     let rawOllInput: string[] = this.removeNonCubeFieldInput(rows);
 
     let expectedOllFieldInputWidth: number = rawOllInput[0]!.length;
-    this.ollFieldInput = new OllFieldColors(expectedOllFieldInputWidth);
+    this.ollFieldInput = new OllFieldColoring(expectedOllFieldInputWidth);
 
     this.cubeWidth = rawOllInput[0]!.length - 2;
     this.cubeHeight = rawOllInput.length - 2;

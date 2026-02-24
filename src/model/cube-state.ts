@@ -1,7 +1,7 @@
 import {InvalidInput} from "./invalid-input";
 import {Algorithms} from "./algorithms";
 import {Arrows, Dimensions} from "./geometry";
-import {OllFieldColors} from "./OllFieldColors";
+import {OllFieldColoring} from "./oll-field-coloring";
 import {MappedAlgorithms} from "./algorithms";
 
 export abstract class CubeState {
@@ -65,7 +65,7 @@ export class CubeStatePLL extends CubeState {
  * - value: set of arrows this algorithm implements
  */
 export class CubeStateOLL extends CubeState {
-  ollFieldColors: OllFieldColors;
+  ollFieldColors: OllFieldColoring;
   algorithmToArrows: MappedAlgorithms;
   currentAlgorithmIndex: number = 0;
 

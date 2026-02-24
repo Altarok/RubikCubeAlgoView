@@ -1,4 +1,4 @@
-import {Algorithm, Algorithms, AlgorithmStep, possibleSteps} from "../model/algorithms";
+import {Algorithm,  AlgorithmStep, possibleSteps} from "../model/algorithms";
 import {InvalidInput} from "../model/invalid-input";
 
 const possibleStepsPattern: string = "[xyzRrLlFfBbUuDdMSE](|'|2)";
@@ -6,9 +6,6 @@ const algorithmPattern: string = possibleStepsPattern + '( ?' + possibleStepsPat
 const stepSeparator: string = ' ';
 
 export class AlgorithmParser {
-
-  constructor() {
-  }
 
   /**
    * @param {string} row - string starting with 'alg:'
@@ -31,7 +28,6 @@ export class AlgorithmParser {
       }
     }
 
-    // steps.push(new Algorithm(steps));
     return new Algorithm(steps);
   }
 
