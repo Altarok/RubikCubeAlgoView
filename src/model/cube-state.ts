@@ -1,6 +1,6 @@
 import {InvalidInput} from "./invalid-input";
 import {Algorithms} from "./algorithms";
-import {ArrowCoords, Arrows, Dimensions} from "./arrowCoords";
+import {ArrowCoordinates, Arrows, Dimensions} from "./arrowCoordinates";
 import {OllFieldColors} from "./OllFieldColors";
 import {MappedAlgorithms} from "./algorithms";
 
@@ -41,7 +41,7 @@ export abstract class CubeState {
  */
 export class CubeStatePLL extends CubeState {
   algorithms: Algorithms;
-  arrowCoordinates: ArrowCoords[];
+  arrowCoordinates: ArrowCoordinates[];
 
   constructor(codeBlockContent: string[]) {
     super(codeBlockContent);
