@@ -4,25 +4,18 @@ import {Algorithm, Algorithms} from "../model/algorithms";
 import {OllFieldColoring} from "../model/oll-field-coloring";
 import {createArrowHead, drawArrows, drawGrid, drawRotateLeftIcon, drawRotateRightIcon, drawSticker} from "./svg-utils";
 import {renderAlgorithmList, renderAlgorithmSelect, showInvalidInput} from "./ui-utils";
+import {applyRotation} from "./dom-rotation";
+import {createCubeLayout, CubeLayout} from "./cube-layout";
 
 
 export abstract class CubeRenderer {
-  cubeState: CubeState;
-  /** Rotation of cube, degrees */
-  cubeRotation: number;
-  /** Pointer to cube SVG image */
-  cubeDiv: HTMLDivElement;
-  /** Pointer to algorithms container  */
-  algorithmsDiv: HTMLDivElement
+  layout: CubeLayout;
 
   buttonLeft: HTMLButtonElement;
-  // buttonCopy: HTMLButtonElement;
   buttonRight: HTMLButtonElement;
   mainCubeSvg: SVGSVGElement;
 
-  protected constructor(cubeState: CubeState) {
-    this.cubeState = cubeState;
-    this.cubeRotation = 0;
+  protected constructor(private readonly cubeState: CubeState) {
   }
 
   /**
@@ -45,36 +38,28 @@ export abstract class CubeRenderer {
 
   displayCubeButtonAndAlgorithms(container: HTMLElement): void {
 
-    let mainContainer: HTMLDivElement = container.createEl('div', {cls: 'rubik-cube-div-main-container'});
+    this.layout = createCubeLayout(container);
 
-    let leftSide: HTMLDivElement = mainContainer.createEl('div', {cls: 'rubik-cube-div-left-column'});
-    let textSide: HTMLDivElement = mainContainer.createEl('div', {cls: 'rubik-cube-div-right-column'});
-
-    this.cubeDiv = leftSide.createEl('div', {attr: {id: 'cubeDiv'}, cls: 'rotatable'});
-    let buttonDiv: HTMLDivElement = leftSide.createEl('div', {attr: {id: 'buttonDiv'}, cls: 'button-container'});
-    this.algorithmsDiv = textSide.createEl('div', {attr: {id: 'algorithmsDiv'}});
-
-    this.displayCube(this.cubeDiv);
-    this.displayButtons(buttonDiv);
-    this.displayAlgorithms(this.algorithmsDiv);
+    this.displayCube(this.layout.cubeDiv);
+    this.displayButtons(this.layout.buttonDiv);
+    this.displayAlgorithms(this.layout.algorithmsDiv);
   }
 
   redrawCube(): void {
-    this.cubeDiv.removeChild(this.mainCubeSvg);
-    // this.mainCubeSvg.detach();
-    this.displayCube(this.cubeDiv);
+    this.layout.cubeDiv.removeChild(this.mainCubeSvg);
+    this.displayCube(this.layout.cubeDiv);
   }
 
-  displayCube(element: HTMLDivElement): void {
+  displayCube(cubeDiv: HTMLDivElement): void {
     let viewBoxDimensions: Dimensions = this.cubeState.viewBoxDimensions;
     let viewBoxWidth: number = viewBoxDimensions.width;
     let viewBoxHeight: number = viewBoxDimensions.height;
 
-    let mainSvgElement: SVGSVGElement = this.displayCubeBackground(element, viewBoxWidth, viewBoxHeight);
+    let mainSvgElement: SVGSVGElement = this.displayCubeBackground(cubeDiv, viewBoxWidth, viewBoxHeight);
+
     this.displayCubeForeground(mainSvgElement, viewBoxWidth, viewBoxHeight);
     this.displayArrows(mainSvgElement);
   }
-
 
   /**
    * @param {HTMLElement} element - HTML element to draw on
@@ -135,8 +120,11 @@ export abstract class CubeRenderer {
    * @param {number} degreeChange - Usually +90 or -90, but everything works
    */
   private rotateCube(degreeChange: number): void {
-    this.cubeRotation += degreeChange;
-    this.cubeDiv.style.transform = `rotate(${this.cubeRotation}deg)`;
+    this.cubeState.cubeRotation += degreeChange;
+    // this.cubeDiv.style.transform = `rotate(${this.cubeRotation}deg)`;
+    // const newDegrees = currentDegrees - 90;
+    applyRotation(this.layout.cubeDiv, this.cubeState.cubeRotation);
+    // return newDegrees;
   }
 
   displayButtons(buttonDiv: HTMLDivElement): void {
@@ -158,15 +146,12 @@ export abstract class CubeRenderer {
     drawRotateRightIcon(turnRightSvg);
 
   }
-
 }
 
 export class CubeRendererPLL extends CubeRenderer {
-  cubeState: CubeStatePLL;
 
-  constructor(cubeState: CubeStatePLL) {
-    super(cubeState);
-    this.cubeState = cubeState;
+  constructor(private readonly cubeStatePll: CubeStatePLL) {
+    super(cubeStatePll);
   }
 
   displayCubeForeground(svgElement: SVGSVGElement, viewBoxWidth: number, viewBoxHeight: number): void {
@@ -174,43 +159,34 @@ export class CubeRendererPLL extends CubeRenderer {
   }
 
   displayArrows(mainSvg: SVGSVGElement): void {
-    drawArrows(mainSvg, this.cubeState.arrowCoordinates, this.cubeState.arrowColor);
+    drawArrows(mainSvg, this.cubeStatePll.arrowCoordinates, this.cubeStatePll.arrowColor);
   }
 
   redrawAlgorithms(): void {
 
-    if (this.algorithmsDiv === undefined) return;
+    if (this.layout.algorithmsDiv === undefined) return;
 
-    this.algorithmsDiv.empty();
-    this.displayAlgorithms(this.algorithmsDiv);
+    this.layout.algorithmsDiv.empty();
+    this.displayAlgorithms(this.layout.algorithmsDiv);
   }
 
   displayAlgorithms(container: HTMLDivElement): void {
-    const algorithms: Algorithms = this.cubeState.algorithms;
+    const algorithms: Algorithms = this.cubeStatePll.algorithms;
     if (!algorithms || algorithms.items.length === 0) return;  /* Fail-safe, algorithms are optional */
     renderAlgorithmList(container, algorithms.items);
   }
 }
 
 export class CubeRendererOLL extends CubeRenderer {
-  cubeState: CubeStateOLL;
-  radioDiv: HTMLDivElement;
-  // arrowSVG: SVGSVGElement;
-  // arrowSVGs: SVGLineElement[];
 
-  constructor(cubeState: CubeStateOLL) {
-    super(cubeState);
-    this.cubeState = cubeState;
-    // this.arrowSVGs = new Array<SVGLineElement>();
+  constructor(private readonly cubeStateOLL: CubeStateOLL) {
+    super(cubeStateOLL);
   }
 
   displayCubeForeground(svgElement: SVGSVGElement, viewBoxWidth: number, viewBoxHeight: number): void {
-    let cells: OllFieldColoring = this.cubeState.ollFieldColors;
-    const [ cubeWidth, cubeHeight ] = [this.cubeState.cubeWidth, this.cubeState.cubeHeight]; // e.g. 3,3
+    let cells: OllFieldColoring = this.cubeStateOLL.ollFieldColors;
+    const [ cubeWidth, cubeHeight ] = [this.cubeStateOLL.cubeWidth, this.cubeStateOLL.cubeHeight]; // e.g. 3,3
 
-    /*
-     * Edge rows/columns
-     */
     /* Upper and lower edges */
     for (let x = 0; x < cubeWidth; x++) {
       drawSticker(svgElement, 50 + x * 100, 0, 100, 50, cells.getColor(0, x + 1));
@@ -243,19 +219,19 @@ export class CubeRendererOLL extends CubeRenderer {
   }
 
   displayArrows(mainSvg: SVGSVGElement): void {
-    drawArrows(mainSvg, this.cubeState.currentArrowCoordinates(), this.cubeState.arrowColor);
+    drawArrows(mainSvg, this.cubeStateOLL.currentArrowCoordinates(), this.cubeStateOLL.arrowColor);
   }
 
   redrawAlgorithms(): void {
-    if (this.algorithmsDiv === undefined) return;
-    this.algorithmsDiv.empty();
-    this.displayAlgorithms(this.algorithmsDiv);
+    if (this.layout.algorithmsDiv === undefined) return;
+    this.layout.algorithmsDiv.empty();
+    this.displayAlgorithms(this.layout.algorithmsDiv);
   }
 
   displayAlgorithms(container: HTMLDivElement): void {
-    if (undefined === this.cubeState.currentAlgorithmIndex) return; /* Fail-safe, nothing selected */
-    const items: Algorithm[] = this.cubeState.algorithmToArrows.getAllItems();
-    renderAlgorithmSelect(container, items, this.cubeState.currentAlgorithmIndex);
+    if (undefined === this.cubeStateOLL.currentAlgorithmIndex) return; /* Fail-safe, nothing selected */
+    const items: Algorithm[] = this.cubeStateOLL.algorithmToArrows.getAllItems();
+    renderAlgorithmSelect(container, items, this.cubeStateOLL.currentAlgorithmIndex);
   }
 
 }

@@ -1,7 +1,7 @@
 import RubikCubeAlgos from "./main";
 import {CodeBlockInterpreterOLL} from "./CodeBlockInterpreter";
 import {CubeStateOLL} from "./model/cube-state";
-import {CubeRendererOLL} from "./view/CubeRenderer";
+import {CubeRendererOLL} from "./view/cube-renderer";
 import {MarkdownRenderChild} from "obsidian";
 
 export class MarkdownPostProcessorOLL extends MarkdownRenderChild {
@@ -79,17 +79,15 @@ export class MarkdownPostProcessorOLL extends MarkdownRenderChild {
 
       // let radioButtons: HTMLCollectionOf<HTMLInputElement> = cubeRenderer.radioDiv.getElementsByTagName('input');
 
-      let elementsByTagName: HTMLCollectionOf<HTMLLabelElement> = cubeRenderer.radioDiv.getElementsByTagName('label');
+      let elementsByTagName: HTMLCollectionOf<HTMLLabelElement> = cubeRenderer.algorithmsDiv.getElementsByTagName('label');
 
       console.debug('turn left');
 
       for (let i: number = 0; i < elementsByTagName.length; i++) {
         let radioButton: HTMLLabelElement = elementsByTagName[i]!;
         let radioButtonId: number = +radioButton.id;
-        // radioButton.setText(cubeState.algorithmToArrows.get(+radioButtonId)!.algorithm.toString());
         let s: string = cubeState.algorithmToArrows.get(radioButtonId)!.algorithm.toString();
         console.debug('turn right: ' + radioButtonId + ' --> ' + s);
-        // radioButton.setAttribute('text', s);
         radioButton.setText(s);
       }
 
@@ -98,11 +96,8 @@ export class MarkdownPostProcessorOLL extends MarkdownRenderChild {
     cubeRenderer.buttonRight.addEventListener('click', () => {
       cubeRenderer.rotateRight();
       cubeState.rotateRight();
-      // cubeRenderer.redrawAlgorithms()
 
-      // let radioButtons: HTMLCollectionOf<HTMLInputElement> = cubeRenderer.radioDiv.getElementsByTagName('input');
-
-      let elementsByTagName: HTMLCollectionOf<HTMLLabelElement> = cubeRenderer.radioDiv.getElementsByTagName('label');
+      let elementsByTagName: HTMLCollectionOf<HTMLLabelElement> = cubeRenderer.algorithmsDiv.getElementsByTagName('label');
 
       console.debug('turn right');
 
@@ -112,7 +107,6 @@ export class MarkdownPostProcessorOLL extends MarkdownRenderChild {
         let radioButtonId: number = +radioButton.id;
         let s: string = cubeState.algorithmToArrows.get(radioButtonId)!.algorithm.toString();
         console.debug('turn right: ' + radioButtonId + ' --> ' + s);
-        // radioButton.setAttribute('text', s);
         radioButton.setText(s);
       }
     });

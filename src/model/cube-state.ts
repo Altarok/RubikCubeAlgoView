@@ -17,6 +17,8 @@ export abstract class CubeState {
   backgroundColor: string;
   /** SVG metadata */
   viewBoxDimensions: Dimensions;
+  /** Rotation of cube, degrees */
+  cubeRotation: number = 0;
 
   /**
    * @param codeBlockContent - Code block content inside triple backticks (```)
