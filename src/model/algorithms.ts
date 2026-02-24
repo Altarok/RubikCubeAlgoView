@@ -116,6 +116,14 @@ export class MappedAlgorithms {
     this.map.forEach(mappedAlgo => mappedAlgo.algorithm.rotate(quarterTurns));
   }
 
+  getAllItems(): Algorithm[] {
+    let result: Algorithm[] = [];
+    this.map.forEach(mappedAlgo => {
+      result.push(mappedAlgo.algorithm);
+    });
+    return result;
+  }
+
   toString = (): string => {
     let result: string[] = [];
 
@@ -129,5 +137,7 @@ export class MappedAlgorithms {
 
     return result.join('\n');
   }
+
+
 }
 

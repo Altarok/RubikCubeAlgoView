@@ -1,4 +1,5 @@
 import {InvalidInput, isInvalidRow} from "../model/invalid-input";
+import {Algorithm} from "../model/algorithms";
 
 /**
  * Renders a formatted error message when code block interpretation fails.
@@ -26,5 +27,50 @@ export function showInvalidInput(container: HTMLElement, rows: string[], error: 
     } else {
       listContainer.createEl('div', {text: row});
     }
+  });
+}
+
+/**
+ * Renders a simple bullet point list of algorithms (used by PLL).
+ */
+export function renderAlgorithmList(container: HTMLElement, algorithms: Algorithm[]): void {
+  if (algorithms.length === 0) return;
+
+  const ul = container.createEl('ul');
+  algorithms.forEach(alg => {
+    ul.createEl('li', { text: alg.toString() });
+  });
+}
+
+/**
+ * Renders a list of algorithms with radio buttons for selection (used by OLL).
+ */
+export function renderAlgorithmSelect(
+  container: HTMLElement,
+  algorithms: Algorithm[], // { algorithm: Algorithm }[],
+  selectedIndex: number
+): void {
+  const ul = container.createEl('ul');
+  const radioDiv = ul.createEl('div', { attr: { id: 'oll-radio-buttons-div' } });
+
+  algorithms.forEach((item, i) => {
+    const isChecked = selectedIndex === i;
+
+    radioDiv.createEl('input', {
+      attr: {
+        name: 'algorithm-selection',
+        type: 'radio',
+        id: i.toString(),
+        value: i.toString(),
+        ...(isChecked && { checked: true }) // Only add checked attribute if true
+      }
+    });
+
+    radioDiv.createEl('label', {
+      attr: { for: i.toString() },
+      text: item.toString()
+    });
+
+    radioDiv.createEl('br');
   });
 }

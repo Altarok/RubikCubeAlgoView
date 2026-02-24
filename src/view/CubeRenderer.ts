@@ -1,10 +1,9 @@
 import {CubeState, CubeStateOLL, CubeStatePLL} from "../model/cube-state";
-import {InvalidInput, isInvalidRow} from "../model/invalid-input";
-import {ArrowCoords, Arrows, Coordinates, Dimensions} from "../model/geometry";
+import { Dimensions} from "../model/geometry";
 import {Algorithm, Algorithms} from "../model/algorithms";
 import {OllFieldColoring} from "../model/oll-field-coloring";
 import {createArrowHead, drawArrows, drawGrid, drawRotateLeftIcon, drawRotateRightIcon, drawSticker} from "./svg-utils";
-import {showInvalidInput} from "./ui-utils";
+import {renderAlgorithmList, renderAlgorithmSelect, showInvalidInput} from "./ui-utils";
 
 
 export abstract class CubeRenderer {
@@ -187,19 +186,9 @@ export class CubeRendererPLL extends CubeRenderer {
   }
 
   displayAlgorithms(container: HTMLDivElement): void {
-
-    let algorithms: Algorithms = this.cubeState.algorithms;
-
-    /* Fail-safe */
-    if (algorithms === undefined || algorithms.length() === 0) return;
-
-    let ul: HTMLUListElement = container.createEl('ul');
-
-    let items: Algorithm[] = algorithms.items;
-
-    for (let i: number = 0; i < items.length; i++) {
-      ul.createEl('li', {text: items[i]!.toString()});
-    }
+    const algorithms: Algorithms = this.cubeState.algorithms;
+    if (!algorithms || algorithms.items.length === 0) return;  /* Fail-safe, algorithms are optional */
+    renderAlgorithmList(container, algorithms.items);
   }
 }
 
@@ -258,54 +247,15 @@ export class CubeRendererOLL extends CubeRenderer {
   }
 
   redrawAlgorithms(): void {
-
     if (this.algorithmsDiv === undefined) return;
-
     this.algorithmsDiv.empty();
     this.displayAlgorithms(this.algorithmsDiv);
   }
 
   displayAlgorithms(container: HTMLDivElement): void {
-
-    if (undefined === this.cubeState.currentAlgorithmIndex) return;
-
-    let ul: HTMLUListElement = container.createEl('ul');
-
-    // let algorithmIterator: MapIterator<MappedAlgorithm> = this.cubeState.algorithmToArrows.values();
-
-    this.radioDiv = ul.createEl('div', {attr: {id: 'radioButtons'}});
-
-    console.debug(`Draw algorithms. Selected: ${this.cubeState.currentAlgorithmIndex}, count: ${this.cubeState.algorithmToArrows.size()}`);
-
-    for (let i: number = 0; i < this.cubeState.algorithmToArrows.size(); i++) {
-      let algorithm: Algorithm = this.cubeState.algorithmToArrows.get(i)!.algorithm;
-
-      let checked: boolean = this.cubeState.currentAlgorithmIndex === i;
-
-      if (checked) {
-        this.radioDiv.createEl('input', {
-          attr: {
-            name: 'algorithm-selection',
-            type: 'radio',
-            id: '' + i,
-            value: '' + i,
-            checked
-          }
-        });
-      } else {
-        this.radioDiv.createEl('input', {
-          attr: {
-            name: 'algorithm-selection',
-            type: 'radio',
-            id: '' + i,
-            value: '' + i
-          }
-        });
-      }
-      this.radioDiv.createEl('label', {attr: {id: '' + i, for: '' + i}, text: algorithm.toString()});
-      this.radioDiv.createEl('br');
-    }
-
+    if (undefined === this.cubeState.currentAlgorithmIndex) return; /* Fail-safe, nothing selected */
+    const items: Algorithm[] = this.cubeState.algorithmToArrows.getAllItems();
+    renderAlgorithmSelect(container, items, this.cubeState.currentAlgorithmIndex);
   }
 
 }

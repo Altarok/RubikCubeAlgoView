@@ -52,9 +52,12 @@ export class MarkdownPostProcessorOLL extends MarkdownRenderChild {
     // console.debug('addButtonFunctions ' + cubeState.algorithmToArrows.size());
 
     if (cubeState.algorithmToArrows.size() > 1) {
-      let radioButtons: HTMLCollectionOf<HTMLInputElement> = cubeRenderer.radioDiv.getElementsByTagName('input');
 
-      console.debug('turn');
+
+
+      let radioButtons: HTMLCollectionOf<HTMLInputElement> = cubeRenderer.algorithmsDiv.getElementsByTagName('input');
+
+      // console.debug('turn');
 
       for (let i: number = 0; i < radioButtons.length; i++) {
         let radioButton: HTMLInputElement = radioButtons[i]!;
