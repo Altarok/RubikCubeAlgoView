@@ -1,7 +1,7 @@
 import {ArrowCoords, Arrows, Coordinates, CubeDimensions} from "./model/geometry";
 import {DEFAULT_SETTINGS, RubikCubeAlgoSettingsTab} from "./RubikCubeAlgoSettings";
 import {InvalidInput} from "./model/invalid-input";
-import {Algorithm, Algorithms, MappedAlgorithm, MappedAlgorithms} from "./model/algorithms";
+import {Algorithms, MappedAlgorithm, MappedAlgorithms} from "./model/algorithms";
 import {CubeStatePLL, CubeStateOLL} from "./model/cube-state";
 import {parseAlgorithm, parseArrowColor, parseCubeColor, parseDimensions} from "./parser/parser";
 import {OllFieldColoring} from "./model/oll-field-coloring";
@@ -51,7 +51,7 @@ export abstract class CodeBlockInterpreter {
     // protected cubeHeight: number = DEFAULT.HEIGHT;
   protected codeBlockInterpretationSuccessful: boolean = true;
   protected invalidInput?: InvalidInput;
-  protected cubeletCoordinates: Coordinates[] = [];
+  protected stickerCoordinates: Coordinates[] = [];
   protected arrowColor: string;
 
   protected constructor(protected readonly codeBlockContent: string[], settings: RubikCubeAlgoSettingsTab) {
@@ -93,7 +93,7 @@ export abstract class CodeBlockInterpreter {
   abstract setupCubeRectangleCenterCoordinates(): void;
 
   protected addCoordinates(coords: Coordinates): void {
-    this.cubeletCoordinates.push(coords);
+    this.stickerCoordinates.push(coords);
   }
 
   setupArrowCoordinates(arrowInput: string | undefined): Arrows {
@@ -104,8 +104,8 @@ export abstract class CodeBlockInterpreter {
       const [from, to] = segment.split(/[+-]/); // Split on + OR -
 
       if (from && to) {
-        const start = this.getCubeletCenterCoordinates(from);
-        const end = this.getCubeletCenterCoordinates(to);
+        const start = this.getStickerCenterCoordinates(from);
+        const end = this.getStickerCenterCoordinates(to);
 
         acc.push(new ArrowCoords(start, end));
         if (isDoubleSided) acc.push(new ArrowCoords(end, start));
@@ -116,9 +116,9 @@ export abstract class CodeBlockInterpreter {
 
   /**
    * @param input - arrow coordinates like '3.2' where the first integer is the row, the second integer is the column or just a single integer
-   * @returns coordinates of center of cubelet the input is pointing to
+   * @returns coordinates of center of sticker the input is pointing to
    */
-  private getCubeletCenterCoordinates(input: string): Coordinates {
+  private getStickerCenterCoordinates(input: string): Coordinates {
     let indexOfCubeletCenter = 0;
     if (isPositiveIntegerRegex.test(input)) {
       indexOfCubeletCenter = Number(input);
@@ -126,27 +126,27 @@ export abstract class CodeBlockInterpreter {
       const parts = input.split('.');
       const row = parseInt(parts[0] ?? '1', 10);
       const col = parseInt(parts[1] ?? '1', 10);
-      indexOfCubeletCenter = (row - 1) * this.cubeDimensions.width + col;
+      indexOfCubeletCenter = ((row  - 1) * this.cubeDimensions.width + col) - 1;
     } else {
-      indexOfCubeletCenter = parseInt(input, 10) || 0;
+      indexOfCubeletCenter = (parseInt(input, 10) || 1) - 1;
     }
 
     // Safety check
-    const coords = this.cubeletCoordinates[indexOfCubeletCenter];
+    const coords = this.stickerCoordinates[indexOfCubeletCenter];
 
     if (!coords) {
       // Fallback to a default (like 0,0 or the first cubelet)
       // to prevent the whole SVG from failing to render
       console.warn(`Invalid cubelet index requested: ${input}`);
-      return this.cubeletCoordinates[1] ?? new Coordinates(0, 0);
+      return this.stickerCoordinates[1] ?? new Coordinates(0, 0);
     }
 
-    return this.cubeletCoordinates[indexOfCubeletCenter]!;
+    return this.stickerCoordinates[indexOfCubeletCenter]!;
   }
 
-  static get3by3PllTemplate = () => DEFAULT.PLL_TEMPLATE;
+  static get3by3PllTemplate = (): string => DEFAULT.PLL_TEMPLATE;
 
-  static get3by3OllTemplate = () => DEFAULT.OLL_TEMPLATE;
+  static get3by3OllTemplate = (): string => DEFAULT.OLL_TEMPLATE;
 }
 
 export class CodeBlockInterpreterPLL extends CodeBlockInterpreter {
@@ -254,7 +254,7 @@ export class CodeBlockInterpreterPLL extends CodeBlockInterpreter {
   }
 
   setupCubeRectangleCenterCoordinates(): void {
-    this.addCoordinates(new Coordinates(-1, -1)); /* unused first entry to start arrows with 1 instead of 0 */
+    // this.addCoordinates(new Coordinates(-1, -1)); /* unused first entry to start arrows with 1 instead of 0 */
     /* reverse loop order to give x coordinates priority */
     for (let h: number = 0; h < this.cubeDimensions.height; h++) {
       for (let w: number = 0; w < this.cubeDimensions.width; w++) {
@@ -364,7 +364,7 @@ export class CodeBlockInterpreterOLL extends CodeBlockInterpreter {
   }
 
   setupCubeRectangleCenterCoordinates(): void {
-    this.addCoordinates(new Coordinates(-1, -1)); /* unused first entry to start arrows with 1 instead of 0 */
+    // this.addCoordinates(new Coordinates(-1, -1)); /* unused first entry to start arrows with 1 instead of 0 */
     /* reverse loop order to give x coordinates more priority */
     for (let h: number = 0; h < this.cubeDimensions.height; h++) {
       for (let w: number = 0; w < this.cubeDimensions.width; w++) {
