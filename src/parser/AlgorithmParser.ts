@@ -1,5 +1,5 @@
 import {Algorithm, AlgorithmStep, possibleSteps} from "../model/Algorithm";
-import {InvalidInputContainer} from "../model/InvalidInputContainer";
+import {InvalidInput} from "../model/InvalidInput";
 
 const possibleStepsPattern: string = "[xyzRrLlFfBbUuDdMSE](|'|2)";
 const algorithmPattern: string = possibleStepsPattern + '( ?' + possibleStepsPattern + ')*';
@@ -13,10 +13,9 @@ export class AlgorithmParser {
   /**
    * @param {string} row - string starting with 'alg:'
    */
-  parse(row: string): Algorithm | InvalidInputContainer {
+  parse(row: string): Algorithm | InvalidInput {
     if (!row.match('^' + algorithmPattern + '$')) {
-      return new InvalidInputContainer(row, "invalid, expected algorithm  like: alg:R' U2 R U2 R' F R U R' U' R' F' R2 U' (spaces not optional, no comments in this line)");
-
+      return new InvalidInput(row, "invalid, expected algorithm  like: alg:R' U2 R U2 R' F R U R' U' R' F' R2 U' (spaces not optional, no comments in this line)");
     }
     let splitSteps: string[] = row.split(stepSeparator);
     let steps: AlgorithmStep[] = new Array<AlgorithmStep>();

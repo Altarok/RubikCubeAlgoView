@@ -1,7 +1,6 @@
-import {Coordinates} from "./model/Coordinates";
-import {ArrowCoordinates} from "./model/ArrowCoordinates";
+import {ArrowCoords, Coordinates} from "./model/ArrowCoords";
 import {DEFAULT_SETTINGS, RubikCubeAlgoSettingsTab} from "./RubikCubeAlgoSettings";
-import {InvalidInputContainer} from "./model/InvalidInputContainer";
+import {InvalidInput} from "./model/InvalidInput";
 
 const DEFAULT = {
   WIDTH: 3, /* default rubik cube width  */
@@ -79,14 +78,14 @@ export abstract class CodeBlockInterpreterBase {
     this.reasonForFailure = reason;
   }
 
-  errorWhileParsing(errorData: InvalidInputContainer): void {
-    this.errorInThisLine(errorData.nonInterpretableLine, errorData.reasonForFailure);
+  errorWhileParsing(errorData: InvalidInput): void {
+    this.errorInThisLine(errorData.line, errorData.reason);
   }
 
-  setupArrowCoordinates(arrowInput: string): ArrowCoordinates[] {
+  setupArrowCoordinates(arrowInput: string): ArrowCoords[] {
 
     /* Method's return value: */
-    let arrowCoordinates: ArrowCoordinates[] = new Array<ArrowCoordinates>();
+    let arrowCoordinates: ArrowCoords[] = new Array<ArrowCoords>();
 
     let completeArrowsInput: string[] = arrowInput.split(',').filter((x) => x.length > 0);
     let isDoubleSided: boolean = false;
@@ -143,12 +142,12 @@ export abstract class CodeBlockInterpreterBase {
       }
 
 
-      let newArrow: ArrowCoordinates = new ArrowCoordinates(arrowStart, arrowEnd);
+      let newArrow: ArrowCoords = new ArrowCoords(arrowStart, arrowEnd);
       // console.log('new arrow: ' + newArrow.toString());
       arrowCoordinates.push(newArrow);
 
       if (isDoubleSided) { // add reverse copy
-        let newArrowReversed: ArrowCoordinates = new ArrowCoordinates(arrowEnd, arrowStart);
+        let newArrowReversed: ArrowCoords = new ArrowCoords(arrowEnd, arrowStart);
         // console.log('new arrow: ' + newArrowReversed.toString());
         arrowCoordinates.push(newArrowReversed);
       }

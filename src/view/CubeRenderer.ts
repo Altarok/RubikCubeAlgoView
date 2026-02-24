@@ -1,5 +1,5 @@
 import {CubeState} from "../model/CubeState";
-import {InvalidInputContainer} from "../model/InvalidInputContainer";
+import {InvalidInput, isInvalidRow} from "../model/InvalidInput";
 import {Dimensions} from "../model/Dimensions";
 
 
@@ -122,17 +122,17 @@ export abstract class CubeRenderer {
     element.createEl('div', {text: 'Code block interpretation failed:', cls: 'rubik-cube-warning-text-orange'});
 
     let rows: string[] = this.cubeState.codeBlockContent;
-    let invalidInputContainer: InvalidInputContainer = this.cubeState.invalidInputContainer!;
+    let invalidInput: InvalidInput = this.cubeState.invalidInput!;
 
     if (rows.length === 0) {
       element.createEl('b', {text: '[empty]', cls: 'rubik-cube-warning-text-red'});
-      element.createEl('span', {text: ' => ' + invalidInputContainer.reasonForFailure});
+      element.createEl('span', {text: ' => ' + invalidInput.reason});
     } else {
       for (let r: number = 0; r < rows.length; r++) {
         let row: string = rows[r]!;
-        if (invalidInputContainer.isInvalidRow(row)) {
+        if (isInvalidRow(invalidInput, row)) {
           element.createEl('b', {text: row, cls: 'rubik-cube-warning-text-red'});
-          element.createEl('span', {text: ' => ' + invalidInputContainer.reasonForFailure});
+          element.createEl('span', {text: ' => ' + invalidInput.reason});
         } else {
           element.createEl('div', {text: row});
         }

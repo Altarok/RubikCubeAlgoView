@@ -1,12 +1,13 @@
-import {InvalidInputContainer} from "./InvalidInputContainer";
+import {InvalidInput} from "./InvalidInput";
 import {Dimensions} from "./Dimensions";
-
+import {Algorithms} from "./Algorithm";
+import {ArrowCoords} from "./ArrowCoords";
+import {OllFieldColors} from "./OllFieldColors";
+import {MappedAlgorithms} from "./Algorithm";
 
 export abstract class CubeState {
-  /** Code block content */
-  codeBlockContent!: string[];
   /** Container for invalid code block content */
-  invalidInputContainer?: InvalidInputContainer;
+  invalidInput?: InvalidInput;
   /** cube width (rectangles, not pixels) */
   cubeWidth: number;
   /** cube height (rectangles, not pixels) */
@@ -18,9 +19,11 @@ export abstract class CubeState {
   /** SVG metadata */
   viewBoxDimensions: Dimensions;
 
-  protected constructor(codeBlockContent: string[]) {
-    this.codeBlockContent = codeBlockContent;
-  }
+  /**
+   * @constructor
+   * @param {string[]} codeBlockContent - Code block content inside triple backticks (```)
+   */
+  protected constructor(readonly codeBlockContent: string[]) {}
 
   /**
    * @return true if cube size equals 3 by 3
@@ -30,7 +33,74 @@ export abstract class CubeState {
   }
 
   codeBlockInterpretationFailed(): boolean {
-    return this.invalidInputContainer != undefined;
+    return this.invalidInput != undefined;
+  }
+}
+
+/**
+ * PLL algorithms have an n:1 relation to exchanged cubelets.
+ * This means we need 1 set of arrows and n sets of algorithms.
+ */
+export class CubeStatePLL extends CubeState {
+  algorithms: Algorithms;
+  arrowCoordinates: ArrowCoords[];
+
+  constructor(codeBlockContent: string[]) {
+    super(codeBlockContent);
   }
 
+  /** Clock-wise quarter rotation    */
+  rotateLeft(): void {
+    this.algorithms.rotate(1);
+  }
+
+  /** Anti-clock-wise quarter rotation    */
+  rotateRight(): void {
+    this.algorithms.rotate(3);
+  }
+}
+
+/**
+ * OLL algorithms have a 1:1 relation to exchanged cubelets.
+ * This means we need 1 map containing
+ * - key: algorithm
+ * - value: set of arrows this algorithm implements
+ */
+export class CubeStateOLL extends CubeState {
+  ollFieldColors: OllFieldColors;
+  algorithmToArrows: MappedAlgorithms;
+  currentAlgorithmIndex: number;
+
+  constructor(codeBlockContent: string[]) {
+    super(codeBlockContent);
+    this.currentAlgorithmIndex = 0;
+  }
+
+  currentArrowCoordinates(): ArrowCoords[] {
+    // if (this.algorithmToArrows === undefined || this.algorithmToArrows.size === 0) {
+    //   return new Array<Arrows>()
+    // }
+    return this.algorithmToArrows?.get(this.currentAlgorithmIndex)?.arrows ?? [];
+  }
+
+  /** Clock-wise quarter rotation */
+  rotateLeft(): void {
+    this.algorithmToArrows.rotate(1);
+  }
+
+  /** Anti-clock-wise quarter rotation */
+  rotateRight(): void {
+    this.algorithmToArrows.rotate(3);
+  }
+
+  changeAlgorithm(algorithmId: number): boolean {
+    // console.log(algorithmId);
+    if (this.currentAlgorithmIndex === algorithmId) {
+      // console.log('no change');
+      return false;
+    }
+    this.currentAlgorithmIndex = algorithmId;
+    // console.log('changed to ' + this.currentAlgorithmIndex);
+    return true;
+  }
 }

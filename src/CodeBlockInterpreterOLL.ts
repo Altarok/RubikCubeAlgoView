@@ -1,31 +1,17 @@
 import {DEFAULT_SETTINGS, RubikCubeAlgoSettingsTab} from "./RubikCubeAlgoSettings";
-import {OllFieldColors} from "./OllFieldColors";
-import {Coordinates} from "./model/Coordinates";
+import {OllFieldColors} from "./model/OllFieldColors";
 import {Dimensions} from "./model/Dimensions";
-import {InvalidInputContainer} from "./model/InvalidInputContainer";
-import {CubeStateOLL} from "./model/CubeStateOLL";
+import {InvalidInput} from "./model/InvalidInput";
+import {CubeStateOLL} from "./model/CubeState";
 import {CodeBlockInterpreterBase} from "./CodeBlockInterpreterBase";
 import {Algorithm, MappedAlgorithm, MappedAlgorithms} from "./model/Algorithm";
-import {ArrowCoordinates} from "./model/ArrowCoordinates";
+import {ArrowCoords, Coordinates} from "./model/ArrowCoords";
 import {AlgorithmParser} from "./parser/AlgorithmParser";
 
 const DEFAULT = {
   CODE_BLOCK_TEMPLATE:
-    '\n```rubikCubeOLL\n' +
-    '.000.\n' +
-    '01101\n' +
-    '10101\n' +
-    '01101\n' +
-    '.000.\n' +
-    '```\n' +
-    '\n' +
-    '```rubikCubeOLL\n' +
-    '.rrg.\n' +
-    'bwwrw\n' +
-    'wgwbw\n' +
-    'owwbw\n' +
-    '.goo.\n' +
-    '```\n'
+    '\n```rubikCubeOLL\n.000.\n01101\n10101\n01101\n.000.\n```\n' +
+    '\n```rubikCubeOLL\n.rrg.\nbwwrw\nwgwbw\nowwbw\n.goo.\n```\n'
 } as const;
 
 export class CodeBlockInterpreterOLL extends CodeBlockInterpreterBase {
@@ -80,7 +66,7 @@ export class CodeBlockInterpreterOLL extends CodeBlockInterpreterBase {
       // cubeState.algBackupForReference = algBackupForReference;
 
     } else {
-      cubeState.invalidInputContainer = new InvalidInputContainer(this.lastNonInterpretableLine, this.reasonForFailure);
+      cubeState.invalidInput = { line: this.lastNonInterpretableLine, reason: this.reasonForFailure };
     }
 
     return cubeState;
@@ -170,12 +156,12 @@ export class CodeBlockInterpreterOLL extends CodeBlockInterpreterBase {
       // console.log('row: ' + row);
 
       // console.log('splits: ' + splits);
-      let data: Algorithm | InvalidInputContainer = new AlgorithmParser().parse(splits[0]!);
+      let data: Algorithm | InvalidInput = new AlgorithmParser().parse(splits[0]!);
 
       let algorithm: Algorithm;
-      let matchingArrows: ArrowCoordinates[];
+      let matchingArrows: ArrowCoords[];
 
-      if (data instanceof InvalidInputContainer) {
+      if (data instanceof InvalidInput) {
         super.errorWhileParsing(data);
         return map;
       } else if (data instanceof Algorithm) {

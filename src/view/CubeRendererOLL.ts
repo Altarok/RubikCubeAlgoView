@@ -1,8 +1,7 @@
 import {CubeRenderer} from "./CubeRenderer";
-import {CubeStateOLL} from "../model/CubeStateOLL";
-import {OllFieldColors} from "../OllFieldColors";
-import {ArrowCoordinates} from "../model/ArrowCoordinates";
-import {Coordinates} from "../model/Coordinates";
+import {CubeStateOLL} from "../model/CubeState";
+import {OllFieldColors} from "../model/OllFieldColors";
+import {ArrowCoords, Coordinates} from "../model/ArrowCoords";
 import {Algorithm} from "../model/Algorithm";
 
 export class CubeRendererOLL extends CubeRenderer {
@@ -77,12 +76,12 @@ export class CubeRendererOLL extends CubeRenderer {
 
     // this.arrowSVG = mainSvg;
 
-    let arrows: ArrowCoordinates[] = this.cubeState.currentArrowCoordinates();
+    let arrows: ArrowCoords[] = this.cubeState.currentArrowCoordinates();
 
     for (let i: number = 0; i < arrows.length; i++) {
-      let arrow: ArrowCoordinates = arrows[i]!;
-      let arrStart: Coordinates = arrow.start();
-      let arrEnd: Coordinates = arrow.end();
+      let arrow: ArrowCoords = arrows[i]!;
+      let arrStart: Coordinates = arrow.start;
+      let arrEnd: Coordinates = arrow.end;
       // let arrowSVG: SVGLineElement =
         mainSvg.createSvg('line', {
         attr: {
@@ -123,9 +122,9 @@ export class CubeRendererOLL extends CubeRenderer {
       let checked: boolean = this.cubeState.currentAlgorithmIndex === i;
 
       if (checked) {
-        this.radioDiv.createEl('input', {attr: {name:'algorithm-selection' + this.cubeState.id, type:'radio', id:''+i, value:''+i, checked}});
+        this.radioDiv.createEl('input', {attr: {name:'algorithm-selection', type:'radio', id:''+i, value:''+i, checked}});
       } else {
-        this.radioDiv.createEl('input', {attr: {name:'algorithm-selection' + this.cubeState.id, type:'radio', id:''+i, value:''+i}});
+        this.radioDiv.createEl('input', {attr: {name:'algorithm-selection', type:'radio', id:''+i, value:''+i}});
       }
       this.radioDiv.createEl('label', {attr: {id:''+i, for:''+i}, text: algorithm.toString()});
       this.radioDiv.createEl('br');

@@ -1,11 +1,10 @@
 import {DEFAULT_SETTINGS, RubikCubeAlgoSettingsTab} from "./RubikCubeAlgoSettings";
-import {Coordinates} from "./model/Coordinates";
 import {Dimensions} from "./model/Dimensions";
-import {CubeStatePLL} from "./model/CubeStatePLL";
-import {InvalidInputContainer} from "./model/InvalidInputContainer";
+import {CubeStatePLL} from "./model/CubeState";
+import {InvalidInput} from "./model/InvalidInput";
 import {CodeBlockInterpreterBase} from "./CodeBlockInterpreterBase";
 import {Algorithm, Algorithms} from "./model/Algorithm";
-import {ArrowCoordinates} from "./model/ArrowCoordinates";
+import {ArrowCoords, Coordinates} from "./model/ArrowCoords";
 import {AlgorithmParser} from "./parser/AlgorithmParser";
 
 const CODE_BLOCK_TEMPLATE =
@@ -20,7 +19,7 @@ export class CodeBlockInterpreterPLL extends CodeBlockInterpreterBase {
   cubeColor: string;
   algorithms: Algorithms;
   /** Nested array of coordinates. Contains start and end coordinates of arrows in pixels. */
-    // arrowCoordinates: ArrowCoordinates[];
+    // arrowCoordinates: Arrows[];
   arrowsLine: string;
   arrows: string;
 
@@ -32,13 +31,13 @@ export class CodeBlockInterpreterPLL extends CodeBlockInterpreterBase {
       this.cubeColor = DEFAULT_SETTINGS.CUBE_COLOR;
     }
     this.algorithms = new Algorithms();
-    // this.arrowCoordinates = new Array<ArrowCoordinates>();
+    // this.arrowCoordinates = new Array<Arrows>();
   }
 
   setupPll(): CubeStatePLL {
     super.setup();
 
-    let arrowCoordinates: ArrowCoordinates[] = super.setupArrowCoordinates(this.arrows);
+    let arrowCoordinates: ArrowCoords[] = super.setupArrowCoordinates(this.arrows);
 
 
     let cubeState: CubeStatePLL = new CubeStatePLL(this.codeBlockContent);
@@ -52,7 +51,7 @@ export class CodeBlockInterpreterPLL extends CodeBlockInterpreterBase {
       cubeState.viewBoxDimensions = new Dimensions(this.cubeWidth * 100, this.cubeHeight * 100);
       cubeState.algorithms = this.algorithms;
     } else {
-      cubeState.invalidInputContainer = new InvalidInputContainer(this.lastNonInterpretableLine, this.reasonForFailure);
+      cubeState.invalidInput = new InvalidInput(this.lastNonInterpretableLine, this.reasonForFailure);
     }
 
     return cubeState;
@@ -144,9 +143,9 @@ export class CodeBlockInterpreterPLL extends CodeBlockInterpreterBase {
    */
   private handleAlgorithmInput(row: string): void {
     let rowCleaned: string = row.trim().replace('alg:', '');
-    let data: Algorithm | InvalidInputContainer = new AlgorithmParser().parse(rowCleaned);
+    let data: Algorithm | InvalidInput = new AlgorithmParser().parse(rowCleaned);
 
-    if (data instanceof InvalidInputContainer) {
+    if (data instanceof InvalidInput) {
       return super.errorWhileParsing(data);
     } else if (data instanceof Algorithm) {
       this.algorithms.push(data);

@@ -1,4 +1,4 @@
-import {ArrowCoordinates} from "./ArrowCoordinates";
+import {ArrowCoords} from "./ArrowCoords";
 
 export const possibleSteps = [
   "R", "R'", "R2", // right side
@@ -72,7 +72,6 @@ export class Algorithm {
     }
   }
 
-
   toString(): string {
     let s: string = ''
     for (const step of this.steps) {
@@ -101,9 +100,9 @@ export class Algorithms extends Array<Algorithm> {
 
 export class MappedAlgorithm {
   algorithm: Algorithm;
-  arrows: ArrowCoordinates[];
+  arrows: ArrowCoords[];
 
-  constructor(algorithm: Algorithm, arrows: ArrowCoordinates[]) {
+  constructor(algorithm: Algorithm, arrows: ArrowCoords[]) {
     this.algorithm = algorithm;
     this.arrows = arrows;
   }
