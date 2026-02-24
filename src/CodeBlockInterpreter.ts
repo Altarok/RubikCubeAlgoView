@@ -38,13 +38,6 @@ arrows:1.1-1.3,7+9 // normal arrow in top row, double-sided arrow in lower row
 `
 } as const;
 
-/**
- * Shared Utilities
- */
-const parseHexColor = (input: string): string | null => {
-  const hex = input.split(' ')[0]?.split(':')[1];
-  return hex?.match(/^([a-f0-9]{3}){1,2}$/i) ? `#${hex}` : null;
-};
 
 const isPositiveIntegerRegex = new RegExp('\\d+');
 
@@ -55,15 +48,29 @@ export abstract class CodeBlockInterpreter {
   /** cube height (rectangles, not pixels) */
   protected cubeHeight: number = DEFAULT.HEIGHT;
   protected codeBlockInterpretationSuccessful: boolean = true;
-  protected invalidInput: InvalidInput;
+  protected invalidInput?: InvalidInput;
   protected cubeletCoordinates: Coordinates[] = [];
   protected arrowColor: string;
 
   protected constructor(protected readonly codeBlockContent: string[], settings: RubikCubeAlgoSettingsTab) {
+    this.arrowColor = settings.arrowColor ?? DEFAULT_SETTINGS.ARROW_COLOR;
     if (codeBlockContent.length === 0) {
       this.setInvalidInput(new InvalidInput("[empty]", "At least 1 parameter needed: 'dimension/cubeColor/arrowColor/arrows'"));
     }
-    this.arrowColor = settings.arrowColor ?? DEFAULT_SETTINGS.ARROW_COLOR;
+  }
+
+  protected parseHexColor = (row: string, prefix: string): string | null => {
+    const clean = row.split(' ')[0]?.replace(prefix, '').trim();
+    return clean?.match(/^([a-f0-9]{3}){1,2}$/i) ? '#' + clean : null;
+  }
+
+  /**
+   * Called when the interpretation of a code block failed.
+   * @param {InvalidInput} errData - contains invalid input and description of problem
+   */
+  setInvalidInput(errData: InvalidInput): void {
+    this.codeBlockInterpretationSuccessful = false;
+    this.invalidInput = errData;
   }
 
   setup(): void {
@@ -92,49 +99,23 @@ export abstract class CodeBlockInterpreter {
     this.cubeletCoordinates.push(coords);
   }
 
-  /**
-   * Called when the interpretation of a code block failed.
-   * @param {string} lineWithError - the row containing un-interpretable input
-   * @param {string} reason - human-readable reason for failure
-   */
-  setError(lineWithError: string, reason: string): void {
-    this.setInvalidInput(new InvalidInput(lineWithError, reason));
-  }
-
-  setInvalidInput(errData: InvalidInput): void {
-    this.codeBlockInterpretationSuccessful = false;
-    this.invalidInput = errData;
-  }
-
   setupArrowCoordinates(arrowInput: string | undefined): Arrows {
-    const arrows: Arrows = []; /* method's return value: */
-    if (!arrowInput) return arrows;
-    const completeArrowsInput: string[] = arrowInput.split(',').filter((x) => x.length > 0);
+    if (!arrowInput) return [];
 
-    for (const segment of completeArrowsInput) {
+    return arrowInput.split(',').filter(Boolean).reduce((acc: Arrows, segment) => {
       const isDoubleSided = segment.includes('+');
-      const parts = segment.split(/[+-]/); // Split on either + or -
+      const [from, to] = segment.split(/[+-]/); // Split on + OR -
 
-      if (parts.length < 2) continue;
+      if (from && to) {
+        const start = this.getCubeletCenterCoordinates(from);
+        const end = this.getCubeletCenterCoordinates(to);
 
-      const [from, to] = parts;
-      const arrowStart: Coordinates = this.getCubeletCenterCoordinates(from!);
-      const arrowEnd: Coordinates = this.getCubeletCenterCoordinates(to!);
-
-      if (arrowStart === arrowEnd) {
-        this.setInvalidInput(InvalidInput.ofArrows(arrowInput, `Arrow ${segment} is pointing to itself.`));
-        continue;
+        acc.push(new ArrowCoords(start, end));
+        if (isDoubleSided) acc.push(new ArrowCoords(end, start));
       }
-
-      arrows.push(new ArrowCoords(arrowStart, arrowEnd));
-
-      if (isDoubleSided) { // add reverse copy
-        arrows.push(new ArrowCoords(arrowEnd, arrowStart));
-      }
-    }
-    return arrows;
+      return acc;
+    }, []);
   }
-
 
   /**
    * @param input - arrow coordinates like '3.2' where the first integer is the row, the second integer is the column or just a single integer
@@ -167,14 +148,12 @@ export abstract class CodeBlockInterpreter {
   }
 
   /**
-   * @param {string} row - string starting with 'arrowColor:'
+   * @param {string} row - string starting with 'arrowColor:' followed by a hex value for the arrows' color
    */
   handleArrowColorInput(row: string): void {
-    if (row.match('^arrowColor:([a-f0-9]{3}){1,2}( //.*)?')) {
-      // @ts-ignore checked with regex
-      let newAroClr = row.split(' ')[0].trim().replace('arrowColor:', '')
-      // console.log("new arrow color: '"+newAroClr+"'");
-      this.arrowColor = '#' + newAroClr;
+    const color: string | null = this.parseHexColor(row, 'arrowColor:');
+    if (color) {
+      this.arrowColor = color;
     } else {
       this.setInvalidInput(InvalidInput.ofArrowColor(row));
     }
@@ -227,20 +206,19 @@ export class CodeBlockInterpreterPLL extends CodeBlockInterpreter {
   /* @formatter:off */
 
   interpretCodeBlock(rows: string[]): void {
-    for (const row of rows) {
-      const trimmed = row.trim();
-      if (!trimmed || trimmed.startsWith('//')) continue;
+    for (const row of rows.map(r => r.trim())) {
+      if (!row || row.startsWith('//')) continue;
 
-      const [command] = trimmed.split(':');
+      const [command] = row.split(':');
 
       switch (command) {
-        case 'dimension':   this.handleDimensionsInput(trimmed); break;
-        case 'cubeColor':   this.handleCubeColorInput(trimmed); break;
-        case 'arrowColor': super.handleArrowColorInput(trimmed); break;
-        case 'arrows':      this.handleArrowsInput(trimmed); break;
-        case 'alg':         this.handleAlgorithmInput(trimmed); break;
+        case 'dimension':   this.handleDimensionsInput(row); break;
+        case 'cubeColor':   this.handleCubeColorInput(row); break;
+        case 'arrowColor': super.handleArrowColorInput(row); break;
+        case 'arrows':      this.handleArrowsInput(row); break;
+        case 'alg':         this.handleAlgorithmInput(row); break;
         default:
-          return this.setInvalidInput(InvalidInput.ofUnknownPllParameter(trimmed));
+          return this.setInvalidInput(InvalidInput.ofPllParameter(row));
       }
     }
   }
@@ -275,33 +253,25 @@ export class CodeBlockInterpreterPLL extends CodeBlockInterpreter {
    * @param row string starting with 'dimension:'
    */
   private handleDimensionsInput(row: string): void {
-    const dims: number[] | undefined = row.replace('dimension:', '') // cut prefix
+    const dims: number[] | undefined = row
     .split(' ')[0]?. // cut comments
-    split(',') // split width and height
+    replace('dimension:', '') // cut prefix
+    .split(',') // split width and height
     .map(Number);
     if (dims?.length === 2 && dims.every(n => n >= 2 && n <= 10)) {
-      [this.cubeWidth, this.cubeHeight] = [dims[0]!, dims[1]!];
+      [this.cubeWidth, this.cubeHeight] = dims as [number, number];
     } else {
       this.setInvalidInput(InvalidInput.ofDimensions(row));
     }
-
-    const data = row.split(' ')[0]?.replace('dimension:', '');
-    const [w, h] = (data?.split(',') ?? []).map(Number);
-
-    if (!w || !h || w < 2 || w > 10 || h < 2 || h > 10) {
-      return this.setInvalidInput(InvalidInput.ofDimensions(row));
-    }
-
-    [this.cubeWidth, this.cubeHeight] = [w, h];
   }
 
   /**
    * @param {string} row - string starting with 'cubeColor:'
    */
   private handleCubeColorInput(row: string): void {
-    const hex: string | undefined = row.split(' ')[0]?.replace('cubeColor:', '');
-    if (hex?.match(/^([a-f0-9]{3}){1,2}$/)) {
-      this.cubeColor = `#${hex}`;
+    const color: string | null = this.parseHexColor(row, 'cubeColor:');
+    if (color) {
+      this.cubeColor = color;
     } else {
       this.setInvalidInput(InvalidInput.ofCubeColor(row));
     }
@@ -361,8 +331,7 @@ export class CodeBlockInterpreterOLL extends CodeBlockInterpreter {
   }
 
   private removeNonCubeFieldInput(rows: string[]): string[] {
-    return rows
-    .filter(row => !row.startsWith('//')) // ignore comments
+    return rows.filter(row => !row.startsWith('//')) // ignore comments
     .map(row => {
       if (row.startsWith('alg:')) {
         this.algorithmToArrowsInput.push(row.replace('alg:', '').trim());
@@ -373,6 +342,10 @@ export class CodeBlockInterpreterOLL extends CodeBlockInterpreter {
     .filter((row): row is string => row !== null);
   }
 
+  /**
+   * @param str - gets checked
+   * @returns true if given string starts and ends with '.'
+   */
   private isWrappedInDots = (str: string): boolean => str.startsWith('.') && str.endsWith('.');
 
   interpretCodeBlock(rows: string[]): void {
@@ -380,37 +353,34 @@ export class CodeBlockInterpreterOLL extends CodeBlockInterpreter {
       return super.setInvalidInput(new InvalidInput("[not enough input]", "Input for OLL should contain at least 4 lines!"));
     }
 
-    if (!this.isWrappedInDots(rows[0]!) || !this.isWrappedInDots(rows[rows.length - 1]!)) {
-      return super.setInvalidInput(new InvalidInput(rows[0]!, `First '${rows[0]}' and last '${rows[rows.length - 1]}' line should start and end on a dot ('.')!`));
+    const firstRow = rows[0]!;
+    const lastRow = rows[rows.length - 1]!;
+
+    if (!this.isWrappedInDots(firstRow) || !this.isWrappedInDots(lastRow)) {
+      return super.setInvalidInput(new InvalidInput(firstRow, `First '${firstRow}' and last '${lastRow}' line should start and end on a dot ('.')!`));
     }
 
     const rawOllInput: string[] = this.removeNonCubeFieldInput(rows);
-
     let expectedWidth: number = rawOllInput[0]!.length;
-    this.ollFieldInput = new OllFieldColoring(expectedWidth);
 
-    this.cubeWidth = rawOllInput[0]!.length - 2;
+    this.ollFieldInput = new OllFieldColoring(expectedWidth);
+    this.cubeWidth = expectedWidth - 2;
     this.cubeHeight = rawOllInput.length - 2;
 
-    for (let rowIndex: number = 0; rowIndex < rawOllInput.length; rowIndex++) {
-      let row: string = rawOllInput[rowIndex]!.trim();
+    for (let i: number = 0; i < rawOllInput.length; i++) {
+      const row: string = rawOllInput[i]!.trim();
 
       if (row.length !== expectedWidth) {
-        return super.setInvalidInput(new InvalidInput(row, `Inconsistent row length! Expected ${expectedWidth} characters but found ${row.length}.`));
+        return super.setInvalidInput(new InvalidInput(row, `Invalid row length! Expected ${expectedWidth} characters but found ${row.length}.`));
       }
 
-      let parsedRow: string[] = new Array<string>();
-      let index: number = 0;
-      for (let i: number = 0; i < row.length; i++) {
-        let clr: string = row[i]!;
-        if (clr === '.') {
-          parsedRow[index++] = '-1';
-        } else if (i === 0 || rowIndex === 0 || rowIndex === rawOllInput.length - 1 || i === row.length - 1) {
-          parsedRow[index++] = clr.toLowerCase(); // side stickers
-        } else {
-          parsedRow[index++] = clr.toUpperCase(); // top stickers
-        }
-      }
+      const parsedRow = row.split('').map((char: string, x: number): string => {
+        if (char === '.') return '-1';
+        const isEdge = (x === 0 || x === row.length - 1 || i === 0 || i === rawOllInput.length - 1);
+        // Side stickers are lowercase, Top stickers are uppercase
+        return isEdge ? char.toLowerCase() : char.toUpperCase();
+      });
+
       this.ollFieldInput.addRow(parsedRow);
     }
   }
@@ -426,45 +396,66 @@ export class CodeBlockInterpreterOLL extends CodeBlockInterpreter {
   }
 
   private setupAlgorithmArrowMap(): MappedAlgorithms {
-    /* Method's return value: */
-    const map: MappedAlgorithms = new MappedAlgorithms();
+    const map = new MappedAlgorithms();
 
-    // console.debug('>> setupAlgorithmArrowMap');
+    this.algorithmToArrowsInput.forEach((row: string, i: number) => {
+      const [algInput, arrowInput] = row.split(/ *== */);
 
-    for (let i: number = 0; i < this.algorithmToArrowsInput.length; i++) {
-      let row: string = this.algorithmToArrowsInput[i]!;
-
-      const splits = row.split(/ *== */);
-
-      // console.debug('-- splits: ' + splits);
-
-      if (splits.length < 2) {
-        this.setInvalidInput(new InvalidInput(row, "Missing arrow mapping! Use 'alg:[algorithm] == [arrows]'"));
-        return map;
-      }
-
-      const algInput: string = splits[0]!;
-      const arrowInput: string | undefined = splits[1];
-
-      // console.log('splits: ' + splits);
-      let data: Algorithm | InvalidInput = new AlgorithmParser().parse(algInput);
-
-      let algorithm: Algorithm;
-      let matchingArrows: Arrows;
-
+      const data: InvalidInput | Algorithm = new AlgorithmParser().parse(algInput!);
       if (data instanceof InvalidInput) {
         this.setInvalidInput(data);
-      } else /* if (data instanceof Algorithm) */ {
-        algorithm = data;
-        matchingArrows = super.setupArrowCoordinates(arrowInput);
+      } else {
 
-        console.debug('Add algorithm : ' + algorithm.toString());
-
-        map.add(i, new MappedAlgorithm(algorithm, matchingArrows));
-        this.startingAlgorithm = 0;
+        let matchingArrows: Arrows;
+        if (!arrowInput) {
+          matchingArrows = [];
+        } else {
+          matchingArrows = super.setupArrowCoordinates(arrowInput);
+        }
+        map.add(i, new MappedAlgorithm(data, matchingArrows));
       }
-    }
+    });
 
+    this.startingAlgorithm = 0;
     return map;
   }
+
+  // // console.debug('>> setupAlgorithmArrowMap');
+  //
+  // for (let i: number = 0; i < this.algorithmToArrowsInput.length; i++) {
+  //   let row: string = this.algorithmToArrowsInput[i]!;
+  //
+  //   const splits = row.split(/ *== */);
+  //
+  //   // console.debug('-- splits: ' + splits);
+  //
+  //   if (splits.length < 2) {
+  //     this.setInvalidInput(new InvalidInput(row, "Missing arrow mapping! Use 'alg:[algorithm] == [arrows]'"));
+  //     return map;
+  //   }
+  //
+  //   const algInput: string = splits[0]!;
+  //   const arrowInput: string | undefined = splits[1];
+  //
+  //   // console.log('splits: ' + splits);
+  //   let data: Algorithm | InvalidInput = new AlgorithmParser().parse(algInput);
+  //
+  //   let algorithm: Algorithm;
+  //   let matchingArrows: Arrows;
+  //
+  //   if (data instanceof InvalidInput) {
+  //     this.setInvalidInput(data);
+  //   } else /* if (data instanceof Algorithm) */ {
+  //     algorithm = data;
+  //     matchingArrows = super.setupArrowCoordinates(arrowInput);
+  //
+  //     console.debug('Add algorithm : ' + algorithm.toString());
+  //
+  //     map.add(i, new MappedAlgorithm(algorithm, matchingArrows));
+  //     this.startingAlgorithm = 0;
+  //   }
+  // }
+  //
+  // return map;
+  // }
 }

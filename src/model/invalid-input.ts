@@ -22,7 +22,7 @@ export class InvalidInput {
     return new InvalidInput(line,"Invalid algorithm format. Example: alg:R' U2 R U2 R' F R U R' U' R' F' R2 U' (spaces not optional, no comments in this line)");
   }
 
-  static ofUnknownPllParameter(line: string): InvalidInput {
+  static ofPllParameter(line: string): InvalidInput {
     return new InvalidInput(line, "Invalid parameter. Expected: 'dimension/cubeColor/arrowColor/arrows'");
   }
 
