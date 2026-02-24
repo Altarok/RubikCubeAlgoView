@@ -1,7 +1,9 @@
+
+export class InvalidInput {
 /**
  * Container for invalid user input.
  */
-export class InvalidInput {
+
   /**
    * @param line - the row containing un-interpretable input
    * @param reason - human-readable reason for failure

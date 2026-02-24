@@ -31,3 +31,5 @@ export interface Dimensions {
   readonly height: number;
 }
 
+export type CubeDimensions = Dimensions;
+

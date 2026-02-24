@@ -31,7 +31,9 @@ export class MarkdownPostProcessorOLL extends MarkdownRenderChild {
 
   display(): void {
     this.element.empty();
-    const rows: string[] = this.source.split('\n').filter((row) => row.length > 0);
+    const rows: string[] = this.source.split('\n')
+      .map(row => row && row.trim()).filter((row) => row.length > 0)
+    ;
 
     let interpreter: CodeBlockInterpreterOLL = new CodeBlockInterpreterOLL(rows, this.plugin.settings);
     let cubeState: CubeStateOLL = interpreter.setupOll();
