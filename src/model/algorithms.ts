@@ -78,7 +78,9 @@ export class Algorithm {
 }
 
 export class Algorithms {
-  private items: Algorithm[] = [];
+  items: Algorithm[] = [];
+
+  length = () => this.items.length;
 
   add(alg: Algorithm) {
     this.items.push(alg);
@@ -112,6 +114,20 @@ export class MappedAlgorithms {
 
   rotate(quarterTurns: number): void {
     this.map.forEach(mappedAlgo => mappedAlgo.algorithm.rotate(quarterTurns));
+  }
+
+  toString = (): string => {
+    let result: string[] = [];
+
+    this.map.forEach((mappedAlgo, index) => {
+      const algStr = mappedAlgo.algorithm.toString();
+
+      const arrowCount = mappedAlgo.arrows.length;
+
+      result.push(`${index}: [${algStr}] (${arrowCount} arrows)`);
+    });
+
+    return result.join('\n');
   }
 }
 

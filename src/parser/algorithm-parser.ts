@@ -1,48 +1,48 @@
 import {Algorithm,  AlgorithmStep, possibleSteps} from "../model/algorithms";
 import {InvalidInput} from "../model/invalid-input";
 
-const possibleStepsPattern: string = "[xyzRrLlFfBbUuDdMSE](|'|2)";
-const algorithmPattern: string = possibleStepsPattern + '( ?' + possibleStepsPattern + ')*';
-const stepSeparator: string = ' ';
+const stepPattern: string = "[xyzRrLlFfBbUuDdMSE](|'|2)";
+const algorithmRegex: RegExp = new RegExp(`^(${stepPattern})( ${stepPattern})*$`);
 
 export class AlgorithmParser {
 
   /**
-   * @param row - row containing algorithm steps, pre-trimmed and prefix 'alg:' removed
+   * @param row - row containing algorithm steps, may start with 'alg:'
    */
   parse(row: string): Algorithm | InvalidInput {
-    if (!row.match('^' + algorithmPattern + '$')) {
+    let cleanRow: string = row.startsWith('alg:') ? row.slice(4).trim() : row.trim();
+
+    if (!algorithmRegex.test(cleanRow)) {
       return new InvalidInput(row, "Invalid algorithm format. Example: alg:R' U2 R U2 R' F R U R' U' R' F' R2 U' (spaces not optional, no comments in this line)");
     }
-    let splitSteps: string[] = row.split(stepSeparator);
-    let steps: AlgorithmStep[] = new Array<AlgorithmStep>();
 
-    for (let i: number = 0; i < splitSteps.length; i++) {
-      if (isAlgorithmStep(splitSteps[i]!)) {
-        let val: AlgorithmStep | null = parseAlgorithmStep(splitSteps[i]!);
-        if (val != null) {
-          steps.push(val);
-        }
+    let splitSteps: string[] = cleanRow.split(' ');
+    let steps: AlgorithmStep[] = [];
+
+    for (const step of splitSteps) {
+      if (isAlgorithmStep(step)) {
+        steps.push(step);
       } else {
-        console.error(`Invalid AlgorithmStep: ${splitSteps[i]}`);
+        // This should technically be unreachable if the Regex is perfect
+        return new InvalidInput(row, `Unknown rotation step: ${step}`);
       }
     }
-
     return new Algorithm(steps);
   }
 
 }
 
 /**
- * Validates if a string is a valid Step
+ * Type Guard: Tells TS that 'value' is specifically an AlgorithmStep.
+ * Validates if a string is a valid Step.
  */
 function isAlgorithmStep(value: string): value is AlgorithmStep {
   return (possibleSteps as readonly string[]).includes(value);
 }
 
-function parseAlgorithmStep(input: string): AlgorithmStep | null {
-  if (isAlgorithmStep(input)) {
-    return input;
-  }
-  return null;
-}
+// function parseAlgorithmStep(input: string): AlgorithmStep | null {
+//   if (isAlgorithmStep(input)) {
+//     return input;
+//   }
+//   return null;
+// }

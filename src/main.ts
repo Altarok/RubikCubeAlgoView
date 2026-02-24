@@ -1,5 +1,5 @@
 import {Plugin} from "obsidian";
-import {CodeBlockInterpreterOLL} from "./CodeBlockInterpreterOLL";
+import {CodeBlockInterpreter, CodeBlockInterpreterOLL} from "./CodeBlockInterpreter";
 import {CodeBlockInterpreterPLL} from "./CodeBlockInterpreterPLL";
 import {MarkdownPostProcessorOLL} from "./MarkdownPostProcessorOLL";
 import {MarkdownPostProcessorPLL} from "./MarkdownPostProcessorPLL";
@@ -28,7 +28,7 @@ export default class RubikCubeAlgos extends Plugin {
       id: "RubikCubeAlgo-add-code-block-template-3x3-OLL",
       name: "Add code block template for 3x3 cube: OLL.",
       editorCallback: (editor, view) => {
-        editor.replaceSelection(CodeBlockInterpreterOLL.get3by3CodeBlockTemplate());
+        editor.replaceSelection(CodeBlockInterpreter.get3by3OllTemplate());
       }
     });
 
@@ -36,7 +36,7 @@ export default class RubikCubeAlgos extends Plugin {
       id: "RubikCubeAlgo-add-code-block-template-3x3-PLL",
       name: "Add code block template for 3x3 cube: PLL.",
       editorCallback: (editor, view) => {
-        editor.replaceSelection(CodeBlockInterpreterPLL.get3by3CodeBlockTemplate());
+        editor.replaceSelection(CodeBlockInterpreter.get3by3PllTemplate());
       }
     });
 

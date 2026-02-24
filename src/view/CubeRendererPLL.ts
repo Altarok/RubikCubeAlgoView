@@ -1,7 +1,7 @@
 import {CubeRenderer} from "./CubeRenderer";
 import {CubeStatePLL} from "../model/cube-state";
-import {Algorithms} from "../model/algorithms";
-import {Geometry, Coordinates} from "../model/geometry";
+import {Algorithm, Algorithms} from "../model/algorithms";
+import {ArrowCoords, Arrows, Coordinates} from "../model/geometry";
 
 export class CubeRendererPLL extends CubeRenderer {
   cubeState: CubeStatePLL;
@@ -26,9 +26,9 @@ export class CubeRendererPLL extends CubeRenderer {
   }
 
   displayArrows(mainSvg: SVGSVGElement): void {
-    let arrows: Geometry[] = this.cubeState.arrowCoordinates;
-    for (let i: number = 0; i < arrows.length; i++) {
-      let arrow: Geometry = arrows[i]!;
+    let arrows: Arrows = this.cubeState.arrowCoordinates;
+    for (let i = 0; i < arrows.length; i++) {
+      let arrow: ArrowCoords = arrows[i]!;
       let arrStart: Coordinates = arrow.start;
       let arrEnd: Coordinates = arrow.end;
       mainSvg.createSvg('line', {
@@ -52,15 +52,17 @@ export class CubeRendererPLL extends CubeRenderer {
 
   displayAlgorithms(container: HTMLDivElement): void {
 
-    let algorithms: Algorithms[] = this.cubeState.algorithms;
+    let algorithms: Algorithms = this.cubeState.algorithms;
 
     /* Fail-safe */
-    if (algorithms === undefined || algorithms.length === 0) return;
+    if (algorithms === undefined || algorithms.length() === 0) return;
 
     let ul: HTMLUListElement = container.createEl('ul');
 
-    for (let i: number = 0; i < algorithms.length; i++) {
-      ul.createEl('li', {text: algorithms[i]!.toString()});
+    let items: Algorithm[] = algorithms.items;
+
+    for (let i: number = 0; i < items.length; i++) {
+      ul.createEl('li', {text: items[i]!.toString()});
     }
   }
 }

@@ -1,6 +1,6 @@
 import {CubeState} from "../model/cube-state";
 import {InvalidInput, isInvalidRow} from "../model/invalid-input";
-import {Dimensions} from "../model/Dimensions";
+import {Dimensions} from "../model/geometry";
 
 
 export abstract class CubeRenderer {

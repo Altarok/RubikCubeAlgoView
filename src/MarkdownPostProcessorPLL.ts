@@ -1,5 +1,5 @@
 import RubikCubeAlgos from "./main";
-import {CodeBlockInterpreterPLL} from "./CodeBlockInterpreterPLL";
+import {CodeBlockInterpreterPLL} from "./CodeBlockInterpreter";
 import {CubeRendererPLL} from "./view/CubeRendererPLL";
 import {CubeStatePLL} from "./model/cube-state";
 import {MarkdownRenderChild} from "obsidian";

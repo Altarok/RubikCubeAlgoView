@@ -2,6 +2,7 @@ import {CubeRenderer} from "./CubeRenderer";
 import {CubeStateOLL} from "../model/cube-state";
 import {OllFieldColoring} from "../model/oll-field-coloring";
 import {ArrowCoords, Arrows, Coordinates} from "../model/geometry";
+import {Algorithm} from "../model/algorithms";
 
 export class CubeRendererOLL extends CubeRenderer {
   cubeState: CubeStateOLL;
@@ -112,10 +113,9 @@ export class CubeRendererOLL extends CubeRenderer {
 
     this.radioDiv = ul.createEl('div', {attr: { id:'radioButtons' }});
 
-    console.log('Draw algorithms. Current selection: ' + this.cubeState.currentAlgorithmIndex);
+    console.debug(`Draw algorithms. Selected: ${this.cubeState.currentAlgorithmIndex}, count: ${this.cubeState.algorithmToArrows.size()}`);
 
     for (let i: number = 0; i < this.cubeState.algorithmToArrows.size(); i++) {
-    // for (const algorithm of algorithmIterator) {
       let algorithm: Algorithm = this.cubeState.algorithmToArrows.get(i)!.algorithm;
 
       let checked: boolean = this.cubeState.currentAlgorithmIndex === i;
