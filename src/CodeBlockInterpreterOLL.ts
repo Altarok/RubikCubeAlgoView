@@ -4,7 +4,7 @@ import {InvalidInput} from "./model/invalid-input";
 import {CubeStateOLL} from "./model/cube-state";
 import {CodeBlockInterpreterBase} from "./CodeBlockInterpreterBase";
 import {Algorithms, MappedAlgorithm, MappedAlgorithms} from "./model/algorithms";
-import {Geometry, Coordinates} from "./model/geometry";
+import {ArrowCoords, Coordinates} from "./model/arrowCoords";
 import {AlgorithmParser} from "./parser/AlgorithmParser";
 
 const DEFAULT = {
@@ -146,7 +146,7 @@ export class CodeBlockInterpreterOLL extends CodeBlockInterpreterBase {
       let data: Algorithms | InvalidInput = new AlgorithmParser().parse(splits[0]!);
 
       let algorithm: Algorithms;
-      let matchingArrows: Geometry[];
+      let matchingArrows: ArrowCoords[];
 
       if (data instanceof InvalidInput) {
         super.errorWhileParsing(data);

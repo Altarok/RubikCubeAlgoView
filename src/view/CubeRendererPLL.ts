@@ -1,7 +1,7 @@
 import {CubeRenderer} from "./CubeRenderer";
 import {CubeStatePLL} from "../model/cube-state";
 import {Algorithms} from "../model/algorithms";
-import {Geometry, Coordinates} from "../model/geometry";
+import {ArrowCoords, Coordinates} from "../model/arrowCoords";
 
 export class CubeRendererPLL extends CubeRenderer {
   cubeState: CubeStatePLL;
@@ -26,9 +26,9 @@ export class CubeRendererPLL extends CubeRenderer {
   }
 
   displayArrows(mainSvg: SVGSVGElement): void {
-    let arrows: Geometry[] = this.cubeState.arrowCoordinates;
+    let arrows: ArrowCoords[] = this.cubeState.arrowCoordinates;
     for (let i: number = 0; i < arrows.length; i++) {
-      let arrow: Geometry = arrows[i]!;
+      let arrow: ArrowCoords = arrows[i]!;
       let arrStart: Coordinates = arrow.start;
       let arrEnd: Coordinates = arrow.end;
       mainSvg.createSvg('line', {

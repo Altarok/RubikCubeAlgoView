@@ -1,4 +1,4 @@
-import {Geometry} from "./geometry";
+import {ArrowCoords} from "./arrowCoords";
 
 export const possibleSteps = [
   "R", "R'", "R2", // right side
@@ -100,9 +100,9 @@ export class Algorithm extends Array<Algorithm> {
 
 export class MappedAlgorithm {
   algorithm: Algorithms;
-  arrows: Geometry[];
+  arrows: ArrowCoords[];
 
-  constructor(algorithm: Algorithms, arrows: Geometry[]) {
+  constructor(algorithm: Algorithms, arrows: ArrowCoords[]) {
     this.algorithm = algorithm;
     this.arrows = arrows;
   }

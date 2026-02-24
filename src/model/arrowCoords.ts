@@ -9,7 +9,7 @@ export class Coordinates {
 }
 
 /** Coordinates for -one- arrow. */
-export class Geometry {
+export class ArrowCoords {
   /**
    * @param start - start coordinates of arrow
    * @param end - end coordinates of arrow
@@ -19,7 +19,7 @@ export class Geometry {
 }
 
 /** Coordinates for -multiple- arrows. */
-export type Arrows = Geometry[];
+export type Arrows = ArrowCoords[];
 
 export interface Dimensions {
   readonly width: number;
