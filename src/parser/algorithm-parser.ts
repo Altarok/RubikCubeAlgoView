@@ -13,7 +13,7 @@ export class AlgorithmParser {
     let cleanRow: string = row.startsWith('alg:') ? row.slice(4).trim() : row.trim();
 
     if (!algorithmRegex.test(cleanRow)) {
-      return new InvalidInput(row, "Invalid algorithm format. Example: alg:R' U2 R U2 R' F R U R' U' R' F' R2 U' (spaces not optional, no comments in this line)");
+      return InvalidInput.ofAlgorithm(row);
     }
 
     let splitSteps: string[] = cleanRow.split(' ');

@@ -9,6 +9,18 @@ export class InvalidInput {
   constructor(public readonly line: string,
               public readonly reason: string) {
   }
+
+  static ofCubeColor(line: string): InvalidInput {
+    return new InvalidInput(line, 'Invalid cube color, expected: "cubeColor:[3 (or 6) lowercase hex digits (0-9/a-f)] // optional comment goes here"');
+  }
+
+  static ofArrowColor(line: string): InvalidInput {
+    return new InvalidInput(line, 'Invalid arrow color, expected: "cubeColor:[3 (or 6) lowercase hex digits (0-9/a-f)] // optional comment goes here"');
+  }
+
+  static ofAlgorithm(line: string): InvalidInput {
+    return new InvalidInput(line,"Invalid algorithm format. Example: alg:R' U2 R U2 R' F R U R' U' R' F' R2 U' (spaces not optional, no comments in this line)");
+  }
 }
 
 export const isInvalidRow = ({line}: InvalidInput, row: string): boolean => {
