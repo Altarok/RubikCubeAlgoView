@@ -11,8 +11,8 @@ export class InvalidInput {
   }
 }
 
-export const isInvalidRow = (input: InvalidInput, row: string): boolean => {
-  return input.line === row;
+export const isInvalidRow = ({line}: InvalidInput, row: string): boolean => {
+  return line === row;
 };
 
 

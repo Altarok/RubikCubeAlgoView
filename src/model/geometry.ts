@@ -7,9 +7,7 @@ export class Coordinates {
   constructor(public readonly x: number, public readonly y: number) {
   }
 
-  toString = () => {
-    return `${this.x},${this.y}`;
-  }
+  toString = () => `${this.x},${this.y}`;
 }
 
 /** Coordinates for -one- arrow. */
@@ -21,9 +19,7 @@ export class ArrowCoords {
   constructor(public readonly start: Coordinates, public readonly end: Coordinates) {
   }
 
-  toString = () => {
-    return `Arrow[from'${this.start}', to'${this.end}']`;
-  }
+  toString = () => `Arrow[from'${this.start}', to'${this.end}']`;
 }
 
 /** Coordinates for -multiple- arrows. */
