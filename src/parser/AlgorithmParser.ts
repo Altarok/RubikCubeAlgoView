@@ -1,5 +1,5 @@
-import {Algorithm, AlgorithmStep, possibleSteps} from "../model/Algorithm";
-import {InvalidInput} from "../model/InvalidInput";
+import {Algorithms, AlgorithmStep, possibleSteps} from "../model/algorithms";
+import {InvalidInput} from "../model/invalid-input";
 
 const possibleStepsPattern: string = "[xyzRrLlFfBbUuDdMSE](|'|2)";
 const algorithmPattern: string = possibleStepsPattern + '( ?' + possibleStepsPattern + ')*';
@@ -13,7 +13,7 @@ export class AlgorithmParser {
   /**
    * @param {string} row - string starting with 'alg:'
    */
-  parse(row: string): Algorithm | InvalidInput {
+  parse(row: string): Algorithms | InvalidInput {
     if (!row.match('^' + algorithmPattern + '$')) {
       return new InvalidInput(row, "invalid, expected algorithm  like: alg:R' U2 R U2 R' F R U R' U' R' F' R2 U' (spaces not optional, no comments in this line)");
     }
@@ -32,7 +32,7 @@ export class AlgorithmParser {
     }
 
     // steps.push(new Algorithm(steps));
-    return new Algorithm(steps);
+    return new Algorithms(steps);
   }
 
 }

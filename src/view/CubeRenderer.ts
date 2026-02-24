@@ -1,5 +1,5 @@
-import {CubeState} from "../model/CubeState";
-import {InvalidInput, isInvalidRow} from "../model/InvalidInput";
+import {CubeState} from "../model/cube-state";
+import {InvalidInput, isInvalidRow} from "../model/invalid-input";
 import {Dimensions} from "../model/Dimensions";
 
 

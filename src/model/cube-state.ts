@@ -1,9 +1,8 @@
-import {InvalidInput} from "./InvalidInput";
-import {Dimensions} from "./Dimensions";
-import {Algorithms} from "./Algorithm";
-import {ArrowCoords} from "./ArrowCoords";
+import {InvalidInput} from "./invalid-input";
+import {Algorithms} from "./algorithms";
+import {Geometry, Arrows, Dimensions} from "./geometry";
 import {OllFieldColors} from "./OllFieldColors";
-import {MappedAlgorithms} from "./Algorithm";
+import {MappedAlgorithms} from "./algorithms";
 
 export abstract class CubeState {
   /** Container for invalid code block content */
@@ -20,8 +19,7 @@ export abstract class CubeState {
   viewBoxDimensions: Dimensions;
 
   /**
-   * @constructor
-   * @param {string[]} codeBlockContent - Code block content inside triple backticks (```)
+   * @param codeBlockContent - Code block content inside triple backticks (```)
    */
   protected constructor(readonly codeBlockContent: string[]) {}
 
@@ -43,7 +41,7 @@ export abstract class CubeState {
  */
 export class CubeStatePLL extends CubeState {
   algorithms: Algorithms;
-  arrowCoordinates: ArrowCoords[];
+  arrowCoordinates: Geometry[];
 
   constructor(codeBlockContent: string[]) {
     super(codeBlockContent);
@@ -76,11 +74,8 @@ export class CubeStateOLL extends CubeState {
     this.currentAlgorithmIndex = 0;
   }
 
-  currentArrowCoordinates(): ArrowCoords[] {
-    // if (this.algorithmToArrows === undefined || this.algorithmToArrows.size === 0) {
-    //   return new Array<Arrows>()
-    // }
-    return this.algorithmToArrows?.get(this.currentAlgorithmIndex)?.arrows ?? [];
+  currentArrowCoordinates(): Arrows {
+    return this.algorithmToArrows?.get(this.currentAlgorithmIndex)?.arrows ?? /* null or undefined */ [];
   }
 
   /** Clock-wise quarter rotation */

@@ -1,10 +1,10 @@
 import {DEFAULT_SETTINGS, RubikCubeAlgoSettingsTab} from "./RubikCubeAlgoSettings";
 import {Dimensions} from "./model/Dimensions";
-import {CubeStatePLL} from "./model/CubeState";
-import {InvalidInput} from "./model/InvalidInput";
+import {CubeStatePLL} from "./model/cube-state";
+import {InvalidInput} from "./model/invalid-input";
 import {CodeBlockInterpreterBase} from "./CodeBlockInterpreterBase";
-import {Algorithm, Algorithms} from "./model/Algorithm";
-import {ArrowCoords, Coordinates} from "./model/ArrowCoords";
+import {Algorithms, Algorithms} from "./model/algorithms";
+import {Geometry, Coordinates} from "./model/geometry";
 import {AlgorithmParser} from "./parser/AlgorithmParser";
 
 const CODE_BLOCK_TEMPLATE =
@@ -37,18 +37,25 @@ export class CodeBlockInterpreterPLL extends CodeBlockInterpreterBase {
   setupPll(): CubeStatePLL {
     super.setup();
 
-    let arrowCoordinates: ArrowCoords[] = super.setupArrowCoordinates(this.arrows);
+    let arrowCoordinates: Geometry[] = super.setupArrowCoordinates(this.arrows);
 
 
     let cubeState: CubeStatePLL = new CubeStatePLL(this.codeBlockContent);
 
     if (this.codeBlockInterpretationSuccessful) {
+      /*
+       * Generic data:
+       */
+
       cubeState.cubeWidth = this.cubeWidth;
       cubeState.cubeHeight = this.cubeHeight;
       cubeState.backgroundColor = this.cubeColor;
       cubeState.arrowColor = this.arrowColor;
       cubeState.arrowCoordinates = arrowCoordinates;
-      cubeState.viewBoxDimensions = new Dimensions(this.cubeWidth * 100, this.cubeHeight * 100);
+      cubeState.viewBoxDimensions = {width: this.cubeWidth * 100, height: this.cubeHeight * 100};
+      /*
+       * PLL-only data:
+       */
       cubeState.algorithms = this.algorithms;
     } else {
       cubeState.invalidInput = new InvalidInput(this.lastNonInterpretableLine, this.reasonForFailure);
@@ -143,11 +150,11 @@ export class CodeBlockInterpreterPLL extends CodeBlockInterpreterBase {
    */
   private handleAlgorithmInput(row: string): void {
     let rowCleaned: string = row.trim().replace('alg:', '');
-    let data: Algorithm | InvalidInput = new AlgorithmParser().parse(rowCleaned);
+    let data: Algorithms | InvalidInput = new AlgorithmParser().parse(rowCleaned);
 
     if (data instanceof InvalidInput) {
       return super.errorWhileParsing(data);
-    } else if (data instanceof Algorithm) {
+    } else if (data instanceof Algorithms) {
       this.algorithms.push(data);
     } else {
       // TODO df

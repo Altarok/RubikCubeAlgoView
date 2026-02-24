@@ -1,11 +1,10 @@
 import {DEFAULT_SETTINGS, RubikCubeAlgoSettingsTab} from "./RubikCubeAlgoSettings";
 import {OllFieldColors} from "./model/OllFieldColors";
-import {Dimensions} from "./model/Dimensions";
-import {InvalidInput} from "./model/InvalidInput";
-import {CubeStateOLL} from "./model/CubeState";
+import {InvalidInput} from "./model/invalid-input";
+import {CubeStateOLL} from "./model/cube-state";
 import {CodeBlockInterpreterBase} from "./CodeBlockInterpreterBase";
-import {Algorithm, MappedAlgorithm, MappedAlgorithms} from "./model/Algorithm";
-import {ArrowCoords, Coordinates} from "./model/ArrowCoords";
+import {Algorithms, MappedAlgorithm, MappedAlgorithms} from "./model/algorithms";
+import {Geometry, Coordinates} from "./model/geometry";
 import {AlgorithmParser} from "./parser/AlgorithmParser";
 
 const DEFAULT = {
@@ -42,29 +41,17 @@ export class CodeBlockInterpreterOLL extends CodeBlockInterpreterBase {
       /*
        * Generic data:
        */
-
       cubeState.cubeWidth = this.cubeWidth;
       cubeState.cubeHeight = this.cubeHeight;
       cubeState.backgroundColor = '#000';
       cubeState.arrowColor = this.arrowColor;
-      cubeState.viewBoxDimensions = new Dimensions(this.cubeWidth * 100 + 100, this.cubeHeight * 100 + 100);
-
+      cubeState.viewBoxDimensions = {width: this.cubeWidth * 100 + 100, height: this.cubeHeight * 100 + 100 };
       /*
        * OLL-only data:
        */
       cubeState.algorithmToArrows = algorithmToArrows;
       cubeState.currentAlgorithmIndex = 0;
       cubeState.ollFieldColors = this.ollFieldInput;
-
-      // let algBackupForReference: Map<Algorithm,Algorithm> = new Map<Algorithm,Algorithm>();
-      // let algorithms: MapIterator<Algorithm> = algorithmToArrows.keys();
-      // for (const alg of algorithms) {
-      //   let algorithmClone: Algorithm = alg.clone();
-      //   algBackupForReference.set(algorithmClone, alg);
-      // }
-      //
-      // cubeState.algBackupForReference = algBackupForReference;
-
     } else {
       cubeState.invalidInput = { line: this.lastNonInterpretableLine, reason: this.reasonForFailure };
     }
@@ -156,15 +143,15 @@ export class CodeBlockInterpreterOLL extends CodeBlockInterpreterBase {
       // console.log('row: ' + row);
 
       // console.log('splits: ' + splits);
-      let data: Algorithm | InvalidInput = new AlgorithmParser().parse(splits[0]!);
+      let data: Algorithms | InvalidInput = new AlgorithmParser().parse(splits[0]!);
 
-      let algorithm: Algorithm;
-      let matchingArrows: ArrowCoords[];
+      let algorithm: Algorithms;
+      let matchingArrows: Geometry[];
 
       if (data instanceof InvalidInput) {
         super.errorWhileParsing(data);
         return map;
-      } else if (data instanceof Algorithm) {
+      } else if (data instanceof Algorithms) {
         algorithm = data;
         matchingArrows = super.setupArrowCoordinates(splits[1]!);
 

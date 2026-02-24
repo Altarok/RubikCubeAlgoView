@@ -1,4 +1,4 @@
-import {ArrowCoords} from "./ArrowCoords";
+import {Geometry} from "./geometry";
 
 export const possibleSteps = [
   "R", "R'", "R2", // right side
@@ -52,7 +52,7 @@ const turnCubeLeftMap: TurnCubeMap = {
  * A Rubik's Cube algorithm is a sequence of rotations
  * aimed to change a cube's state in a specific way.
  */
-export class Algorithm {
+export class Algorithms {
   steps: AlgorithmStep[];
 
   constructor(steps: AlgorithmStep[]) {
@@ -80,12 +80,12 @@ export class Algorithm {
     return s.trim();
   }
 
-  clone(): Algorithm {
-    return new Algorithm(Object.assign([], this.steps));
+  clone(): Algorithms {
+    return new Algorithms(Object.assign([], this.steps));
   }
 }
 
-export class Algorithms extends Array<Algorithm> {
+export class Algorithm extends Array<Algorithm> {
 
   constructor() {
     super();
@@ -99,10 +99,10 @@ export class Algorithms extends Array<Algorithm> {
 }
 
 export class MappedAlgorithm {
-  algorithm: Algorithm;
-  arrows: ArrowCoords[];
+  algorithm: Algorithms;
+  arrows: Geometry[];
 
-  constructor(algorithm: Algorithm, arrows: ArrowCoords[]) {
+  constructor(algorithm: Algorithms, arrows: Geometry[]) {
     this.algorithm = algorithm;
     this.arrows = arrows;
   }

@@ -48,12 +48,12 @@ arrows:1.1-1.2 // arrow from row1-column1 to row1-column2
 ```
 Would create a 2x2 Cube with a fixed-coordinates arrow from the first to the second rectangle in the first row.
 Arrow coordinates go from top-left to bottom-right. First integer is row, second integer is column.
-ArrowCoords with fixed coordinates do not change position when resizing the cube.
+Geometry with fixed coordinates do not change position when resizing the cube.
 ```
 arrows:1-2 // "lazy" coordinates
 ```
 Would create the same. Notice the "lazy" arrow coordinates. It just gives each rectangle an integer. 
-ArrowCoords with lazy coordinates do change position when resizing the cube.
+Geometry with lazy coordinates do change position when resizing the cube.
 ```
 arrows:1+2 // "+" makes this a double-sided arrow
 ```

@@ -1,8 +1,8 @@
 import {CubeRenderer} from "./CubeRenderer";
-import {CubeStateOLL} from "../model/CubeState";
+import {CubeStateOLL} from "../model/cube-state";
 import {OllFieldColors} from "../model/OllFieldColors";
-import {ArrowCoords, Coordinates} from "../model/ArrowCoords";
-import {Algorithm} from "../model/Algorithm";
+import {Geometry, Coordinates} from "../model/geometry";
+import {Algorithms} from "../model/algorithms";
 
 export class CubeRendererOLL extends CubeRenderer {
   cubeState: CubeStateOLL;
@@ -76,10 +76,10 @@ export class CubeRendererOLL extends CubeRenderer {
 
     // this.arrowSVG = mainSvg;
 
-    let arrows: ArrowCoords[] = this.cubeState.currentArrowCoordinates();
+    let arrows: Geometry[] = this.cubeState.currentArrowCoordinates();
 
     for (let i: number = 0; i < arrows.length; i++) {
-      let arrow: ArrowCoords = arrows[i]!;
+      let arrow: Geometry = arrows[i]!;
       let arrStart: Coordinates = arrow.start;
       let arrEnd: Coordinates = arrow.end;
       // let arrowSVG: SVGLineElement =
@@ -117,7 +117,7 @@ export class CubeRendererOLL extends CubeRenderer {
 
     for (let i: number = 0; i < this.cubeState.algorithmToArrows.size; i++) {
     // for (const algorithm of algorithmIterator) {
-      let algorithm: Algorithm = this.cubeState.algorithmToArrows.get(i)!.algorithm;
+      let algorithm: Algorithms = this.cubeState.algorithmToArrows.get(i)!.algorithm;
 
       let checked: boolean = this.cubeState.currentAlgorithmIndex === i;
 
