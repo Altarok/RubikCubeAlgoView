@@ -93,6 +93,7 @@ export abstract class CodeBlockInterpreter {
   abstract setupCubeRectangleCenterCoordinates(): void;
 
   protected addCoordinates(coords: Coordinates): void {
+    // console.info('push coordinates:  ' + coords);
     this.stickerCoordinates.push(coords);
   }
 
@@ -126,22 +127,22 @@ export abstract class CodeBlockInterpreter {
       const parts = input.split('.');
       const row = parseInt(parts[0] ?? '1', 10);
       const col = parseInt(parts[1] ?? '1', 10);
-      indexOfCubeletCenter = ((row  - 1) * this.cubeDimensions.width + col) - 1;
+      indexOfCubeletCenter = (row - 1) * this.cubeDimensions.width + col ;
     } else {
-      indexOfCubeletCenter = (parseInt(input, 10) || 1) - 1;
+      indexOfCubeletCenter = (parseInt(input, 10) || 1) ;
     }
 
     // Safety check
-    const coords = this.stickerCoordinates[indexOfCubeletCenter];
+    const coords = this.stickerCoordinates[indexOfCubeletCenter-1];
 
-    if (!coords) {
+    if (!coords) { // TODO remove
       // Fallback to a default (like 0,0 or the first cubelet)
       // to prevent the whole SVG from failing to render
       console.warn(`Invalid cubelet index requested: ${input}`);
       return this.stickerCoordinates[1] ?? new Coordinates(0, 0);
     }
 
-    return this.stickerCoordinates[indexOfCubeletCenter]!;
+    return this.stickerCoordinates[indexOfCubeletCenter-1]!;
   }
 
   static get3by3PllTemplate = (): string => DEFAULT.PLL_TEMPLATE;

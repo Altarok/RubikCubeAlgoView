@@ -48,20 +48,21 @@ export function parseDimensions(row: string): Result<CubeDimensions> {
   /*
    * Cut comments, cut prefix, split width and height
    */
-  const dims: number[] | undefined = row.split(' ')[0]?.replace('dimension:', '').split(',').map(Number) as [number, number];
-  if (dims?.length === 2 && dims.every(n => n >= 2 && n <= 10)) {
-    return {success: true, data: {width: dims[0]!, height: dims[1]!}};
+  const parts = row.split(' ')[0]?.replace('dimension:', '').split(',');
+  const [w=0, h=0] = parts?.map(Number) ?? [];
+  if (/*w && h &&*/ w >= 2 && w <= 10 && h >=2 && h <= 10) {
+    return {success: true, data: {width: w, height: h}};
   } else {
     return {success: false, error: InvalidInput.ofDimensions(row)};
   }
 }
 
-function parseHexColor(row: string, prefix: string, error: InvalidInput): Result<string> {
+function parseHexColor(row: string, prefix: string, errorFactory: () => InvalidInput): Result<string> {
   const clean = row.split(' ')[0]?.replace(prefix, '').trim();
   if (clean?.match(/^([a-f0-9]{3}){1,2}$/i)) {
     return { success: true, data: '#' + clean };
   } else {
-    return { success: false, error: error };
+    return { success: false, error: errorFactory() };
   }
 }
 
@@ -69,14 +70,14 @@ function parseHexColor(row: string, prefix: string, error: InvalidInput): Result
  * @param {string} row - string starting with 'cubeColor:' followed by a hex value for the cube's color
  */
 export function parseCubeColor(row: string): Result<string> {
-  return parseHexColor(row, 'cubeColor:', InvalidInput.ofCubeColor(row));
+  return parseHexColor(row, 'cubeColor:', () => InvalidInput.ofCubeColor(row));
 }
 
 /**
  * @param {string} row - string starting with 'arrowColor:' followed by a hex value for the arrows' color
  */
 export function parseArrowColor(row: string): Result<string> {
-  return parseHexColor(row, 'arrowColor:', InvalidInput.ofArrowColor(row));
+  return parseHexColor(row, 'arrowColor:', () => InvalidInput.ofArrowColor(row));
 }
 
 

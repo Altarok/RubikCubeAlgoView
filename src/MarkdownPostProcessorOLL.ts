@@ -1,7 +1,7 @@
 import RubikCubeAlgos from "./main";
 import {CodeBlockInterpreterOLL} from "./CodeBlockInterpreter";
 import {CubeStateOLL} from "./model/cube-state";
-import {CubeRendererOLL} from "./view/CubeRendererOLL";
+import {CubeRendererOLL} from "./view/CubeRenderer";
 import {MarkdownRenderChild} from "obsidian";
 
 export class MarkdownPostProcessorOLL extends MarkdownRenderChild {
