@@ -21,6 +21,18 @@ export class InvalidInput {
   static ofAlgorithm(line: string): InvalidInput {
     return new InvalidInput(line,"Invalid algorithm format. Example: alg:R' U2 R U2 R' F R U R' U' R' F' R2 U' (spaces not optional, no comments in this line)");
   }
+
+  static ofUnknownPllParameter(line: string): InvalidInput {
+    return new InvalidInput(line, "Invalid parameter. Expected: 'dimension/cubeColor/arrowColor/arrows'");
+  }
+
+  static ofDimensions(line: string) {
+    return new InvalidInput(line, 'Invalid dimensions. Expected: "dimension:[2-10],[2-10]" (e.g. "dimension:3,3")');
+  }
+
+  static ofArrows(line: string, reason: string) {
+    return new InvalidInput(line, reason);
+  }
 }
 
 export const isInvalidRow = ({line}: InvalidInput, row: string): boolean => {

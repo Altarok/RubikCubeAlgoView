@@ -26,6 +26,7 @@ export default class RubikCubeAlgos extends Plugin {
 
     this.addCommand({
       id: "RubikCubeAlgo-add-code-block-template-3x3-OLL",
+      // @ts-ignore
       name: "Add code block template for 3x3 cube: OLL.",
       editorCallback: (editor, view) => {
         editor.replaceSelection(CodeBlockInterpreter.get3by3OllTemplate());
@@ -34,6 +35,7 @@ export default class RubikCubeAlgos extends Plugin {
 
     this.addCommand({
       id: "RubikCubeAlgo-add-code-block-template-3x3-PLL",
+      // @ts-ignore
       name: "Add code block template for 3x3 cube: PLL.",
       editorCallback: (editor, view) => {
         editor.replaceSelection(CodeBlockInterpreter.get3by3PllTemplate());

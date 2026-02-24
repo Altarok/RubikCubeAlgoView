@@ -24,7 +24,7 @@ export class AlgorithmParser {
         steps.push(step);
       } else {
         // This should technically be unreachable if the Regex is perfect
-        return new InvalidInput(row, `Unknown rotation step: ${step}`);
+        return new InvalidInput(row, 'Unknown rotation step: ' + step);
       }
     }
     return new Algorithm(steps);
