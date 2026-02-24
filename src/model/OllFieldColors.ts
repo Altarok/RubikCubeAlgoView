@@ -1,10 +1,7 @@
 export class OllFieldColors {
-  ollFieldInputWidth: number;
-  parsedRows: string[][];
+  parsedRows: string[][] = new Array<string[]>();
 
-  constructor(ollFieldInputWidth: number) {
-    this.ollFieldInputWidth = ollFieldInputWidth;
-    this.parsedRows = new Array<string[]>();
+  constructor(private readonly ollFieldInputWidth: number) {
   }
 
   addRow(parsedRow: string[]): void {
@@ -12,9 +9,7 @@ export class OllFieldColors {
     this.parsedRows.push(parsedRow);
   }
 
-  length(): number {
-    return this.parsedRows[0]!.length;
-  }
+  length = () => this.parsedRows[0]!.length;
 
   toString(): string {
     let s: string = '';

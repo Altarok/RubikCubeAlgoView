@@ -1,4 +1,7 @@
-import {ArrowCoordinates} from "./arrowCoordinates";
+import {Arrows} from "./geometry";
+
+// type MoveSuffix = "" | "'" | "2";
+// type BaseMove = "R" | "L" | "F" | "B" | "U" | "D" | "r" | "l" | "f" | "b" | "u" | "d" | "x" | "y" | "z" | "M" | "S" | "E";
 
 export const possibleSteps = [
   "R", "R'", "R2", // right side
@@ -52,75 +55,64 @@ const turnCubeLeftMap: TurnCubeMap = {
  * A Rubik's Cube algorithm is a sequence of rotations
  * aimed to change a cube's state in a specific way.
  */
-export class Algorithms {
-  steps: AlgorithmStep[];
-
-  constructor(steps: AlgorithmStep[]) {
-    this.steps = steps;
+export class Algorithm {
+  constructor(private steps: AlgorithmStep[]) {
   }
 
   rotate(quarterTurns: number): void {
+    const turns = ((quarterTurns % 4) + 4) % 4;
+    if (turns === 0) return;
 
-    for (let i: number = 0; i < this.steps.length; i++) {
-      let algStep: AlgorithmStep = this.steps[i]!;
-
-      for (let ii: number = 0; ii < quarterTurns; ii++) {
-        algStep = turnCubeLeftMap[algStep];
+    this.steps = this.steps.map(step => {
+      let current = step;
+      for (let i = 0; i < turns; i++) {
+        current = turnCubeLeftMap[current];
       }
-
-      this.steps[i] = algStep;
-    }
+      return current;
+    });
   }
 
-  toString(): string {
-    let s: string = ''
-    for (const step of this.steps) {
-      s += step + ' ';
-    }
-    return s.trim();
-  }
+  toString = () => this.steps.join(' ');
 
-  clone(): Algorithms {
-    return new Algorithms(Object.assign([], this.steps));
-  }
+  clone = (): Algorithm => new Algorithm([...this.steps]);
 }
 
-export class Algorithm extends Array<Algorithm> {
+export class Algorithms {
+  private items: Algorithm[] = [];
 
-  constructor() {
-    super();
+  add(alg: Algorithm) {
+    this.items.push(alg);
   }
 
   rotate(quarterTurns: number): void {
-    this.forEach(algorithm => {
-      algorithm.rotate(quarterTurns)
-    });
+    this.items.forEach(algorithm => algorithm.rotate(quarterTurns));
   }
 }
 
 export class MappedAlgorithm {
-  algorithm: Algorithms;
-  arrows: ArrowCoordinates[];
-
-  constructor(algorithm: Algorithms, arrows: ArrowCoordinates[]) {
-    this.algorithm = algorithm;
-    this.arrows = arrows;
+  /**
+   * @param algorithm one of these will be matched to 0-n arrows
+   * @param arrows
+   */
+  constructor(public readonly algorithm: Algorithm,
+              public readonly arrows: Arrows) {
   }
 
-  rotate(quarterTurns: number): void {
-    this.algorithm.rotate(quarterTurns);
-  }
+  rotate = (quarterTurns: number): void => this.algorithm.rotate(quarterTurns);
 }
 
-export class MappedAlgorithms extends Map<number, MappedAlgorithm> {
+export class MappedAlgorithms {
+  private map = new Map<number, MappedAlgorithm>();
+
   constructor() {
-    super();
-  }
-  rotate(quarterTurns: number): void {
-    for (const mappedAlgorithm of this.values()){
-      mappedAlgorithm.algorithm.rotate(quarterTurns);
-    }
   }
 
+  add = (index: number, mappedAlgorithm: MappedAlgorithm) => this.map.set(index, mappedAlgorithm);
+
+  get = (index: number): MappedAlgorithm | undefined => this.map.get(index);
+
+  rotate(quarterTurns: number): void {
+    this.map.forEach(mappedAlgo => mappedAlgo.algorithm.rotate(quarterTurns));
+  }
 }
 

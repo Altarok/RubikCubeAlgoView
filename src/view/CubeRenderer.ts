@@ -81,7 +81,7 @@ export abstract class CubeRenderer {
   displayCubeBackground(element: HTMLElement, viewBoxWidth: number, viewBoxHeight: number): SVGSVGElement {
     let imageWidth: number = viewBoxWidth;
     let imageHeight: number = viewBoxHeight;
-    if (this.cubeState.isDefaultCubeSize()) {
+    if (this.cubeState.isDefaultSize()) {
       imageWidth = 200;
       imageHeight = 200;
     }

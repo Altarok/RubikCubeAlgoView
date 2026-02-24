@@ -3,8 +3,8 @@ import {OllFieldColors} from "./model/OllFieldColors";
 import {InvalidInput} from "./model/invalid-input";
 import {CubeStateOLL} from "./model/cube-state";
 import {CodeBlockInterpreterBase} from "./CodeBlockInterpreterBase";
-import {Algorithms, MappedAlgorithm, MappedAlgorithms} from "./model/algorithms";
-import {ArrowCoordinates, Coordinates} from "./model/arrowCoordinates";
+import {Algorithm, Algorithms, MappedAlgorithm, MappedAlgorithms} from "./model/algorithms";
+import {Coordinates, Arrows} from "./model/geometry";
 import {AlgorithmParser} from "./parser/AlgorithmParser";
 
 const DEFAULT = {
@@ -143,10 +143,10 @@ export class CodeBlockInterpreterOLL extends CodeBlockInterpreterBase {
       // console.log('row: ' + row);
 
       // console.log('splits: ' + splits);
-      let data: Algorithms | InvalidInput = new AlgorithmParser().parse(splits[0]!);
+      let data: Algorithm | InvalidInput = new AlgorithmParser().parse(splits[0]!);
 
-      let algorithm: Algorithms;
-      let matchingArrows: ArrowCoordinates[];
+      let algorithm: Algorithm;
+      let matchingArrows: Arrows;
 
       if (data instanceof InvalidInput) {
         super.errorWhileParsing(data);
@@ -155,7 +155,7 @@ export class CodeBlockInterpreterOLL extends CodeBlockInterpreterBase {
         algorithm = data;
         matchingArrows = super.setupArrowCoordinates(splits[1]!);
 
-        map.set(i, new MappedAlgorithm(algorithm, matchingArrows));
+        map.add(i, new MappedAlgorithm(algorithm, matchingArrows));
           this.startingAlgorithm = 0;
 
       } else {

@@ -4,7 +4,7 @@ import {CubeStatePLL} from "./model/cube-state";
 import {InvalidInput} from "./model/invalid-input";
 import {CodeBlockInterpreterBase} from "./CodeBlockInterpreterBase";
 import {Algorithms, Algorithms} from "./model/algorithms";
-import {ArrowCoordinates, Coordinates} from "./model/arrowCoordinates";
+import {Geometry, Coordinates} from "./model/geometry";
 import {AlgorithmParser} from "./parser/AlgorithmParser";
 
 const CODE_BLOCK_TEMPLATE =
@@ -37,7 +37,7 @@ export class CodeBlockInterpreterPLL extends CodeBlockInterpreterBase {
   setupPll(): CubeStatePLL {
     super.setup();
 
-    let arrowCoordinates: ArrowCoordinates[] = super.setupArrowCoordinates(this.arrows);
+    let arrowCoordinates: Geometry[] = super.setupArrowCoordinates(this.arrows);
 
 
     let cubeState: CubeStatePLL = new CubeStatePLL(this.codeBlockContent);

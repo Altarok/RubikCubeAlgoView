@@ -1,6 +1,6 @@
 import {InvalidInput} from "./invalid-input";
 import {Algorithms} from "./algorithms";
-import {ArrowCoordinates, Arrows, Dimensions} from "./arrowCoordinates";
+import {Arrows, Dimensions} from "./geometry";
 import {OllFieldColors} from "./OllFieldColors";
 import {MappedAlgorithms} from "./algorithms";
 
@@ -26,12 +26,12 @@ export abstract class CubeState {
   /**
    * @return true if cube size equals 3 by 3
    */
-  isDefaultCubeSize(): boolean {
+  isDefaultSize(): boolean {
     return this.cubeWidth === 3 && this.cubeHeight === 3;
   }
 
   codeBlockInterpretationFailed(): boolean {
-    return this.invalidInput != undefined;
+    return this.invalidInput !== undefined;
   }
 }
 
@@ -41,7 +41,7 @@ export abstract class CubeState {
  */
 export class CubeStatePLL extends CubeState {
   algorithms: Algorithms;
-  arrowCoordinates: ArrowCoordinates[];
+  arrowCoordinates: Arrows;
 
   constructor(codeBlockContent: string[]) {
     super(codeBlockContent);
@@ -67,11 +67,10 @@ export class CubeStatePLL extends CubeState {
 export class CubeStateOLL extends CubeState {
   ollFieldColors: OllFieldColors;
   algorithmToArrows: MappedAlgorithms;
-  currentAlgorithmIndex: number;
+  currentAlgorithmIndex: number = 0;
 
   constructor(codeBlockContent: string[]) {
     super(codeBlockContent);
-    this.currentAlgorithmIndex = 0;
   }
 
   currentArrowCoordinates(): Arrows {
@@ -79,23 +78,14 @@ export class CubeStateOLL extends CubeState {
   }
 
   /** Clock-wise quarter rotation */
-  rotateLeft(): void {
-    this.algorithmToArrows.rotate(1);
-  }
+  rotateLeft = ():void => this.algorithmToArrows.rotate(1);
 
   /** Anti-clock-wise quarter rotation */
-  rotateRight(): void {
-    this.algorithmToArrows.rotate(3);
-  }
+  rotateRight = ():void => this.algorithmToArrows.rotate(3);
 
   changeAlgorithm(algorithmId: number): boolean {
-    // console.log(algorithmId);
-    if (this.currentAlgorithmIndex === algorithmId) {
-      // console.log('no change');
-      return false;
-    }
+    if (this.currentAlgorithmIndex === algorithmId) return false;
     this.currentAlgorithmIndex = algorithmId;
-    // console.log('changed to ' + this.currentAlgorithmIndex);
     return true;
   }
 }

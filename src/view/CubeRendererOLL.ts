@@ -1,7 +1,7 @@
 import {CubeRenderer} from "./CubeRenderer";
 import {CubeStateOLL} from "../model/cube-state";
 import {OllFieldColors} from "../model/OllFieldColors";
-import {ArrowCoordinates, Coordinates} from "../model/arrowCoordinates";
+import {Geometry, Coordinates} from "../model/geometry";
 import {Algorithms} from "../model/algorithms";
 
 export class CubeRendererOLL extends CubeRenderer {
@@ -76,10 +76,10 @@ export class CubeRendererOLL extends CubeRenderer {
 
     // this.arrowSVG = mainSvg;
 
-    let arrows: ArrowCoordinates[] = this.cubeState.currentArrowCoordinates();
+    let arrows: Geometry[] = this.cubeState.currentArrowCoordinates();
 
     for (let i: number = 0; i < arrows.length; i++) {
-      let arrow: ArrowCoordinates = arrows[i]!;
+      let arrow: Geometry = arrows[i]!;
       let arrStart: Coordinates = arrow.start;
       let arrEnd: Coordinates = arrow.end;
       // let arrowSVG: SVGLineElement =
