@@ -343,7 +343,7 @@ export class CodeBlockInterpreterOLL extends CodeBlockInterpreter {
 
     let expectedWidth: number = rawOllInput[0]!.length;
 
-    this.ollFieldInput = new OllFieldColoring(expectedWidth);
+    this.ollFieldInput = new OllFieldColoring();
     this.cubeDimensions = {width: expectedWidth - 2, height: rawOllInput.length - 2};
 
     for (let i: number = 0; i < rawOllInput.length; i++) {

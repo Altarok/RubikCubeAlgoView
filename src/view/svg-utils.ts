@@ -2,6 +2,19 @@ import {Arrows} from "../model/geometry";
 
 const stickerDrawSize = 100;
 
+/*
+ * Object Literal Namespace or a Module Object.
+ */
+export const SvgUtils = {
+  createArrowHead,
+  drawArrows,
+  drawBackgroundRect,
+  drawGrid,
+  drawRotateLeftIcon,
+  drawRotateRightIcon,
+  drawSticker
+};
+
 /**
  * Draw static background grid; unresponsive, black, rectangular lines
  * @param svg - SVG to draw in
@@ -9,7 +22,7 @@ const stickerDrawSize = 100;
  * @param height - height of SVG's view box
  * @param offset - distance to top left corner for first vertical and horizontal line
  */
-export function drawGrid(svg: SVGSVGElement, width: number, height: number, offset: number = 0) {
+function drawGrid(svg: SVGSVGElement, width: number, height: number, offset = 0) {
   /* Vertical lines */
   for (let x = offset; x < width; x += stickerDrawSize) {
     svg.createSvg('line', {
@@ -26,24 +39,24 @@ export function drawGrid(svg: SVGSVGElement, width: number, height: number, offs
   }
 }
 
-export function drawArrows(svg: SVGSVGElement, arrows: Arrows, color: string) {
-  for (const arrow of arrows) {
+function drawArrows(svg: SVGSVGElement, arrows: Arrows, stroke: string) {
+  arrows.forEach(({start, end}) => {
     svg.createSvg('line', {
       attr: {
-        x1: arrow.start.x, y1: arrow.start.y,
-        x2: arrow.end.x, y2: arrow.end.y,
-        'marker-end': `url(#arrowhead${color})`,
-        stroke: color
+        x1: start.x, y1: start.y,
+        x2: end.x, y2: end.y,
+        'marker-end': `url(#arrowhead${stroke})`,
+        stroke // shorthand
       },
       cls: 'rubik-cube-arrow'
     });
-  }
+  });
 }
 
 /**
  * Creates the <defs> and <marker> required for the arrow tips.
  */
-export function createArrowHead(svg: SVGSVGElement, color: string): void {
+function createArrowHead(svg: SVGSVGElement, color: string) {
   const defs = svg.createSvg('defs');
   const marker = defs.createSvg('marker', {
     attr: {
@@ -64,9 +77,9 @@ export function createArrowHead(svg: SVGSVGElement, color: string): void {
 /**
  * Draws the background color rectangle for the SVG.
  */
-export function drawBackgroundRect(svg: SVGSVGElement, color: string): void {
+function drawBackgroundRect(svg: SVGSVGElement, fill: string) {
   svg.createSvg('rect', {
-    attr: {width: '100%', height: '100%', fill: color},
+    attr: {width: '100%', height: '100%', fill}, // Shorthand property {fill: fill}
     cls: "rubik-cube-pll-rect"
   });
 }
@@ -74,23 +87,16 @@ export function drawBackgroundRect(svg: SVGSVGElement, color: string): void {
 /**
  * Draws a single colored "sticker" (rectangle) on the cube.
  */
-export function drawSticker(
-  svg: SVGSVGElement,
-  x: number,
-  y: number,
-  width: number,
-  height: number,
-  color: string,
-  isGrid: boolean = false
-): void {
+function drawSticker(svg: SVGSVGElement,
+                     x: number,
+                     y: number,
+                     width: number,
+                     height: number,
+                     fill: number | string, // Accept either
+                     isGrid = false
+) {
   svg.createSvg('rect', {
-    attr: {
-      x: x,
-      y: y,
-      width: width.toString(),
-      height: height.toString(),
-      fill: color
-    },
+    attr: {x, y, width, height, fill},
     cls: isGrid ? "rubik-cube-pll-line-grid" : "rubik-cube-rect"
   });
 }
@@ -98,7 +104,7 @@ export function drawSticker(
 /**
  * Draws the "Rotate Left" icon onto an SVG
  */
-export function drawRotateLeftIcon(svg: SVGSVGElement): void {
+function drawRotateLeftIcon(svg: SVGSVGElement) {
   svg.createSvg('rect', {attr: {x: 10, y: 2, width: 12, height: 12, rx: 2, ry: 2}});
   svg.createSvg('line', {attr: {x1: 14, y1: 2, x2: 14, y2: 14}});
   svg.createSvg('line', {attr: {x1: 18, y1: 2, x2: 18, y2: 14}});
@@ -111,7 +117,7 @@ export function drawRotateLeftIcon(svg: SVGSVGElement): void {
 /**
  * Draws the "Rotate Right" icon onto an SVG
  */
-export function drawRotateRightIcon(svg: SVGSVGElement): void {
+function drawRotateRightIcon(svg: SVGSVGElement) {
   svg.createSvg('rect', {attr: {x: 2, y: 2, width: 12, height: 12, rx: 2, ry: 2}});
   svg.createSvg('line', {attr: {x1: 6, y1: 2, x2: 6, y2: 14}});
   svg.createSvg('line', {attr: {x1: 10, y1: 2, x2: 10, y2: 14}});

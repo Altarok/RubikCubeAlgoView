@@ -16,11 +16,9 @@ const colorMap: Record<string, string> = {
   '1': '#ff0'     // bright field (for binary input) TODO replace with default
 };
 
-export class OllFieldColoring {
-  parsedRows: string[][] = new Array<string[]>();
 
-  constructor(private readonly ollFieldInputWidth: number) {
-  }
+export class OllFieldColoring {
+  parsedRows: string[][] = [];
 
   addRow(parsedRow: string[]): void {
     // console.log('add row: ', parsedRow);

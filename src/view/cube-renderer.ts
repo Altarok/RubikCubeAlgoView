@@ -1,16 +1,14 @@
 import {CubeState, CubeStateOLL, CubeStatePLL} from "../model/cube-state";
-import { Dimensions} from "../model/geometry";
 import {Algorithm, Algorithms} from "../model/algorithms";
 import {OllFieldColoring} from "../model/oll-field-coloring";
-import {createArrowHead, drawArrows, drawGrid, drawRotateLeftIcon, drawRotateRightIcon, drawSticker} from "./svg-utils";
-import {renderAlgorithmList, renderAlgorithmSelect, showInvalidInput} from "./ui-utils";
+import {SvgUtils} from "./svg-utils";
+import {UiUtils} from "./ui-utils";
 import {applyRotation} from "./dom-rotation";
 import {createCubeLayout, CubeLayout} from "./cube-layout";
 
 
 export abstract class CubeRenderer {
   layout: CubeLayout;
-
   buttonLeft: HTMLButtonElement;
   buttonRight: HTMLButtonElement;
   mainCubeSvg: SVGSVGElement;
@@ -25,9 +23,10 @@ export abstract class CubeRenderer {
 
     if (this.cubeState.codeBlockInterpretationFailed()) {
       this.displayWarningForInvalidInput(element);
-    } else {
-      this.displayCubeButtonAndAlgorithms(element);
+      return;
     }
+
+    this.displayCubeButtonAndAlgorithms(element);
   }
 
   abstract displayCubeForeground(container: SVGSVGElement, viewBoxWidth: number, viewBoxHeight: number): void;
@@ -36,7 +35,7 @@ export abstract class CubeRenderer {
 
   abstract displayArrows(container: SVGSVGElement): void;
 
-  displayCubeButtonAndAlgorithms(container: HTMLElement): void {
+  displayCubeButtonAndAlgorithms(container: HTMLElement) {
 
     this.layout = createCubeLayout(container);
 
@@ -51,11 +50,9 @@ export abstract class CubeRenderer {
   }
 
   displayCube(cubeDiv: HTMLDivElement): void {
-    let viewBoxDimensions: Dimensions = this.cubeState.viewBoxDimensions;
-    let viewBoxWidth: number = viewBoxDimensions.width;
-    let viewBoxHeight: number = viewBoxDimensions.height;
+    const {width: viewBoxWidth, height: viewBoxHeight} = this.cubeState.viewBoxDimensions;
 
-    let mainSvgElement: SVGSVGElement = this.displayCubeBackground(cubeDiv, viewBoxWidth, viewBoxHeight);
+    const mainSvgElement: SVGSVGElement = this.displayCubeBackground(cubeDiv, viewBoxWidth, viewBoxHeight);
 
     this.displayCubeForeground(mainSvgElement, viewBoxWidth, viewBoxHeight);
     this.displayArrows(mainSvgElement);
@@ -63,28 +60,26 @@ export abstract class CubeRenderer {
 
   /**
    * @param {HTMLElement} element - HTML element to draw on
-   * @param {number} viewBoxWidth - width of image part to zoom in to
-   * @param {number} viewBoxHeight - height of image part to zoom in to
+   * @param {number} viewBoxWidth - view box width of image part to zoom in to
+   * @param {number} viewBoxHeight - view box height of image part to zoom in to
    */
   displayCubeBackground(element: HTMLElement, viewBoxWidth: number, viewBoxHeight: number): SVGSVGElement {
-    let imageWidth: number = viewBoxWidth;
-    let imageHeight: number = viewBoxHeight;
-    if (this.cubeState.isDefaultSize()) {
-      imageWidth = 200;
-      imageHeight = 200;
-    }
+    const isDefault = this.cubeState.isDefaultSize();
+    const imageWidth = isDefault ? 200 : viewBoxWidth;
+    const imageHeight = isDefault ? 200 : viewBoxHeight;
 
     this.mainCubeSvg = element.createSvg('svg', {
       attr: {
-        width: imageWidth, height: imageHeight,
-        viewBox: '0 0 ' + viewBoxWidth + ' ' + viewBoxHeight
+        width: imageWidth,
+        height: imageHeight,
+        viewBox: `0 0 ${viewBoxWidth} ${viewBoxHeight}`
       }, cls: 'rubik-cube-pll'
     });
 
-    createArrowHead(this.mainCubeSvg, this.cubeState.arrowColor);
+    SvgUtils.createArrowHead(this.mainCubeSvg, this.cubeState.arrowColor);
 
     /* Background rectangle */
-    this.mainCubeSvg.createSvg('rect', {attr: {fill: this.cubeState.backgroundColor}, cls: "rubik-cube-pll-rect"});
+    SvgUtils.drawBackgroundRect(this.mainCubeSvg, this.cubeState.backgroundColor);
 
     return this.mainCubeSvg;
   }
@@ -97,7 +92,7 @@ export abstract class CubeRenderer {
     const error = this.cubeState.invalidInput;
 
     if (error) {
-      showInvalidInput(element, this.cubeState.codeBlockContent, error);
+      UiUtils.showInvalidInput(element, this.cubeState.codeBlockContent, error);
     }
   }
 
@@ -121,10 +116,7 @@ export abstract class CubeRenderer {
    */
   private rotateCube(degreeChange: number): void {
     this.cubeState.cubeRotation += degreeChange;
-    // this.cubeDiv.style.transform = `rotate(${this.cubeRotation}deg)`;
-    // const newDegrees = currentDegrees - 90;
     applyRotation(this.layout.cubeDiv, this.cubeState.cubeRotation);
-    // return newDegrees;
   }
 
   displayButtons(buttonDiv: HTMLDivElement): void {
@@ -137,13 +129,13 @@ export abstract class CubeRenderer {
       attr: {'stroke-width': 1},
       cls: 'rubik-cube-button'
     });
-    drawRotateLeftIcon(turnLeftSvg);
+    SvgUtils.drawRotateLeftIcon(turnLeftSvg);
 
     let turnRightSvg: SVGSVGElement = this.buttonRight.createSvg('svg', {
       attr: {'stroke-width': 1},
       cls: 'rubik-cube-button'
     });
-    drawRotateRightIcon(turnRightSvg);
+    SvgUtils.drawRotateRightIcon(turnRightSvg);
 
   }
 }
@@ -155,11 +147,11 @@ export class CubeRendererPLL extends CubeRenderer {
   }
 
   displayCubeForeground(svgElement: SVGSVGElement, viewBoxWidth: number, viewBoxHeight: number): void {
-    drawGrid(svgElement, viewBoxWidth, viewBoxHeight, 100);
+    SvgUtils.drawGrid(svgElement, viewBoxWidth, viewBoxHeight, 100);
   }
 
   displayArrows(mainSvg: SVGSVGElement): void {
-    drawArrows(mainSvg, this.cubeStatePll.arrowCoordinates, this.cubeStatePll.arrowColor);
+    SvgUtils.drawArrows(mainSvg, this.cubeStatePll.arrowCoordinates, this.cubeStatePll.arrowColor);
   }
 
   redrawAlgorithms(): void {
@@ -173,7 +165,7 @@ export class CubeRendererPLL extends CubeRenderer {
   displayAlgorithms(container: HTMLDivElement): void {
     const algorithms: Algorithms = this.cubeStatePll.algorithms;
     if (!algorithms || algorithms.items.length === 0) return;  /* Fail-safe, algorithms are optional */
-    renderAlgorithmList(container, algorithms.items);
+    UiUtils.renderAlgorithmList(container, algorithms.items);
   }
 }
 
@@ -185,41 +177,43 @@ export class CubeRendererOLL extends CubeRenderer {
 
   displayCubeForeground(svgElement: SVGSVGElement, viewBoxWidth: number, viewBoxHeight: number): void {
     let cells: OllFieldColoring = this.cubeStateOLL.ollFieldColors;
-    const [ cubeWidth, cubeHeight ] = [this.cubeStateOLL.cubeWidth, this.cubeStateOLL.cubeHeight]; // e.g. 3,3
+    const [cubeWidth, cubeHeight] = [this.cubeStateOLL.cubeWidth, this.cubeStateOLL.cubeHeight]; // e.g. 3,3
+
+    const stickerSize = 100;
+    const half = stickerSize / 2;
+    const gridLen = cells.length();
 
     /* Upper and lower edges */
     for (let x = 0; x < cubeWidth; x++) {
-      drawSticker(svgElement, 50 + x * 100, 0, 100, 50, cells.getColor(0, x + 1));
-      drawSticker(svgElement, 50 + x * 100, viewBoxHeight - 50, 100, 50, cells.getColor(cells.length() - 1, x + 1));
+      const xPos = half + x * stickerSize;
+      SvgUtils.drawSticker(svgElement, xPos, 0, stickerSize, half, cells.getColor(0, x + 1));
+      SvgUtils.drawSticker(svgElement, xPos, viewBoxHeight - half, stickerSize, half, cells.getColor(gridLen - 1, x + 1));
     }
 
     /* Left and right edges */
     for (let y = 0; y < cubeHeight; y++) {
-      drawSticker(svgElement, 0, 50 + y * 100, 50, 100, cells.getColor(y + 1, 0));
-      drawSticker(svgElement, viewBoxWidth - 50, 50 + y * 100, 50, 100, cells.getColor(y + 1, cells.length() - 1));
+      const yPos = half + y * stickerSize;
+      SvgUtils.drawSticker(svgElement, 0, yPos, half, stickerSize, cells.getColor(y + 1, 0));
+      SvgUtils.drawSticker(svgElement, viewBoxWidth - half, yPos, half, stickerSize, cells.getColor(y + 1, gridLen - 1));
     }
 
     /* Center rows/columns */
-    for (let y: number = 0; y < cubeHeight; y++) {
-      for (let x: number = 0; x < cubeWidth; x++) {
-        drawSticker(svgElement, 50 + x * 100, 50 + y * 100, 100, 100, cells.getColor(y + 1, x + 1), true);
+    for (let y = 0; y < cubeHeight; y++) {
+      for (let x = 0; x < cubeWidth; x++) {
+        SvgUtils.drawSticker(svgElement, half + x * stickerSize, half + y * stickerSize, stickerSize, stickerSize, cells.getColor(y + 1, x + 1), true);
       }
     }
 
-    drawGrid(svgElement, viewBoxWidth, viewBoxHeight, 50);
+    SvgUtils.drawGrid(svgElement, viewBoxWidth, viewBoxHeight, half);
   }
 
   redrawArrows(): void {
-    // for(const arr of this.arrowSVGs) {
-    //   // this.arrowSVG.remove(arr);
-    // }
-    // // this.arrowSVGs.length = 0; // clear array, yes really
-    // this.displayArrows(this.arrowSVG);
     super.redrawCube();
   }
 
   displayArrows(mainSvg: SVGSVGElement): void {
-    drawArrows(mainSvg, this.cubeStateOLL.currentArrowCoordinates(), this.cubeStateOLL.arrowColor);
+    const { arrowColor } = this.cubeStateOLL;
+    SvgUtils.drawArrows(mainSvg, this.cubeStateOLL.currentArrowCoordinates(), arrowColor);
   }
 
   redrawAlgorithms(): void {
@@ -228,11 +222,10 @@ export class CubeRendererOLL extends CubeRenderer {
     this.displayAlgorithms(this.layout.algorithmsDiv);
   }
 
-  displayAlgorithms(container: HTMLDivElement): void {
-    if (undefined === this.cubeStateOLL.currentAlgorithmIndex) return; /* Fail-safe, nothing selected */
-    const items: Algorithm[] = this.cubeStateOLL.algorithmToArrows.getAllItems();
-    renderAlgorithmSelect(container, items, this.cubeStateOLL.currentAlgorithmIndex);
+  displayAlgorithms(container: HTMLDivElement) {
+    const { currentAlgorithmIndex: index, algorithmToArrows } = this.cubeStateOLL;
+    if (index === undefined) return; /* Fail-safe, nothing selected */
+    UiUtils.renderAlgorithmSelect(container, algorithmToArrows.getAllItems(), index);
   }
-
 }
 

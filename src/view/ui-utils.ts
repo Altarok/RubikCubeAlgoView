@@ -1,10 +1,16 @@
 import {InvalidInput, isInvalidRow} from "../model/invalid-input";
 import {Algorithm} from "../model/algorithms";
 
+export const UiUtils = {
+  renderAlgorithmList,
+  renderAlgorithmSelect,
+  showInvalidInput
+};
+
 /**
  * Renders a formatted error message when code block interpretation fails.
  */
-export function showInvalidInput(container: HTMLElement, rows: string[], error: InvalidInput): void {
+function showInvalidInput(container: HTMLElement, rows: string[], error: InvalidInput): void {
   container.createEl('div', {
     text: 'Code block interpretation failed:',
     cls: 'rubik-cube-warning-text-orange'
@@ -33,7 +39,7 @@ export function showInvalidInput(container: HTMLElement, rows: string[], error: 
 /**
  * Renders a simple bullet point list of algorithms (used by PLL).
  */
-export function renderAlgorithmList(container: HTMLElement, algorithms: Algorithm[]): void {
+function renderAlgorithmList(container: HTMLElement, algorithms: Algorithm[]): void {
   if (algorithms.length === 0) return;
 
   const ul = container.createEl('ul');
@@ -45,7 +51,7 @@ export function renderAlgorithmList(container: HTMLElement, algorithms: Algorith
 /**
  * Renders a list of algorithms with radio buttons for selection (used by OLL).
  */
-export function renderAlgorithmSelect(
+function renderAlgorithmSelect(
   container: HTMLElement,
   algorithms: Algorithm[], // { algorithm: Algorithm }[],
   selectedIndex: number
