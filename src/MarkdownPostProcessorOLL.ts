@@ -55,7 +55,7 @@ export class MarkdownPostProcessorOLL extends MarkdownRenderChild {
 
 
 
-      let radioButtons: HTMLCollectionOf<HTMLInputElement> = cubeRenderer.algorithmsDiv.getElementsByTagName('input');
+      let radioButtons: HTMLCollectionOf<HTMLInputElement> = cubeRenderer.layout.algorithmsDiv.getElementsByTagName('input');
 
       // console.debug('turn');
 
@@ -75,11 +75,8 @@ export class MarkdownPostProcessorOLL extends MarkdownRenderChild {
       /*
        * TODO instead change text of divs
        */
-      // cubeRenderer.redrawAlgorithms();
 
-      // let radioButtons: HTMLCollectionOf<HTMLInputElement> = cubeRenderer.radioDiv.getElementsByTagName('input');
-
-      let elementsByTagName: HTMLCollectionOf<HTMLLabelElement> = cubeRenderer.algorithmsDiv.getElementsByTagName('label');
+      let elementsByTagName: HTMLCollectionOf<HTMLLabelElement> = cubeRenderer.layout.algorithmsDiv.getElementsByTagName('label');
 
       console.debug('turn left');
 
@@ -97,7 +94,7 @@ export class MarkdownPostProcessorOLL extends MarkdownRenderChild {
       cubeRenderer.rotateRight();
       cubeState.rotateRight();
 
-      let elementsByTagName: HTMLCollectionOf<HTMLLabelElement> = cubeRenderer.algorithmsDiv.getElementsByTagName('label');
+      let elementsByTagName: HTMLCollectionOf<HTMLLabelElement> = cubeRenderer.layout.algorithmsDiv.getElementsByTagName('label');
 
       console.debug('turn right');
 
