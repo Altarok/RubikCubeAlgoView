@@ -43,8 +43,10 @@ function renderAlgorithmList(container: HTMLElement, algorithms: Algorithm[]): v
   if (algorithms.length === 0) return;
 
   const ul = container.createEl('ul');
-  algorithms.forEach(alg => {
-    ul.createEl('li', { text: alg.toString() });
+  algorithms.forEach(item => {
+    let li = ul.createEl('li'); // { text: item.toString() }
+    let listLabel: HTMLLabelElement = li.createEl('label', {text: item.toString()});
+    item.algorithmLabel = listLabel;
   });
 }
 
@@ -57,7 +59,7 @@ function renderAlgorithmSelect(
   selectedIndex: number
 ): void {
   const ul = container.createEl('ul');
-  const radioDiv = ul.createEl('div', { attr: { id: 'oll-radio-buttons-div' } });
+  const radioDiv = ul.createEl('div', {attr: {id: 'oll-radio-buttons-div'}});
 
   algorithms.forEach((item, i) => {
     const isChecked = selectedIndex === i;
@@ -68,15 +70,16 @@ function renderAlgorithmSelect(
         type: 'radio',
         id: i.toString(),
         value: i.toString(),
-        ...(isChecked && { checked: true }) // Only add checked attribute if true
+        ...(isChecked && {checked: true}) // Only add checked attribute if true
       }
     });
 
-    radioDiv.createEl('label', {
-      attr: { for: i.toString(), id: i, },
+    let radioBtnLabel: HTMLLabelElement = radioDiv.createEl('label', {
+      attr: {for: i.toString(), id: i,},
       text: item.toString()
     });
-
     radioDiv.createEl('br');
+
+    item.algorithmLabel = radioBtnLabel;
   });
 }

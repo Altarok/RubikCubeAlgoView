@@ -51,19 +51,16 @@ export class MarkdownPostProcessorPLL extends MarkdownRenderChild {
     cubeRenderer.buttonLeft.addEventListener('click', () => {
       cubeState.rotateLeft();
       cubeRenderer.rotateCube();
-      cubeRenderer.redrawAlgorithms();
     });
 
     cubeRenderer.buttonReset.addEventListener('click', () => {
       cubeState.resetRotation();
       cubeRenderer.rotateCube();
-      cubeRenderer.redrawAlgorithms();
     });
 
     cubeRenderer.buttonRight.addEventListener('click', () => {
       cubeState.rotateRight();
       cubeRenderer.rotateCube();
-      cubeRenderer.redrawAlgorithms();
     });
   }
 }

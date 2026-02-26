@@ -26,10 +26,9 @@ export class ArrowCoords {
 export type Arrows = ArrowCoords[];
 
 /** Simple dimensions */
-export interface Dimensions {
-  readonly width: number;
-  readonly height: number;
+export class Dimensions {
+  constructor(public readonly width: number, public readonly height: number) {
+  }
+
+  isDefaultSize = () => this.width === 3 && this.height === 3;
 }
-
-export type CubeDimensions = Dimensions;
-

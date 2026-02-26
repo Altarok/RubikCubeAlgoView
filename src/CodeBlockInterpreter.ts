@@ -1,4 +1,4 @@
-import {ArrowCoords, Arrows, Coordinates, CubeDimensions} from "./model/geometry";
+import {ArrowCoords, Arrows, Coordinates, Dimensions} from "./model/geometry";
 import {DEFAULT_SETTINGS, RubikCubeAlgoSettingsTab} from "./RubikCubeAlgoSettings";
 import {InvalidInput} from "./model/invalid-input";
 import {Algorithms, MappedAlgorithm, MappedAlgorithms} from "./model/algorithms";
@@ -43,12 +43,8 @@ const isPositiveIntegerRegex = new RegExp('\\d+');
 
 
 export abstract class CodeBlockInterpreter {
-  /** cube width (rectangles, not pixels) */
-  // protected cubeWidth: number = DEFAULT.WIDTH;
   /** cube's dimensions (stickers, not pixels) */
-  cubeDimensions: CubeDimensions = {width: DEFAULT.WIDTH, height: DEFAULT.HEIGHT};
-  /** cube height (rectangles, not pixels) */
-    // protected cubeHeight: number = DEFAULT.HEIGHT;
+  protected cubeDimensions: Dimensions = new Dimensions(DEFAULT.WIDTH, DEFAULT.HEIGHT);
   protected codeBlockInterpretationSuccessful: boolean = true;
   protected invalidInput?: InvalidInput;
   protected stickerCoordinates: Coordinates[] = [];
@@ -127,13 +123,13 @@ export abstract class CodeBlockInterpreter {
       const parts = input.split('.');
       const row = parseInt(parts[0] ?? '1', 10);
       const col = parseInt(parts[1] ?? '1', 10);
-      indexOfCubeletCenter = (row - 1) * this.cubeDimensions.width + col ;
+      indexOfCubeletCenter = (row - 1) * this.cubeDimensions.width + col;
     } else {
-      indexOfCubeletCenter = (parseInt(input, 10) || 1) ;
+      indexOfCubeletCenter = (parseInt(input, 10) || 1);
     }
 
     // Safety check
-    const coords = this.stickerCoordinates[indexOfCubeletCenter-1];
+    const coords = this.stickerCoordinates[indexOfCubeletCenter - 1];
 
     if (!coords) { // TODO remove
       // Fallback to a default (like 0,0 or the first cubelet)
@@ -142,7 +138,7 @@ export abstract class CodeBlockInterpreter {
       return this.stickerCoordinates[1] ?? new Coordinates(0, 0);
     }
 
-    return this.stickerCoordinates[indexOfCubeletCenter-1]!;
+    return this.stickerCoordinates[indexOfCubeletCenter - 1]!;
   }
 
   static get3by3PllTemplate = (): string => DEFAULT.PLL_TEMPLATE;
@@ -169,19 +165,23 @@ export class CodeBlockInterpreterPLL extends CodeBlockInterpreter {
     let cubeState: CubeStatePLL = new CubeStatePLL(this.codeBlockContent);
 
     if (this.codeBlockInterpretationSuccessful) {
-      /*
-       * Generic data:
-       */
-      cubeState.cubeWidth = this.cubeDimensions.width;
-      cubeState.cubeHeight = this.cubeDimensions.height;
-      cubeState.backgroundColor = this.cubeColor;
-      cubeState.arrowColor = this.arrowColor;
-      cubeState.arrowCoordinates = arrowCoordinates;
-      cubeState.viewBoxDimensions = {width: this.cubeDimensions.width * 100, height: this.cubeDimensions.height * 100};
-      /*
-       * PLL-only data:
-       */
-      cubeState.algorithms = this.algorithms;
+      Object.assign(cubeState, {
+        /*
+         * Generic data:
+         */
+        dimensions: this.cubeDimensions,
+        backgroundColor: this.cubeColor,
+        arrowColor: this.arrowColor,
+        arrowCoordinates: arrowCoordinates,
+        viewBoxDimensions: {
+          width: this.cubeDimensions.width * 100,
+          height: this.cubeDimensions.height * 100
+        },
+        /*
+         * PLL-only data:
+         */
+        algorithms: this.algorithms
+      });
     } else {
       cubeState.invalidInput = this.invalidInput;
     }
@@ -199,7 +199,7 @@ export class CodeBlockInterpreterPLL extends CodeBlockInterpreter {
 
       switch (command) {
         case 'dimension': {
-          const result  = parseDimensions(row);
+          const result = parseDimensions(row);
           if (result.success) {
             this.cubeDimensions = result.data;
           } else {
@@ -286,8 +286,7 @@ export class CodeBlockInterpreterOLL extends CodeBlockInterpreter {
         /*
          * Generic data:
          */
-        cubeWidth: this.cubeDimensions.width,
-        cubeHeight: this.cubeDimensions.height,
+        dimensions: this.cubeDimensions,
         backgroundColor: '#000',
         arrowColor: this.arrowColor,
         viewBoxDimensions: {
@@ -344,7 +343,7 @@ export class CodeBlockInterpreterOLL extends CodeBlockInterpreter {
     let expectedWidth: number = rawOllInput[0]!.length;
 
     this.ollFieldInput = new OllFieldColoring();
-    this.cubeDimensions = {width: expectedWidth - 2, height: rawOllInput.length - 2};
+    this.cubeDimensions = new Dimensions(expectedWidth - 2, rawOllInput.length - 2);
 
     for (let i: number = 0; i < rawOllInput.length; i++) {
       const row: string = rawOllInput[i]!.trim();
@@ -393,7 +392,7 @@ export class CodeBlockInterpreterOLL extends CodeBlockInterpreter {
       }
     );
 
-    this .startingAlgorithm = 0;
+    this.startingAlgorithm = 0;
     return map;
   }
 }

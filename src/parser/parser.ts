@@ -1,6 +1,6 @@
 import {Algorithm, AlgorithmStep, possibleSteps} from "../model/algorithms";
 import {InvalidInput} from "../model/invalid-input";
-import {CubeDimensions} from "../model/geometry";
+import {Dimensions} from "../model/geometry";
 
 const stepPattern: string = "[xyzRrLlFfBbUuDdMSE](|'|2)";
 const algorithmRegex: RegExp = new RegExp(`^(${stepPattern})( ${stepPattern})*$`);
@@ -44,14 +44,14 @@ export function parseAlgorithm(row: string): Result<Algorithm> {
 /**
  * @param row string starting with 'dimension:'
  */
-export function parseDimensions(row: string): Result<CubeDimensions> {
+export function parseDimensions(row: string): Result<Dimensions> {
   /*
    * Cut comments, cut prefix, split width and height
    */
   const parts = row.split(' ')[0]?.replace('dimension:', '').split(',');
   const [w=0, h=0] = parts?.map(Number) ?? [];
   if (/*w && h &&*/ w >= 2 && w <= 10 && h >=2 && h <= 10) {
-    return {success: true, data: {width: w, height: h}};
+    return {success: true, data: new Dimensions(w, h)};
   } else {
     return {success: false, error: InvalidInput.ofDimensions(row)};
   }

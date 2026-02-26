@@ -7,10 +7,8 @@ import {MappedAlgorithms} from "./algorithms";
 export abstract class CubeState {
   /** Container for invalid code block content */
   invalidInput?: InvalidInput;
-  /** cube width (rectangles, not pixels) */
-  cubeWidth: number;
-  /** cube height (rectangles, not pixels) */
-  cubeHeight: number;
+  /** cube dimensions in stickers (rectangles, not pixels) */
+  dimensions: Dimensions;
   /** the arrows' color */
   arrowColor: string;
   /** the background's color */
@@ -29,7 +27,7 @@ export abstract class CubeState {
   /**
    * @return true if cube size equals 3 by 3
    */
-  isDefaultSize = () =>  this.cubeWidth === 3 && this.cubeHeight === 3;
+  isDefaultSize = () => this.dimensions.isDefaultSize();
 
   codeBlockInterpretationFailed = () => this.invalidInput !== undefined;
 

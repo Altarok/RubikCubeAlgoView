@@ -149,14 +149,6 @@ export class CubeRendererPLL extends CubeRenderer {
     SvgUtils.drawArrows(mainSvg, this.cubeStatePll.arrowCoordinates, this.cubeStatePll.arrowColor);
   }
 
-  redrawAlgorithms(): void {
-
-    if (this.layout.algorithmsDiv === undefined) return;
-
-    this.layout.algorithmsDiv.empty();
-    this.displayAlgorithms(this.layout.algorithmsDiv);
-  }
-
   displayAlgorithms(container: HTMLDivElement): void {
     const algorithms: Algorithms = this.cubeStatePll.algorithms;
     if (!algorithms || algorithms.items.length === 0) return;  /* Fail-safe, algorithms are optional */
@@ -172,7 +164,7 @@ export class CubeRendererOLL extends CubeRenderer {
 
   displayCubeForeground(svgElement: SVGSVGElement, viewBoxWidth: number, viewBoxHeight: number): void {
     let cells: OllFieldColoring = this.cubeStateOLL.ollFieldColors;
-    const [cubeWidth, cubeHeight] = [this.cubeStateOLL.cubeWidth, this.cubeStateOLL.cubeHeight]; // e.g. 3,3
+    const [cubeWidth, cubeHeight] = [this.cubeStateOLL.dimensions.width, this.cubeStateOLL.dimensions.height]; // e.g. 3,3
 
     const stickerSize = 100;
     const half = stickerSize / 2;
@@ -209,12 +201,6 @@ export class CubeRendererOLL extends CubeRenderer {
   displayArrows(mainSvg: SVGSVGElement): void {
     const {arrowColor} = this.cubeStateOLL;
     SvgUtils.drawArrows(mainSvg, this.cubeStateOLL.currentArrowCoordinates(), arrowColor);
-  }
-
-  redrawAlgorithms(): void {
-    if (this.layout.algorithmsDiv === undefined) return;
-    this.layout.algorithmsDiv.empty();
-    this.displayAlgorithms(this.layout.algorithmsDiv);
   }
 
   displayAlgorithms(container: HTMLDivElement) {

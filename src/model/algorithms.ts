@@ -56,6 +56,8 @@ const turnCubeLeftMap: TurnCubeMap = {
  * aimed to change a cube's state in a specific way.
  */
 export class Algorithm {
+  algorithmLabel: HTMLLabelElement
+
   constructor(private steps: AlgorithmStep[]) {
   }
 
@@ -70,11 +72,16 @@ export class Algorithm {
       }
       return current;
     });
+
+    if (this.algorithmLabel) {
+      this.algorithmLabel.setText(this.toString());
+    }
   }
 
   toString = () => this.steps.join(' ');
 
   clone = (): Algorithm => new Algorithm([...this.steps]);
+
 }
 
 export class Algorithms {
@@ -82,13 +89,10 @@ export class Algorithms {
 
   length = () => this.items.length;
 
-  add(alg: Algorithm) {
-    this.items.push(alg);
-  }
+  add = (alg: Algorithm) => this.items.push(alg);
 
-  rotate(quarterTurns: number): void {
-    this.items.forEach(algorithm => algorithm.rotate(quarterTurns));
-  }
+  rotate = (quarterTurns: number) => this.items.forEach(algorithm => algorithm.rotate(quarterTurns));
+
 }
 
 export class MappedAlgorithm {
