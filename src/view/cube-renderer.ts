@@ -1,5 +1,5 @@
 import {CubeState, CubeStateOLL, CubeStatePLL} from "../model/cube-state";
-import {Algorithm, Algorithms} from "../model/algorithms";
+import {Algorithms} from "../model/algorithms";
 import {OllFieldColoring} from "../model/oll-field-coloring";
 import {SvgUtils} from "./svg-utils";
 import {UiUtils} from "./ui-utils";
@@ -10,6 +10,9 @@ import {createCubeLayout, CubeLayout} from "./cube-layout";
 export abstract class CubeRenderer {
   layout: CubeLayout;
   buttonLeft: HTMLButtonElement;
+  /*
+   * TODO add reset-rotation button
+   */
   buttonRight: HTMLButtonElement;
   mainCubeSvg: SVGSVGElement;
 
