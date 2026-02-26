@@ -13,6 +13,7 @@ export abstract class CubeRenderer {
   /*
    * TODO add reset-rotation button
    */
+  buttonReset: HTMLButtonElement;
   buttonRight: HTMLButtonElement;
   mainCubeSvg: SVGSVGElement;
 
@@ -100,32 +101,17 @@ export abstract class CubeRenderer {
   }
 
   /**
-   * Clock-wise quarter rotation of cube.
-   */
-  rotateLeft(): void {
-    this.rotateCube(+90);
-  }
-
-  /**
-   * Anti-clock-wise quarter rotation of cube.
-   */
-  rotateRight(): void {
-    this.rotateCube(-90);
-  }
-
-  /**
    * Change current cube rotation.
-   * @param {number} degreeChange - Usually +90 or -90, but everything works
    */
-  private rotateCube(degreeChange: number): void {
-    this.cubeState.cubeRotation += degreeChange;
-    applyRotation(this.layout.cubeDiv, this.cubeState.cubeRotation);
+  rotateCube(): void {
+    const degrees = this.cubeState.cubeRotation * 90;
+    applyRotation(this.layout.cubeDiv, degrees);
   }
 
   displayButtons(buttonDiv: HTMLDivElement): void {
 
     this.buttonLeft = buttonDiv.createEl('button', {'title': 'Rotate left 90 degrees'});
-    // this.buttonCopy = buttonDiv.createEl('button', {'title': 'Copy code block at current state'});
+    this.buttonReset = buttonDiv.createEl('button', {'title': 'Reset rotation'});
     this.buttonRight = buttonDiv.createEl('button', {'title': 'Rotate right 90 degrees'});
 
     let turnLeftSvg: SVGSVGElement = this.buttonLeft.createSvg('svg', {
@@ -133,6 +119,12 @@ export abstract class CubeRenderer {
       cls: 'rubik-cube-button'
     });
     SvgUtils.drawRotateLeftIcon(turnLeftSvg);
+
+    let resetRotationSvg: SVGSVGElement = this.buttonReset.createSvg('svg', {
+      attr: {'stroke-width': 1},
+      cls: 'rubik-cube-button-grey'
+    });
+    SvgUtils.drawResetRotateIcon(resetRotationSvg);
 
     let turnRightSvg: SVGSVGElement = this.buttonRight.createSvg('svg', {
       attr: {'stroke-width': 1},
@@ -215,7 +207,7 @@ export class CubeRendererOLL extends CubeRenderer {
   }
 
   displayArrows(mainSvg: SVGSVGElement): void {
-    const { arrowColor } = this.cubeStateOLL;
+    const {arrowColor} = this.cubeStateOLL;
     SvgUtils.drawArrows(mainSvg, this.cubeStateOLL.currentArrowCoordinates(), arrowColor);
   }
 
@@ -226,7 +218,7 @@ export class CubeRendererOLL extends CubeRenderer {
   }
 
   displayAlgorithms(container: HTMLDivElement) {
-    const { currentAlgorithmIndex: index, algorithmToArrows } = this.cubeStateOLL;
+    const {currentAlgorithmIndex: index, algorithmToArrows} = this.cubeStateOLL;
     if (index === undefined) return; /* Fail-safe, nothing selected */
     UiUtils.renderAlgorithmSelect(container, algorithmToArrows.getAllItems(), index);
   }

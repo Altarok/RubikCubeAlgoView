@@ -46,21 +46,21 @@
   color: #fff;
 }
 .rubik-cube-button {
-/*  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background-color: #f9f9f9;
-  transition: background-color 0.2s;*/
   width: 24px;
   height: 24px;
   stroke: white;
   fill: none;
   stroke-linecap: round;
   stroke-linejoin: round;
-  /*viewBox: 0 0 24 24;*/
 }
+.rubik-cube-button-grey {
+   width: 24px;
+   height: 24px;
+   stroke: grey;
+   fill: none;
+   stroke-linecap: round;
+   stroke-linejoin: round;
+ }
 .div /* debug-div-red-border */ {
   outline: 1px solid red !important;
 }
