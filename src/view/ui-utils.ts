@@ -73,7 +73,7 @@ function renderAlgorithmSelect(
     });
 
     radioDiv.createEl('label', {
-      attr: { for: i.toString() },
+      attr: { for: i.toString(), id: i, },
       text: item.toString()
     });
 

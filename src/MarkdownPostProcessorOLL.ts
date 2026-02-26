@@ -49,15 +49,9 @@ export class MarkdownPostProcessorOLL extends MarkdownRenderChild {
 
   private addButtonFunctions(cubeRenderer: CubeRendererOLL, cubeState: CubeStateOLL) {
 
-    // console.debug('addButtonFunctions ' + cubeState.algorithmToArrows.size());
-
     if (cubeState.algorithmToArrows.size() > 1) {
 
-
-
       let radioButtons: HTMLCollectionOf<HTMLInputElement> = cubeRenderer.layout.algorithmsDiv.getElementsByTagName('input');
-
-      // console.debug('turn');
 
       for (let i: number = 0; i < radioButtons.length; i++) {
         let radioButton: HTMLInputElement = radioButtons[i]!;
@@ -70,40 +64,69 @@ export class MarkdownPostProcessorOLL extends MarkdownRenderChild {
     }
 
     cubeRenderer.buttonLeft.addEventListener('click', () => {
-      cubeRenderer.rotateLeft();
       cubeState.rotateLeft();
-      /*
-       * TODO instead change text of divs
-       */
+      cubeRenderer.rotateCube();
 
       let elementsByTagName: HTMLCollectionOf<HTMLLabelElement> = cubeRenderer.layout.algorithmsDiv.getElementsByTagName('label');
 
-      console.debug('turn left');
+      console.debug(`turn left '${elementsByTagName.length}'`);
 
-      for (let i: number = 0; i < elementsByTagName.length; i++) {
+      for (let i = 0; i < elementsByTagName.length; i++) {
         let radioButton: HTMLLabelElement = elementsByTagName[i]!;
         let radioButtonId: number = +radioButton.id;
+
+        console.debug(`radioButtonId ${radioButtonId}`);
+
         let s: string = cubeState.algorithmToArrows.get(radioButtonId)!.algorithm.toString();
-        console.debug('turn right: ' + radioButtonId + ' --> ' + s);
+
+        console.debug(`turn left (${i}): '${radioButton.getText()}' --> '${s}'`);
         radioButton.setText(s);
       }
 
     });
 
-    cubeRenderer.buttonRight.addEventListener('click', () => {
-      cubeRenderer.rotateRight();
-      cubeState.rotateRight();
+    cubeRenderer.buttonReset.addEventListener('click', () => {
+      cubeState.resetRotation();
+      cubeRenderer.rotateCube();
 
       let elementsByTagName: HTMLCollectionOf<HTMLLabelElement> = cubeRenderer.layout.algorithmsDiv.getElementsByTagName('label');
 
-      console.debug('turn right');
+      console.debug(`reset rotation '${elementsByTagName.length}'`);
 
-      for (let i: number = 0; i < elementsByTagName.length; i++) {
-
+      for (let i = 0; i < elementsByTagName.length; i++) {
         let radioButton: HTMLLabelElement = elementsByTagName[i]!;
         let radioButtonId: number = +radioButton.id;
+
+        console.debug(`radioButtonId ${radioButtonId}`);
+
         let s: string = cubeState.algorithmToArrows.get(radioButtonId)!.algorithm.toString();
-        console.debug('turn right: ' + radioButtonId + ' --> ' + s);
+
+        console.debug(`reset (${i}): '${radioButton.getText()}' --> '${s}'`);
+        radioButton.setText(s);
+      }
+    });
+
+    cubeRenderer.buttonRight.addEventListener('click', () => {
+      cubeState.rotateRight();
+      cubeRenderer.rotateCube();
+
+      let elementsByTagName: HTMLCollectionOf<HTMLLabelElement> = cubeRenderer.layout.algorithmsDiv.getElementsByTagName('label');
+
+      console.debug(`turn right '${elementsByTagName.length}'`);
+
+      for (let i = 0; i < elementsByTagName.length; i++) {
+
+        let radioButton: HTMLLabelElement = elementsByTagName[i]!;
+
+        console.debug(`radioButton ${radioButton}`);
+
+        let radioButtonId: number = +radioButton.id;
+
+        console.debug(`radioButtonId ${radioButtonId}`);
+
+        let s: string = cubeState.algorithmToArrows.get(radioButtonId)!.algorithm.toString();
+
+        console.debug(`turn right (${i}): '${radioButton.getText()}' --> '${s}'`);
         radioButton.setText(s);
       }
     });

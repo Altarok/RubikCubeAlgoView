@@ -17,24 +17,22 @@ export abstract class CubeState {
   backgroundColor: string;
   /** SVG metadata */
   viewBoxDimensions: Dimensions;
-  /** Rotation of cube, degrees */
+  /** Rotation of cube, multiply by 90 to get svg rotation, use directly for algorithm rotation */
   cubeRotation: number = 0;
 
   /**
    * @param codeBlockContent - Code block content inside triple backticks (```)
    */
-  protected constructor(readonly codeBlockContent: string[]) {}
+  protected constructor(readonly codeBlockContent: string[]) {
+  }
 
   /**
    * @return true if cube size equals 3 by 3
    */
-  isDefaultSize(): boolean {
-    return this.cubeWidth === 3 && this.cubeHeight === 3;
-  }
+  isDefaultSize = () =>  this.cubeWidth === 3 && this.cubeHeight === 3;
 
-  codeBlockInterpretationFailed(): boolean {
-    return this.invalidInput !== undefined;
-  }
+  codeBlockInterpretationFailed = () => this.invalidInput !== undefined;
+
 }
 
 /**
@@ -52,11 +50,18 @@ export class CubeStatePLL extends CubeState {
   /** Clock-wise quarter rotation    */
   rotateLeft(): void {
     this.algorithms.rotate(1);
+    this.cubeRotation += 1
+  }
+
+  resetRotation(): void {
+    this.algorithms.rotate((4 - this.cubeRotation % 4) - 4);
+    this.cubeRotation = 0;
   }
 
   /** Anti-clock-wise quarter rotation    */
   rotateRight(): void {
     this.algorithms.rotate(3);
+    this.cubeRotation -= 1;
   }
 }
 
@@ -80,10 +85,21 @@ export class CubeStateOLL extends CubeState {
   }
 
   /** Clock-wise quarter rotation */
-  rotateLeft = ():void => this.algorithmToArrows.rotate(1);
+  rotateLeft(): void {
+    this.algorithmToArrows.rotate(1);
+    this.cubeRotation += 1
+  }
+
+  resetRotation(): void {
+    this.algorithmToArrows.rotate((4 - this.cubeRotation % 4) - 4);
+    this.cubeRotation = 0;
+  }
 
   /** Anti-clock-wise quarter rotation */
-  rotateRight = ():void => this.algorithmToArrows.rotate(3);
+  rotateRight(): void {
+    this.algorithmToArrows.rotate(3);
+    this.cubeRotation -= 1;
+  }
 
   changeAlgorithm(algorithmId: number): boolean {
     if (this.currentAlgorithmIndex === algorithmId) return false;
