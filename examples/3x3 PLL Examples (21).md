@@ -160,7 +160,7 @@ alg:y2 R' U R' U' R' U' R' U R U R2
 21. PLL-Z Edges Only
 ```rubikCubePLL
 arrows:2+6,4+8
-alg:M' U M2 U M2 U M' U2 M2
+alg:M' U M2 U M2 U M' U2 M2 U'
 alg:y M' U' M2 U' M2 U' M' U2 M2
 alg:y M2 U M2 U M' U2 M2 U2 M'
 alg:M2 U' M2 U' M' U2 M2 U2 M'

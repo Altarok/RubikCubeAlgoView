@@ -26,7 +26,6 @@ alg:R U2 R2 F R F' U2 R' F R F' == 2+4,6+8,3-7,7-9,9-3
 alg:r U r' U2 r U2 R' U2 R U' r' == 2+4,6+8,1+9,3+7
 alg:y' F R U R' U' F' f R U R' U' f' y == 2+6,4+8
 alg:y' F R U R' U' S R U R' U' f' y == 2+6,4+8
-
 ```
 3. OLL-3 Dot
 ```rubikCubeOLL
@@ -134,8 +133,8 @@ alg:M' R' U' R U' R' U2 R U' R r'
 01110
 01000
 .011.
-alg:F U R U' R2 F' R U R U' R'
-alg:r U' r' U' r U r' y' R' U R
+alg:F U R U' R2 F' R U R U' R' == 2-8,8-6,6-2,1-7,7-9,9-1
+alg:r U' r' U' r U r' y' R' U R == 2-8,8-4,4-2,1-9,9-3,3-1
 ```
 14. OLL-14 Knight Move Shape
 ```rubikCubeOLL
@@ -144,7 +143,7 @@ alg:r U' r' U' r U r' y' R' U R
 01110
 00010
 .110.
-alg:R' F R U R' F' R F U' F'
+alg:R' F R U R' F' R F U' F' == 2-6,6-8,8-2,1-3,3-7,7-1
 ```
 15. OLL-15 Knight Move Shape
 ```rubikCubeOLL
@@ -153,8 +152,8 @@ alg:R' F R U R' F' R F U' F'
 01110
 10000
 .011.
-alg:l' U' l L' U' L U l' U l
-alg:y2 r' U' r R' U' R U r' U r
+alg:l' U' l L' U' L U l' U l == 2-8,8-4,4-2,1+9,3+7
+alg:y2 r' U' r R' U' R U r' U r == 2-6,6-8,8-2,1+9,3+7
 ```
 16. OLL-16 Knight Move Shape
 ```rubikCubeOLL
@@ -163,7 +162,7 @@ alg:y2 r' U' r R' U' R U r' U r
 01110
 00001
 .110.
-alg:r U r' R U R' U' r U' r'
+alg:r U r' R U R' U' r U' r' == 1+9,3+7,2-8,8-6,6-2
 ```
 17. OLL-17 Dot
 ```rubikCubeOLL
@@ -172,8 +171,8 @@ alg:r U r' R U R' U' r U' r'
 10101
 00010
 .110.
-alg:F R' F' R2 r' U R U' R' U' M'
-alg:y2 R U R' U R' F R F' U2 R' F R F'
+alg:F R' F' R2 r' U R U' R' U' M' == 3+9,2-6,6-8,8-4,4-2
+alg:y2 R U R' U R' F R F' U2 R' F R F' == 1-9,9-7,7-1,2-4,4-6,6-2
 ```
 18. OLL-18 Dot
 ```rubikCubeOLL
@@ -182,8 +181,8 @@ alg:y2 R U R' U R' F R F' U2 R' F R F'
 10101
 00000
 .111.
-alg:r U R' U R U2 r2 U' R U' R' U2 r
-alg:y R U2 R2 F R F' U2 M' U R U' r'
+alg:r U R' U R U2 r2 U' R U' R' U2 r == 2+4,6+8
+alg:y R U2 R2 F R F' U2 M' U R U' r' == 2+4,6+8,1+3,7+9
 ```
 19. OLL-19 Dot
 ```rubikCubeOLL
@@ -192,7 +191,7 @@ alg:y R U2 R2 F R F' U2 M' U R U' r'
 10101
 10001
 .010.
-alg:r' R U R U R' U' M' R' F R F'
+alg:r' R U R U R' U' M' R' F R F' == 2-4,4-8,8-6,6-2,3+9
 ```
 16. OLL-20 Dot
 ```rubikCubeOLL
@@ -201,9 +200,10 @@ alg:r' R U R U R' U' M' R' F R F'
 10101
 01010
 .010.
-alg:r U R' U' M2 U R U' R' U' M'
-alg:r' R U R U R' U' M2 U R U' r'
+alg:r U R' U' M2 U R U' R' U' M' == 1-7,7-9,9-3,3-1,2-6,6-8,8-4,4-2
+alg:r' R U R U R' U' M2 U R U' r' == 1-3,3-9,9-7,7-1,2-4,4-8,8-6,6-2
 ```
+
 21. OLL-21 Cross
 ```rubikCubeOLL
 .101.
