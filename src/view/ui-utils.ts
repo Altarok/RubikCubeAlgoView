@@ -78,7 +78,7 @@ function renderAlgorithmSelect(
     let radioBtnLabel: HTMLLabelElement = radioDiv.createEl('label', {
       attr: {
         for: uniqueId, // allows users to click the text to select the button
-        id: 'forBtn'+uniqueId
+        id: 'forBtn' + uniqueId
       },
       text: item.toString()
     });

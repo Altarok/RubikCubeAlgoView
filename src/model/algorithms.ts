@@ -89,8 +89,7 @@ export class Algorithm {
 
   toString = () => this.steps.filter(value => value !== 'y0').join(' ');
 
-  clone = (): Algorithm => new Algorithm([...this.steps]);
-
+  // clone = (): Algorithm => new Algorithm([...this.steps]);
 }
 
 export class Algorithms {
@@ -100,8 +99,8 @@ export class Algorithms {
 
   add = (alg: Algorithm) => this.items.push(alg);
 
-  rotate = (quarterTurns: number) => this.items.forEach(algorithm => algorithm.rotate(quarterTurns));
-
+  rotate = (quarterTurns: number) =>
+    this.items.forEach(algorithm => algorithm.rotate(quarterTurns));
 }
 
 export class MappedAlgorithm {

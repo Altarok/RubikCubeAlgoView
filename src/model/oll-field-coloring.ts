@@ -16,7 +16,6 @@ const colorMap: Record<string, string> = {
   '1': '#ff0'     // bright field (for binary input) TODO replace with default
 };
 
-
 export class OllFieldColoring {
   parsedRows: string[][] = [];
 

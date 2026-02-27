@@ -1,9 +1,9 @@
 import {flags} from "./algorithms";
 
 export class InvalidInput {
-/**
- * Container for invalid user input.
- */
+  /**
+   * Container for invalid user input.
+   */
 
   /**
    * @param line - the row containing un-interpretable input
@@ -22,7 +22,7 @@ export class InvalidInput {
   }
 
   static ofAlgorithm(line: string): InvalidInput {
-    return new InvalidInput(line,"Invalid algorithm format. Example: alg:R' U2 R U2 R' F R U R' U' R' F' R2 U' (spaces not optional, no comments in this line)");
+    return new InvalidInput(line, "Invalid algorithm format. Example: alg:R' U2 R U2 R' F R U R' U' R' F' R2 U' (spaces not optional, no comments in this line)");
   }
 
   static ofPllParameter(line: string): InvalidInput {
@@ -37,9 +37,9 @@ export class InvalidInput {
     return new InvalidInput(line, `Invalid flag. Allowed: ${flags.join(',')}`);
   }
 
-  static ofArrows(line: string, reason: string) {
-    return new InvalidInput(line, reason);
-  }
+  //  static ofArrows(line: string, reason: string) {
+  //     return new InvalidInput(line, reason);
+  //   }
 }
 
 export const isInvalidRow = ({line}: InvalidInput, row: string): boolean => {

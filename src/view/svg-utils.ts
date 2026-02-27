@@ -106,7 +106,7 @@ function drawSticker(svg: SVGSVGElement,
  * @param {SVGSVGElement} svg - resetRotationSvg
  */
 function drawResetRotateIcon(svg: SVGSVGElement) {
-  svg.createSvg('circle', {attr: {cx: 12, cy: 12, r:11}});
+  svg.createSvg('circle', {attr: {cx: 12, cy: 12, r: 11}});
   svg.createSvg('line', {attr: {x1: 7, y1: 7, x2: 17, y2: 17}});
   svg.createSvg('line', {attr: {x1: 17, y1: 7, x2: 7, y2: 17}});
 }
