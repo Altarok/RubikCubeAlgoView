@@ -4,7 +4,13 @@ import {Arrows, Dimensions} from "./geometry";
 import {OllFieldColoring} from "./oll-field-coloring";
 import {MappedAlgorithms} from "./algorithms";
 
+
+
 export abstract class CubeState {
+  static index = 1;
+
+  uniqueIdForRadioButtons = '' + CubeState.index++;
+
   /** Container for invalid code block content */
   invalidInput?: InvalidInput;
   /** cube dimensions in stickers (rectangles, not pixels) */

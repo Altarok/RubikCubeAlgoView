@@ -56,7 +56,7 @@ const turnCubeLeftMap: TurnCubeMap = {
  * aimed to change a cube's state in a specific way.
  */
 export class Algorithm {
-  algorithmLabel: HTMLLabelElement
+  algorithmLabel: HTMLLabelElement;
 
   constructor(private steps: AlgorithmStep[]) {
   }
@@ -108,6 +108,15 @@ export class MappedAlgorithm {
 }
 
 export class MappedAlgorithms {
+  /*
+   * TODO change key number to string to be able to always get the right one without knowing its index
+   *
+   * problem is in line 59 of MarkdownPostProcessorOLL
+   *
+   * if (cubeState.changeAlgorithm(+radioButton.id)) {
+   *   cubeRenderer.redrawArrows();
+   * }
+   */
   private map = new Map<number, MappedAlgorithm>();
 
   size = () => this.map.size;

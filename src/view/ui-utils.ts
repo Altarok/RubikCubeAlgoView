@@ -45,8 +45,7 @@ function renderAlgorithmList(container: HTMLElement, algorithms: Algorithm[]): v
   const ul = container.createEl('ul');
   algorithms.forEach(item => {
     let li = ul.createEl('li'); // { text: item.toString() }
-    let listLabel: HTMLLabelElement = li.createEl('label', {text: item.toString()});
-    item.algorithmLabel = listLabel;
+    item.algorithmLabel = li.createEl('label', {text: item.toString()});
   });
 }
 
@@ -54,28 +53,30 @@ function renderAlgorithmList(container: HTMLElement, algorithms: Algorithm[]): v
  * Renders a list of algorithms with radio buttons for selection (used by OLL).
  */
 function renderAlgorithmSelect(
-  container: HTMLElement,
-  algorithms: Algorithm[], // { algorithm: Algorithm }[],
-  selectedIndex: number
-): void {
+  container: HTMLElement, algorithms: Algorithm[], selectedIndex: number, uniqueIdForRadioButtons: string): void {
   const ul = container.createEl('ul');
   const radioDiv = ul.createEl('div', {attr: {id: 'oll-radio-buttons-div'}});
 
   algorithms.forEach((item, i) => {
     const isChecked = selectedIndex === i;
 
-    radioDiv.createEl('input', {
+    const uniqueId = uniqueIdForRadioButtons + i.toString(); // unique identifier for EACH element
+
+    radioDiv.createEl('input', { // create HTMLInputElement
       attr: {
-        name: 'algorithm-selection',
-        type: 'radio',
-        id: i.toString(),
-        value: i.toString(),
-        ...(isChecked && {checked: true}) // Only add checked attribute if true
+        type: 'radio', // radio button
+        name: uniqueIdForRadioButtons, // unique identifier for radio button grp
+        id: uniqueId,
+        value: i.toString(), // data sent to the script ("backend") when the form is submitted
+        ...(isChecked && {checked: true}) // only add checked attribute if true
       }
     });
 
     let radioBtnLabel: HTMLLabelElement = radioDiv.createEl('label', {
-      attr: {for: i.toString(), id: i,},
+      attr: {
+        for: uniqueId, // allows users to click the text to select the button
+        id: 'forBtn'+uniqueId
+      },
       text: item.toString()
     });
     radioDiv.createEl('br');

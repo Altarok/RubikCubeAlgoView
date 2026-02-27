@@ -385,7 +385,8 @@ export class CodeBlockInterpreterOLL extends CodeBlockInterpreter {
           if (arrowInput) {
             matchingArrows = super.setupArrowCoordinates(arrowInput);
           }
-          map.add(i, new MappedAlgorithm(result.data, matchingArrows));
+          let algorithm = result.data;
+          map.add(i, new MappedAlgorithm(algorithm, matchingArrows));
         } else {
           this.setInvalidInput(result.error);
         }
