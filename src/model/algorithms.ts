@@ -116,6 +116,8 @@ export class MappedAlgorithms {
    * if (cubeState.changeAlgorithm(+radioButton.id)) {
    *   cubeRenderer.redrawArrows();
    * }
+   *
+   * TODO add method get UniqueId to sub class Algorithm
    */
   private map = new Map<number, MappedAlgorithm>();
 
