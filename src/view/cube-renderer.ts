@@ -38,7 +38,7 @@ export abstract class CubeRenderer {
 
   displayCubeButtonAndAlgorithms(container: HTMLElement) {
 
-    this.layout = createCubeLayout(container);
+    this.layout = createCubeLayout(container, this.cubeState.specialFlags.contains('no-rotation'));
 
     this.displayCube(this.layout.cubeDiv);
     this.displayButtons(this.layout.buttonDiv);
@@ -105,7 +105,11 @@ export abstract class CubeRenderer {
     applyRotation(this.layout.cubeDiv, degrees);
   }
 
-  displayButtons(buttonDiv: HTMLDivElement): void {
+  displayButtons(buttonDiv: HTMLDivElement | undefined): void {
+
+    if (!buttonDiv || this.cubeState.specialFlags.contains('no-rotation')) {
+      return;
+    }
 
     this.buttonLeft = buttonDiv.createEl('button', {'title': 'Rotate left 90 degrees'});
     this.buttonReset = buttonDiv.createEl('button', {'title': 'Reset rotation'});

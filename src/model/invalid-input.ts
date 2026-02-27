@@ -1,3 +1,4 @@
+import {flags} from "./algorithms";
 
 export class InvalidInput {
 /**
@@ -30,6 +31,10 @@ export class InvalidInput {
 
   static ofDimensions(line: string) {
     return new InvalidInput(line, 'Invalid dimensions. Expected: "dimension:[2-10],[2-10]" (e.g. "dimension:3,3")');
+  }
+
+  static ofFlags(line: string) {
+    return new InvalidInput(line, `Invalid flag. Allowed: ${flags.join(',')}`);
   }
 
   static ofArrows(line: string, reason: string) {

@@ -4,6 +4,13 @@ import {MarkdownPostProcessorOLL} from "./MarkdownPostProcessorOLL";
 import {MarkdownPostProcessorPLL} from "./MarkdownPostProcessorPLL";
 import {DEFAULT_SETTINGS, RubikCubeAlgoSettingsTab} from "./RubikCubeAlgoSettings";
 
+
+/*
+ * - [x] change algorithm key (number to string) to be able to get the right one without knowing its index
+ *   - [x] add hash() method to sub class Algorithm
+ * - [x] remove 'y' after rotation
+ * - [x] add flag: no-rotation, with svg in center sticker "no location change"
+ */
 export default class RubikCubeAlgos extends Plugin {
   settings: RubikCubeAlgoSettingsTab;
 

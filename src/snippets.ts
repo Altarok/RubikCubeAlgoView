@@ -22,7 +22,7 @@ function hash(str: string, seed = 0): string {
   h2 ^= Math.imul(h1 ^ (h1 >>> 13), 3266489909);
 
   return '' + (4294967296 * (2097151 & h2) + (h1 >>> 0));
-};
+}
 
 // console.log(`cyrb53('a') -> ${cyrb53('a')}`)
 // console.log(`cyrb53('b') -> ${cyrb53('b')}`)

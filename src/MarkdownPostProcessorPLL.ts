@@ -48,6 +48,10 @@ export class MarkdownPostProcessorPLL extends MarkdownRenderChild {
 
   private addButtonFunctions(cubeRenderer: CubeRendererPLL, cubeState: CubeStatePLL) {
 
+    if (cubeState.specialFlags.contains('no-rotation')) {
+      return;
+    }
+
     cubeRenderer.buttonLeft.addEventListener('click', () => {
       cubeState.rotateLeft();
       cubeRenderer.rotateCube();

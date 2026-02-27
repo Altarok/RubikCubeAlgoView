@@ -1,5 +1,5 @@
 import {InvalidInput} from "./invalid-input";
-import {Algorithms} from "./algorithms";
+import {Algorithms, SpecialFlags} from "./algorithms";
 import {Arrows, Dimensions} from "./geometry";
 import {OllFieldColoring} from "./oll-field-coloring";
 import {MappedAlgorithms} from "./algorithms";
@@ -23,6 +23,7 @@ export abstract class CubeState {
   viewBoxDimensions: Dimensions;
   /** Rotation of cube, multiply by 90 to get svg rotation, use directly for algorithm rotation */
   cubeRotation: number = 0;
+  specialFlags: SpecialFlags[] = [];
 
   /**
    * @param codeBlockContent - Code block content inside triple backticks (```)

@@ -1,4 +1,4 @@
-import {Algorithm, AlgorithmStep, possibleSteps} from "../model/algorithms";
+import {Algorithm, AlgorithmStep, flags, possibleSteps, SpecialFlags} from "../model/algorithms";
 import {InvalidInput} from "../model/invalid-input";
 import {Dimensions} from "../model/geometry";
 
@@ -78,6 +78,34 @@ export function parseCubeColor(row: string): Result<string> {
  */
 export function parseArrowColor(row: string): Result<string> {
   return parseHexColor(row, 'arrowColor:', () => InvalidInput.ofArrowColor(row));
+}
+
+function isSpecialFlag(value: string): value is SpecialFlags {
+  return (flags as readonly string[]).includes(value);
+}
+
+const specialFlagsJoined: string = flags.join('|');
+const specialFlagsPattern: RegExp = new RegExp(`${specialFlagsJoined}(,${specialFlagsJoined})*`);
+
+export function parseFlags(row: string): Result<SpecialFlags[]> {
+  let cleanRow: string = row.startsWith('flags:') ? row.slice(6).trim() : row.trim();
+
+  if (!specialFlagsPattern.test(cleanRow)) {
+    return {success: false, error: InvalidInput.ofFlags(row)};
+  }
+
+  let splitFlags: string[] = cleanRow.split(',');
+  let flags: SpecialFlags[] = [];
+
+  for (const flag of splitFlags) {
+    if (isSpecialFlag(flag)) {
+      flags.push(flag);
+    } else {
+      // This should technically be unreachable if the Regex is perfect
+      return {success: false, error: new InvalidInput(row, 'Unknown flag: ' + flag)};
+    }
+  }
+  return {success: true, data: flags};
 }
 
 

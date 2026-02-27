@@ -1,9 +1,9 @@
 import {ArrowCoords, Arrows, Coordinates, Dimensions} from "./model/geometry";
 import {DEFAULT_SETTINGS, RubikCubeAlgoSettingsTab} from "./RubikCubeAlgoSettings";
 import {InvalidInput} from "./model/invalid-input";
-import {Algorithms, MappedAlgorithm, MappedAlgorithms} from "./model/algorithms";
+import {Algorithms, MappedAlgorithm, MappedAlgorithms, SpecialFlags} from "./model/algorithms";
 import {CubeStatePLL, CubeStateOLL} from "./model/cube-state";
-import {parseAlgorithm, parseArrowColor, parseCubeColor, parseDimensions} from "./parser/parser";
+import {parseAlgorithm, parseArrowColor, parseCubeColor, parseDimensions, parseFlags} from "./parser/parser";
 import {OllFieldColoring} from "./model/oll-field-coloring";
 
 const DEFAULT = {
@@ -49,6 +49,7 @@ export abstract class CodeBlockInterpreter {
   protected invalidInput?: InvalidInput;
   protected stickerCoordinates: Coordinates[] = [];
   protected arrowColor: string;
+  protected specialFlags: SpecialFlags[] = [];
 
   protected constructor(protected readonly codeBlockContent: string[], settings: RubikCubeAlgoSettingsTab) {
     this.arrowColor = settings.arrowColor ?? DEFAULT_SETTINGS.ARROW_COLOR;
@@ -116,7 +117,7 @@ export abstract class CodeBlockInterpreter {
    * @returns coordinates of center of sticker the input is pointing to
    */
   private getStickerCenterCoordinates(input: string): Coordinates {
-    let indexOfCubeletCenter = 0;
+    let indexOfCubeletCenter: number;
     if (isPositiveIntegerRegex.test(input)) {
       indexOfCubeletCenter = Number(input);
     } else if (input.includes('.')) {
@@ -177,6 +178,7 @@ export class CodeBlockInterpreterPLL extends CodeBlockInterpreter {
           width: this.cubeDimensions.width * 100,
           height: this.cubeDimensions.height * 100
         },
+        specialFlags: this.specialFlags,
         /*
          * PLL-only data:
          */
@@ -227,6 +229,14 @@ export class CodeBlockInterpreterPLL extends CodeBlockInterpreter {
           const result = parseAlgorithm(row);
           if (result.success) {
             this.algorithms.add(result.data);
+          } else {
+            this.setInvalidInput(result.error);
+          }
+        } break;
+        case 'flags': {
+          const result = parseFlags(row);
+          if (result.success) {
+            this.specialFlags = result.data;
           } else {
             this.setInvalidInput(result.error);
           }
@@ -293,6 +303,7 @@ export class CodeBlockInterpreterOLL extends CodeBlockInterpreter {
           width: this.cubeDimensions.width * 100 + 100,
           height: this.cubeDimensions.height * 100 + 100
         },
+        specialFlags: this.specialFlags,
         /*
          * OLL-only data:
          */
@@ -314,10 +325,19 @@ export class CodeBlockInterpreterOLL extends CodeBlockInterpreter {
       if (row.startsWith('alg:')) {
         this.algorithmToArrowsInput.push(row.replace('alg:', '').trim());
         return null; // Mark for removal
+      } else if (row.startsWith('flags:')) {
+        const result = parseFlags(row);
+        if (result.success) {
+          this.specialFlags = result.data;
+        } else {
+          this.setInvalidInput(result.error);
+        }
+        return null; // Mark for removal
+      } else if (row.startsWith('//')) {
+        return null; // Mark for removal
       }
       return row;
-    })
-    .filter((row): row is string => row !== null);
+    }).filter((row): row is string => row !== null);
   }
 
   /**
@@ -376,7 +396,7 @@ export class CodeBlockInterpreterOLL extends CodeBlockInterpreter {
   private setupAlgorithmArrowMap(): MappedAlgorithms {
     const map = new MappedAlgorithms();
 
-    this.algorithmToArrowsInput.forEach((row: string, index: number) => {
+    this.algorithmToArrowsInput.forEach((row: string) => {
         const [algInput, arrowInput] = row.split(/ *== */);
 
         const result = parseAlgorithm(algInput!);
@@ -386,19 +406,15 @@ export class CodeBlockInterpreterOLL extends CodeBlockInterpreter {
             matchingArrows = super.setupArrowCoordinates(arrowInput);
           }
           let algorithm = result.data;
-          if (! this.initialAlgorithmSelectionHash) {
+          if (!this.initialAlgorithmSelectionHash) {
             this.initialAlgorithmSelectionHash = algorithm.initialHash;
           }
           map.add(new MappedAlgorithm(algorithm, matchingArrows));
         } else {
           this.setInvalidInput(result.error);
         }
-
-
       }
     );
-
-
     return map;
   }
 }

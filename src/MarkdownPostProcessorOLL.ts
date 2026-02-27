@@ -62,6 +62,10 @@ export class MarkdownPostProcessorOLL extends MarkdownRenderChild {
       }
     }
 
+    if (cubeState.specialFlags.contains('no-rotation')) {
+      return;
+    }
+
     cubeRenderer.buttonLeft.addEventListener('click', () => {
       cubeState.rotateLeft();
       cubeRenderer.rotateCube();
