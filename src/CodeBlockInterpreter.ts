@@ -131,7 +131,7 @@ export abstract class CodeBlockInterpreter {
     // Safety check
     const coords = this.stickerCoordinates[indexOfCubeletCenter - 1];
 
-    if (!coords) { // TODO remove
+    if (!coords) {
       // Fallback to a default (like 0,0 or the first cubelet)
       // to prevent the whole SVG from failing to render
       console.warn(`Invalid cubelet index requested: ${input}`);

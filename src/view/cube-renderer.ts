@@ -10,9 +10,6 @@ import {createCubeLayout, CubeLayout} from "./cube-layout";
 export abstract class CubeRenderer {
   layout: CubeLayout;
   buttonLeft: HTMLButtonElement;
-  /*
-   * TODO add reset-rotation button
-   */
   buttonReset: HTMLButtonElement;
   buttonRight: HTMLButtonElement;
   mainCubeSvg: SVGSVGElement;
