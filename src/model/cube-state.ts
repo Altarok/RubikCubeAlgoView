@@ -78,14 +78,14 @@ export class CubeStatePLL extends CubeState {
 export class CubeStateOLL extends CubeState {
   ollFieldColors: OllFieldColoring;
   algorithmToArrows: MappedAlgorithms;
-  currentAlgorithmIndex: number = 0;
+  selectedAlgorithmHash: string = '';
 
   constructor(codeBlockContent: string[]) {
     super(codeBlockContent);
   }
 
   currentArrowCoordinates(): Arrows {
-    return this.algorithmToArrows?.get(this.currentAlgorithmIndex)?.arrows ?? /* null or undefined */ [];
+    return this.algorithmToArrows?.get(this.selectedAlgorithmHash)?.arrows ?? /* null or undefined */ [];
   }
 
   /** Clock-wise quarter rotation */
@@ -105,9 +105,9 @@ export class CubeStateOLL extends CubeState {
     this.cubeRotation -= 1;
   }
 
-  changeAlgorithm(algorithmId: number): boolean {
-    if (this.currentAlgorithmIndex === algorithmId) return false;
-    this.currentAlgorithmIndex = algorithmId;
+  changeAlgorithm(algorithmId: string): boolean {
+    if (this.selectedAlgorithmHash === algorithmId) return false;
+    this.selectedAlgorithmHash = algorithmId;
     return true;
   }
 }

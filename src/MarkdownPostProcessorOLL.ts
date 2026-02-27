@@ -32,8 +32,7 @@ export class MarkdownPostProcessorOLL extends MarkdownRenderChild {
   display(): void {
     this.element.empty();
     const rows: string[] = this.source.split('\n')
-      .map(row => row && row.trim()).filter((row) => row.length > 0)
-    ;
+      .map(row => row && row.trim()).filter((row) => row.length > 0)    ;
 
     let interpreter: CodeBlockInterpreterOLL = new CodeBlockInterpreterOLL(rows, this.plugin.settings);
     let cubeState: CubeStateOLL = interpreter.setupOll();
@@ -56,7 +55,7 @@ export class MarkdownPostProcessorOLL extends MarkdownRenderChild {
       for (let i: number = 0; i < radioButtons.length; i++) {
         let radioButton: HTMLInputElement = radioButtons[i]!;
         radioButton.addEventListener('click', () => {
-          if (cubeState.changeAlgorithm(+radioButton.id)) {
+          if (cubeState.changeAlgorithm(radioButton.id)) {
             cubeRenderer.redrawArrows();
           }
         });

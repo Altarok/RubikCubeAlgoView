@@ -201,9 +201,9 @@ export class CubeRendererOLL extends CubeRenderer {
   }
 
   displayAlgorithms(container: HTMLDivElement) {
-    const {currentAlgorithmIndex: index, algorithmToArrows, uniqueIdForRadioButtons} = this.cubeStateOLL;
-    if (index === undefined) return; /* Fail-safe, nothing selected */
-    UiUtils.renderAlgorithmSelect(container, algorithmToArrows.getAllItems(), index, uniqueIdForRadioButtons );
+    const {selectedAlgorithmHash, algorithmToArrows, uniqueIdForRadioButtons} = this.cubeStateOLL;
+    if (selectedAlgorithmHash === undefined) return; /* Fail-safe, nothing selected */
+    UiUtils.renderAlgorithmSelect(container, algorithmToArrows.getAllItems(), selectedAlgorithmHash, uniqueIdForRadioButtons );
   }
 }
 

@@ -53,14 +53,17 @@ function renderAlgorithmList(container: HTMLElement, algorithms: Algorithm[]): v
  * Renders a list of algorithms with radio buttons for selection (used by OLL).
  */
 function renderAlgorithmSelect(
-  container: HTMLElement, algorithms: Algorithm[], selectedIndex: number, uniqueIdForRadioButtons: string): void {
+  container: HTMLElement, algorithms: Algorithm[], selectedIndex: string, uniqueIdForRadioButtons: string): void {
   const ul = container.createEl('ul');
   const radioDiv = ul.createEl('div', {attr: {id: 'oll-radio-buttons-div'}});
 
   algorithms.forEach((item, i) => {
-    const isChecked = selectedIndex === i;
+    const isChecked = selectedIndex === item.initialHash;
 
-    const uniqueId = uniqueIdForRadioButtons + i.toString(); // unique identifier for EACH element
+    const uniqueId = item.initialHash;
+    // uniqueIdForRadioButtons + i.toString(); // unique identifier for EACH element
+
+    // console.log(`draw algorithm (${uniqueId}): ${item.toString()}, checked:${isChecked}`);
 
     radioDiv.createEl('input', { // create HTMLInputElement
       attr: {

@@ -1,4 +1,5 @@
 import {Arrows} from "./geometry";
+import {Snippets} from "../snippets";
 
 // type MoveSuffix = "" | "'" | "2";
 // type BaseMove = "R" | "L" | "F" | "B" | "U" | "D" | "r" | "l" | "f" | "b" | "u" | "d" | "x" | "y" | "z" | "M" | "S" | "E";
@@ -56,9 +57,13 @@ const turnCubeLeftMap: TurnCubeMap = {
  * aimed to change a cube's state in a specific way.
  */
 export class Algorithm {
+  /** Used as salt for hash value */
+  static index = 42;
   algorithmLabel: HTMLLabelElement;
+  readonly initialHash: string;
 
   constructor(private steps: AlgorithmStep[]) {
+    this.initialHash = Snippets.hash(steps.join('') + Algorithm.index++, 1337);
   }
 
   rotate(quarterTurns: number): void {
@@ -109,7 +114,7 @@ export class MappedAlgorithm {
 
 export class MappedAlgorithms {
   /*
-   * TODO change key number to string to be able to always get the right one without knowing its index
+   * TODO WNM change key number to string to be able to always get the right one without knowing its index
    *
    * problem is in line 59 of MarkdownPostProcessorOLL
    *
@@ -117,19 +122,22 @@ export class MappedAlgorithms {
    *   cubeRenderer.redrawArrows();
    * }
    *
-   * TODO add method get UniqueId to sub class Algorithm
+   * TODO add flag: no-rotation, with svg in center sticker "no location change"
+   *
+   * TODO remove 'y' after rotation
+   *
+   * TODO add hash()- method to sub class Algorithm
    */
-  private map = new Map<number, MappedAlgorithm>();
+  private map = new Map<string, MappedAlgorithm>();
 
   size = () => this.map.size;
 
-  add = (index: number, mappedAlgorithm: MappedAlgorithm) => this.map.set(index, mappedAlgorithm);
+  add = (mappedAlgorithm: MappedAlgorithm) => this.map.set(mappedAlgorithm.algorithm.initialHash, mappedAlgorithm);
 
-  get = (index: number): MappedAlgorithm | undefined => this.map.get(index);
+  get = (algHash: string): MappedAlgorithm | undefined => this.map.get(algHash);
 
-  rotate(quarterTurns: number): void {
-    this.map.forEach(mappedAlgo => mappedAlgo.algorithm.rotate(quarterTurns));
-  }
+  rotate = (quarterTurns: number): void => this.map.forEach(mappedAlgo => mappedAlgo.algorithm.rotate(quarterTurns));
+
 
   getAllItems(): Algorithm[] {
     let result: Algorithm[] = [];
@@ -141,13 +149,11 @@ export class MappedAlgorithms {
 
   toString = (): string => {
     let result: string[] = [];
-
-    this.map.forEach((mappedAlgo, index) => {
+    let index = 0;
+    this.map.forEach((mappedAlgo, key: string) => {
       const algStr = mappedAlgo.algorithm.toString();
-
       const arrowCount = mappedAlgo.arrows.length;
-
-      result.push(`${index}: [${algStr}] (${arrowCount} arrows)`);
+      result.push(`${index++}: [${algStr}] (${arrowCount} arrows)`);
     });
 
     return result.join('\n');

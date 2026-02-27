@@ -269,7 +269,7 @@ export class CodeBlockInterpreterOLL extends CodeBlockInterpreter {
   cubeColor: string;
   ollFieldInput!: OllFieldColoring;
   algorithmToArrowsInput: string[] = [];
-  startingAlgorithm: number = 0;
+  initialAlgorithmSelectionHash: string;
 
   constructor(rows: string[], settings: RubikCubeAlgoSettingsTab) {
     super(rows, settings);
@@ -297,7 +297,7 @@ export class CodeBlockInterpreterOLL extends CodeBlockInterpreter {
          * OLL-only data:
          */
         algorithmToArrows: this.setupAlgorithmArrowMap(),
-        currentAlgorithmIndex: 0,
+        selectedAlgorithmHash: this.initialAlgorithmSelectionHash,
         ollFieldColors: this.ollFieldInput
       });
     } else {
@@ -376,7 +376,7 @@ export class CodeBlockInterpreterOLL extends CodeBlockInterpreter {
   private setupAlgorithmArrowMap(): MappedAlgorithms {
     const map = new MappedAlgorithms();
 
-    this.algorithmToArrowsInput.forEach((row: string, i: number) => {
+    this.algorithmToArrowsInput.forEach((row: string, index: number) => {
         const [algInput, arrowInput] = row.split(/ *== */);
 
         const result = parseAlgorithm(algInput!);
@@ -386,14 +386,19 @@ export class CodeBlockInterpreterOLL extends CodeBlockInterpreter {
             matchingArrows = super.setupArrowCoordinates(arrowInput);
           }
           let algorithm = result.data;
-          map.add(i, new MappedAlgorithm(algorithm, matchingArrows));
+          if (! this.initialAlgorithmSelectionHash) {
+            this.initialAlgorithmSelectionHash = algorithm.initialHash;
+          }
+          map.add(new MappedAlgorithm(algorithm, matchingArrows));
         } else {
           this.setInvalidInput(result.error);
         }
+
+
       }
     );
 
-    this.startingAlgorithm = 0;
+
     return map;
   }
 }
