@@ -3,10 +3,63 @@
   transform-origin: center;
   transition: transform 0.5s ease-in-out;
 }
+/*.rubik-cube-div-main-container { !* Base Layout (Desktop/Wide) *!*/
+/*  display: flex;*/
+/*  flex-direction: row; !* Default: Side-by-side *!*/
+/*  !*gap: 20px; !* ? *!*!*/
+/*  !*align-items: flex-start; !* ? *!*!*/
+/*  container-type: inline-size;*/
+/*  width: 100%;*/
+/*}*/
+/* The Main Wrapper */
 .rubik-cube-div-main-container {
   display: flex;
+  flex-wrap: wrap;       /* This is the magic: it allows stacking */
+  gap: 1.5rem;
+  width: 100%;
+  align-items: flex-start;
 }
-.rubik-cube-div-left-column {
+/*.rubik-cube-div-left-column,
+.rubik-cube-div-right-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}*/
+/* Both columns start at 300px wide.
+   If the container is < 600px, they both snap to 100% width. */
+.rubik-cube-div-left-column,
+.rubik-cube-div-right-column {
+  flex: 1 1 300px;       /* Grow, Shrink, Basis */
+  display: flex;
+  flex-direction: column;
+  min-width: 0;          /* Prevents overflow in narrow sidebars */
+}
+/* Ensure the cube doesn't get weirdly huge when stacked */
+#cubeDiv {
+  width: 100%;
+  max-width: 400px;
+  /*aspect-ratio: 1 / 1;   !* Keeps it square *!*/
+  margin: 0 auto;
+}
+/* Mobile & Narrow Sidebar Layout */
+/*@container (max-width: 600px) {
+  .rubik-cube-div-main-container {
+    flex-direction: column;
+    align-items: center; !* Centers the cube on mobile *!
+  }
+  .rubik-cube-div-left-column,
+  .rubik-cube-div-right-column {
+    width: 100%;
+  }
+  !*!* Ensures the cube stays a reasonable size on small screens *!*!
+  !*#cubeDiv {*!
+  !*  margin: 0 auto;*!
+  !*  max-width: 300px;*!
+  !*}*!
+}*/
+
+/*.rubik-cube-div-left-column {
   display: flex;
   flex-direction: column;
 }
@@ -14,7 +67,7 @@
   display: flex;
   flex-direction: column;
   padding: 10px 20px;
-}
+}*/
 .rubik-cube-div-buttons {
   display: flex;
   justify-content: center;
@@ -64,11 +117,20 @@
 .div /* debug-div-red-border */ {
   outline: 1px solid red !important;
 }
+/*.button-container {*/
+/*  display: flex;*/
+/*  flex-wrap: wrap; !* Prevents buttons from clipping off-screen *!*/
+/*  gap: 8px; !* Space between buttons *!*/
+/*  justify-content: center; !* Centers buttons horizontally *!*/
+/*  padding: 20px;*/
+/*}*/
+/* Button spacing */
 .button-container {
   display: flex;
-  gap: 10px; /* Space between buttons */
-  justify-content: center; /* Centers buttons horizontally */
-  padding: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
 }
 .button {
   padding: 10px 20px;
