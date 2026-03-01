@@ -1,79 +1,82 @@
-.rotatable {
-  /* Ensure it rotates around its own center */
-  transform-origin: center;
-  transition: transform 0.5s ease-in-out;
-}
-/*.rubik-cube-div-main-container { !* Base Layout (Desktop/Wide) *!*/
-/*  display: flex;*/
-/*  flex-direction: row; !* Default: Side-by-side *!*/
-/*  !*gap: 20px; !* ? *!*!*/
-/*  !*align-items: flex-start; !* ? *!*!*/
-/*  container-type: inline-size;*/
-/*  width: 100%;*/
-/*}*/
-/* The Main Wrapper */
 .rubik-cube-div-main-container {
   display: flex;
-  flex-wrap: wrap;       /* This is the magic: it allows stacking */
+  flex-wrap: wrap; /* This is the magic: it allows stacking */
   gap: 1.5rem;
   width: 100%;
   align-items: flex-start;
+  justify-content: center; /* TODO may be remove? check on mobile*/
+  padding: 0 10px; /* Small 10px gutter so it doesn't touch the screen edge */
 }
-/*.rubik-cube-div-left-column,
-.rubik-cube-div-right-column {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}*/
-/* Both columns start at 300px wide.
-   If the container is < 600px, they both snap to 100% width. */
 .rubik-cube-div-left-column,
 .rubik-cube-div-right-column {
-  flex: 1 1 300px;       /* Grow, Shrink, Basis */
   display: flex;
   flex-direction: column;
-  min-width: 0;          /* Prevents overflow in narrow sidebars */
 }
-/* Ensure the cube doesn't get weirdly huge when stacked */
-#cubeDiv {
-  width: 100%;
-  max-width: 400px;
-  /*aspect-ratio: 1 / 1;   !* Keeps it square *!*/
-  margin: 0 auto;
+.rubik-cube-div-algorithms-list ul {
+  margin: 0;
+  padding: 0;  /* Only keep what you need for legibility */
+  list-style-position: inside; /* Helps prevent left-side overflow */
 }
-/* Mobile & Narrow Sidebar Layout */
-/*@container (max-width: 600px) {
-  .rubik-cube-div-main-container {
-    flex-direction: column;
-    align-items: center; !* Centers the cube on mobile *!
-  }
-  .rubik-cube-div-left-column,
-  .rubik-cube-div-right-column {
-    width: 100%;
-  }
-  !*!* Ensures the cube stays a reasonable size on small screens *!*!
-  !*#cubeDiv {*!
-  !*  margin: 0 auto;*!
-  !*  max-width: 300px;*!
-  !*}*!
-}*/
-
-/*.rubik-cube-div-left-column {
-  display: flex;
-  flex-direction: column;
+.rubik-cube-div-left-column {
+  flex: 0 0 auto; /* No grow, no shrink, no cry */
+  min-width: 0; /* Prevents overflow in narrow sidebars */
+  align-items: center; /* Centers children */
 }
 .rubik-cube-div-right-column {
-  display: flex;
-  flex-direction: column;
-  padding: 10px 20px;
-}*/
-.rubik-cube-div-buttons {
+  flex: 1 1 300px; /* Grow to fill space, shrink if needed, prefer 300px */
+  align-items: stretch;
+}
+/* Desktop/Tablet style: Add breathing room only if there is space */
+@media (min-width: 768px) {
+  .rubik-cube-div-main-container {
+    padding-left: 5%;  /* Percentage-based padding scales with the screen */
+    padding-right: 5%;
+  }
+}
+/* Target narrow Obsidian panes */
+@media (max-width: 600px) {
+  .rubik-cube-div-main-container {
+    flex-direction: column; /* Forces vertical stacking */
+    align-items: flex-start;
+    gap: 0.5rem; /* small gap btw buttons and */
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    width: 100%;
+  }
+  .rubik-cube-div-left-column {
+    flex: 0 0 auto;
+    width: 100%;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  .rubik-cube-div-right-column {
+    flex: 0 0 auto; /* no growing */
+    width: 100%;
+    margin: 0 !important;
+    padding: 0 !important;
+    min-height: 0; /* Prevents browser from enforcing a default height */
+  }
+  .rubik-cube-div-algorithms-list ul {
+    margin: 0 !important;
+    padding: 0 !important;
+    list-style-position: inside; /* Helps prevent left-side overflow */
+    width: 100%;
+  }
+  /*.rubik-cube-div-content {*/
+  /*  margin-left: 0 !important;*/
+  /*  margin-right: 0 !important;*/
+  /*  width: 100%;*/
+  /*}*/
+}
+.rubik-cube-div-content {
   display: flex;
   justify-content: center;
-}
-.rubik-cube-main-container {
-  display: flex;
+  align-items: center;
+  margin-left: auto;
+  margin-right: auto;
+  /* Ensure it rotates around its own center */
+  transform-origin: center;
+  transition: transform 0.5s ease-in-out;
 }
 .rubik-cube-pll {
   display: flex;
@@ -98,39 +101,15 @@
   background-color: #ff6400;
   color: #fff;
 }
-.rubik-cube-button {
-  width: 24px;
-  height: 24px;
-  stroke: white;
-  fill: none;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-.rubik-cube-button-grey {
-   width: 24px;
-   height: 24px;
-   stroke: grey;
-   fill: none;
-   stroke-linecap: round;
-   stroke-linejoin: round;
- }
-.div /* debug-div-red-border */ {
-  outline: 1px solid red !important;
-}
-/*.button-container {*/
-/*  display: flex;*/
-/*  flex-wrap: wrap; !* Prevents buttons from clipping off-screen *!*/
-/*  gap: 8px; !* Space between buttons *!*/
-/*  justify-content: center; !* Centers buttons horizontally *!*/
-/*  padding: 20px;*/
-/*}*/
-/* Button spacing */
+/* --- Button Grouping & Layout --- */
 .button-container {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
   margin-top: 10px;
+  justify-content: center;
+  align-content: center;
+  gap: 15px;
+  width: 100%
 }
 .button {
   padding: 10px 20px;
@@ -143,4 +122,22 @@
 }
 .button:hover {
   background-color: #e0e0e0;
+}
+.rubik-cube-button,
+.rubik-cube-button-grey {
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.rubik-cube-button {
+  stroke: white;
+}
+.rubik-cube-button-grey {
+  stroke: grey;
+}
+/* --- Debug Tool --- */
+.div {
+  outline: 1px solid red !important;
 }

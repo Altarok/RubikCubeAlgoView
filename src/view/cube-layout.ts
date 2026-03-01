@@ -15,7 +15,7 @@ export function createCubeLayout(container: HTMLElement, skipButtons: boolean): 
   /* right */
   const textSide = mainContainer.createEl('div', { cls: 'rubik-cube-div-right-column' });
 
-  const cubeDiv = leftSide.createEl('div', { attr: { id: 'cubeDiv' }, cls: 'rotatable' });
+  const cubeDiv = leftSide.createEl('div', { /*cls: 'rotatable',*/ cls: 'rubik-cube-div-content' });
 
   let buttonDiv: HTMLDivElement | undefined;
 
@@ -24,7 +24,7 @@ export function createCubeLayout(container: HTMLElement, skipButtons: boolean): 
   } else {
     buttonDiv = leftSide.createEl('div', { attr: { id: 'buttonDiv' }, cls: 'button-container' });
   }
-  const algorithmsDiv = textSide.createEl('div', { attr: { id: 'algorithmsDiv' } });
+  const algorithmsDiv = textSide.createEl('div', { attr: { id: 'algorithmsDiv' }, cls: 'rubik-cube-div-algorithms-list' });
 
   return { mainContainer, cubeDiv, buttonDiv, algorithmsDiv };
 }
