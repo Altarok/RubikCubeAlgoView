@@ -12,6 +12,7 @@ import {DEFAULT_SETTINGS, RubikCubeAlgoSettingsTab} from "./RubikCubeAlgoSetting
  * - [x] add flag: no-rotation, with svg in center sticker "no location change"
  * - [x] added mobile support with a lot of AI-inspired CSS changes
  *   - [ ] remove redundant CSS
+ * - [ ] remove 'y0' 
  */
 export default class RubikCubeAlgos extends Plugin {
   settings: RubikCubeAlgoSettingsTab;
