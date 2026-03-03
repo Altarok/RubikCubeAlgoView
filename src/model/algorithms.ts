@@ -23,7 +23,7 @@ export const possibleSteps = [
   "d", "d'", "d2", // bottom, 2 layers deep ('d' is alternative to 'Dw')
 
   "x", "x'", "x2", // whole cube, around X axis (to the right)
-  "y", "y'", "y2", "y0", // whole cube, around Y axis (to the top)
+  "y", "y'", "y2", // "y0", // whole cube, around Y axis (to the top)
   "z", "z'", "z2", // whole cube, around Z axis (to the front)
 
   "M", "M'", "M2", // vertical middle layer, around X axis, 90 degrees to the front (like L/R')
@@ -49,7 +49,8 @@ const turnCubeLeftMap: TurnCubeMap = {
   "D": "D", "D'": "D'", "D2": "D2",
   "d": "d", "d'": "d'", "d2": "d2",
   "x": "z", "x'": "z'", "x2": "z2", // !! non-linear changes
-  "y": "y0", "y0": "y'", "y'": "y2", "y2": "y", // y rotations are what the buttons do, so they could get swallowed by turning the cube
+  // "y": "y0", "y0": "y'", "y'": "y2", "y2": "y", // y rotations are what the buttons do, so they could get swallowed by turning the cube
+  "y": "y", "y'": "y'", "y2": "y2",
   "z": "x'", "z'": "x", "z2": "x2", // !! non-linear changes
   "M": "S'", "M'": "S", "M2": "S2", // !! non-linear changes
   "S": "M", "S'": "M'", "S2": "M2", // !! non-linear changes
@@ -87,7 +88,9 @@ export class Algorithm {
     }
   }
 
-  toString = () => this.steps.filter(value => value !== 'y0').join(' ');
+  toString(): string {
+    return this.steps/*.filter(value => value !== 'y0')*/.join(' ');
+  }
 
   // clone = (): Algorithm => new Algorithm([...this.steps]);
 }
