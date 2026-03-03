@@ -16,6 +16,7 @@ Alternative data:
 .010.
 alg:R U2 R2 F R F' U2 R' F R F' == 2+4,6+8,3-7,7-9,9-3
 ```
+
 2. OLL-2 Dot
 ```rubikCubeOLL
 .111.
@@ -24,9 +25,10 @@ alg:R U2 R2 F R F' U2 R' F R F' == 2+4,6+8,3-7,7-9,9-3
 10001
 .010.
 alg:r U r' U2 r U2 R' U2 R U' r' == 2+4,6+8,1+9,3+7
-alg:y' F R U R' U' F' f R U R' U' f' y == 2+6,4+8
-alg:y' F R U R' U' S R U R' U' f' y == 2+6,4+8
+alg:L F U F' U' L' l F U F' U' l' == 2+6,4+8
+alg:L F U F' U' M F U F' U' l' == 2+6,4+8
 ```
+
 3. OLL-3 Dot
 ```rubikCubeOLL
 .110.
@@ -35,9 +37,10 @@ alg:y' F R U R' U' S R U R' U' f' y == 2+6,4+8
 01000
 .011.
 alg:r' R2 U R' U r U2 r' U M'
-alg:y F U R U' R' F' U F R U R' U' F'
-alg:y' f R U R' U' f' U' F R U R' U' F'
+alg:R U B U' B' R' U R B U B' U' R'
+alg:l F U F' U' l' U' L F U F' U' L'
 ```
+
 4. OLL-4 Dot
 ```rubikCubeOLL
 .011.
@@ -46,9 +49,10 @@ alg:y' f R U R' U' f' U' F R U R' U' F'
 00010
 .110.
 alg:M U' r U2 r' U' R U' R' M'
-alg:y F U R U' R' F' U' F R U R' U' F'
-alg:y' f R U R' U' f' U F R U R' U' F'
+alg:R U B U' B' R' U' R B U B' U' R'
+alg:l F U F' U' l' U L F U F' U' L'
 ```
+
 5. OLL-5 Square Shape
 ```rubikCubeOLL
 .000.
@@ -57,8 +61,8 @@ alg:y' f R U R' U' f' U F R U R' U' F'
 10000
 .011.
 alg:l' U2 L U L' U l
-alg:y2 r' U2 R U R' U r
 ```
+
 6. OLL-5 Square Shape
 ```rubikCubeOLL
 .000.
@@ -68,6 +72,7 @@ alg:y2 r' U2 R U R' U r
 .110.
 alg:r U2 R' U' R U' r'
 ```
+
 7. OLL-7 Small Lightning Bolt
 ```rubikCubeOLL
 .100.
@@ -77,6 +82,7 @@ alg:r U2 R' U' R U' r'
 .011.
 alg:r U R' U R U2 r'
 ```
+
 8. OLL-8 Small Lightning Bolt
 ```rubikCubeOLL
 .001.
@@ -86,8 +92,8 @@ alg:r U R' U R U2 r'
 .110.
 alg:l' U' L U' L' U2 l
 alg:R U2 R' U2 R' F R F'
-alg:y2 r' U' R U' R' U2 r
 ```
+
 9. OLL-9 Fish Shape
 ```rubikCubeOLL
 .001.
@@ -97,6 +103,7 @@ alg:y2 r' U' R U' R' U2 r
 .110.
 alg:R U R' U' R' F R2 U R' U' F'
 ```
+
 10. OLL-10 Fish Shape
 ```rubikCubeOLL
 .110.
@@ -105,8 +112,9 @@ alg:R U R' U' R' F R2 U R' U' F'
 10100
 .001.
 alg:R U R' U R' F R F' R U2 R'
-alg:y2 r U R' U R U' R' U' r' R U R U' R'
+alg:l U L' U L U' L' U' l' L U L U' L'
 ```
+
 11. OLL-11 Small Lightning Bolt
 ```rubikCubeOLL
 .100.
@@ -115,8 +123,9 @@ alg:y2 r U R' U R U' R' U' r' R U R U' R'
 10000
 .011.
 alg:r U R' U R' F R F' R U2 r'
-alg:y2 r' R2 U R' U R U2 R' U M'
+alg:l' L2 U L' U L U2 L' U M
 ```
+
 12. OLL-12 Small Lightning Bolt
 ```rubikCubeOLL
 .000.
@@ -126,6 +135,7 @@ alg:y2 r' R2 U R' U R U2 R' U M'
 .110.
 alg:M' R' U' R U' R' U2 R U' R r'
 ```
+
 13. OLL-13 Knight Move Shape
 ```rubikCubeOLL
 .110.
@@ -136,6 +146,7 @@ alg:M' R' U' R U' R' U2 R U' R r'
 alg:F U R U' R2 F' R U R U' R' == 2-8,8-6,6-2,1-7,7-9,9-1
 alg:r U' r' U' r U r' y' R' U R == 2-8,8-4,4-2,1-9,9-3,3-1
 ```
+
 14. OLL-14 Knight Move Shape
 ```rubikCubeOLL
 .011.
@@ -145,6 +156,7 @@ alg:r U' r' U' r U r' y' R' U R == 2-8,8-4,4-2,1-9,9-3,3-1
 .110.
 alg:R' F R U R' F' R F U' F' == 2-6,6-8,8-2,1-3,3-7,7-1
 ```
+
 15. OLL-15 Knight Move Shape
 ```rubikCubeOLL
 .010.
@@ -153,8 +165,8 @@ alg:R' F R U R' F' R F U' F' == 2-6,6-8,8-2,1-3,3-7,7-1
 10000
 .011.
 alg:l' U' l L' U' L U l' U l == 2-8,8-4,4-2,1+9,3+7
-alg:y2 r' U' r R' U' R U r' U r == 2-6,6-8,8-2,1+9,3+7
 ```
+
 16. OLL-16 Knight Move Shape
 ```rubikCubeOLL
 .010.
@@ -164,6 +176,7 @@ alg:y2 r' U' r R' U' R U r' U r == 2-6,6-8,8-2,1+9,3+7
 .110.
 alg:r U r' R U R' U' r U' r' == 1+9,3+7,2-8,8-6,6-2
 ```
+
 17. OLL-17 Dot
 ```rubikCubeOLL
 .010.
@@ -172,8 +185,9 @@ alg:r U r' R U R' U' r U' r' == 1+9,3+7,2-8,8-6,6-2
 00010
 .110.
 alg:F R' F' R2 r' U R U' R' U' M' == 3+9,2-6,6-8,8-4,4-2
-alg:y2 R U R' U R' F R F' U2 R' F R F' == 1-9,9-7,7-1,2-4,4-6,6-2
+alg:L U L' U L' B L B' U2 L' B L B' == 1-9,9-7,7-1,2-4,4-6,6-2
 ```
+
 18. OLL-18 Dot
 ```rubikCubeOLL
 .010.
@@ -182,8 +196,9 @@ alg:y2 R U R' U R' F R F' U2 R' F R F' == 1-9,9-7,7-1,2-4,4-6,6-2
 00000
 .111.
 alg:r U R' U R U2 r2 U' R U' R' U2 r == 2+4,6+8
-alg:y R U2 R2 F R F' U2 M' U R U' r' == 2+4,6+8,1+3,7+9
+alg:B U2 B2 R B R' U2 S' U B U' b' == 2+4,6+8,1+3,7+9
 ```
+
 19. OLL-19 Dot
 ```rubikCubeOLL
 .010.
@@ -212,7 +227,7 @@ alg:r' R U R U R' U' M2 U R U' r' == 1-3,3-9,9-7,7-1,2-4,4-8,8-6,6-2
 00100
 .101.
 alg:R U2 R' U' R U R' U' R U' R'
-alg:y R U R' U R U' R' U R U2 R'
+alg:B U B' U B U' B' U B U2 B'
 ```
 22. OLL-22 Cross
 ```rubikCubeOLL
@@ -231,7 +246,7 @@ alg:R U2 R2 U' R2 U' R2 U2 R
 01110
 .000.
 alg:R2 D' R U2 R' D R U2 R
-alg:y2 R2 D R' U2 R D' R' U2 R'
+alg:L2 D L' U2 L D' L' U2 L'
 ```
 24. OLL-24 Cross
 ```rubikCubeOLL
