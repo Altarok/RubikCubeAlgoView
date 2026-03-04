@@ -10,10 +10,18 @@ import {DEFAULT_SETTINGS, RubikCubeAlgoSettingsTab} from "./RubikCubeAlgoSetting
  * - [x] change algorithm key (number to string) to be able to get the right one without knowing its index
  *   - [x] add hash() method to sub class Algorithm
  * - [x] remove 'y' after rotation
- * - [x] add flag: no-rotation, with svg in center sticker "no location change"
  * - [x] added mobile support with a lot of AI-inspired CSS changes
  *   - [ ] remove redundant CSS
  * - [ ] remove 'y0'
+ *
+ * # Input
+ * ## Flags
+ * - [x] add flag: 'no-rotation'
+ *   - [ ] then add svg in center sticker "no location change"
+ * - [ ] Add flag: 'keep-y-prefix' -> y am Start aendern, Rest lassen
+ * - [ ] Add flag: 'do-not-auto-remove-y-prefix' -> y am Start automatisch raus schmeissen
+ * - [ ] Add flag: 'punkt-gespiegelt'
+ * - [ ] Add flag: 'achsen-gespiegelt' vertical und/oder(?) horizontal
  *
  * # GUI
  * - [ ] Add button: save rotation as default
