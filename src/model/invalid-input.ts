@@ -37,9 +37,9 @@ export class InvalidInput {
     return new InvalidInput(line, `Invalid flag. Allowed: ${flags.join(',')}`);
   }
 
-  //  static ofArrows(line: string, reason: string) {
-  //     return new InvalidInput(line, reason);
-  //   }
+   static ofArrows(line: string, reason: string) {
+      return new InvalidInput(line, reason);
+    }
 }
 
 export const isInvalidRow = ({line}: InvalidInput, row: string): boolean => {

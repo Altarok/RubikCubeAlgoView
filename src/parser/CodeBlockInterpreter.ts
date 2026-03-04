@@ -1,10 +1,10 @@
-import {ArrowCoords, Arrows, Coordinates, Dimensions} from "./model/geometry";
-import {DEFAULT_SETTINGS, RubikCubeAlgoSettingsTab} from "./RubikCubeAlgoSettings";
-import {InvalidInput} from "./model/invalid-input";
-import {Algorithms, MappedAlgorithm, MappedAlgorithms, SpecialFlags} from "./model/algorithms";
-import {CubeStatePLL, CubeStateOLL} from "./model/cube-state";
-import {parseAlgorithm, parseArrowColor, parseCubeColor, parseDimensions, parseFlags} from "./parser/parser";
-import {OllFieldColoring} from "./model/oll-field-coloring";
+import {ArrowCoords, Arrows, Coordinates, Dimensions} from "../model/geometry";
+import {DEFAULT_SETTINGS, RubikCubeAlgoSettingsTab} from "../RubikCubeAlgoSettings";
+import {InvalidInput} from "../model/invalid-input";
+import {Algorithms, MappedAlgorithm, MappedAlgorithms, SpecialFlags} from "../model/algorithms";
+import {CubeStatePLL, CubeStateOLL} from "../model/cube-state";
+import {Parse} from "./parser";
+import {OllFieldColoring} from "../model/oll-field-coloring";
 
 const DEFAULT = {
   WIDTH: 3, /* default rubik cube width  */
@@ -94,21 +94,34 @@ export abstract class CodeBlockInterpreter {
     this.stickerCoordinates.push(coords);
   }
 
-  setupArrowCoordinates(arrowInput: string | undefined): Arrows {
+  setupArrowCoordinates(arrowInput?: string): Arrows {
     if (!arrowInput) return [];
 
-    return arrowInput.split(',').filter(Boolean).reduce((acc: Arrows, segment) => {
+    return arrowInput.split(',')
+    .filter(Boolean)
+    .flatMap((segment) => {
       const isDoubleSided = segment.includes('+');
-      const [from, to] = segment.split(/[+-]/); // Split on + OR -
+      const parts= segment.split(/[+-]/); // Split on + OR -
 
-      if (from && to) {
-        const start = this.getStickerCenterCoordinates(from);
-        const end = this.getStickerCenterCoordinates(to);
+      // Map the string IDs to their coordinate objects immediately
+      const coords = parts.map(id => this.getStickerCenterCoordinates(id));
 
-        acc.push(new ArrowCoords(start, end));
-        if (isDoubleSided) acc.push(new ArrowCoords(end, start));
+      if (isDoubleSided && coords.length === 2) {
+        const [start, end] = coords;
+        return [new ArrowCoords(start, end), new ArrowCoords(end, start)];
       }
-      return acc;
+
+      const arrows: ArrowCoords[] = [];
+      for (let i = 0; i < coords.length - 1; i++) {
+        arrows.push(new ArrowCoords(coords[i], coords[i + 1]));
+      }
+
+      // chained arrows
+      if (coords.length > 2) {
+        arrows.push(new ArrowCoords(coords[coords.length - 1], coords[0]));
+      }
+
+      return arrows;
     }, []);
   }
 
@@ -201,7 +214,7 @@ export class CodeBlockInterpreterPLL extends CodeBlockInterpreter {
 
       switch (command) {
         case 'dimension': {
-          const result = parseDimensions(row);
+          const result = Parse.toDimensions(row);
           if (result.success) {
             this.cubeDimensions = result.data;
           } else {
@@ -209,7 +222,7 @@ export class CodeBlockInterpreterPLL extends CodeBlockInterpreter {
           }}
           break;
         case 'cubeColor': {
-          const result = parseCubeColor(row);
+          const result = Parse.toCubeColor(row);
           if (result.success) {
             this.cubeColor = result.data;
           } else {
@@ -217,7 +230,7 @@ export class CodeBlockInterpreterPLL extends CodeBlockInterpreter {
           }}
         break;
         case 'arrowColor': {
-          const result = parseArrowColor(row);
+          const result = Parse.toArrowColor(row);
           if (result.success) {
             this.arrowColor = result.data;
           } else {
@@ -226,7 +239,7 @@ export class CodeBlockInterpreterPLL extends CodeBlockInterpreter {
         } break;
         case 'arrows': this.handleArrowsInput(row); break;
         case 'alg': {
-          const result = parseAlgorithm(row);
+          const result = Parse.toAlgorithm(row);
           if (result.success) {
             this.algorithms.add(result.data);
           } else {
@@ -234,7 +247,7 @@ export class CodeBlockInterpreterPLL extends CodeBlockInterpreter {
           }
         } break;
         case 'flags': {
-          const result = parseFlags(row);
+          const result = Parse.toFlags(row);
           if (result.success) {
             this.specialFlags = result.data;
           } else {
@@ -260,7 +273,7 @@ export class CodeBlockInterpreterPLL extends CodeBlockInterpreter {
       // @ts-ignore checked with regex
       this.arrows = row.split(' ')[0].trim().replace('arrows:', '');
     } else {
-      this.setInvalidInput(InvalidInput.ofArrowColor(row));
+      this.setInvalidInput(InvalidInput.ofArrows(row, 'Invalid arrow input.'));
     }
   }
 
@@ -326,7 +339,7 @@ export class CodeBlockInterpreterOLL extends CodeBlockInterpreter {
         this.algorithmToArrowsInput.push(row.replace('alg:', '').trim());
         return null; // Mark for removal
       } else if (row.startsWith('flags:')) {
-        const result = parseFlags(row);
+        const result = Parse.toFlags(row);
         if (result.success) {
           this.specialFlags = result.data;
         } else {
@@ -399,7 +412,7 @@ export class CodeBlockInterpreterOLL extends CodeBlockInterpreter {
     this.algorithmToArrowsInput.forEach((row: string) => {
         const [algInput, arrowInput] = row.split(/ *== */);
 
-        const result = parseAlgorithm(algInput!);
+        const result = Parse.toAlgorithm(algInput!);
         if (result.success) {
           let matchingArrows: Arrows = [];
           if (arrowInput) {

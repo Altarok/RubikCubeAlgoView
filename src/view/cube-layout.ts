@@ -1,4 +1,3 @@
-
 export interface CubeLayout {
   readonly mainContainer: HTMLDivElement;
   readonly cubeDiv: HTMLDivElement;

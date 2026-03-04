@@ -9,6 +9,17 @@ type Result<T> =
   | { success: true; data: T }
   | { success: false; error: InvalidInput };
 
+/*
+ * Object Namespace
+ */
+export const Parse = {
+  toAlgorithm,
+  toDimensions,
+  toCubeColor,
+  toArrowColor,
+  toFlags
+};
+
 /**
  * Type Guard: Tells TS that 'value' is specifically an AlgorithmStep.
  * Validates if a string is a valid Step.
@@ -20,7 +31,7 @@ function isAlgorithmStep(value: string): value is AlgorithmStep {
 /**
  * @param row - row containing algorithm steps, may start with 'alg:'
  */
-export function parseAlgorithm(row: string): Result<Algorithm> {
+function toAlgorithm(row: string): Result<Algorithm> {
   let cleanRow: string = row.startsWith('alg:') ? row.slice(4).trim() : row.trim();
 
   if (!algorithmRegex.test(cleanRow)) {
@@ -44,7 +55,7 @@ export function parseAlgorithm(row: string): Result<Algorithm> {
 /**
  * @param row string starting with 'dimension:'
  */
-export function parseDimensions(row: string): Result<Dimensions> {
+function toDimensions(row: string): Result<Dimensions> {
   /*
    * Cut comments, cut prefix, split width and height
    */
@@ -69,14 +80,14 @@ function parseHexColor(row: string, prefix: string, errorFactory: () => InvalidI
 /**
  * @param {string} row - string starting with 'cubeColor:' followed by a hex value for the cube's color
  */
-export function parseCubeColor(row: string): Result<string> {
+function toCubeColor(row: string): Result<string> {
   return parseHexColor(row, 'cubeColor:', () => InvalidInput.ofCubeColor(row));
 }
 
 /**
  * @param {string} row - string starting with 'arrowColor:' followed by a hex value for the arrows' color
  */
-export function parseArrowColor(row: string): Result<string> {
+function toArrowColor(row: string): Result<string> {
   return parseHexColor(row, 'arrowColor:', () => InvalidInput.ofArrowColor(row));
 }
 
@@ -87,7 +98,7 @@ function isSpecialFlag(value: string): value is SpecialFlags {
 const specialFlagsJoined: string = flags.join('|');
 const specialFlagsPattern: RegExp = new RegExp(`${specialFlagsJoined}(,${specialFlagsJoined})*`);
 
-export function parseFlags(row: string): Result<SpecialFlags[]> {
+function toFlags(row: string): Result<SpecialFlags[]> {
   let cleanRow: string = row.startsWith('flags:') ? row.slice(6).trim() : row.trim();
 
   if (!specialFlagsPattern.test(cleanRow)) {
