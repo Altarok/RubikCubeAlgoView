@@ -1,8 +1,9 @@
 import RubikCubeAlgos from "./main";
-import {CodeBlockInterpreterOLL} from "./parser/CodeBlockInterpreter";
+import {CodeBlockInterpreterOLL} from "./parser/codeblock-interpreter";
 import {CubeStateOLL} from "./model/cube-state";
 import {CubeRendererOLL} from "./view/cube-renderer";
 import {MarkdownRenderChild} from "obsidian";
+import {ButtonController} from "./control/button-controller";
 
 export class MarkdownPostProcessorOLL extends MarkdownRenderChild {
   source: string;
@@ -62,23 +63,6 @@ export class MarkdownPostProcessorOLL extends MarkdownRenderChild {
       }
     }
 
-    if (cubeState.specialFlags.contains('no-rotation')) {
-      return;
-    }
-
-    cubeRenderer.buttonLeft.addEventListener('click', () => {
-      cubeState.rotateLeft();
-      cubeRenderer.rotateCube();
-    });
-
-    cubeRenderer.buttonReset.addEventListener('click', () => {
-      cubeState.resetRotation();
-      cubeRenderer.rotateCube();
-    });
-
-    cubeRenderer.buttonRight.addEventListener('click', () => {
-      cubeState.rotateRight();
-      cubeRenderer.rotateCube();
-    });
+    ButtonController.addButtonFunctions(cubeRenderer, cubeState);
   }
 }

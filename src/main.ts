@@ -1,5 +1,5 @@
 import {Plugin} from "obsidian";
-import {CodeBlockInterpreter} from "./parser/CodeBlockInterpreter";
+import {CodeBlockInterpreter} from "./parser/codeblock-interpreter";
 import {MarkdownPostProcessorOLL} from "./MarkdownPostProcessorOLL";
 import {MarkdownPostProcessorPLL} from "./MarkdownPostProcessorPLL";
 import {DEFAULT_SETTINGS, RubikCubeAlgoSettingsTab} from "./RubikCubeAlgoSettings";

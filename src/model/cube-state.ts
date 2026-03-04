@@ -38,6 +38,14 @@ export abstract class CubeState {
 
   codeBlockInterpretationFailed = () => this.invalidInput !== undefined;
 
+  /** Clock-wise quarter rotation */
+  abstract rotateLeft(): void ;
+
+  abstract resetRotation(): void;
+
+  /** Anti-clock-wise quarter rotation */
+  abstract rotateRight(): void;
+
 }
 
 /**
