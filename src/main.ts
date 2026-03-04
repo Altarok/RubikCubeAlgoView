@@ -18,6 +18,7 @@ import {DEFAULT_SETTINGS, RubikCubeAlgoSettingsTab} from "./RubikCubeAlgoSetting
  * # GUI
  * - [ ] Add button: save rotation as default
  * - [ ] Add button: save algorithm as default
+ * - [ ] Add button: mirror algorithm vertically (when allowed by flag)
  */
 export default class RubikCubeAlgos extends Plugin {
   settings: RubikCubeAlgoSettingsTab;
@@ -40,7 +41,6 @@ export default class RubikCubeAlgos extends Plugin {
 
     this.addCommand({
       id: "RubikCubeAlgo-add-code-block-template-3x3-OLL",
-      // @ts-ignore
       name: "Add code block template for 3x3 cube: OLL.",
       editorCallback: (editor, view) => {
         editor.replaceSelection(CodeBlockInterpreter.get3by3OllTemplate());
@@ -49,7 +49,6 @@ export default class RubikCubeAlgos extends Plugin {
 
     this.addCommand({
       id: "RubikCubeAlgo-add-code-block-template-3x3-PLL",
-      // @ts-ignore
       name: "Add code block template for 3x3 cube: PLL.",
       editorCallback: (editor, view) => {
         editor.replaceSelection(CodeBlockInterpreter.get3by3PllTemplate());
