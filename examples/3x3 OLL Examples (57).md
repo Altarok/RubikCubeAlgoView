@@ -208,7 +208,8 @@ alg:B U2 B2 R B R' U2 S' U B U' b' == 2+4,6+8,1+3,7+9
 .010.
 alg:r' R U R U R' U' M' R' F R F' == 2-4,4-8,8-6,6-2,3+9
 ```
-16. OLL-20 Dot
+
+20. OLL-20 Dot
 ```rubikCubeOLL
 .010.
 01010
@@ -229,6 +230,7 @@ alg:r' R U R U R' U' M2 U R U' r' == 1-3,3-9,9-7,7-1,2-4,4-8,8-6,6-2
 alg:R U2 R' U' R U R' U' R U' R'
 alg:B U B' U B U' B' U B U2 B'
 ```
+
 22. OLL-22 Cross
 ```rubikCubeOLL
 .001.
@@ -238,6 +240,7 @@ alg:B U B' U B U' B' U B U2 B'
 .001.
 alg:R U2 R2 U' R2 U' R2 U2 R
 ```
+
 23. OLL-23 Cross
 ```rubikCubeOLL
 .101.
@@ -248,6 +251,7 @@ alg:R U2 R2 U' R2 U' R2 U2 R
 alg:R2 D' R U2 R' D R U2 R
 alg:L2 D L' U2 L D' L' U2 L'
 ```
+
 24. OLL-24 Cross
 ```rubikCubeOLL
 .100.
@@ -256,8 +260,9 @@ alg:L2 D L' U2 L D' L' U2 L'
 00110
 .100.
 alg:r U R' U' r' F R F'
-alg:y R U R D R' U' R D' R2
+alg:B U B D B' U' B D' B2
 ```
+
 25. OLL-25 Cross
 ```rubikCubeOLL
 .000.
@@ -266,8 +271,9 @@ alg:y R U R D R' U' R D' R2
 01100
 .001.
 alg:F' r U R' U' r' F R
-alg:y' R' F R B' R' F' R B
+alg:F' L F R' F' L' F R
 ```
+
 26. OLL-26 Cross
 ```rubikCubeOLL
 .000.
@@ -276,8 +282,9 @@ alg:y' R' F R B' R' F' R B
 00101
 .100.
 alg:R U2 R' U' R U' R'
-alg:y' R' U' R U' R' U2 R
+alg:F' U' F U' F' U2 F
 ```
+
 27. OLL-27 Cross
 ```rubikCubeOLL
 .100.
@@ -286,8 +293,9 @@ alg:y' R' U' R U' R' U2 R
 01100
 .001.
 alg:R U R' U R U2 R'
-alg:y' R' U2 R U R' U R
+alg:F' U2 F U F' U F
 ```
+
 28. OLL-28 Corners Oriented
 ```rubikCubeOLL
 .000.
@@ -297,6 +305,7 @@ alg:y' R' U2 R U R' U R
 .010.
 alg:r U R' U' r' R U R U' R'
 ```
+
 29. OLL-29 Awkward Shape
 ```rubikCubeOLL
 .100.
@@ -306,6 +315,7 @@ alg:r U R' U' r' R U R U' R'
 .110.
 alg:R U R' U' R U' R' F' U' F R U R'
 ```
+
 30. OLL-30 Awkward Shape
 ```rubikCubeOLL
 .000.
@@ -316,6 +326,7 @@ alg:R U R' U' R U' R' F' U' F R U R'
 alg:F R' F R2 U' R' U' R U R' F2
 alg:F U R U2 R' U' R U2 R' U' F'
 ```
+
 31. OLL-31 P Shape
 ```rubikCubeOLL
 .100.
@@ -325,6 +336,7 @@ alg:F U R U2 R' U' R U2 R' U' F'
 .110.
 alg:R' U' F U R U' R' F' R
 ```
+
 32. OLL-32 P Shape
 ```rubikCubeOLL
 .001.
@@ -333,8 +345,9 @@ alg:R' U' F U R U' R' F' R
 01000
 .011.
 alg:L U F' U' L' U L F L'
-alg:y2 S R U R' U' R' F R f'
+alg:S' L U L' U' L' B L b'
 ```
+
 33. OLL-33 T Shape
 ```rubikCubeOLL
 .110.
@@ -344,6 +357,7 @@ alg:y2 S R U R' U' R' F R f'
 .110.
 alg:R U R' U' R' F R F'
 ```
+
 34. OLL-34 C Shape
 ```rubikCubeOLL
 .010.
@@ -354,6 +368,7 @@ alg:R U R' U' R' F R F'
 alg:R U R2 U' R' F R U R U' F'
 alg:R U R' U' B' R' F R F' B
 ```
+
 35. OLL-35 Fish Shape
 ```rubikCubeOLL
 .010.
@@ -363,6 +378,7 @@ alg:R U R' U' B' R' F R F' B
 .100.
 alg:R U2 R2 F R F' R U2 R'
 ```
+
 36. OLL-36 W Shape
 ```rubikCubeOLL
 .001.
@@ -371,8 +387,8 @@ alg:R U2 R2 F R F' R U2 R'
 10010
 .010.
 alg:L' U' L U' L' U L U L F' L' F
-alg:y2 R' U' R U' R' U R U R B' R' B
 ```
+
 37. OLL-37 Fish Shape
 ```rubikCubeOLL
 .000.
@@ -383,6 +399,7 @@ alg:y2 R' U' R U' R' U R U R B' R' B
 alg:F R' F' R U R U' R'
 alg:F R U' R' U' R U R' F'
 ```
+
 38. OLL-38 W Shape
 ```rubikCubeOLL
 .100.
@@ -392,6 +409,7 @@ alg:F R U' R' U' R U R' F'
 .010.
 alg:R U R' U R U' R' U' R' F R F'
 ```
+
 39. OLL-39 Big Lightning Bolt
 ```rubikCubeOLL
 .110.
@@ -400,9 +418,9 @@ alg:R U R' U R U' R' U' R' F R F'
 01001
 .010.
 alg:L F' L' U' L U F U' L'
-alg:y2 R B' R' U' R U B U' R'
 ```
-39. OLL-40 Big Lightning Bolt
+
+40. OLL-40 Big Lightning Bolt
 ```rubikCubeOLL
 .011.
 01000
@@ -411,7 +429,8 @@ alg:y2 R B' R' U' R U B U' R'
 .010.
 alg:R' F R U R' U' F' U R
 ```
-39. OLL-41 Awkward Shape
+
+41. OLL-41 Awkward Shape
 ```rubikCubeOLL
 .101.
 00100
@@ -420,7 +439,8 @@ alg:R' F R U R' U' F' U R
 .010.
 alg:R U R' U R U2 R' F R U R' U' F'
 ```
-39. OLL-42 Awkward Shape
+
+42. OLL-42 Awkward Shape
 ```rubikCubeOLL
 .010.
 01010
@@ -429,7 +449,8 @@ alg:R U R' U R U2 R' F R U R' U' F'
 .101.
 alg:R' U' R U' R' U2 R F R U R' U' F'
 ```
-39. OLL-43 P Shape
+
+43. OLL-43 P Shape
 ```rubikCubeOLL
 .000.
 10110
@@ -439,7 +460,8 @@ alg:R' U' R U' R' U2 R F R U R' U' F'
 alg:F' U' L' U L F
 alg:R' U' F R' F' R U R
 ```
-39. OLL-44 P Shape
+
+44. OLL-44 P Shape
 ```rubikCubeOLL
 .000.
 01101
@@ -447,9 +469,10 @@ alg:R' U' F R' F' R U R
 01001
 .010.
 alg:F U R U' R' F'
-alg:y2 f R U R' U' f'
+alg:b L U L' U' b'
 ```
-39. OLL-45 T Shape
+
+45. OLL-45 T Shape
 ```rubikCubeOLL
 .010.
 10010
@@ -458,7 +481,8 @@ alg:y2 f R U R' U' f'
 .010.
 alg:F R U R' U' F'
 ```
-39. OLL-46 C Shape
+
+46. OLL-46 C Shape
 ```rubikCubeOLL
 .000.
 01101
@@ -467,7 +491,8 @@ alg:F R U R' U' F'
 .000.
 alg:R' U' R' F R F' U R
 ```
-39. OLL-47 Small L Shape
+
+47. OLL-47 Small L Shape
 ```rubikCubeOLL
 .100.
 00101
@@ -476,9 +501,10 @@ alg:R' U' R' F R F' U R
 .110.
 alg:R' U' R' F R F' R' F R F' U R
 alg:F' L' U' L U L' U' L U F
-alg:y' F U R U' R' F' R U R' U R U2 R'
+alg:L U F U' F' L' F U F' U F U2 F'
 ```
-39. OLL-48 Small L Shape
+
+48. OLL-48 Small L Shape
 ```rubikCubeOLL
 .001.
 10100
@@ -487,7 +513,8 @@ alg:y' F U R U' R' F' R U R' U R U2 R'
 .011.
 alg:F R U R' U' R U R' U' F'
 ```
-39. OLL-49 Small L Shape
+
+49. OLL-49 Small L Shape
 ```rubikCubeOLL
 .001.
 10100
@@ -496,7 +523,8 @@ alg:F R U R' U' R U R' U' F'
 .011.
 alg:r U' r2 U r2 U r2 U' r
 ```
-39. OLL-50 Small L Shape
+
+50. OLL-50 Small L Shape
 ```rubikCubeOLL
 .011.
 10000
@@ -505,7 +533,8 @@ alg:r U' r2 U r2 U r2 U' r
 .001.
 alg:r' U r2 U' r2 U' r2 U r'
 ```
-39. OLL-51 I Shape
+
+51. OLL-51 I Shape
 ```rubikCubeOLL
 .110.
 00001
@@ -513,9 +542,10 @@ alg:r' U r2 U' r2 U' r2 U r'
 00001
 .110.
 alg:F U R U' R' U R U' R' F'
-alg:y2 f R U R' U' R U R' U' f'
+alg:b L U L' U' L U L' U' b'
 ```
-39. OLL-52 I Shape
+
+52. OLL-52 I Shape
 ```rubikCubeOLL
 .100.
 00101
@@ -523,10 +553,11 @@ alg:y2 f R U R' U' R U R' U' f'
 00101
 .100.
 alg:R U R' U R U' B U' B' R'
-alg:y2 R' F' U' F U' R U R' U R
+alg:L' B' U' B U' L U L' U L
 alg:R U R' U R U' y R U' R' F'
 ```
-39. OLL-53 Small L Shape
+
+53. OLL-53 Small L Shape
 ```rubikCubeOLL
 .101.
 00100
@@ -534,10 +565,10 @@ alg:R U R' U R U' y R U' R' F'
 00000
 .111.
 alg:l' U2 L U L' U' L U L' U l
-alg:y2 r' U2 R U R' U' R U R' U r
-alg:y r' U' R U' R' U R U' R' U2 r
+alg:b' U' B U' B' U B U' B' U2 b
 ```
-39. OLL-54 Small L Shape
+
+54. OLL-54 Small L Shape
 ```rubikCubeOLL
 .101.
 00100
@@ -545,9 +576,10 @@ alg:y r' U' R U' R' U R U' R' U2 r
 00000
 .111.
 alg:r U2 R' U' R U R' U' R U' r'
-alg:y r U R' U R U' R' U R U2 r'
+alg:b U B' U B U' B' U B U2 b'
 ```
-39. OLL-55 I Shape
+
+55. OLL-55 I Shape
 ```rubikCubeOLL
 .111.
 00000
@@ -555,9 +587,10 @@ alg:y r U R' U R U' R' U R U2 r'
 00000
 .111.
 alg:R' F R U R U' R2 F' R2 U' R' U R U R'
-alg:y R U2 R2 U' R U' R' U2 F R F'
+alg:B U2 B2 U' B U' B' U2 R B R'
 ```
-39. OLL-56 I Shape
+
+56. OLL-56 I Shape
 ```rubikCubeOLL
 .010.
 10001
@@ -568,6 +601,7 @@ alg:r' U' r U' R' U R U' R' U R r' U r
 alg:r U r' U R U' R' U R U' R' r U' r'
 alg:r U r' U R U' R' U R U' M' U' r'
 ```
+
  57. OLL-57 Corners Oriented
 ```rubikCubeOLL
 .010.

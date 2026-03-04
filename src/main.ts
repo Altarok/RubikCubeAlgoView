@@ -6,13 +6,18 @@ import {DEFAULT_SETTINGS, RubikCubeAlgoSettingsTab} from "./RubikCubeAlgoSetting
 
 
 /*
+ * # Logic
  * - [x] change algorithm key (number to string) to be able to get the right one without knowing its index
  *   - [x] add hash() method to sub class Algorithm
  * - [x] remove 'y' after rotation
  * - [x] add flag: no-rotation, with svg in center sticker "no location change"
  * - [x] added mobile support with a lot of AI-inspired CSS changes
  *   - [ ] remove redundant CSS
- * - [ ] remove 'y0' 
+ * - [ ] remove 'y0'
+ *
+ * # GUI
+ * - [ ] Add button: save rotation as default
+ * - [ ] Add button: save algorithm as default
  */
 export default class RubikCubeAlgos extends Plugin {
   settings: RubikCubeAlgoSettingsTab;
