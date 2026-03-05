@@ -1,8 +1,8 @@
 import {Plugin} from "obsidian";
-import {CodeBlockInterpreter} from "./parser/codeblock-interpreter";
 import {MarkdownPostProcessorOLL} from "./MarkdownPostProcessorOLL";
 import {MarkdownPostProcessorPLL} from "./MarkdownPostProcessorPLL";
-import {DEFAULT_SETTINGS, RubikCubeAlgoSettingsTab} from "./RubikCubeAlgoSettings";
+import {DefaultSettings, RubikCubeAlgoSettingsTab} from "./RubikCubeAlgoSettings";
+import {Templates} from "./model/templates";
 
 /*
  * # Logic
@@ -25,7 +25,7 @@ import {DEFAULT_SETTINGS, RubikCubeAlgoSettingsTab} from "./RubikCubeAlgoSetting
  *
  * # Input
  * - [x] PLL with dimensions
- * - [x] OLL with and w/o colour
+ * - [x] OLL with and w/o color
  * - [x] arrows: x-y = arrow from x to y
  *   - [x] double-sided arrows: x+y = 1 arrow from x to y, 1 arrow from y to x
  *   - [x] chained arrows: x-y-z = 3 arrows, 1 from x to y, 1 from y to z, 1 from z to x
@@ -37,12 +37,12 @@ import {DEFAULT_SETTINGS, RubikCubeAlgoSettingsTab} from "./RubikCubeAlgoSetting
  * ## Flags
  * - [x] add flag: 'no-rotation'
  *   - [ ] then add svg in center sticker "no location change"
- * - [ ] Add flag: 'keep-y-prefix' -> y am Start aendern, Rest lassen
+ * - [ ] Add flag: 'keep-y-prefix' -> change y on parsing, keep rest
  *   - do not change algorithm on rotation, only the amount of y prefix
  *   - add rotation as parameter to method Algorithm.toString when using flag 'keep-y-prefix'. Skip y when #y = currentRotation
- * - [ ] Add flag: 'do-not-auto-remove-y-prefix' -> y am Start automatisch raus schmeissen
- * - [ ] Add flag: 'punkt-gespiegelt'
- * - [ ] Add flag: 'achsen-gespiegelt' vertical und/oder(?) horizontal
+ * - [ ] Add flag: 'do-not-auto-remove-y-prefix' -> automatically swallow y prefix on parsing
+ * - [ ] Add flag: 'point-mirrored'
+ * - [ ] Add flag: 'axis-mirrored' vertical a/o(?) horizontal
  *
  * # GUI
  * - [x] Button: rotate cube
@@ -67,6 +67,8 @@ export default class RubikCubeAlgos extends Plugin {
 
   async onload() {
 
+    console.log('>> onload');
+
     await this.loadSettings();
 
     this.registerMarkdownCodeBlockProcessor("rubikCubeOLL",
@@ -82,18 +84,18 @@ export default class RubikCubeAlgos extends Plugin {
     );
 
     this.addCommand({
-      id: "RubikCubeAlgo-add-code-block-template-3x3-OLL",
-      name: "Add code block template for 3x3 cube: OLL.",
-      editorCallback: (editor, view) => {
-        editor.replaceSelection(CodeBlockInterpreter.get3by3OllTemplate());
+      id: 'RubikCubeAlgo-add-code-block-template-3x3-OLL',
+      name: 'Add code block template for 3x3 cube: OLL.',
+      editorCallback: (editor) => {
+        editor.replaceSelection(Templates.OLL_CodeBlock);
       }
     });
 
     this.addCommand({
-      id: "RubikCubeAlgo-add-code-block-template-3x3-PLL",
-      name: "Add code block template for 3x3 cube: PLL.",
-      editorCallback: (editor, view) => {
-        editor.replaceSelection(CodeBlockInterpreter.get3by3PllTemplate());
+      id: 'RubikCubeAlgo-add-code-block-template-3x3-PLL',
+      name: 'Add code block template for 3x3 cube: PLL.',
+      editorCallback: (editor) => {
+        editor.replaceSelection(Templates.PLL_CodeBlock);
       }
     });
 
@@ -110,7 +112,7 @@ export default class RubikCubeAlgos extends Plugin {
 
   async loadSettings() {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+    this.settings = Object.assign({}, DefaultSettings, await this.loadData());
   }
 
   async saveSettings() {
@@ -119,4 +121,4 @@ export default class RubikCubeAlgos extends Plugin {
       "rubik:rerender-markdown-code-block-processors"
     );
   }
-};
+}

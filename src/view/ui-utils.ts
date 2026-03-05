@@ -1,4 +1,4 @@
-import {InvalidInput, isInvalidRow} from "../model/invalid-input";
+import {InvalidInput} from "../model/codeblock-input";
 import {Algorithm} from "../model/algorithms";
 
 export const UiUtils = {
@@ -26,7 +26,7 @@ function showInvalidInput(container: HTMLElement, rows: string[], error: Invalid
   const listContainer = container.createEl('div', {cls: 'rubik-cube-error-list'});
 
   rows.forEach(row => {
-    if (isInvalidRow(error, row)) {
+    if (error.isInvalidRow(row)) {
       const errorRow = listContainer.createEl('div');
       errorRow.createEl('b', {text: row, cls: 'rubik-cube-warning-text-red'});
       errorRow.createEl('span', {text: ` => ${error.reason}`});

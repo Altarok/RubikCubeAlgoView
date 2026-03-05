@@ -17,5 +17,8 @@ function stickerCoordinates(cubeDimensions: Dimensions, offset: number): Sticker
       stickerCenterCoords.push(new Coordinates(w * 100 + offset, h * 100 + offset));
     }
   }
-  return new StickerCoords(stickerCenterCoords);
+  let stickerCoords = new StickerCoords(stickerCenterCoords, cubeDimensions);
+  // console.debug(`Build sticker coordinates ${stickerCoords.toString()}`);
+  return stickerCoords;
 }
+ 

@@ -5,6 +5,7 @@ import {CubeRendererOLL} from "./view/cube-renderer";
 import {MarkdownRenderChild} from "obsidian";
 import {ButtonController} from "./control/button-controller";
 import {StringUtils} from "./parser/string-utils";
+import {UserInput} from "./model/codeblock-input";
 
 export class MarkdownPostProcessorOLL extends MarkdownRenderChild {
   source: string;
@@ -33,9 +34,9 @@ export class MarkdownPostProcessorOLL extends MarkdownRenderChild {
 
   display(): void {
     this.element.empty();
-    const rows: string[] = StringUtils.codeBlockToStrings(this.source);
+    const userInput: UserInput = StringUtils.codeBlockToStrings(this.source);
 
-    let interpreter: CodeBlockInterpreterOLL = new CodeBlockInterpreterOLL(rows, this.plugin.settings);
+    let interpreter: CodeBlockInterpreterOLL = new CodeBlockInterpreterOLL(userInput, this.plugin.settings);
     let cubeState: CubeStateOLL = interpreter.setupOll();
 
     let cubeRenderer = new CubeRendererOLL(cubeState);

@@ -93,7 +93,7 @@ export abstract class CubeRenderer {
     const error = this.cubeState.invalidInput;
 
     if (error) {
-      UiUtils.showInvalidInput(element, this.cubeState.codeBlockContent, error);
+      UiUtils.showInvalidInput(element, this.cubeState.userInput.completeCodeBlock, error);
     }
   }
 

@@ -18,7 +18,6 @@ data.json
 package.json
 AGENTS.md
 version-bump.mjs
-package-lock.json
 eslint.config.mts
 esbuild.config.mjs
 tsconfig.json

@@ -5,9 +5,6 @@ export const flags = ['no-rotation'] as const;
 
 export type SpecialFlags = (typeof flags)[number];
 
-// type MoveSuffix = "" | "'" | "2";
-// type BaseMove = "R" | "L" | "F" | "B" | "U" | "D" | "r" | "l" | "f" | "b" | "u" | "d" | "x" | "y" | "z" | "M" | "S" | "E";
-
 export const possibleSteps = [
   "R", "R'", "R2", // right side
   "r", "r'", "r2", // right side, 2 layers deep ('r' is alternative to 'Rw')
@@ -26,9 +23,9 @@ export const possibleSteps = [
   "y", "y'", "y2", // "y0", // whole cube, around Y axis (to the top)
   "z", "z'", "z2", // whole cube, around Z axis (to the front)
 
-  "M", "M'", "M2", // vertical middle layer, around X axis, 90 degrees to the front (like L/R')
-  "S", "S'", "S2", // vertical middle layer, around Z axis, 90 degrees to the right (like F/B')
-  "E", "E'", "E2"  // horizontal middle layer, around Y axis, 90 degrees to the right (like D/U')
+  "M", "M'", "M2", // vertical middle layer, around X axis, 90 degrees to the front (like L or R-prime)
+  "S", "S'", "S2", // vertical middle layer, around Z axis, 90 degrees to the right (like F or B-prime)
+  "E", "E'", "E2"  // horizontal middle layer, around Y axis, 90 degrees to the right (like D or U-prime)
 ] as const;
 
 export type AlgorithmStep = (typeof possibleSteps)[number];

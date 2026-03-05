@@ -1,9 +1,13 @@
-import {Algorithm, AlgorithmStep, flags, possibleSteps, SpecialFlags} from "../model/algorithms";
-import {InvalidInput} from "../model/invalid-input";
+import {
+  Algorithm,
+  AlgorithmStep,
+  flags,
+  possibleSteps,
+  SpecialFlags
+} from "../model/algorithms";
+import {InvalidInput} from "../model/codeblock-input";
 import {Dimensions} from "../model/geometry";
-
-const stepPattern: string = "[xyzRrLlFfBbUuDdMSE](|'|2)";
-const algorithmRegex: RegExp = new RegExp(`^(${stepPattern})( ${stepPattern})*$`);
+import {RegEx} from "./regex-util";
 
 type Result<T> =
   | { success: true; data: T }
@@ -35,7 +39,7 @@ function isAlgorithmStep(value: string): value is AlgorithmStep {
 function toAlgorithm(row: string): Result<Algorithm> {
   let cleanRow: string = row.startsWith('alg:') ? row.slice(4).trim() : row.trim();
 
-  if (!algorithmRegex.test(cleanRow)) {
+  if (!RegEx.isAlgorithm(cleanRow)) {
     return {success: false, error: InvalidInput.ofAlgorithm(row)};
   }
 
@@ -94,13 +98,10 @@ function isSpecialFlag(value: string): value is SpecialFlags {
   return (flags as readonly string[]).includes(value);
 }
 
-const specialFlagsJoined: string = flags.join('|');
-const specialFlagsPattern: RegExp = new RegExp(`${specialFlagsJoined}(,${specialFlagsJoined})*`);
-
 function toFlags(row: string): Result<Set<SpecialFlags>> {
   let cleanRow: string = row.startsWith('flags:') ? row.slice(6).trim() : row.trim();
 
-  if (!specialFlagsPattern.test(cleanRow)) {
+  if (!RegEx.isSpecialFlags(cleanRow)) {
     return {success: false, error: InvalidInput.ofFlags(row)};
   }
 
@@ -118,10 +119,6 @@ function toFlags(row: string): Result<Set<SpecialFlags>> {
   return {success: true, data: flags};
 }
 
-const arrowCoordRawPattern: string = '\\d+(\\.\\d+)?';
-const doubleSidedArrowPattern: RegExp = new RegExp(`^${arrowCoordRawPattern}\\+${arrowCoordRawPattern}$`);
-const chainedArrowPattern: RegExp = new RegExp(`^${arrowCoordRawPattern}(-${arrowCoordRawPattern}){1,3}$`);
-
 /**
  * Splits joined arrow input to array of single arrow input values and check each against a regex.
  * This does not parse to Arrows (with coordinates) yet, as we still have to calculate the cube's dimensions.
@@ -136,7 +133,7 @@ function toArrows(input: string): Result<string[]> {
   }
 
   for (const arrow of arrowInput) {
-    if (!chainedArrowPattern.test(arrow) && !doubleSidedArrowPattern.test(arrow)) {
+    if (!RegEx.isChainedArrow(arrow) && !RegEx.isDoubleSidedArrow(arrow)) {
       return {success: false, error: InvalidInput.ofArrows(input, `Invalid arrow input: ${arrow}`)};
     }
   }

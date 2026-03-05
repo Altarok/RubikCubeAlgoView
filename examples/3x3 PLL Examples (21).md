@@ -160,4 +160,4 @@ alg:M' U M2 U M2 U M' U2 M2
 alg:S' U' S2 U' S2 U' S' U2 S2
 alg:S2 U S2 U S' U2 S2 U2 S'
 alg:M2 U' M2 U' M' U2 M2 U2 M'
-```- S' U' S2 U' S2 U' S' U2 S2
+```

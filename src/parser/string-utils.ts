@@ -1,3 +1,5 @@
+import {BaseInputTypes, ListInputTypes, undeclared, UserInput} from "../model/codeblock-input";
+
 export const StringUtils = {
   hash,
   codeBlockToStrings
@@ -34,8 +36,30 @@ function hash(str: string, seed = 0): string {
  * Takes complete code block content and returns all non-empty lines in a string array.
  * @param input - a code block's content
  */
-function codeBlockToStrings(input: string): string[] {
-  return input.split('\n') // split lines
+function codeBlockToStrings(input: string): UserInput {
+  let nonEmptyStrings = input.split('\n') // split lines
   .map(line => line.trim())
   .filter(Boolean); // skip empty lines, "" is falsy
+
+  const userInput = new UserInput(nonEmptyStrings);
+
+  for (const nonEmptyString of nonEmptyStrings) {
+    if (nonEmptyString.startsWith('//')) continue;
+
+    let strings = nonEmptyString.split(':');
+    const key: string = strings[0] as string;
+    const value: string = strings[1]?.split(' ')[0] as string ?? '';
+
+    if (BaseInputTypes.includes(key)) {
+      userInput.baseInput.set(key, value);
+      userInput.isEmpty = false;
+    } else if (ListInputTypes.includes(key)) {
+      userInput.listInput.get(key)!.push(value);
+      userInput.isEmpty = false;
+    } else {
+      userInput.listInput.get(undeclared)!.push(key);
+      userInput.isEmpty = false;
+    }
+  }
+  return userInput;
 }

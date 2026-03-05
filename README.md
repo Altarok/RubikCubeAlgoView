@@ -15,7 +15,7 @@ Well with this you can.
 - At the moment, you must use BRAT to install it: https://github.com/TfTHacker/obsidian42-brat
 
 # Where to start?
-- You may copy markdown (.md) files from this folder directly into your obsidian vault: https://github.com/Altarok/RubikCubeAlgoView/tree/main/markdown-examples
+- You may copy Markdown (.md) files from this folder directly into your obsidian vault: https://github.com/Altarok/RubikCubeAlgoView/tree/main/markdown-examples
 - The plugin features two commands to insert code block templates into your note
 
 # Output example

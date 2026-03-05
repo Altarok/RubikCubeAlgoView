@@ -1,10 +1,7 @@
-import {InvalidInput} from "./invalid-input";
-import {Algorithms, SpecialFlags} from "./algorithms";
+import {InvalidInput, UserInput} from "./codeblock-input";
+import {Algorithms, MappedAlgorithms, SpecialFlags} from "./algorithms";
 import {Arrows, Dimensions} from "./geometry";
 import {OllFieldColoring} from "./oll-field-coloring";
-import {MappedAlgorithms} from "./algorithms";
-
-
 
 export abstract class CubeState {
   static index = 1;
@@ -25,10 +22,7 @@ export abstract class CubeState {
   cubeRotation: number = 0;
   specialFlags: Set<SpecialFlags>;
 
-  /**
-   * @param codeBlockContent - Code block content inside triple backticks (```)
-   */
-  protected constructor(readonly codeBlockContent: string[]) {
+  protected constructor(public readonly userInput: UserInput) {
   }
 
   /**
@@ -56,8 +50,8 @@ export class CubeStatePLL extends CubeState {
   algorithms: Algorithms;
   arrowCoordinates: Arrows;
 
-  constructor(codeBlockContent: string[]) {
-    super(codeBlockContent);
+  constructor(userInput: UserInput) {
+    super(userInput);
   }
 
   /** Clock-wise quarter rotation    */
@@ -89,8 +83,8 @@ export class CubeStateOLL extends CubeState {
   algorithmToArrows: MappedAlgorithms;
   selectedAlgorithmHash: string = '';
 
-  constructor(codeBlockContent: string[]) {
-    super(codeBlockContent);
+  constructor(userInput: UserInput) {
+    super(userInput);
   }
 
   currentArrowCoordinates(): Arrows {
