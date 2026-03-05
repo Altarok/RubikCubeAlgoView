@@ -26,3 +26,4 @@ tsconfig.json
 versions.json
 LICENSE
 .npmrc
+/coverage

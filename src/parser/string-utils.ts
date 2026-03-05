@@ -1,4 +1,4 @@
-export const Snippets = {
+export const StringUtils = {
   hash,
   codeBlockToStrings
 };

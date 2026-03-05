@@ -1,5 +1,5 @@
 import {Arrows} from "./geometry";
-import {Snippets} from "../parser/snippets";
+import {StringUtils} from "../parser/string-utils";
 
 export const flags = ['no-rotation'] as const;
 
@@ -68,7 +68,7 @@ export class Algorithm {
   readonly initialHash: string;
 
   constructor(private steps: AlgorithmStep[]) {
-    this.initialHash = Snippets.hash(steps.join('') + Algorithm.index++, 1337);
+    this.initialHash = StringUtils.hash(steps.join('') + Algorithm.index++, 1337);
   }
 
   rotate(quarterTurns: number): void {
