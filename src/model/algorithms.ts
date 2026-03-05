@@ -1,5 +1,5 @@
 import {Arrows} from "./geometry";
-import {Snippets} from "../snippets";
+import {Snippets} from "../parser/snippets";
 
 export const flags = ['no-rotation'] as const;
 
