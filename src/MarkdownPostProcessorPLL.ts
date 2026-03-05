@@ -4,6 +4,7 @@ import {CubeRendererPLL} from "./view/cube-renderer";
 import {CubeStatePLL} from "./model/cube-state";
 import {MarkdownRenderChild} from "obsidian";
 import {ButtonController} from "./control/button-controller";
+import {Snippets} from "./parser/snippets";
 
 export class MarkdownPostProcessorPLL extends MarkdownRenderChild {
   source: string;
@@ -32,9 +33,7 @@ export class MarkdownPostProcessorPLL extends MarkdownRenderChild {
 
   display(): void {
     this.element.empty();
-    const rows: string[] = this.source.split('\n')
-    .map(row => row && row.trim())
-    .filter((row) => row.length > 0);
+    const rows: string[] = Snippets.codeBlockToStrings(this.source);
 
     let interpreter: CodeBlockInterpreterPLL = new CodeBlockInterpreterPLL(rows, this.plugin.settings);
     let cubeState: CubeStatePLL = interpreter.setupPll();
@@ -43,7 +42,7 @@ export class MarkdownPostProcessorPLL extends MarkdownRenderChild {
     cubeRenderer.display(this.element);
 
     if (!cubeState.codeBlockInterpretationFailed()) {
-      ButtonController.addButtonFunctions(cubeRenderer, cubeState);
+      ButtonController.addRotationButtons(cubeRenderer, cubeState);
     }
   }
 }

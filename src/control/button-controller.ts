@@ -2,11 +2,11 @@ import {CubeRenderer} from "../view/cube-renderer";
 import {CubeState} from "../model/cube-state";
 
 export const ButtonController = {
-  addButtonFunctions
+  addRotationButtons
 };
 
 
-function addButtonFunctions(cubeRenderer: CubeRenderer, cubeState: CubeState) {
+function addRotationButtons(cubeRenderer: CubeRenderer, cubeState: CubeState) {
 
   if (cubeState.specialFlags.contains('no-rotation')) {
     return;

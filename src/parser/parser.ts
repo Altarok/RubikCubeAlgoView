@@ -14,9 +14,10 @@ type Result<T> =
  */
 export const Parse = {
   toAlgorithm,
-  toDimensions,
-  toCubeColor,
   toArrowColor,
+  toArrows,
+  toCubeColor,
+  toDimensions,
   toFlags
 };
 
@@ -60,8 +61,8 @@ function toDimensions(row: string): Result<Dimensions> {
    * Cut comments, cut prefix, split width and height
    */
   const parts = row.split(' ')[0]?.replace('dimension:', '').split(',');
-  const [w=0, h=0] = parts?.map(Number) ?? [];
-  if (/*w && h &&*/ w >= 2 && w <= 10 && h >=2 && h <= 10) {
+  const [w = 0, h = 0] = parts?.map(Number) ?? [];
+  if (/*w && h &&*/ w >= 2 && w <= 10 && h >= 2 && h <= 10) {
     return {success: true, data: new Dimensions(w, h)};
   } else {
     return {success: false, error: InvalidInput.ofDimensions(row)};
@@ -71,9 +72,9 @@ function toDimensions(row: string): Result<Dimensions> {
 function parseHexColor(row: string, prefix: string, errorFactory: () => InvalidInput): Result<string> {
   const clean = row.split(' ')[0]?.replace(prefix, '').trim();
   if (clean?.match(/^([a-f0-9]{3}){1,2}$/i)) {
-    return { success: true, data: '#' + clean };
+    return {success: true, data: '#' + clean};
   } else {
-    return { success: false, error: errorFactory() };
+    return {success: false, error: errorFactory()};
   }
 }
 
@@ -117,6 +118,22 @@ function toFlags(row: string): Result<SpecialFlags[]> {
     }
   }
   return {success: true, data: flags};
+}
+
+/**
+ * @param row - string starting with 'arrows:'
+ */
+function toArrows(row: string): Result<string> {
+  if (row.match('^arrows:\\d+(\\.\\d+)?(-|\\+)\\d+(\\.\\d+)?(,\\d+(\\.\\d+)?((-|\\+)\\d+(\\.\\d+))*?)*( //.*)?')) {
+    /* do not parse yet, as we still have to calculate the cube dimensions*/
+    const arrowsOnly = row.slice(6).trim().split(' ')[0];
+
+
+    // @ts-ignore checked with regex
+    return {success: true, data: row.slice(6).split(' ')[0].trim()};
+  } else {
+    return {success: false, error: InvalidInput.ofArrows(row, 'Invalid arrow input.')};
+  }
 }
 
 

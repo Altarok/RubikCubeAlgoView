@@ -38,9 +38,7 @@ arrows:1.1-1.3,7+9 // normal arrow in top row, double-sided arrow in lower row
 `
 } as const;
 
-
 const isPositiveIntegerRegex = new RegExp('\\d+');
-
 
 export abstract class CodeBlockInterpreter {
   /** cube's dimensions (stickers, not pixels) */
@@ -89,11 +87,6 @@ export abstract class CodeBlockInterpreter {
    */
   abstract setupCubeRectangleCenterCoordinates(): void;
 
-  protected addCoordinates(coords: Coordinates): void {
-    // console.info('push coordinates:  ' + coords);
-    this.stickerCoordinates.push(coords);
-  }
-
   setupArrowCoordinates(arrowInput?: string): Arrows {
     if (!arrowInput) return [];
 
@@ -101,7 +94,7 @@ export abstract class CodeBlockInterpreter {
     .filter(Boolean)
     .flatMap((segment) => {
       const isDoubleSided = segment.includes('+');
-      const parts= segment.split(/[+-]/); // Split on + OR -
+      const parts = segment.split(/[+-]/); // Split on + OR -
 
       // Map the string IDs to their coordinate objects immediately
       const coords = parts.map(id => this.getStickerCenterCoordinates(id));
@@ -219,7 +212,8 @@ export class CodeBlockInterpreterPLL extends CodeBlockInterpreter {
             this.cubeDimensions = result.data;
           } else {
             this.setInvalidInput(result.error);
-          }}
+          }
+        }
           break;
         case 'cubeColor': {
           const result = Parse.toCubeColor(row);
@@ -227,8 +221,9 @@ export class CodeBlockInterpreterPLL extends CodeBlockInterpreter {
             this.cubeColor = result.data;
           } else {
             this.setInvalidInput(result.error);
-          }}
-        break;
+          }
+        }
+          break;
         case 'arrowColor': {
           const result = Parse.toArrowColor(row);
           if (result.success) {
@@ -236,8 +231,18 @@ export class CodeBlockInterpreterPLL extends CodeBlockInterpreter {
           } else {
             this.setInvalidInput(result.error);
           }
-        } break;
-        case 'arrows': this.handleArrowsInput(row); break;
+        }
+          break;
+        case 'arrows': {
+          this.arrowsLine = row;
+          const result = Parse.toArrows(row);
+          if (result.success) {
+            this.arrows = result.data;
+          } else {
+            this.setInvalidInput(result.error);
+          }
+        }
+          break;
         case 'alg': {
           const result = Parse.toAlgorithm(row);
           if (result.success) {
@@ -245,7 +250,8 @@ export class CodeBlockInterpreterPLL extends CodeBlockInterpreter {
           } else {
             this.setInvalidInput(result.error);
           }
-        } break;
+        }
+          break;
         case 'flags': {
           const result = Parse.toFlags(row);
           if (result.success) {
@@ -253,7 +259,8 @@ export class CodeBlockInterpreterPLL extends CodeBlockInterpreter {
           } else {
             this.setInvalidInput(result.error);
           }
-        } break;
+        }
+          break;
         default:
           return this.setInvalidInput(InvalidInput.ofPllParameter(row));
       }
@@ -263,26 +270,13 @@ export class CodeBlockInterpreterPLL extends CodeBlockInterpreter {
 
   /* @formatter:on */
 
-  /**
-   * @param {string} row - string starting with 'arrows:'
-   */
-  handleArrowsInput(row: string): void {
-    this.arrowsLine = row;
-    if (row.match('^arrows:\\d+(\\.\\d+)?(-|\\+)\\d+(\\.\\d+)?(,\\d+(\\.\\d+)?(-|\\+)\\d+(\\.\\d+)?)*( //.*)?')) {
-      /* do not parse yet, another line may still brake the input which makes the calculation obsolete */
-      // @ts-ignore checked with regex
-      this.arrows = row.split(' ')[0].trim().replace('arrows:', '');
-    } else {
-      this.setInvalidInput(InvalidInput.ofArrows(row, 'Invalid arrow input.'));
-    }
-  }
 
   setupCubeRectangleCenterCoordinates(): void {
     // this.addCoordinates(new Coordinates(-1, -1)); /* unused first entry to start arrows with 1 instead of 0 */
     /* reverse loop order to give x coordinates priority */
     for (let h: number = 0; h < this.cubeDimensions.height; h++) {
       for (let w: number = 0; w < this.cubeDimensions.width; w++) {
-        this.addCoordinates(new Coordinates(w * 100 + 50, h * 100 + 50));
+        this.stickerCoordinates.push(new Coordinates(w * 100 + 50, h * 100 + 50));
       }
     }
   }
@@ -397,11 +391,10 @@ export class CodeBlockInterpreterOLL extends CodeBlockInterpreter {
   }
 
   setupCubeRectangleCenterCoordinates(): void {
-    // this.addCoordinates(new Coordinates(-1, -1)); /* unused first entry to start arrows with 1 instead of 0 */
     /* reverse loop order to give x coordinates more priority */
     for (let h: number = 0; h < this.cubeDimensions.height; h++) {
       for (let w: number = 0; w < this.cubeDimensions.width; w++) {
-        this.addCoordinates(new Coordinates(w * 100 + 100, h * 100 + 100));
+        this.stickerCoordinates.push(new Coordinates(w * 100 + 100, h * 100 + 100));
       }
     }
   }

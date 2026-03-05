@@ -4,6 +4,7 @@ import {CubeStateOLL} from "./model/cube-state";
 import {CubeRendererOLL} from "./view/cube-renderer";
 import {MarkdownRenderChild} from "obsidian";
 import {ButtonController} from "./control/button-controller";
+import {Snippets} from "./parser/snippets";
 
 export class MarkdownPostProcessorOLL extends MarkdownRenderChild {
   source: string;
@@ -32,8 +33,7 @@ export class MarkdownPostProcessorOLL extends MarkdownRenderChild {
 
   display(): void {
     this.element.empty();
-    const rows: string[] = this.source.split('\n')
-    .map(row => row && row.trim()).filter((row) => row.length > 0);
+    const rows: string[] = Snippets.codeBlockToStrings(this.source);
 
     let interpreter: CodeBlockInterpreterOLL = new CodeBlockInterpreterOLL(rows, this.plugin.settings);
     let cubeState: CubeStateOLL = interpreter.setupOll();
@@ -63,6 +63,6 @@ export class MarkdownPostProcessorOLL extends MarkdownRenderChild {
       }
     }
 
-    ButtonController.addButtonFunctions(cubeRenderer, cubeState);
+    ButtonController.addRotationButtons(cubeRenderer, cubeState);
   }
 }
