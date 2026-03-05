@@ -51,6 +51,16 @@ import {DEFAULT_SETTINGS, RubikCubeAlgoSettingsTab} from "./RubikCubeAlgoSetting
  * - [ ] Button: save algorithm as default
  * - [ ] Button: mirror algorithm vertically (when allowed by flag)
  * - [ ] Button: lock rotation
+ *
+ * # Unit tests
+ * - [x] setup env
+ *   - [x] add vitest to imported packages
+ *   - [x] npm audit, npm update
+ * - [x] create first test file
+ * - [ ] test most notorious files
+ *   - [ ] parser.ts -> parser.test.ts
+ *   - [x] geometry-builder.ts
+ *   - [x] string-util.ts
  */
 export default class RubikCubeAlgos extends Plugin {
   settings: RubikCubeAlgoSettingsTab;

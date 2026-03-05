@@ -22,6 +22,15 @@ export class ArrowCoords {
   toString = () => `Arrow[from'${this.start}', to'${this.end}']`;
 }
 
+/** Coordinates of a cube's stickers. References the stickers' center. */
+export class StickerCoords {
+  constructor(public readonly coordinates: Coordinates[]) {
+  }
+
+  get = (index: number): Coordinates | undefined => this.coordinates[index];
+  toString = () => `StickerCoords[${this.coordinates.join(',')}]`;
+}
+
 /** Coordinates for -multiple- arrows. */
 export type Arrows = ArrowCoords[];
 

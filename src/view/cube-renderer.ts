@@ -38,7 +38,7 @@ export abstract class CubeRenderer {
 
   displayCubeButtonAndAlgorithms(container: HTMLElement) {
 
-    this.layout = createCubeLayout(container, this.cubeState.specialFlags.contains('no-rotation'));
+    this.layout = createCubeLayout(container, this.cubeState.specialFlags.has('no-rotation'));
 
     this.displayCube(this.layout.cubeDiv);
     this.displayButtons(this.layout.buttonDiv);
@@ -107,7 +107,7 @@ export abstract class CubeRenderer {
 
   displayButtons(buttonDiv: HTMLDivElement | undefined): void {
 
-    if (!buttonDiv || this.cubeState.specialFlags.contains('no-rotation')) {
+    if (!buttonDiv || this.cubeState.specialFlags.has('no-rotation')) {
       return;
     }
 

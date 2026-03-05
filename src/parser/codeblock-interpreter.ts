@@ -1,10 +1,11 @@
-import {ArrowCoords, Arrows, Coordinates, Dimensions} from "../model/geometry";
+import {ArrowCoords, Arrows, Coordinates, Dimensions, StickerCoords} from "../model/geometry";
 import {DEFAULT_SETTINGS, RubikCubeAlgoSettingsTab} from "../RubikCubeAlgoSettings";
 import {InvalidInput} from "../model/invalid-input";
 import {Algorithms, MappedAlgorithm, MappedAlgorithms, SpecialFlags} from "../model/algorithms";
 import {CubeStatePLL, CubeStateOLL} from "../model/cube-state";
 import {Parse} from "./parser";
 import {OllFieldColoring} from "../model/oll-field-coloring";
+import {Build} from "./geometry-builder";
 
 const DEFAULT = {
   WIDTH: 3, /* default rubik cube width  */
@@ -45,9 +46,9 @@ export abstract class CodeBlockInterpreter {
   protected cubeDimensions: Dimensions = new Dimensions(DEFAULT.WIDTH, DEFAULT.HEIGHT);
   protected codeBlockInterpretationSuccessful: boolean = true;
   protected invalidInput?: InvalidInput;
-  protected stickerCoordinates: Coordinates[] = [];
+  protected stickerCoordinates: StickerCoords;
   protected arrowColor: string;
-  protected specialFlags: SpecialFlags[] = [];
+  protected specialFlags: Set<SpecialFlags>;
 
   protected constructor(protected readonly codeBlockContent: string[], settings: RubikCubeAlgoSettingsTab) {
     this.arrowColor = settings.arrowColor ?? DEFAULT_SETTINGS.ARROW_COLOR;
@@ -61,6 +62,7 @@ export abstract class CodeBlockInterpreter {
    * @param {InvalidInput} errData - contains invalid input and description of problem
    */
   setInvalidInput(errData: InvalidInput): void {
+    console.warn(`Failed to parse code block. Error: ${errData.toString()}`);
     this.codeBlockInterpretationSuccessful = false;
     this.invalidInput = errData;
   }
@@ -87,11 +89,10 @@ export abstract class CodeBlockInterpreter {
    */
   abstract setupCubeRectangleCenterCoordinates(): void;
 
-  setupArrowCoordinates(arrowInput?: string): Arrows {
-    if (!arrowInput) return [];
+  setupArrowCoordinates(input: string[]): Arrows {
+    if (input.length === 0) return [];
 
-    return arrowInput.split(',')
-    .filter(Boolean)
+    return input.filter(Boolean)
     .flatMap((segment) => {
       const isDoubleSided = segment.includes('+');
       const parts = segment.split(/[+-]/); // Split on + OR -
@@ -136,16 +137,18 @@ export abstract class CodeBlockInterpreter {
     }
 
     // Safety check
-    const coords = this.stickerCoordinates[indexOfCubeletCenter - 1];
+    const coords = this.stickerCoordinates.get(indexOfCubeletCenter - 1);
 
     if (!coords) {
       // Fallback to a default (like 0,0 or the first cubelet)
       // to prevent the whole SVG from failing to render
       console.warn(`Invalid cubelet index requested: ${input}`);
-      return this.stickerCoordinates[1] ?? new Coordinates(0, 0);
+      return this.stickerCoordinates.get(1) ?? new Coordinates(0, 0);
     }
 
-    return this.stickerCoordinates[indexOfCubeletCenter - 1]!;
+    let output: Coordinates = this.stickerCoordinates.get(indexOfCubeletCenter - 1)!;
+    console.debug(`${input} -> ${output.toString()}`);
+    return output;
   }
 
   static get3by3PllTemplate = (): string => DEFAULT.PLL_TEMPLATE;
@@ -157,7 +160,7 @@ export class CodeBlockInterpreterPLL extends CodeBlockInterpreter {
   cubeColor: string;
   algorithms: Algorithms = new Algorithms();
   arrowsLine: string = '';
-  arrows: string = '';
+  arrows: string[] = [];
 
   constructor(codeBlockContent: string[], settings: RubikCubeAlgoSettingsTab) {
     super(codeBlockContent, settings);
@@ -184,7 +187,7 @@ export class CodeBlockInterpreterPLL extends CodeBlockInterpreter {
           width: this.cubeDimensions.width * 100,
           height: this.cubeDimensions.height * 100
         },
-        specialFlags: this.specialFlags,
+        specialFlags: this.specialFlags ?? new Set<SpecialFlags>(),
         /*
          * PLL-only data:
          */
@@ -235,7 +238,7 @@ export class CodeBlockInterpreterPLL extends CodeBlockInterpreter {
           break;
         case 'arrows': {
           this.arrowsLine = row;
-          const result = Parse.toArrows(row);
+          const result = Parse.toArrows(row.slice(7));
           if (result.success) {
             this.arrows = result.data;
           } else {
@@ -267,18 +270,10 @@ export class CodeBlockInterpreterPLL extends CodeBlockInterpreter {
     }
   }
 
-
   /* @formatter:on */
 
-
   setupCubeRectangleCenterCoordinates(): void {
-    // this.addCoordinates(new Coordinates(-1, -1)); /* unused first entry to start arrows with 1 instead of 0 */
-    /* reverse loop order to give x coordinates priority */
-    for (let h: number = 0; h < this.cubeDimensions.height; h++) {
-      for (let w: number = 0; w < this.cubeDimensions.width; w++) {
-        this.stickerCoordinates.push(new Coordinates(w * 100 + 50, h * 100 + 50));
-      }
-    }
+    this.stickerCoordinates = Build.stickerCoordinates(this.cubeDimensions, 50);
   }
 }
 
@@ -310,7 +305,7 @@ export class CodeBlockInterpreterOLL extends CodeBlockInterpreter {
           width: this.cubeDimensions.width * 100 + 100,
           height: this.cubeDimensions.height * 100 + 100
         },
-        specialFlags: this.specialFlags,
+        specialFlags: this.specialFlags ?? new Set<SpecialFlags>(),
         /*
          * OLL-only data:
          */
@@ -391,12 +386,7 @@ export class CodeBlockInterpreterOLL extends CodeBlockInterpreter {
   }
 
   setupCubeRectangleCenterCoordinates(): void {
-    /* reverse loop order to give x coordinates more priority */
-    for (let h: number = 0; h < this.cubeDimensions.height; h++) {
-      for (let w: number = 0; w < this.cubeDimensions.width; w++) {
-        this.stickerCoordinates.push(new Coordinates(w * 100 + 100, h * 100 + 100));
-      }
-    }
+    this.stickerCoordinates = Build.stickerCoordinates(this.cubeDimensions, 100);
   }
 
   private setupAlgorithmArrowMap(): MappedAlgorithms {
@@ -409,7 +399,8 @@ export class CodeBlockInterpreterOLL extends CodeBlockInterpreter {
         if (result.success) {
           let matchingArrows: Arrows = [];
           if (arrowInput) {
-            matchingArrows = super.setupArrowCoordinates(arrowInput);
+            let toArrows = Parse.toArrows(arrowInput);
+            if (toArrows.success) matchingArrows = super.setupArrowCoordinates(toArrows.data);
           }
           let algorithm = result.data;
           if (!this.initialAlgorithmSelectionHash) {

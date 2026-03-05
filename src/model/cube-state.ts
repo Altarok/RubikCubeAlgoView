@@ -23,7 +23,7 @@ export abstract class CubeState {
   viewBoxDimensions: Dimensions;
   /** Rotation of cube, multiply by 90 to get svg rotation, use directly for algorithm rotation */
   cubeRotation: number = 0;
-  specialFlags: SpecialFlags[] = [];
+  specialFlags: Set<SpecialFlags>;
 
   /**
    * @param codeBlockContent - Code block content inside triple backticks (```)

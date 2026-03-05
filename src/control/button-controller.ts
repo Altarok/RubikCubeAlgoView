@@ -8,7 +8,7 @@ export const ButtonController = {
 
 function addRotationButtons(cubeRenderer: CubeRenderer, cubeState: CubeState) {
 
-  if (cubeState.specialFlags.contains('no-rotation')) {
+  if (cubeState.specialFlags.has('no-rotation')) {
     return;
   }
 

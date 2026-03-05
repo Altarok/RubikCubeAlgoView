@@ -89,7 +89,7 @@ export class Algorithm {
   }
 
   toString(): string {
-    return this.steps/*.filter(value => value !== 'y0')*/.join(' ');
+    return this.steps.join(' ');
   }
 
   // clone = (): Algorithm => new Algorithm([...this.steps]);

@@ -13,6 +13,8 @@ export class InvalidInput {
               public readonly reason: string) {
   }
 
+  public toString = () =>  `InvalidInput[line=${this.line},reason=${this.reason}`;
+
   static ofCubeColor(line: string): InvalidInput {
     return new InvalidInput(line, 'Invalid cube color, expected: "cubeColor:[3 (or 6) lowercase hex digits (0-9/a-f)] // optional comment goes here"');
   }

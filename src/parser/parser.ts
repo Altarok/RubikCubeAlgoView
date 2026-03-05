@@ -54,15 +54,13 @@ function toAlgorithm(row: string): Result<Algorithm> {
 }
 
 /**
+ * Cuts comments & prefix, split width and height
  * @param row string starting with 'dimension:'
  */
 function toDimensions(row: string): Result<Dimensions> {
-  /*
-   * Cut comments, cut prefix, split width and height
-   */
   const parts = row.split(' ')[0]?.replace('dimension:', '').split(',');
   const [w = 0, h = 0] = parts?.map(Number) ?? [];
-  if (/*w && h &&*/ w >= 2 && w <= 10 && h >= 2 && h <= 10) {
+  if (w >= 2 && w <= 10 && h >= 2 && h <= 10) {
     return {success: true, data: new Dimensions(w, h)};
   } else {
     return {success: false, error: InvalidInput.ofDimensions(row)};
@@ -99,7 +97,7 @@ function isSpecialFlag(value: string): value is SpecialFlags {
 const specialFlagsJoined: string = flags.join('|');
 const specialFlagsPattern: RegExp = new RegExp(`${specialFlagsJoined}(,${specialFlagsJoined})*`);
 
-function toFlags(row: string): Result<SpecialFlags[]> {
+function toFlags(row: string): Result<Set<SpecialFlags>> {
   let cleanRow: string = row.startsWith('flags:') ? row.slice(6).trim() : row.trim();
 
   if (!specialFlagsPattern.test(cleanRow)) {
@@ -107,11 +105,11 @@ function toFlags(row: string): Result<SpecialFlags[]> {
   }
 
   let splitFlags: string[] = cleanRow.split(',');
-  let flags: SpecialFlags[] = [];
+  let flags: Set<SpecialFlags> = new Set<SpecialFlags>();
 
   for (const flag of splitFlags) {
     if (isSpecialFlag(flag)) {
-      flags.push(flag);
+      flags.add(flag);
     } else {
       // This should technically be unreachable if the Regex is perfect
       return {success: false, error: new InvalidInput(row, 'Unknown flag: ' + flag)};
@@ -120,20 +118,30 @@ function toFlags(row: string): Result<SpecialFlags[]> {
   return {success: true, data: flags};
 }
 
+const arrowCoordRawPattern: string = '\\d+(\\.\\d+)?';
+const doubleSidedArrowPattern: RegExp = new RegExp(`^${arrowCoordRawPattern}\\+${arrowCoordRawPattern}$`);
+const chainedArrowPattern: RegExp = new RegExp(`^${arrowCoordRawPattern}(-${arrowCoordRawPattern}){1,3}$`);
+
 /**
- * @param row - string starting with 'arrows:'
+ * Splits joined arrow input to array of single arrow input values and check each against a regex.
+ * This does not parse to Arrows (with coordinates) yet, as we still have to calculate the cube's dimensions.
+ * @param input - string NOT starting with 'arrows:'
  */
-function toArrows(row: string): Result<string> {
-  if (row.match('^arrows:\\d+(\\.\\d+)?(-|\\+)\\d+(\\.\\d+)?(,\\d+(\\.\\d+)?((-|\\+)\\d+(\\.\\d+))*?)*( //.*)?')) {
-    /* do not parse yet, as we still have to calculate the cube dimensions*/
-    const arrowsOnly = row.slice(6).trim().split(' ')[0];
+function toArrows(input: string): Result<string[]> {
+  const cleanedRow = input.trim().split(' ')[0] ?? '';
+  const arrowInput: string[] = cleanedRow.split(',');
 
-
-    // @ts-ignore checked with regex
-    return {success: true, data: row.slice(6).split(' ')[0].trim()};
-  } else {
-    return {success: false, error: InvalidInput.ofArrows(row, 'Invalid arrow input.')};
+  if (input.length < 3 || arrowInput.length === 0) {
+    return {success: false, error: InvalidInput.ofArrows(input, `Not enough arrow input: ${input}`)};
   }
+
+  for (const arrow of arrowInput) {
+    if (!chainedArrowPattern.test(arrow) && !doubleSidedArrowPattern.test(arrow)) {
+      return {success: false, error: InvalidInput.ofArrows(input, `Invalid arrow input: ${arrow}`)};
+    }
+  }
+
+  return {success: true, data: arrowInput};
 }
 
 
