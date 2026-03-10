@@ -1,28 +1,17 @@
-# vscode
-.vscode
-# Intellij
-*.iml
-.idea
-# npm
+# --- Build Outputs ---
 node_modules
-# Don't include the compiled main.js file in the repo.
-# They should be uploaded to GitHub releases instead.
+# Ignore compiled main.js, upload to GitHub release instead.
 main.js
 # Exclude sourcemaps
 *.map
-# obsidian
-data.json
-# Exclude macOS Finder (System Explorer) View States
-.DS_Store
-/.github
-package.json
-AGENTS.md
-version-bump.mjs
-eslint.config.mts
-esbuild.config.mjs
-tsconfig.json
-.editorconfig
-versions.json
-LICENSE
-.npmrc
 /coverage
+
+# --- IDEs and OS ---
+.vscode
+.idea
+*.iml
+.DS_Store
+
+# Git
+/.github
+
