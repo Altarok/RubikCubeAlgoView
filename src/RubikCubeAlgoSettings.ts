@@ -1,5 +1,6 @@
 import {App, PluginSettingTab, Setting} from "obsidian";
 import RubikCubeAlgos from "./main";
+import {AlgorithmTypes} from "./model/algorithms";
 
 export const DefaultSettings = {
   CUBE_COLOR: "#ff0", /* yellow for cube */
@@ -10,10 +11,18 @@ export class RubikCubeAlgoSettingsTab extends PluginSettingTab {
   plugin: RubikCubeAlgos;
   cubeColor: string;
   arrowColor: string;
+  /**
+   * key: string with cube hash(?)
+   * value: rotation
+   */
+  cubeRotations = new Map<string, Map<string,number>>();
 
   constructor(app: App, plugin: RubikCubeAlgos) {
     super(app, plugin);
     this.plugin = plugin;
+    // for (const item of AlgorithmTypes) {
+    //   this.cubeRotations.set(item, new Map());
+    // }
   }
 
   display(): void {
@@ -27,12 +36,14 @@ export class RubikCubeAlgoSettingsTab extends PluginSettingTab {
     .setDesc('Starting value: #ff0 (yellow)')
     .addText((text) => text
     .setPlaceholder('3 or 6 digit hex value')
-    .setValue(this.plugin.settings.cubeColor)
+    .setValue(this.cubeColor)
     .onChange(async (value) => {
         if (value.match('^#([a-f0-9]{3}){1,2}$')) {
-          this.plugin.settings.cubeColor = value;
+          this.cubeColor = value;
+          // console.info('Change default cube color: ' + this.cubeColor);
         } else {
-          this.plugin.settings.cubeColor = DefaultSettings.CUBE_COLOR;
+          this.cubeColor = DefaultSettings.CUBE_COLOR;
+          // console.info('Reset default cube color: ' + this.cubeColor);
         }
         await this.plugin.saveSettings();
       }
@@ -46,9 +57,9 @@ export class RubikCubeAlgoSettingsTab extends PluginSettingTab {
     .setValue(this.plugin.settings.arrowColor)
     .onChange(async (value) => {
         if (value.match('^#([a-f0-9]{3}){1,2}$')) {
-          this.plugin.settings.arrowColor = value;
+          this.arrowColor = value;
         } else {
-          this.plugin.settings.arrowColor = DefaultSettings.ARROW_COLOR;
+          this.arrowColor = DefaultSettings.ARROW_COLOR;
         }
         await this.plugin.saveSettings();
       }

@@ -1,4 +1,4 @@
-import {flags} from "../model/algorithms";
+import {Flags} from "../model/flags";
 
 export const RegEx = {
   isAlgorithm, isChainedArrow, isDoubleSidedArrow, isPositiveInteger, isSpecialFlags
@@ -14,7 +14,7 @@ function isPositiveInteger(input: string): boolean {
   return positiveIntegerRegex.test(input);
 }
 
-const specialFlagsJoined = flags.join('|');
+const specialFlagsJoined = Flags.types.join('|');
 const specialFlagsRegex = new RegExp(`${specialFlagsJoined}(,${specialFlagsJoined})*`);
 
 function isSpecialFlags (input: string): boolean {

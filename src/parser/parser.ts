@@ -1,13 +1,8 @@
-import {
-  Algorithm,
-  AlgorithmStep,
-  flags,
-  possibleSteps,
-  SpecialFlags
-} from "../model/algorithms";
+import {Algorithm, AlgorithmStep, possibleSteps} from "../model/algorithms";
 import {InvalidInput} from "../model/codeblock-input";
 import {Dimensions} from "../model/geometry";
 import {RegEx} from "./regex-util";
+import {Flags, FlagType} from "../model/flags";
 
 type Result<T> =
   | { success: true; data: T }
@@ -71,10 +66,10 @@ function toDimensions(row: string): Result<Dimensions> {
   }
 }
 
-function parseHexColor(row: string, prefix: string, errorFactory: () => InvalidInput): Result<string> {
-  const clean = row.split(' ')[0]?.replace(prefix, '').trim();
-  if (clean?.match(/^([a-f0-9]{3}){1,2}$/i)) {
-    return {success: true, data: '#' + clean};
+function parseHexColor(row: string,  errorFactory: () => InvalidInput): Result<string> {
+  // const clean = row.split(' ')[0]?;
+  if (row?.match(/^([a-f0-9]{3}){1,2}$/i)) {
+    return {success: true, data: '#' + row};
   } else {
     return {success: false, error: errorFactory()};
   }
@@ -84,21 +79,17 @@ function parseHexColor(row: string, prefix: string, errorFactory: () => InvalidI
  * @param {string} row - string starting with 'cubeColor:' followed by a hex value for the cube's color
  */
 function toCubeColor(row: string): Result<string> {
-  return parseHexColor(row, 'cubeColor:', () => InvalidInput.ofCubeColor(row));
+  return parseHexColor(row,  () => InvalidInput.ofCubeColor(row));
 }
 
 /**
  * @param {string} row - string starting with 'arrowColor:' followed by a hex value for the arrows' color
  */
 function toArrowColor(row: string): Result<string> {
-  return parseHexColor(row, 'arrowColor:', () => InvalidInput.ofArrowColor(row));
+  return parseHexColor(row, () => InvalidInput.ofArrowColor(row));
 }
 
-function isSpecialFlag(value: string): value is SpecialFlags {
-  return (flags as readonly string[]).includes(value);
-}
-
-function toFlags(row: string): Result<Set<SpecialFlags>> {
+function toFlags(row: string): Result<Set<FlagType>> {
   let cleanRow: string = row.startsWith('flags:') ? row.slice(6).trim() : row.trim();
 
   if (!RegEx.isSpecialFlags(cleanRow)) {
@@ -106,10 +97,10 @@ function toFlags(row: string): Result<Set<SpecialFlags>> {
   }
 
   let splitFlags: string[] = cleanRow.split(',');
-  let flags: Set<SpecialFlags> = new Set<SpecialFlags>();
+  let flags: Set<FlagType> = new Set<FlagType>();
 
   for (const flag of splitFlags) {
-    if (isSpecialFlag(flag)) {
+    if (Flags.isFlag(flag)) {
       flags.add(flag);
     } else {
       // This should technically be unreachable if the Regex is perfect

@@ -56,7 +56,7 @@ export class StickerCoords {
       return new Coordinates(0, 0);
     }
 
-    console.debug(`${input} -> ${output.toString()}`);
+    // console.debug(`${input} -> ${output.toString()}`);
     return output;
   }
 

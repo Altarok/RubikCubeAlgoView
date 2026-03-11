@@ -1,13 +1,18 @@
 import {InvalidInput, UserInput} from "./codeblock-input";
-import {Algorithms, MappedAlgorithms, SpecialFlags} from "./algorithms";
+import {Algorithms, MappedAlgorithms, AlgorithmType} from "./algorithms";
 import {Arrows, Dimensions} from "./geometry";
 import {OllFieldColoring} from "./oll-field-coloring";
+import {FlagType} from "./flags";
+import {StringUtils} from "../parser/string-utils";
 
-export abstract class CubeState {
+
+abstract class CubeState {
   static index = 1;
 
   uniqueIdForRadioButtons = '' + CubeState.index++;
 
+  /** ID for manual identification and caching of rotation */
+  id?: string;
   /** Container for invalid code block content */
   invalidInput?: InvalidInput;
   /** cube dimensions in stickers (rectangles, not pixels) */
@@ -19,28 +24,60 @@ export abstract class CubeState {
   /** SVG metadata */
   viewBoxDimensions: Dimensions;
   /** Rotation of cube, multiply by 90 to get svg rotation, use directly for algorithm rotation */
-  cubeRotation: number = 0;
-  specialFlags: Set<SpecialFlags>;
+  currentRotation: number = 0;
+  currentRotationNormalized: number = 0;
+  defaultRotation: number = 0;
 
-  protected constructor(public readonly userInput: UserInput) {
+  specialFlags: Set<FlagType>;
+  locked: boolean = false;
+
+  protected constructor(public readonly userInput: UserInput, public readonly algorithmType: AlgorithmType) {
+    this.id = userInput.getId();
   }
 
   /**
-   * @return true if cube size equals 3 by 3
+   * Create hash for persisting of metadata.
    */
+  getHash(): string | undefined {
+    if (this.id)
+    switch (this.algorithmType){
+      case'pll': return `pll-${this.id}-${StringUtils.hash(this.id)}`;
+      case'oll': return `oll-${this.id}-${StringUtils.hash(this.id)}`;
+    }
+    return undefined;
+  }
+
+  /** @return true if cube size equals 3 by 3 */
   isDefaultSize = () => this.dimensions.isDefaultSize();
 
   codeBlockInterpretationFailed = () => this.invalidInput !== undefined;
 
   /** Clock-wise quarter rotation */
   abstract rotateLeft(): void ;
-
   abstract resetRotation(): void;
-
   /** Anti-clock-wise quarter rotation */
   abstract rotateRight(): void;
 
+  protected raiseCurrentRotation(): void {
+    this.currentRotation += 1;
+    this.currentRotationNormalized = this.currentRotation % 4;
+  }
+  protected resetCurrentRotation(): void {
+    this.currentRotation = this.defaultRotation;
+    this.currentRotationNormalized = ((this.currentRotation % 4) + 4) % 4;
+  }
+  protected lowerCurrentRotation(): void {
+    this.currentRotation -= 1;
+    this.currentRotationNormalized = (this.currentRotation + 4) % 4;
+  }
+  setDefaultRotation(defaultRotation: number) {
+    this.currentRotation = defaultRotation;
+    this.currentRotationNormalized = defaultRotation;
+    this.defaultRotation = defaultRotation;
+  }
 }
+
+export default CubeState
 
 /**
  * PLL algorithms have an n:1 relation to exchanged cubelets.
@@ -51,25 +88,26 @@ export class CubeStatePLL extends CubeState {
   arrowCoordinates: Arrows;
 
   constructor(userInput: UserInput) {
-    super(userInput);
+    super(userInput, 'pll');
   }
 
   /** Clock-wise quarter rotation    */
   rotateLeft(): void {
     this.algorithms.rotate(1);
-    this.cubeRotation += 1
+    this.raiseCurrentRotation();
   }
 
   resetRotation(): void {
-    this.algorithms.rotate((4 - this.cubeRotation % 4) - 4);
-    this.cubeRotation = 0;
+    this.algorithms.rotate((4 - this.currentRotation % 4) - 4);
+    this.resetCurrentRotation();
   }
 
   /** Anti-clock-wise quarter rotation    */
   rotateRight(): void {
     this.algorithms.rotate(3);
-    this.cubeRotation -= 1;
+    this.lowerCurrentRotation();
   }
+
 }
 
 /**
@@ -84,7 +122,7 @@ export class CubeStateOLL extends CubeState {
   selectedAlgorithmHash: string = '';
 
   constructor(userInput: UserInput) {
-    super(userInput);
+    super(userInput, 'oll');
   }
 
   currentArrowCoordinates(): Arrows {
@@ -94,18 +132,18 @@ export class CubeStateOLL extends CubeState {
   /** Clock-wise quarter rotation */
   rotateLeft(): void {
     this.algorithmToArrows.rotate(1);
-    this.cubeRotation += 1
+    this.raiseCurrentRotation();
   }
 
   resetRotation(): void {
-    this.algorithmToArrows.rotate((4 - this.cubeRotation % 4) - 4);
-    this.cubeRotation = 0;
+    this.algorithmToArrows.rotate((4 - this.currentRotation % 4) - 4);
+    this.resetCurrentRotation();
   }
 
   /** Anti-clock-wise quarter rotation */
   rotateRight(): void {
     this.algorithmToArrows.rotate(3);
-    this.cubeRotation -= 1;
+    this.lowerCurrentRotation();
   }
 
   changeAlgorithm(algorithmId: string): boolean {

@@ -1,17 +1,20 @@
-import {CubeState, CubeStateOLL, CubeStatePLL} from "../model/cube-state";
+import CubeState, {CubeStateOLL, CubeStatePLL} from "../model/cube-state";
 import {Algorithms} from "../model/algorithms";
 import {OllFieldColoring} from "../model/oll-field-coloring";
 import {SvgUtils} from "./svg-utils";
 import {UiUtils} from "./ui-utils";
 import {applyRotation} from "./dom-rotation";
 import {createCubeLayout, CubeLayout} from "./cube-layout";
+import {setIcon} from "obsidian";
 
 
 export abstract class CubeRenderer {
   layout: CubeLayout;
   buttonLeft: HTMLButtonElement;
-  buttonReset: HTMLButtonElement;
   buttonRight: HTMLButtonElement;
+  buttonResetRotation: HTMLButtonElement;
+  buttonLockRotation: HTMLButtonElement;
+  buttonSaveRotation?: HTMLButtonElement;
   mainCubeSvg: SVGSVGElement;
 
   protected constructor(private readonly cubeState: CubeState) {
@@ -101,7 +104,7 @@ export abstract class CubeRenderer {
    * Change current cube rotation.
    */
   rotateCube(): void {
-    const degrees = this.cubeState.cubeRotation * 90;
+    const degrees = this.cubeState.currentRotation * 90;
     applyRotation(this.layout.cubeDiv, degrees);
   }
 
@@ -112,27 +115,23 @@ export abstract class CubeRenderer {
     }
 
     this.buttonLeft = buttonDiv.createEl('button', {'title': 'Rotate left 90 degrees'});
-    this.buttonReset = buttonDiv.createEl('button', {'title': 'Reset rotation'});
-    this.buttonRight = buttonDiv.createEl('button', {'title': 'Rotate right 90 degrees'});
-
-    let turnLeftSvg: SVGSVGElement = this.buttonLeft.createSvg('svg', {
-      attr: {'stroke-width': 1},
-      cls: 'rubik-cube-button'
-    });
+    let turnLeftSvg: SVGSVGElement = this.buttonLeft.createSvg('svg', {cls: 'rubik-cube-button'});
     SvgUtils.drawRotateLeftIcon(turnLeftSvg);
 
-    let resetRotationSvg: SVGSVGElement = this.buttonReset.createSvg('svg', {
-      attr: {'stroke-width': 1},
-      cls: 'rubik-cube-button-grey'
-    });
-    SvgUtils.drawResetRotateIcon(resetRotationSvg);
-
-    let turnRightSvg: SVGSVGElement = this.buttonRight.createSvg('svg', {
-      attr: {'stroke-width': 1},
-      cls: 'rubik-cube-button'
-    });
+    this.buttonRight = buttonDiv.createEl('button', {'title': 'Rotate right 90 degrees'});
+    let turnRightSvg: SVGSVGElement = this.buttonRight.createSvg('svg', {cls: 'rubik-cube-button'});
     SvgUtils.drawRotateRightIcon(turnRightSvg);
 
+    this.buttonResetRotation = buttonDiv.createEl('button', {'title': 'Reset rotation'});
+    setIcon(this.buttonResetRotation, 'reset')
+
+    this.buttonLockRotation = buttonDiv.createEl('button', {'title': 'Lock rotation'});
+    setIcon(this.buttonLockRotation, 'lock-open')
+
+    if (this.cubeState.id){
+      this.buttonSaveRotation = buttonDiv.createEl('button', {'title': 'Save rotation'});
+      setIcon(this.buttonSaveRotation, 'save')
+    }
   }
 }
 

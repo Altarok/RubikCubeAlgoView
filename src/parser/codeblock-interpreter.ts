@@ -1,28 +1,33 @@
 import {ArrowCoords, Arrows, Coordinates, Dimensions, StickerCoords} from "../model/geometry";
 import {DefaultSettings, RubikCubeAlgoSettingsTab} from "../RubikCubeAlgoSettings";
 import {InvalidInput, UserInput} from "../model/codeblock-input";
-import {Algorithms, MappedAlgorithm, MappedAlgorithms, SpecialFlags} from "../model/algorithms";
+import {Algorithms, MappedAlgorithm, MappedAlgorithms} from "../model/algorithms";
 import {CubeStatePLL, CubeStateOLL} from "../model/cube-state";
 import {Parse} from "./parser";
 import {OllFieldColoring} from "../model/oll-field-coloring";
 import {Build} from "./geometry-builder";
+import {FlagType} from "../model/flags";
+import {StringUtils} from "./string-utils";
 
 const DEFAULT = {
   WIDTH: 3, /* default rubik cube width  */
   HEIGHT: 3 /* default rubik cube height */
 } as const;
 
-export abstract class CodeBlockInterpreter {
+export class CodeBlockInterpreter {
   /** cube's dimensions (stickers, not pixels) */
-  protected cubeDimensions: Dimensions = new Dimensions(DEFAULT.WIDTH, DEFAULT.HEIGHT);
-  protected codeBlockInterpretationSuccessful: boolean = true;
-  protected invalidInput?: InvalidInput;
-  protected stickerCoordinates: StickerCoords;
-  protected arrowColor: string;
-  protected specialFlags: Set<SpecialFlags>;
+  cubeDimensions: Dimensions = new Dimensions(DEFAULT.WIDTH, DEFAULT.HEIGHT);
+  codeBlockInterpretationSuccessful: boolean = true;
+  invalidInput?: InvalidInput;
+  stickerCoordinates: StickerCoords;
+  arrowColor: string;
+  cubeColor: string;
+  specialFlags = new Set<FlagType>();
+  initialAlgorithmSelectionHash: string;
 
-  protected constructor(protected readonly userInput: UserInput, settings: RubikCubeAlgoSettingsTab) {
+  constructor(protected readonly userInput: UserInput, settings: RubikCubeAlgoSettingsTab) {
     this.arrowColor = settings.arrowColor ?? DefaultSettings.ARROW_COLOR;
+    this.cubeColor = settings.cubeColor ?? DefaultSettings.CUBE_COLOR;
     if (userInput.isEmpty) {
       this.setInvalidInput(new InvalidInput("[empty]", "At least 1 parameter needed: 'dimension/cubeColor/arrowColor/arrows'"));
     }
@@ -38,29 +43,57 @@ export abstract class CodeBlockInterpreter {
     this.invalidInput = errData;
   }
 
-  setup(): void {
-    console.log('>>');
-    /* Keep order of the following 3 functions */
-    if (!this.codeBlockInterpretationSuccessful) {
-      return;
+  setupArrowColor(): void {
+    if (!this.codeBlockInterpretationSuccessful) return;
+
+    let arrowColor = this.userInput.getArrowColor();
+    if (arrowColor) {
+      const result = Parse.toArrowColor(arrowColor);
+      if (result.success) this.arrowColor = result.data;
+      else this.setInvalidInput(result.error);
     }
-    this.interpretCodeBlock();
-    this.setupCubeRectangleCenterCoordinates();
-    console.log('<<');
   }
 
-  /**
-   * This must include calculating the cube dimensions
-   */
-  abstract interpretCodeBlock(): void;
+  setupCubeColor(): void {
+    if (!this.codeBlockInterpretationSuccessful) return;
 
-  /**
-   * Calculate coordinates of all cube rectangles.
-   * Mandatory preparation for arrow coordinates calculation.
-   */
-  abstract setupCubeRectangleCenterCoordinates(): void;
+    let cubeColor = this.userInput.getCubeColor();
+    if (cubeColor) {
+      const result = Parse.toCubeColor(cubeColor);
+      if (result.success) this.cubeColor = result.data;
+      else this.setInvalidInput(result.error);
+    }
+  }
+
+  setupCubeDimensions(): void {
+    let dimensions = this.userInput.getDimensions();
+    if (dimensions) {
+      const result = Parse.toDimensions(dimensions);
+      if (result.success) {
+        this.cubeDimensions = result.data;
+      } else {
+        this.setInvalidInput(result.error);
+      }
+    }
+  }
+
+  setupFlags(): void {
+    if (!this.codeBlockInterpretationSuccessful) return;
+
+    let flags = this.userInput.getFlags();
+    if (flags) {
+      const result = Parse.toFlags(flags);
+      if (result.success) this.specialFlags = result.data;
+      else this.setInvalidInput(result.error);
+    } else {
+      this.specialFlags.add('default');
+    }
+  }
+
 
   setupArrowCoordinates(input: string[]): Arrows {
+    if (!this.codeBlockInterpretationSuccessful) return [];
+
     if (input.length === 0) return [];
 
     return input.filter(Boolean)
@@ -90,23 +123,41 @@ export abstract class CodeBlockInterpreter {
     }, []);
   }
 
-}
+  createPllCubeState(): CubeStatePLL {
+    let algorithms: Algorithms = new Algorithms();
+    let arrows: string[] = [];
 
-export class CodeBlockInterpreterPLL extends CodeBlockInterpreter {
-  cubeColor: string;
-  algorithms: Algorithms = new Algorithms();
-  arrowsLine: string = '';
-  arrows: string[] = [];
+    this.setupArrowColor();
+    this.setupCubeColor();
+    this.setupFlags();
+    this.setupCubeDimensions();
 
-  constructor(userInput: UserInput, settings: RubikCubeAlgoSettingsTab) {
-    super(userInput, settings);
-    this.cubeColor = settings.cubeColor ?? DefaultSettings.CUBE_COLOR;
-  }
+    let arrowsInput = this.userInput.getArrows();
+    if (arrowsInput) {
+      const result = Parse.toArrows(arrowsInput);
+      if (result.success) {
+        arrows = result.data;
+      } else {
+        this.setInvalidInput(result.error);
+      }
+    }
 
-  setupPll(): CubeStatePLL {
-    super.setup();
+    let algorithmsInput = this.userInput.getAlgorithms();
+    if (algorithmsInput) {
+      algorithmsInput.forEach(algorithm => {
+          const result = Parse.toAlgorithm(algorithm);
+          if (result.success) {
+            algorithms.add(result.data);
+          } else {
+            this.setInvalidInput(result.error);
+          }
+        }
+      )
+    }
 
-    let arrowCoordinates: Arrows = super.setupArrowCoordinates(this.arrows);
+    this.stickerCoordinates = Build.stickerCoordinates(this.cubeDimensions, 50);
+
+    let arrowCoordinates: Arrows = this.setupArrowCoordinates(arrows);
 
     let cubeState: CubeStatePLL = new CubeStatePLL(this.userInput);
 
@@ -123,113 +174,80 @@ export class CodeBlockInterpreterPLL extends CodeBlockInterpreter {
           width: this.cubeDimensions.width * 100,
           height: this.cubeDimensions.height * 100
         },
-        specialFlags: this.specialFlags ?? new Set<SpecialFlags>(),
+        specialFlags: this.specialFlags,
         /*
          * PLL-only data:
          */
-        algorithms: this.algorithms
+        algorithms: algorithms
       });
     } else {
       cubeState.invalidInput = this.invalidInput;
     }
 
     return cubeState;
+
   }
 
+  /**
+   * @param str - gets checked
+   * @returns true if given string starts and ends with '.'
+   */
+  private isWrappedInDots = (str: string): boolean => str.startsWith('.') && str.endsWith('.');
 
-  interpretCodeBlock(): void {
+  setupRawOllInput(ollFieldInput: OllFieldColoring): void {
+    if (!this.codeBlockInterpretationSuccessful) return;
 
-    let dimensions = this.userInput.getDimensions();
-    if (dimensions) {
-      const result = Parse.toDimensions(dimensions);
-      if (result.success) {
-        this.cubeDimensions = result.data;
-      } else {
-        this.setInvalidInput(result.error);
-      }
+    let rawOllInput = this.userInput.getUndeclared();
+
+    if (!rawOllInput || rawOllInput.length < 4) {
+      return this.setInvalidInput(new InvalidInput("[not enough input]", "Input for OLL should contain at least 4 lines!"));
     }
 
-    let cubeColor = this.userInput.getCubeColor();
+    const firstRow = rawOllInput[0]!;
+    const lastRow = rawOllInput[rawOllInput.length - 1]!;
 
-    if (cubeColor) {
-      const result = Parse.toCubeColor(cubeColor);
-      if (result.success) {
-        this.cubeColor = result.data;
-      } else {
-        this.setInvalidInput(result.error);
-      }
+    if (!this.isWrappedInDots(firstRow) || !this.isWrappedInDots(lastRow)) {
+      return this.setInvalidInput(new InvalidInput(firstRow, `First '${firstRow}' and last '${lastRow}' line should start and end on a dot ('.')!`));
     }
 
-    let arrowColor = this.userInput.getArrowColor();
+    let expectedWidth: number = rawOllInput[0]!.length;
 
-    if (arrowColor) {
-      const result = Parse.toArrowColor(arrowColor);
-      if (result.success) {
-        this.arrowColor = result.data;
-      } else {
-        this.setInvalidInput(result.error);
+    this.cubeDimensions = new Dimensions(expectedWidth - 2, rawOllInput.length - 2);
+
+    for (let i: number = 0; i < rawOllInput.length; i++) {
+      const row: string = rawOllInput[i]!.trim();
+
+      if (row.length !== expectedWidth) {
+        return this.setInvalidInput(new InvalidInput(row, `Invalid row length! Expected ${expectedWidth} characters but found ${row.length}.`));
       }
-    }
 
-    let arrows = this.userInput.getArrows();
+      const parsedRow = row.split('').map((char: string, x: number): string => {
+        if (char === '.') return '-1';
+        const isEdge = (x === 0 || x === row.length - 1 || i === 0 || i === rawOllInput.length - 1);
+        // Side stickers are lowercase, Top stickers are uppercase
+        return isEdge ? char.toLowerCase() : char.toUpperCase();
+      });
 
-    if (arrows) {
-      const result = Parse.toArrows(arrows);
-      if (result.success) {
-        this.arrows = result.data;
-      } else {
-        this.setInvalidInput(result.error);
-      }
-    }
-
-    let algorithms = this.userInput.getAlgorithms();
-
-    if (algorithms) {
-      algorithms.forEach(algorithm => {
-          const result = Parse.toAlgorithm(algorithm);
-          if (result.success) {
-            this.algorithms.add(result.data);
-          } else {
-            this.setInvalidInput(result.error);
-          }
-        }
-      )
-    }
-
-    let flags = this.userInput.getFlags();
-
-    if (flags) {
-      const result = Parse.toFlags(flags);
-      if (result.success) {
-        this.specialFlags = result.data;
-      } else {
-        this.setInvalidInput(result.error);
-      }
+      ollFieldInput.addRow(parsedRow);
     }
   }
 
-  setupCubeRectangleCenterCoordinates()
-    :
-    void {
-    this.stickerCoordinates = Build.stickerCoordinates(this.cubeDimensions, 50);
-  }
-}
+  createOllCubeState(): CubeStateOLL {
+    this.setupArrowColor();
+    this.setupCubeColor();
+    this.setupFlags();
 
-export class CodeBlockInterpreterOLL extends CodeBlockInterpreter {
-  cubeColor: string;
-  ollFieldInput!: OllFieldColoring;
-  // algorithmToArrowsInput: string[] = [];
-  initialAlgorithmSelectionHash: string;
+    const ollFieldInput = new OllFieldColoring(this.cubeColor);
 
-  constructor(userInput: UserInput, settings: RubikCubeAlgoSettingsTab) {
-    super(userInput, settings);
-    this.cubeColor = settings.cubeColor ?? DefaultSettings.CUBE_COLOR;
-  }
+    /*
+     * this.cubeDimensions gets set up in here
+     */
+    this.setupRawOllInput(ollFieldInput);
 
-  setupOll(): CubeStateOLL {
-    super.setup();
+    this.stickerCoordinates = Build.stickerCoordinates(this.cubeDimensions, 100);
 
     let cubeState: CubeStateOLL = new CubeStateOLL(this.userInput);
+
 
     if (this.codeBlockInterpretationSuccessful) {
       Object.assign(cubeState, {
@@ -243,80 +261,19 @@ export class CodeBlockInterpreterOLL extends CodeBlockInterpreter {
           width: this.cubeDimensions.width * 100 + 100,
           height: this.cubeDimensions.height * 100 + 100
         },
-        specialFlags: this.specialFlags ?? new Set<SpecialFlags>(),
+        specialFlags: this.specialFlags,
         /*
          * OLL-only data:
          */
         algorithmToArrows: this.setupAlgorithmArrowMap(),
         selectedAlgorithmHash: this.initialAlgorithmSelectionHash,
-        ollFieldColors: this.ollFieldInput
+        ollFieldColors: ollFieldInput
       });
     } else {
       cubeState.invalidInput = this.invalidInput;
     }
 
     return cubeState;
-  }
-
-
-  /**
-   * @param str - gets checked
-   * @returns true if given string starts and ends with '.'
-   */
-  private isWrappedInDots = (str: string): boolean => str.startsWith('.') && str.endsWith('.');
-
-  interpretCodeBlock(): void {
-
-    let rawOllInput = this.userInput.getUndeclared();
-
-    if (!rawOllInput || rawOllInput.length < 4) {
-      return super.setInvalidInput(new InvalidInput("[not enough input]", "Input for OLL should contain at least 4 lines!"));
-    }
-
-    let flags = this.userInput.getFlags();
-
-    if (flags) {
-      const result = Parse.toFlags(flags);
-      if (result.success) {
-        this.specialFlags = result.data;
-      } else {
-        this.setInvalidInput(result.error);
-      }
-    }
-
-
-    const firstRow = rawOllInput[0]!;
-    const lastRow = rawOllInput[rawOllInput.length - 1]!;
-
-    if (!this.isWrappedInDots(firstRow) || !this.isWrappedInDots(lastRow)) {
-      return super.setInvalidInput(new InvalidInput(firstRow, `First '${firstRow}' and last '${lastRow}' line should start and end on a dot ('.')!`));
-    }
-
-    let expectedWidth: number = rawOllInput[0]!.length;
-
-    this.ollFieldInput = new OllFieldColoring();
-    this.cubeDimensions = new Dimensions(expectedWidth - 2, rawOllInput.length - 2);
-
-    for (let i: number = 0; i < rawOllInput.length; i++) {
-      const row: string = rawOllInput[i]!.trim();
-
-      if (row.length !== expectedWidth) {
-        return super.setInvalidInput(new InvalidInput(row, `Invalid row length! Expected ${expectedWidth} characters but found ${row.length}.`));
-      }
-
-      const parsedRow = row.split('').map((char: string, x: number): string => {
-        if (char === '.') return '-1';
-        const isEdge = (x === 0 || x === row.length - 1 || i === 0 || i === rawOllInput.length - 1);
-        // Side stickers are lowercase, Top stickers are uppercase
-        return isEdge ? char.toLowerCase() : char.toUpperCase();
-      });
-
-      this.ollFieldInput.addRow(parsedRow);
-    }
-  }
-
-  setupCubeRectangleCenterCoordinates(): void {
-    this.stickerCoordinates = Build.stickerCoordinates(this.cubeDimensions, 100);
   }
 
   setupAlgorithmArrowMap(): MappedAlgorithms {
@@ -334,7 +291,7 @@ export class CodeBlockInterpreterOLL extends CodeBlockInterpreter {
           let matchingArrows: Arrows = [];
           if (arrowInput) {
             let toArrows = Parse.toArrows(arrowInput);
-            if (toArrows.success) matchingArrows = super.setupArrowCoordinates(toArrows.data);
+            if (toArrows.success) matchingArrows = this.setupArrowCoordinates(toArrows.data);
           }
           let algorithm = result.data;
           if (!this.initialAlgorithmSelectionHash) {
@@ -346,7 +303,6 @@ export class CodeBlockInterpreterOLL extends CodeBlockInterpreter {
         }
       });
     }
-
 
     return map;
   }

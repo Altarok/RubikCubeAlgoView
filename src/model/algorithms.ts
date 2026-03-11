@@ -1,9 +1,11 @@
 import {Arrows} from "./geometry";
 import {StringUtils} from "../parser/string-utils";
 
-export const flags = ['no-rotation'] as const;
-
-export type SpecialFlags = (typeof flags)[number];
+export const AlgorithmTypes = ['pll',  'oll'] as const;
+export type AlgorithmType =  (typeof AlgorithmTypes)[number];
+export interface Rotatable {
+  rotate: (quarterTurns: number) => void;
+}
 
 export const possibleSteps = [
   "R", "R'", "R2", // right side
@@ -58,7 +60,7 @@ const turnCubeLeftMap: TurnCubeMap = {
  * A Rubik's Cube algorithm is a sequence of rotations
  * aimed to change a cube's state in a specific way.
  */
-export class Algorithm {
+export class Algorithm implements Rotatable {
   /** Used as salt for hash value */
   static index = 42;
   algorithmLabel: HTMLLabelElement;
@@ -92,7 +94,7 @@ export class Algorithm {
   // clone = (): Algorithm => new Algorithm([...this.steps]);
 }
 
-export class Algorithms {
+export class Algorithms implements Rotatable {
   items: Algorithm[] = [];
 
   length = () => this.items.length;
@@ -103,7 +105,7 @@ export class Algorithms {
     this.items.forEach(algorithm => algorithm.rotate(quarterTurns));
 }
 
-export class MappedAlgorithm {
+export class MappedAlgorithm implements Rotatable {
   /**
    * @param algorithm one of these will be matched to 0-n arrows
    * @param arrows
@@ -115,7 +117,7 @@ export class MappedAlgorithm {
   rotate = (quarterTurns: number): void => this.algorithm.rotate(quarterTurns);
 }
 
-export class MappedAlgorithms {
+export class MappedAlgorithms implements Rotatable {
 
   private map = new Map<string, MappedAlgorithm>();
 
@@ -126,7 +128,6 @@ export class MappedAlgorithms {
   get = (algHash: string): MappedAlgorithm | undefined => this.map.get(algHash);
 
   rotate = (quarterTurns: number): void => this.map.forEach(mappedAlgo => mappedAlgo.algorithm.rotate(quarterTurns));
-
 
   getAllItems(): Algorithm[] {
     let result: Algorithm[] = [];

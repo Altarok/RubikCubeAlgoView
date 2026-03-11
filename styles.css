@@ -108,7 +108,7 @@
   margin-top: 10px;
   justify-content: center;
   align-content: center;
-  gap: 15px;
+  gap: 15px; /* gap btw buttons */
   width: 100%
 }
 .button {
@@ -123,19 +123,18 @@
 .button:hover {
   background-color: #e0e0e0;
 }
-.rubik-cube-button,
-.rubik-cube-button-grey {
+.rubik-cube-button {
+  stroke: white;
+  stroke-width: 1;
   width: 24px;
   height: 24px;
   fill: none;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
-.rubik-cube-button {
-  stroke: white;
-}
-.rubik-cube-button-grey {
-  stroke: grey;
+.rubik-cube-button:disabled svg {
+  stroke: #6c6c6c; /* Changes the icon color to match the disabled text */
+  fill: none;
 }
 /* --- Debug Tool --- */
 .div {

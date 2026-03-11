@@ -1,5 +1,5 @@
 import RubikCubeAlgos from "./main";
-import {CodeBlockInterpreterPLL} from "./parser/codeblock-interpreter";
+import {CodeBlockInterpreter} from "./parser/codeblock-interpreter";
 import {CubeRendererPLL} from "./view/cube-renderer";
 import {CubeStatePLL} from "./model/cube-state";
 import {MarkdownRenderChild} from "obsidian";
@@ -36,16 +36,27 @@ export class MarkdownPostProcessorPLL extends MarkdownRenderChild {
     this.element.empty();
     const userInput: UserInput = StringUtils.codeBlockToStrings(this.source);
 
-    console.log(userInput)
+    // console.debug(userInput.toString());
 
-    let interpreter: CodeBlockInterpreterPLL = new CodeBlockInterpreterPLL(userInput, this.plugin.settings);
-    let cubeState: CubeStatePLL = interpreter.setupPll();
+    let cubeState = new CodeBlockInterpreter(userInput, this.plugin.settings).createPllCubeState();
+
+    if (userInput.getId()) {
+      // debugger;
+      let hash: string | undefined = StringUtils.cubeHash(userInput.getId(), 'pll');
+      const cubeRotation = this.plugin.settings.cubeRotations['pll'];
+      let defaultRotation: number | undefined = cubeRotation[hash] ?? undefined;
+      if (defaultRotation) {
+        console.info('Pre-set rotation found: ' + defaultRotation);
+        cubeState.setDefaultRotation(defaultRotation);
+      }
+    }
 
     let cubeRenderer: CubeRendererPLL = new CubeRendererPLL(cubeState);
     cubeRenderer.display(this.element);
+    cubeRenderer.rotateCube();
 
     if (!cubeState.codeBlockInterpretationFailed()) {
-      ButtonController.addRotationButtons(cubeRenderer, cubeState);
+      ButtonController.addRotationButtons(cubeRenderer, cubeState, this.plugin);
     }
   }
 }

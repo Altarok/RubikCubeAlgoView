@@ -1,9 +1,25 @@
 import {InputTypes, UserInput} from "../model/codeblock-input";
+import {AlgorithmType} from "../model/algorithms";
 
 export const StringUtils = {
-  hash,
+  hash, cubeHash,
   codeBlockToStrings
 };
+
+/**
+ * Create hash for persisting of metadata.
+ */
+function cubeHash(id: string | undefined, algorithmType: AlgorithmType): string | undefined {
+  if (id) {
+    switch (algorithmType) {
+      case'pll':
+        return `pll-${id}-${StringUtils.hash('a grain of salt' + id)}`;
+      case'oll':
+        return `oll-${id}-${StringUtils.hash('a grain of salt' + id)}`;
+    }
+  }
+  return undefined;
+}
 
 /**
  * Create 53 bit hash value.
@@ -70,6 +86,6 @@ function codeBlockToStrings(input: string): UserInput {
     }
   }
 
-  console.log('User input:\n' + userInput.toString());
+  // console.log('User input:\n' + userInput.toString());
   return userInput;
 }

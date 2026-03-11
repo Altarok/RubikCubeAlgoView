@@ -68,7 +68,7 @@ export default class RubikCubeAlgos extends Plugin {
 
   async onload() {
 
-    console.log('>> onload');
+    // console.log('>> onload');
 
     await this.loadSettings();
 
@@ -121,5 +121,25 @@ export default class RubikCubeAlgos extends Plugin {
     this.app.workspace.trigger(
       "rubik:rerender-markdown-code-block-processors"
     );
+    console.info('Settings updated');
+  }
+
+  // saveSettingsSync() {
+  //   this.saveData(this.settings);
+  //   this.app.workspace.trigger(
+  //     "rubik:rerender-markdown-code-block-processors"
+  //   );
+  //   console.info('Settings updated');
+  // }
+  saveSettingsSync() {
+    // this.localState = "rotating";
+
+    // Trigger the save but don't 'await' it.
+    // It runs in the background.
+    this.saveSettings()
+    .then(() => console.debug("Save successful"))
+    .catch(err => console.error("Save failed", err));
+    //
+    // console.log("UI updated immediately, save is happening in the background.");
   }
 }

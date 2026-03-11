@@ -1,8 +1,8 @@
-import {flags} from "./algorithms";
+import {Flags} from "./flags";
 
 export const undeclared: string = 'undeclared';
 export const InputTypes: string[] =
-  ['alg', 'arrowColor', 'arrows', 'cubeColor', 'dimension', 'flags'] as const;
+  ['alg', 'arrowColor', 'arrows', 'cubeColor', 'dimension', 'flags', 'id'] as const;
 
 export type InputType = (typeof InputTypes)[number];
 type AllPossibleInputs = InputType | typeof undeclared;
@@ -25,16 +25,29 @@ export class UserInput {
     this.listInput.get(undeclared)!.push(value);
   }
 
+
+  getAlgorithms = () => this.listInput.get('alg');
   getArrowColor = () => this.listInput.get('arrowColor')![0] ?? undefined;
   getArrows = () => this.listInput.get('arrows')![0] ?? undefined;
   getCubeColor = () => this.listInput.get('cubeColor')![0] ?? undefined;
   getDimensions = () => this.listInput.get('dimension')![0] ?? undefined;
   getFlags = () => this.listInput.get('flags')![0] ?? undefined;
-  getAlgorithms = () => this.listInput.get('alg');
+  getId = () => this.listInput.get('id')![0] ?? undefined;
   getUndeclared = () => this.listInput.get('undeclared');
 
   toString = () => {
-    if (this.isEmpty) return 'empty'; else return '' + this.listInput;
+    if (this.isEmpty) return 'empty'; else {
+      let s = '';
+      for (const key of InputTypes) {
+        if (this.listInput.get(key)!.length > 1 ){
+          s = s + key + ' = ' + '\n' + this.listInput.get(key)?.join('\n') + '\n';
+        } else if (this.listInput.get(key)!.length === 1 ){
+            s = s + key + ' = ' + this.listInput.get(key)! + '\n';
+        }
+      }
+
+      return s;
+    }
   };
 }
 
@@ -74,7 +87,7 @@ export class InvalidInput {
   }
 
   static ofFlags(line: string) {
-    return new InvalidInput(line, `Invalid flag. Allowed: ${flags.join(',')}`);
+    return new InvalidInput(line, `Invalid flag. Allowed: ${Flags.types.join(',')}`);
   }
 
   static ofArrows(line: string, reason: string) {

@@ -13,10 +13,13 @@ const colorMap: Record<string, string> = {
   'w': '#cccccc', // grey (80%)
   '.': '#444',    // dark field (for binary input or background)
   '0': '#444',    // dark field (for binary input)
-  '1': '#ff0'     // bright field (for binary input) TODO replace with default
+  // '1': '#ff0'     // bright field (for binary input)
 };
 
 export class OllFieldColoring {
+  constructor(readonly defaultCubeColor: string) {
+  }
+
   parsedRows: string[][] = [];
 
   addRow(parsedRow: string[]): void {
@@ -32,6 +35,7 @@ export class OllFieldColoring {
   }
 
   private getColorHex(index: string | undefined): string {
+    if (index === '1') return this.defaultCubeColor;
     return (index && colorMap[index]) ?? '#000';
   }
 

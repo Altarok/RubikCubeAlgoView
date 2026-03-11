@@ -2,5 +2,14 @@
   "CUBE_COLOR": "#ff0",
   "ARROW_COLOR": "#08f",
   "arrowColor": "#08f",
-  "cubeColor": "#ff0"
+  "cubeColor": "#ff0",
+  "cubeRotations": {
+    "pll": {
+      "default": 0,
+      "pll-PLL-Rb-1195246341435081": 1
+    },
+    "oll": {
+      "default": 0
+    }
+  }
 }
