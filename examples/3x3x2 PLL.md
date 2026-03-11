@@ -2,6 +2,9 @@
 tags:
   - rubik/algorithm
 ---
+Min. Plugin version:
+- 0.0.4
+
 # 3x3x2 PLL
 
 ```rubikCubePLL
