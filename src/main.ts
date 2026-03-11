@@ -121,25 +121,13 @@ export default class RubikCubeAlgos extends Plugin {
     this.app.workspace.trigger(
       "rubik:rerender-markdown-code-block-processors"
     );
-    console.info('Settings updated');
+    console.debug('Settings updated');
   }
 
-  // saveSettingsSync() {
-  //   this.saveData(this.settings);
-  //   this.app.workspace.trigger(
-  //     "rubik:rerender-markdown-code-block-processors"
-  //   );
-  //   console.info('Settings updated');
-  // }
   saveSettingsSync() {
-    // this.localState = "rotating";
-
-    // Trigger the save but don't 'await' it.
-    // It runs in the background.
+    // Trigger the save but don't 'await' it. It runs in the background.
     this.saveSettings()
     .then(() => console.debug("Save successful"))
     .catch(err => console.error("Save failed", err));
-    //
-    // console.log("UI updated immediately, save is happening in the background.");
   }
 }

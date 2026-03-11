@@ -27,6 +27,7 @@ abstract class CubeState {
   currentRotation: number = 0;
   currentRotationNormalized: number = 0;
   defaultRotation: number = 0;
+  defaultRotationBackup?: number;
 
   specialFlags: Set<FlagType>;
   locked: boolean = false;
@@ -63,7 +64,7 @@ abstract class CubeState {
     this.currentRotationNormalized = this.currentRotation % 4;
   }
   protected resetCurrentRotation(): void {
-    this.currentRotation = this.defaultRotation;
+    this.currentRotation = this.defaultRotationBackup ?? 0;
     this.currentRotationNormalized = ((this.currentRotation % 4) + 4) % 4;
   }
   protected lowerCurrentRotation(): void {
@@ -73,7 +74,7 @@ abstract class CubeState {
   setDefaultRotation(defaultRotation: number) {
     this.currentRotation = defaultRotation;
     this.currentRotationNormalized = defaultRotation;
-    this.defaultRotation = defaultRotation;
+    this.defaultRotationBackup = defaultRotation;
   }
 }
 

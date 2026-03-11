@@ -129,7 +129,13 @@ export abstract class CubeRenderer {
     setIcon(this.buttonLockRotation, 'lock-open')
 
     if (this.cubeState.id){
-      this.buttonSaveRotation = buttonDiv.createEl('button', {'title': 'Save rotation'});
+      let title: string;
+      if (this.cubeState.defaultRotationBackup === 0) {
+        title = 'Save rotation.';
+      } else {
+        title = `Un-save default rotation. (current: ${this.cubeState.defaultRotationBackup})`
+      }
+      this.buttonSaveRotation = buttonDiv.createEl('button', {title});
       setIcon(this.buttonSaveRotation, 'save')
     }
   }

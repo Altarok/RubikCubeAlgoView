@@ -46,7 +46,7 @@ export class MarkdownPostProcessorOLL extends MarkdownRenderChild {
       const cubeRotation = this.plugin.settings.cubeRotations['oll'];
       let defaultRotation: number | undefined = cubeRotation[hash] ?? undefined;
       if (defaultRotation) {
-        console.info('Pre-set rotation found: ' + defaultRotation);
+        console.debug('Pre-set rotation found: ' + defaultRotation);
         cubeState.setDefaultRotation(defaultRotation);
       }
     }
