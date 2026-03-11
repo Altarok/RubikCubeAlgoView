@@ -1,30 +1,41 @@
 import {flags} from "./algorithms";
 
 export const undeclared: string = 'undeclared';
-export const BaseInputTypes:string[] =
-  ['arrowColor', 'arrows', 'cubeColor', 'dimension', 'flags'] as const;
-export const ListInputTypes:string[] = ['alg', undeclared] as const;
+export const InputTypes: string[] =
+  ['alg', 'arrowColor', 'arrows', 'cubeColor', 'dimension', 'flags'] as const;
 
-export type BaseInputType = (typeof BaseInputTypes)[number];
-export type ListInputType = (typeof ListInputTypes)[number];
-// export type AnyInputType = BaseInputType | ListInputType;
+export type InputType = (typeof InputTypes)[number];
+type AllPossibleInputs = InputType | typeof undeclared;
+
 
 export class UserInput {
-  baseInput: Map<BaseInputType, string> = new Map();
-  listInput: Map<ListInputType, string[]> = new Map();
+  listInput: Map<AllPossibleInputs, string[]> = new Map();
   isEmpty: boolean = true;
 
   constructor(public readonly completeCodeBlock: string[]) {
-    for(const key of ListInputTypes) this.listInput.set(key, new Array<string>());
+    for (const key of InputTypes) this.listInput.set(key, []);
+    this.listInput.set(undeclared, []);
   }
 
-  getArrowColor = () => this.baseInput.get('arrowColor');
-  getArrows = () => this.baseInput.get('arrows');
-  getCubeColor = () => this.baseInput.get('cubeColor');
-  getDimensions = () => this.baseInput.get('dimension');
-  getFlags = () => this.baseInput.get('flags');
+  add = (key: InputType, value: string): void => {
+    this.listInput.get(key)!.push(value);
+  }
+
+  addUnmarkedKey = (value: string): void => {
+    this.listInput.get(undeclared)!.push(value);
+  }
+
+  getArrowColor = () => this.listInput.get('arrowColor')![0] ?? undefined;
+  getArrows = () => this.listInput.get('arrows')![0] ?? undefined;
+  getCubeColor = () => this.listInput.get('cubeColor')![0] ?? undefined;
+  getDimensions = () => this.listInput.get('dimension')![0] ?? undefined;
+  getFlags = () => this.listInput.get('flags')![0] ?? undefined;
   getAlgorithms = () => this.listInput.get('alg');
   getUndeclared = () => this.listInput.get('undeclared');
+
+  toString = () => {
+    if (this.isEmpty) return 'empty'; else return '' + this.listInput;
+  };
 }
 
 /**

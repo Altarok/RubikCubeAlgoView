@@ -1,7 +1,6 @@
 import {describe, expect, it} from "vitest";
 import {RegEx} from "../src/parser/regex-util";
 import {flags} from "../src/model/algorithms";
-import {Parse} from "../src/parser/parser";
 
 describe('RegEx.isPositiveInteger()', () => {
 
@@ -41,8 +40,6 @@ describe('RegEx.isSpecialFlags()', () => {
 
 describe('RegEx.isChainedArrow()', () => {
 
-  let flagsStrings = flags as readonly string[];
-
   it('should identify crap correctly', () => {
     expect(RegEx.isChainedArrow('')).toBe(false);
     expect(RegEx.isChainedArrow(' ')).toBe(false);
@@ -66,8 +63,6 @@ describe('RegEx.isChainedArrow()', () => {
 });
 
 describe('RegEx.isDoubleSidedArrow()', () => {
-
-  let flagsStrings = flags as readonly string[];
 
   it('should identify crap correctly', () => {
     expect(RegEx.isDoubleSidedArrow('')).toBe(false);

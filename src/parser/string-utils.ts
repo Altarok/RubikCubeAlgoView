@@ -1,4 +1,4 @@
-import {BaseInputTypes, ListInputTypes, undeclared, UserInput} from "../model/codeblock-input";
+import {InputTypes, UserInput} from "../model/codeblock-input";
 
 export const StringUtils = {
   hash,
@@ -34,7 +34,9 @@ function hash(str: string, seed = 0): string {
 
 /**
  * Takes complete code block content and returns all non-empty lines in a string array.
- * @param input - a code block's content
+ * Removes comments.
+ * TODO remove comment removal from other code
+ * @param input - a code block's complete content
  */
 function codeBlockToStrings(input: string): UserInput {
   let nonEmptyStrings = input.split('\n') // split lines
@@ -44,22 +46,30 @@ function codeBlockToStrings(input: string): UserInput {
   const userInput = new UserInput(nonEmptyStrings);
 
   for (const nonEmptyString of nonEmptyStrings) {
+
+    /* Skip comment lines */
     if (nonEmptyString.startsWith('//')) continue;
 
     let strings = nonEmptyString.split(':');
     const key: string = strings[0] as string;
-    const value: string = strings[1]?.split(' ')[0] as string ?? '';
+    let value: string = strings[1] as string;
 
-    if (BaseInputTypes.includes(key)) {
-      userInput.baseInput.set(key, value);
-      userInput.isEmpty = false;
-    } else if (ListInputTypes.includes(key)) {
-      userInput.listInput.get(key)!.push(value);
+    /* Skip falsy input */
+    if (!key) continue;
+
+    /* Remove comments, if any */
+    if (value && value.includes('//')) value = (value.split('//')[0] as string).trim();
+
+
+    if (InputTypes.includes(key) && value) {
+      userInput.add(key, value);
       userInput.isEmpty = false;
     } else {
-      userInput.listInput.get(undeclared)!.push(key);
+      userInput.addUnmarkedKey(key);
       userInput.isEmpty = false;
     }
   }
+
+  console.log('User input:\n' + userInput.toString());
   return userInput;
 }

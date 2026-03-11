@@ -51,6 +51,7 @@ import {Templates} from "./model/templates";
  * - [ ] Button: save algorithm as default
  * - [ ] Button: mirror algorithm vertically (when allowed by flag)
  * - [ ] Button: lock rotation
+ * - [ ] Shorten cross arrows by ~10% (see OLL-37, alg 2) -> could/should reduce confusion
  *
  * # Unit tests
  * - [x] setup env
