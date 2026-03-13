@@ -29,16 +29,14 @@ function isAlgorithmStep(value: string): value is AlgorithmStep {
 }
 
 /**
- * @param row - row containing algorithm steps, may start with 'alg:'
+ * @param line - pre-trimmed line containing algorithm steps, no 'alg:'-prefix, no comments
  */
-function toAlgorithm(row: string): Result<Algorithm> {
-  let cleanRow: string = row.startsWith('alg:') ? row.slice(4).trim() : row.trim();
-
-  if (!RegEx.isAlgorithm(cleanRow)) {
-    return {success: false, error: InvalidInput.ofAlgorithm(row)};
+function toAlgorithm(line: string): Result<Algorithm> {
+  if (!RegEx.isAlgorithm(line)) {
+    return {success: false, error: InvalidInput.ofAlgorithm(line)};
   }
 
-  let splitSteps: string[] = cleanRow.split(' ');
+  let splitSteps: string[] = line.split(' ');
   let steps: AlgorithmStep[] = [];
 
   for (const step of splitSteps) {
@@ -46,57 +44,61 @@ function toAlgorithm(row: string): Result<Algorithm> {
       steps.push(step);
     } else {
       // This should technically be unreachable if the Regex is perfect
-      return {success: false, error: new InvalidInput(row, 'Unknown rotation step: ' + step)};
+      return {success: false, error: new InvalidInput(line, 'Unknown rotation step: ' + step)};
     }
   }
   return {success: true, data: new Algorithm(steps)};
 }
 
 /**
- * Cuts comments & prefix, split width and height
- * @param row string starting with 'dimension:'
+ * @param line - pre-trimmed line containing dimensions, no 'dimension:'-prefix, no comments
  */
-function toDimensions(row: string): Result<Dimensions> {
-  const parts = row.split(' ')[0]?.replace('dimension:', '').split(',');
+function toDimensions(line: string): Result<Dimensions> {
+  const parts = line.split(',');
   const [w = 0, h = 0] = parts?.map(Number) ?? [];
   if (w >= 2 && w <= 10 && h >= 2 && h <= 10) {
     return {success: true, data: new Dimensions(w, h)};
   } else {
-    return {success: false, error: InvalidInput.ofDimensions(row)};
+    return {success: false, error: InvalidInput.ofDimensions(line)};
   }
 }
 
-function parseHexColor(row: string,  errorFactory: () => InvalidInput): Result<string> {
-  // const clean = row.split(' ')[0]?;
-  if (row?.match(/^([a-f0-9]{3}){1,2}$/i)) {
-    return {success: true, data: '#' + row};
+/**
+ * @param line - pre-trimmed row containing a color hex value, no 'dimension:'-prefix, no comments
+ * @param errorFactory - use when input is not a color hex value
+ */
+function parseHexColor(line: string, errorFactory: () => InvalidInput): Result<string> {
+  if (RegEx.isColorHexValue(line)) {
+    return {success: true, data: '#' + line};
   } else {
     return {success: false, error: errorFactory()};
   }
 }
 
 /**
- * @param {string} row - string starting with 'cubeColor:' followed by a hex value for the cube's color
+ * @param input - pre-trimmed row containing a color hex value, no 'cubeColor:'-prefix, no comments
  */
-function toCubeColor(row: string): Result<string> {
-  return parseHexColor(row,  () => InvalidInput.ofCubeColor(row));
+function toCubeColor(input: string): Result<string> {
+  return parseHexColor(input, () => InvalidInput.ofCubeColor(input));
 }
 
 /**
- * @param {string} row - string starting with 'arrowColor:' followed by a hex value for the arrows' color
+ * @param input - pre-trimmed row containing a color hex value, no 'arrowColor:'-prefix, no comments
  */
-function toArrowColor(row: string): Result<string> {
-  return parseHexColor(row, () => InvalidInput.ofArrowColor(row));
+function toArrowColor(input: string): Result<string> {
+  return parseHexColor(input, () => InvalidInput.ofArrowColor(input));
 }
 
-function toFlags(row: string): Result<Set<FlagType>> {
-  let cleanRow: string = row.startsWith('flags:') ? row.slice(6).trim() : row.trim();
+/**
+ * @param input - pre-trimmed row containing special flags, no 'flags:'-prefix, no comments
+ */
+function toFlags(input: string): Result<Set<FlagType>> {
 
-  if (!RegEx.isSpecialFlags(cleanRow)) {
-    return {success: false, error: InvalidInput.ofFlags(row)};
+  if (!RegEx.isSpecialFlags(input)) {
+    return {success: false, error: InvalidInput.ofFlags(input)};
   }
 
-  let splitFlags: string[] = cleanRow.split(',');
+  let splitFlags: string[] = input.split(',');
   let flags: Set<FlagType> = new Set<FlagType>();
 
   for (const flag of splitFlags) {
@@ -104,7 +106,7 @@ function toFlags(row: string): Result<Set<FlagType>> {
       flags.add(flag);
     } else {
       // This should technically be unreachable if the Regex is perfect
-      return {success: false, error: new InvalidInput(row, 'Unknown flag: ' + flag)};
+      return {success: false, error: new InvalidInput(input, 'Unknown flags: ' + flag)};
     }
   }
   return {success: true, data: flags};

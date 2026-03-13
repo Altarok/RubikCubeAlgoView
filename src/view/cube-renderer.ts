@@ -130,10 +130,10 @@ export abstract class CubeRenderer {
 
     if (this.cubeState.id){
       let title: string;
-      if (this.cubeState.defaultRotationBackup === 0) {
+      if (this.cubeState.defaultRotation === 0) {
         title = 'Save rotation.';
       } else {
-        title = `Un-save default rotation. (current: ${this.cubeState.defaultRotationBackup})`
+        title = `Un-save default rotation. (current: ${this.cubeState.defaultRotation})`
       }
       this.buttonSaveRotation = buttonDiv.createEl('button', {title});
       setIcon(this.buttonSaveRotation, 'save')
@@ -169,7 +169,8 @@ export class CubeRendererOLL extends CubeRenderer {
   }
 
   displayCubeForeground(svgElement: SVGSVGElement, viewBoxWidth: number, viewBoxHeight: number): void {
-    let cells: OllFieldColoring = this.cubeStateOLL.ollFieldColors;
+    // debugger;
+    let cells: OllFieldColoring = this.cubeStateOLL.ollFieldInput;
     const [cubeWidth, cubeHeight] = [this.cubeStateOLL.dimensions.width, this.cubeStateOLL.dimensions.height]; // e.g. 3,3
 
     const stickerSize = 100;

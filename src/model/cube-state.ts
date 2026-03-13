@@ -27,7 +27,6 @@ abstract class CubeState {
   currentRotation: number = 0;
   currentRotationNormalized: number = 0;
   defaultRotation: number = 0;
-  defaultRotationBackup?: number;
 
   specialFlags: Set<FlagType>;
   locked: boolean = false;
@@ -64,17 +63,28 @@ abstract class CubeState {
     this.currentRotationNormalized = this.currentRotation % 4;
   }
   protected resetCurrentRotation(): void {
-    this.currentRotation = this.defaultRotationBackup ?? 0;
+    this.currentRotation = this.defaultRotation ?? 0;
     this.currentRotationNormalized = ((this.currentRotation % 4) + 4) % 4;
   }
   protected lowerCurrentRotation(): void {
     this.currentRotation -= 1;
     this.currentRotationNormalized = (this.currentRotation + 4) % 4;
   }
-  setDefaultRotation(defaultRotation: number) {
-    this.currentRotation = defaultRotation;
-    this.currentRotationNormalized = defaultRotation;
-    this.defaultRotationBackup = defaultRotation;
+  setDefaultRotation(defaultRotation: number | undefined) {
+    if (defaultRotation) {
+      console.debug(`Pre-set rotation found: ${defaultRotation}`);
+      this.currentRotation = defaultRotation;
+      this.currentRotationNormalized = defaultRotation;
+    } else {
+
+      /*
+       * TODO set boolean 'locked' or similar
+       *
+       * if param = undef -> set said boolean to opposite value
+       *
+       * call this method after saving and after loading
+       */
+    }
   }
 }
 
@@ -118,11 +128,13 @@ export class CubeStatePLL extends CubeState {
  * - value: set of arrows this algorithm implements
  */
 export class CubeStateOLL extends CubeState {
-  ollFieldColors: OllFieldColoring;
+  ollFieldInput: OllFieldColoring;
   algorithmToArrows: MappedAlgorithms;
   selectedAlgorithmHash: string = '';
 
-  constructor(userInput: UserInput) {
+  constructor(userInput: UserInput
+              // , public readonly ollFieldInput: OllFieldColoring
+  ) {
     super(userInput, 'oll');
   }
 

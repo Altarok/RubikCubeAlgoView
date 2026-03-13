@@ -10,16 +10,16 @@ describe('Parse.toAlgorithm()', () => {
   });
 
   it('should not parse invalid algorithms', () => {
-    expect(Parse.toAlgorithm(`alg:#ff2233`).success).toBe(false);
-    expect(Parse.toAlgorithm(`alg:fRUR'U'f`).success).toBe(false);
-    expect(Parse.toAlgorithm(`alg:3,3`).success).toBe(false);
-    expect(Parse.toAlgorithm(`alg:x,y,z`).success).toBe(false);
-    expect(Parse.toAlgorithm(`alg:X y Z`).success).toBe(false);
-    expect(Parse.toAlgorithm(`alg:y0 f r u`).success).toBe(false);
+    expect(Parse.toAlgorithm(`#ff2233`).success).toBe(false);
+    expect(Parse.toAlgorithm(`fRUR'U'f`).success).toBe(false);
+    expect(Parse.toAlgorithm(`3,3`).success).toBe(false);
+    expect(Parse.toAlgorithm(`x,y,z`).success).toBe(false);
+    expect(Parse.toAlgorithm(`X y Z`).success).toBe(false);
+    expect(Parse.toAlgorithm(`y0 f r u`).success).toBe(false);
   });
 
   it('should parse valid algorithms', () => {
-    let result = Parse.toAlgorithm(`alg:F R U R' U' F'`);
+    let result = Parse.toAlgorithm(`F R U R' U' F'`);
     expect(result.success).toBe(true);
     if (result.success) expect(result.data.toString()).toBe(`F R U R' U' F'`); else expect.fail();
   });
@@ -35,12 +35,12 @@ describe('Parse.toArrowColor()', () => {
   });
 
   it('should not parse invalid arrow colors', () => {
-    expect(Parse.toArrowColor('arrowColor:#ff2233').success).toBe(false);
-    expect(Parse.toArrowColor('arrowColor:#f23').success).toBe(false);
-    expect(Parse.toArrowColor('arrowColor:FOO').success).toBe(false);
-    expect(Parse.toArrowColor('arrowColor:foo').success).toBe(false);
-    expect(Parse.toArrowColor('arrowColor:f000').success).toBe(false);
-    expect(Parse.toArrowColor('arrowColor:ff').success).toBe(false);
+    expect(Parse.toArrowColor('#ff2233').success).toBe(false);
+    expect(Parse.toArrowColor('#f23').success).toBe(false);
+    expect(Parse.toArrowColor('FOO').success).toBe(false);
+    expect(Parse.toArrowColor('foo').success).toBe(false);
+    expect(Parse.toArrowColor('f000').success).toBe(false);
+    expect(Parse.toArrowColor('ff').success).toBe(false);
   });
 
   it('should parse valid arrow colors', () => {
@@ -53,11 +53,7 @@ describe('Parse.toArrowColor()', () => {
     if (result.success) expect(result.data).toBe('#ff0000'); else expect.fail();
   });
 
-  it('should accept comments', () => {
-    let result = Parse.toArrowColor('arrowColor:f00 // comment goes here');
-    expect(result.success).toBe(true);
-    if (result.success) expect(result.data).toBe('#f00'); else expect.fail();
-  });
+
 });
 
 describe('Parse.toArrows()', () => {
@@ -97,12 +93,12 @@ describe('Parse.toCubeColor()', () => {
   });
 
   it('should not parse invalid cube colors', () => {
-    expect(Parse.toCubeColor('cubeColor:#ff2233').success).toBe(false);
-    expect(Parse.toCubeColor('cubeColor:#f23').success).toBe(false);
-    expect(Parse.toCubeColor('cubeColor:FOO').success).toBe(false);
-    expect(Parse.toCubeColor('cubeColor:foo').success).toBe(false);
-    expect(Parse.toCubeColor('cubeColor:f000').success).toBe(false);
-    expect(Parse.toCubeColor('cubeColor:ff').success).toBe(false);
+    expect(Parse.toCubeColor('#ff2233').success).toBe(false);
+    expect(Parse.toCubeColor('#f23').success).toBe(false);
+    expect(Parse.toCubeColor('FOO').success).toBe(false);
+    expect(Parse.toCubeColor('foo').success).toBe(false);
+    expect(Parse.toCubeColor('f000').success).toBe(false);
+    expect(Parse.toCubeColor('ff').success).toBe(false);
   });
 
   it('should parse valid cube colors', () => {
@@ -115,11 +111,6 @@ describe('Parse.toCubeColor()', () => {
     if (result.success) expect(result.data).toBe('#ff0000'); else expect.fail();
   });
 
-  it('should accept comments', () => {
-    let result = Parse.toCubeColor('cubeColor:f00 // comment goes here');
-    expect(result.success).toBe(true);
-    if (result.success) expect(result.data).toBe('#f00'); else expect.fail();
-  });
 });
 
 describe('Parse.toDimensions()', () => {
@@ -131,27 +122,21 @@ describe('Parse.toDimensions()', () => {
   });
 
   it('should not parse invalid dimensions', () => {
-    expect(Parse.toDimensions('dimension:').success).toBe(false);
-    expect(Parse.toDimensions('dimension:2').success).toBe(false);
-    expect(Parse.toDimensions('dimension:2,33').success).toBe(false);
-    expect(Parse.toDimensions('dimension:1,2').success).toBe(false);
-    expect(Parse.toDimensions('dimension:-3,3').success).toBe(false);
+    expect(Parse.toDimensions('').success).toBe(false);
+    expect(Parse.toDimensions('2').success).toBe(false);
+    expect(Parse.toDimensions('2,33').success).toBe(false);
+    expect(Parse.toDimensions('1,2').success).toBe(false);
+    expect(Parse.toDimensions('-3,3').success).toBe(false);
   });
 
   it('should parse valid dimensions', () => {
-    let result = Parse.toDimensions('dimension:2,3');
+    let result = Parse.toDimensions('2,3');
     expect(result.success).toBe(true);
     if (result.success) expect(result.data).toMatchObject({width: 2, height: 3}); else expect.fail();
 
-    result = Parse.toDimensions('dimension:3,4');
+    result = Parse.toDimensions('3,4');
     expect(result.success).toBe(true);
     if (result.success) expect(result.data).toMatchObject({width: 3, height: 4}); else expect.fail();
-  });
-
-  it('should accept comments', () => {
-    let result = Parse.toDimensions('dimension:3,3 // comment goes here');
-    expect(result.success).toBe(true);
-    if (result.success) expect(result.data).toMatchObject({width: 3, height: 3}); else expect.fail();
   });
 
 });
@@ -165,21 +150,21 @@ describe('Parse.toFlags()', () => {
   });
 
   it('should not parse unknown flags', () => {
-    expect(Parse.toFlags('flags:i do not exist').success).toBe(false);
+    expect(Parse.toFlags('i do not exist').success).toBe(false);
     const existingFlag = 'no-rotation';
-    expect(Parse.toFlags(`flags:${existingFlag},i do not exist`).success).toBe(false);
+    expect(Parse.toFlags(`${existingFlag},i do not exist`).success).toBe(false);
   });
 
   it('should parse known flags', () => {
     const existingFlag = 'no-rotation';
-    let result = Parse.toFlags(`flags:${existingFlag}`);
+    let result = Parse.toFlags(`${existingFlag}`);
     expect(result.success).toBe(true);
     if (result.success) expect(result.data.size).toBe(1); else expect.fail('should not reach');
   });
 
   it('should ignore duplicates', () => {
     const existingFlag = 'no-rotation';
-    let result = Parse.toFlags(`flags:${existingFlag},${existingFlag}`);
+    let result = Parse.toFlags(`${existingFlag},${existingFlag}`);
     expect(result.success).toBe(true);
     if (result.success) expect(result.data.size).toBe(1); else expect.fail('should not reach');
   });

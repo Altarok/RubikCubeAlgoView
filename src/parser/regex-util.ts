@@ -1,7 +1,7 @@
 import {Flags} from "../model/flags";
 
 export const RegEx = {
-  isAlgorithm, isChainedArrow, isDoubleSidedArrow, isPositiveInteger, isSpecialFlags
+  isAlgorithm, isChainedArrow, isDoubleSidedArrow, isPositiveInteger, isSpecialFlags, isColorHexValue
 }
 
 /*
@@ -32,19 +32,25 @@ function isAlgorithm(input: string): boolean {
   return algorithmRegex.test(input);
 }
 
-/*
+/**
  * User input for arrow coordinates.
- * Examples: '7', '2.1'
+ * Arrow index examples: '7', '2.1'
  */
 const arrowCoordinatesPattern = `${positiveIntegerPattern}(\\.${positiveIntegerPattern})?`;
 const chainedArrowRegex = new RegExp(`^${arrowCoordinatesPattern}(-${arrowCoordinatesPattern}){1,3}$`);
 const doubleSidedArrowRegex = new RegExp(`^${arrowCoordinatesPattern}\\+${arrowCoordinatesPattern}$`);
 
+/** @return true if input equals 2-4 arrow indices (\d+ or \d+\.\d+) separated by a minus-sign (-) */
 function isChainedArrow(input: string): boolean {
   return chainedArrowRegex.test(input);
 }
 
+/** @return true if input equals 2 arrow indices (\d+ or \d+\.\d+) separated by a plus-sign (+) */
 function isDoubleSidedArrow(input: string): boolean {
   return doubleSidedArrowRegex.test(input);
 }
 
+/** @return true if input is a valid lower-case 3 or 6 digit hex value, like e.g. 'f12' or 'bada55' */
+function isColorHexValue(input: string): boolean {
+  return /^([a-f0-9]{3}){1,2}$/i.test(input);
+}

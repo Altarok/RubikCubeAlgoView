@@ -66,6 +66,12 @@ export class StickerCoords {
 /** Coordinates for -multiple- arrows. */
 export type Arrows = ArrowCoords[];
 
+const DefaultDimensions = {
+  WIDTH: 3, /* default rubik cube width  */
+  HEIGHT: 3 /* default rubik cube height */
+} as const;
+
+
 /** Simple dimensions */
 export class Dimensions {
   constructor(public readonly width: number, public readonly height: number) {
@@ -74,4 +80,8 @@ export class Dimensions {
   isDefaultSize = () => this.width === 3 && this.height === 3;
 
   toString = () => `Dimensions[${this.width},${this.height}]`;
+
+  static default(): Dimensions {
+    return new Dimensions(DefaultDimensions.WIDTH, DefaultDimensions.HEIGHT);
+  }
 }

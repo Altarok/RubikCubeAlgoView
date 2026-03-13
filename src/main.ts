@@ -16,7 +16,8 @@ import {Templates} from "./model/templates";
  * - [x] remove 'y' after rotation
  * - [x] mobile support
  *   - [ ] remove redundant CSS
- * - [ ] remove 'y0'
+ * - [x] remove 'y0'
+ * - [ ] validate actual OLL input
  *
  * ## Rotation
  * - [ ] Change cube rotation to integer type [0-3] // to be multiplied by 90 degrees
@@ -112,15 +113,23 @@ export default class RubikCubeAlgos extends Plugin {
   }
 
   async loadSettings() {
+    const loadedData = await this.loadData();
+
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    this.settings = Object.assign({}, DefaultSettings, await this.loadData());
+    this.settings = Object.assign({}, DefaultSettings, loadedData);
+
+    // Convert the plain object from JSON back into a Map
+    this.settings.cubeRotations = new Map(Object.entries(loadedData?.cubeRotations || {}));
   }
 
   async saveSettings() {
-    await this.saveData(this.settings);
-    this.app.workspace.trigger(
-      "rubik:rerender-markdown-code-block-processors"
-    );
+    const storageData = {
+      ...this.settings,
+      cubeRotations: Object.fromEntries(this.settings.cubeRotations)
+    };
+
+    await this.saveData(storageData);
+    this.app.workspace.trigger("rubik:rerender-markdown-code-block-processors");
     console.debug('Settings updated');
   }
 

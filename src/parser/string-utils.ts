@@ -10,15 +10,15 @@ export const StringUtils = {
  * Create hash for persisting of metadata.
  */
 function cubeHash(id: string | undefined, algorithmType: AlgorithmType): string | undefined {
-  if (id) {
-    switch (algorithmType) {
-      case'pll':
-        return `pll-${id}-${StringUtils.hash('a grain of salt' + id)}`;
-      case'oll':
-        return `oll-${id}-${StringUtils.hash('a grain of salt' + id)}`;
-    }
+  if (!id) {
+    return undefined;
   }
-  return undefined;
+  switch (algorithmType) {
+    case'pll':
+      return `pll-${id}-${StringUtils.hash('a grain of salt' + id)}`;
+    case'oll':
+      return `oll-${id}-${StringUtils.hash('a grain of salt' + id)}`;
+  }
 }
 
 /**
@@ -50,7 +50,7 @@ function hash(str: string, seed = 0): string {
 
 /**
  * Takes complete code block content and returns all non-empty lines in a string array.
- * Removes comments.
+ * Removes comments. Removes prefixes.
  * TODO remove comment removal from other code
  * @param input - a code block's complete content
  */

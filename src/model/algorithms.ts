@@ -3,6 +3,7 @@ import {StringUtils} from "../parser/string-utils";
 
 export const AlgorithmTypes = ['pll',  'oll'] as const;
 export type AlgorithmType =  (typeof AlgorithmTypes)[number];
+
 export interface Rotatable {
   rotate: (quarterTurns: number) => void;
 }
@@ -90,8 +91,6 @@ export class Algorithm implements Rotatable {
   toString(): string {
     return this.steps.join(' ');
   }
-
-  // clone = (): Algorithm => new Algorithm([...this.steps]);
 }
 
 export class Algorithms implements Rotatable {
@@ -108,7 +107,7 @@ export class Algorithms implements Rotatable {
 export class MappedAlgorithm implements Rotatable {
   /**
    * @param algorithm one of these will be matched to 0-n arrows
-   * @param arrows
+   * @param arrows collection of arrows matching given algorithm
    */
   constructor(public readonly algorithm: Algorithm,
               public readonly arrows: Arrows) {
@@ -119,7 +118,7 @@ export class MappedAlgorithm implements Rotatable {
 
 export class MappedAlgorithms implements Rotatable {
 
-  private map = new Map<string, MappedAlgorithm>();
+  map = new Map<string, MappedAlgorithm>();
 
   size = () => this.map.size;
 

@@ -25,11 +25,12 @@ export class UserInput {
     this.listInput.get(undeclared)!.push(value);
   }
 
-
   getAlgorithms = () => this.listInput.get('alg');
   getArrowColor = () => this.listInput.get('arrowColor')![0] ?? undefined;
+  /** PLL only: User input keyed 'arrows'. E.g. '1+3,4+8' */
   getArrows = () => this.listInput.get('arrows')![0] ?? undefined;
   getCubeColor = () => this.listInput.get('cubeColor')![0] ?? undefined;
+  /** PLL only: User input keyed 'dimension'. E.g. '3,3' */
   getDimensions = () => this.listInput.get('dimension')![0] ?? undefined;
   getFlags = () => this.listInput.get('flags')![0] ?? undefined;
   getId = () => this.listInput.get('id')![0] ?? undefined;
@@ -46,7 +47,7 @@ export class UserInput {
         }
       }
 
-      return s;
+      return s.trim();
     }
   };
 }
@@ -78,9 +79,9 @@ export class InvalidInput {
     return new InvalidInput(line, "Invalid algorithm format. Example: alg:R' U2 R U2 R' F R U R' U' R' F' R2 U' (spaces not optional, no comments in this line)");
   }
 
-  static ofPllParameter(line: string): InvalidInput {
-    return new InvalidInput(line, "Invalid parameter. Expected: 'dimension/cubeColor/arrowColor/arrows'");
-  }
+  // static ofPllParameter(line: string): InvalidInput {
+  //   return new InvalidInput(line, "Invalid parameter. Expected: 'dimension/cubeColor/arrowColor/arrows'");
+  // }
 
   static ofDimensions(line: string) {
     return new InvalidInput(line, 'Invalid dimensions. Expected: "dimension:[2-10],[2-10]" (e.g. "dimension:3,3")');

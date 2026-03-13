@@ -1,11 +1,11 @@
 import RubikCubeAlgos from "./main";
-import {CodeBlockInterpreter} from "./parser/codeblock-interpreter";
+import {createPllCube} from "./parser/codeblock-interpreter";
 import {CubeRendererPLL} from "./view/cube-renderer";
-import {CubeStatePLL} from "./model/cube-state";
 import {MarkdownRenderChild} from "obsidian";
 import {ButtonController} from "./control/button-controller";
 import {StringUtils} from "./parser/string-utils";
 import {UserInput} from "./model/codeblock-input";
+import {CubeColors, DefaultSettings} from "./RubikCubeAlgoSettings";
 
 export class MarkdownPostProcessorPLL extends MarkdownRenderChild {
   source: string;
@@ -38,17 +38,17 @@ export class MarkdownPostProcessorPLL extends MarkdownRenderChild {
 
     // console.debug(userInput.toString());
 
-    let cubeState = new CodeBlockInterpreter(userInput, this.plugin.settings).createPllCubeState();
+    const colors: CubeColors = {
+      arrow: this.plugin.settings.arrowColor ?? DefaultSettings.ARROW_COLOR,
+      cube: this.plugin.settings.cubeColor ?? DefaultSettings.CUBE_COLOR
+    };
+
+    let cubeState = createPllCube(userInput, colors);
 
     if (userInput.getId()) {
-      // debugger;
-      let hash: string | undefined = StringUtils.cubeHash(userInput.getId(), 'pll');
-      const cubeRotation = this.plugin.settings.cubeRotations['pll'];
-      let defaultRotation: number | undefined = cubeRotation[hash] ?? undefined;
-      if (defaultRotation) {
-        console.debug('Pre-set rotation found: ' + defaultRotation);
-        cubeState.setDefaultRotation(defaultRotation);
-      }
+      let hash: string = StringUtils.cubeHash(userInput.getId(), 'pll');
+      let defaultRotation: number | undefined = this.plugin.settings.cubeRotations.get(hash);
+      cubeState.setDefaultRotation(defaultRotation);
     }
 
     let cubeRenderer: CubeRendererPLL = new CubeRendererPLL(cubeState);
