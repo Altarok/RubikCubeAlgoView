@@ -44,11 +44,11 @@ describe('Parse.toArrowColor()', () => {
   });
 
   it('should parse valid arrow colors', () => {
-    let result = Parse.toArrowColor('arrowColor:f00');
+    let result = Parse.toArrowColor('f00');
     expect(result.success).toBe(true);
     if (result.success) expect(result.data).toBe('#f00'); else expect.fail();
 
-    result = Parse.toArrowColor('arrowColor:ff0000');
+    result = Parse.toArrowColor('ff0000');
     expect(result.success).toBe(true);
     if (result.success) expect(result.data).toBe('#ff0000'); else expect.fail();
   });
@@ -106,11 +106,11 @@ describe('Parse.toCubeColor()', () => {
   });
 
   it('should parse valid cube colors', () => {
-    let result = Parse.toCubeColor('cubeColor:f00');
+    let result = Parse.toCubeColor('f00');
     expect(result.success).toBe(true);
     if (result.success) expect(result.data).toBe('#f00'); else expect.fail();
 
-    result = Parse.toCubeColor('cubeColor:ff0000');
+    result = Parse.toCubeColor('ff0000');
     expect(result.success).toBe(true);
     if (result.success) expect(result.data).toBe('#ff0000'); else expect.fail();
   });

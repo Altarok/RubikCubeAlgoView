@@ -1,6 +1,6 @@
 import {describe, expect, it} from "vitest";
 import {RegEx} from "../src/parser/regex-util";
-import {flags} from "../src/model/algorithms";
+import {Flags} from "../src/model/flags";
 
 describe('RegEx.isPositiveInteger()', () => {
 
@@ -22,7 +22,7 @@ describe('RegEx.isPositiveInteger()', () => {
 
 describe('RegEx.isSpecialFlags()', () => {
 
-  let flagsStrings = flags as readonly string[];
+  let flagsStrings = Flags.types as readonly string[];
 
   it('should identify crap correctly', () => {
     expect(RegEx.isSpecialFlags('')).toBe(false);

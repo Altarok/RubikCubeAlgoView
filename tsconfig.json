@@ -1,23 +1,23 @@
 {
 	"compilerOptions": {
-		"baseUrl": "src", // The starting point for resolving non-relative module names (makes imports cleaner).
-		"inlineSourceMap": true, // Embeds debug mapping data directly in the output files instead of separate .map files.
-		"inlineSources": true, // see above
-		"module": "ESNext", // Tells TS to use the newest standard for "how files talk to each other" (imports/exports).
-		"target": "ES6", // The version of JavaScript your code compiles "down" to; ES6 is quite old now (2015).
-		"allowJs": true, // Allows you to have .js files in your project alongside .ts files.
-		"noImplicitAny": true, // Error if a variable's type can't be inferred, and you didn't provide one (prevents "hidden" any).
-		"noImplicitThis": true, // Raises an error when this has an unclear type, preventing common scoping bugs.
-		"noImplicitReturns": true, // Ensures every code path in a function returns a value (very Java-like safety).
-		"moduleResolution": "node", // Tells TS to mimic how Node.js looks for packages in node_modules.
-		"importHelpers": true, // Reduces code size by importing small "helper" functions instead of re-writing them in every file.
-		"noUncheckedIndexedAccess": true, // Forces you to check if a value exists when accessing an array by index (e.g., myArray[5]).
-		"isolatedModules": true, // Ensures every file can be safely transpiled by tools that don't understand the whole project.
-		"strictNullChecks": true, // The "Billion-Dollar-Mistake" fix; forces you to explicitly handle null or undefined.
-		"strictBindCallApply": true, // Ensures that when you use functions like .call() or .bind(), the arguments are type-checked.
-		"allowSyntheticDefaultImports": true, // Allows you to import libraries that don't have a "default export" using the default syntax.
-		"useUnknownInCatchVariables": true, // Forces the error in a try/catch block to be unknown rather than any, requiring a type check.
-		"lib": [ // Tells TS which "built-in" APIs you expect to be available (like window or Promise).
+		"baseUrl": "src",
+		"inlineSourceMap": true,
+		"inlineSources": true,
+		"module": "ESNext",
+		"target": "ES6",
+		"allowJs": true,
+		"noImplicitAny": true,
+		"noImplicitThis": true,
+		"noImplicitReturns": true,
+		"moduleResolution": "node",
+		"importHelpers": true,
+		"noUncheckedIndexedAccess": true,
+		"isolatedModules": true,
+		"strictNullChecks": true,
+		"strictBindCallApply": true,
+		"allowSyntheticDefaultImports": true,
+		"useUnknownInCatchVariables": true,
+		"lib": [
 			"DOM",
 			"ES5",
 			"ES6",
