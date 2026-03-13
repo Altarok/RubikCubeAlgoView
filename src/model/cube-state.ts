@@ -75,15 +75,14 @@ abstract class CubeState {
       console.debug(`Pre-set rotation found: ${defaultRotation}`);
       this.currentRotation = defaultRotation;
       this.currentRotationNormalized = defaultRotation;
+      this.defaultRotation = defaultRotation;
+      this.locked = true;
     } else {
-
-      /*
-       * TODO set boolean 'locked' or similar
-       *
-       * if param = undef -> set said boolean to opposite value
-       *
-       * call this method after saving and after loading
-       */
+      console.debug(`Pre-set rotation found: ${defaultRotation}`);
+      this.currentRotation = 0;
+      this.currentRotationNormalized = 0;
+      this.defaultRotation = 0;
+      this.locked = false;
     }
   }
 }

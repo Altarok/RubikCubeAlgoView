@@ -138,7 +138,7 @@ function addRotationButtons(cubeRenderer: CubeRenderer, cubeState: CubeState, pl
         buttonSaveRotation.setText('Save rotation.'); // reset mouse over
         cubeState.locked = false;
 
-        IO.saveRotation(cubeState, plugin);
+        IO.unsaveRotation(cubeState, plugin);
         changeStateOfRotationDependantButtons(cubeRenderer, cubeState);
 
       } else {

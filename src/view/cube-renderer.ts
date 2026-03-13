@@ -130,13 +130,17 @@ export abstract class CubeRenderer {
 
     if (this.cubeState.id){
       let title: string;
-      if (this.cubeState.defaultRotation === 0) {
-        title = 'Save rotation.';
-      } else {
+      if (this.cubeState.locked) {
         title = `Un-save default rotation. (current: ${this.cubeState.defaultRotation})`
+      } else {
+        title = 'Save rotation.';
       }
       this.buttonSaveRotation = buttonDiv.createEl('button', {title});
-      setIcon(this.buttonSaveRotation, 'save')
+      if (this.cubeState.locked) {
+        setIcon(this.buttonSaveRotation, 'save-off');
+      }else{
+        setIcon(this.buttonSaveRotation, 'save');
+      }
     }
   }
 }

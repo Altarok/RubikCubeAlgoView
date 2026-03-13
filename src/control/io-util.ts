@@ -3,7 +3,7 @@ import RubikCubeAlgos from "../main";
 import {StringUtils} from "../parser/string-utils";
 
 export const IO = {
-  saveRotation
+  saveRotation, unsaveRotation
 }
 
 /**
@@ -11,7 +11,18 @@ export const IO = {
  * @param cubeState
  * @param plugin
  */
+
+
+function unsaveRotation(cubeState: CubeState, plugin: RubikCubeAlgos) {
+  saveRotation2(0, cubeState, plugin);
+}
+
 function saveRotation(cubeState: CubeState, plugin: RubikCubeAlgos) {
+  saveRotation2(cubeState.currentRotationNormalized, cubeState, plugin);
+}
+
+function saveRotation2(valueToSafe: number, cubeState: CubeState, plugin: RubikCubeAlgos) {
+
 
   let hash: string | undefined = StringUtils.cubeHash(cubeState.id, cubeState.algorithmType);
 
@@ -21,12 +32,12 @@ function saveRotation(cubeState: CubeState, plugin: RubikCubeAlgos) {
     return;
   }
 
-  console.debug(`Cube hash: ${hash}, will persist current rotation: ${cubeState.currentRotationNormalized}`);
-  if (cubeState.currentRotationNormalized !== undefined) {
-    if (cubeState.currentRotationNormalized !== 0) {
+  console.debug(`Cube hash: ${hash}, will persist current rotation: ${valueToSafe}`);
+  if (valueToSafe !== undefined) {
+    if (valueToSafe !== 0) {
       /* Save new value */
-      plugin.settings.cubeRotations.set(hash, cubeState.currentRotationNormalized);
-      cubeState.defaultRotation = cubeState.currentRotationNormalized;
+      plugin.settings.cubeRotations.set(hash, valueToSafe);
+      cubeState.defaultRotation = valueToSafe;
     } else {
       /* Delete value */
       plugin.settings.cubeRotations.delete(hash);
@@ -36,4 +47,3 @@ function saveRotation(cubeState: CubeState, plugin: RubikCubeAlgos) {
 
   plugin.saveSettingsSync();
 }
-

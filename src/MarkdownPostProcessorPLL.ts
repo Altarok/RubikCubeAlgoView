@@ -46,7 +46,7 @@ export class MarkdownPostProcessorPLL extends MarkdownRenderChild {
     let cubeState = createPllCube(userInput, colors);
 
     if (userInput.getId()) {
-      let hash: string = StringUtils.cubeHash(userInput.getId(), 'pll');
+      let hash = StringUtils.cubeHash(userInput.getId(), 'pll');
       let defaultRotation: number | undefined = this.plugin.settings.cubeRotations.get(hash);
       cubeState.setDefaultRotation(defaultRotation);
     }
