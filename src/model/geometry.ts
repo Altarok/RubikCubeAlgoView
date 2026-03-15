@@ -77,6 +77,9 @@ export class Dimensions {
   constructor(public readonly width: number, public readonly height: number) {
   }
 
+  static ofPllCubeDimensions = (cubeDimensions: Dimensions) => new Dimensions(cubeDimensions.width * 100, cubeDimensions.height * 100);
+  static ofOllCubeDimensions = (cubeDimensions: Dimensions) => new Dimensions(cubeDimensions.width * 100 + 100, cubeDimensions.height * 100 + 100);
+
   isDefaultSize = () => this.width === 3 && this.height === 3;
 
   toString = () => `Dimensions[${this.width},${this.height}]`;

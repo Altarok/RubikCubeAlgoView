@@ -234,24 +234,19 @@ export function createPllCube(userInput: UserInput, colors: CubeColors): CubeSta
   let cubeState: CubeStatePLL = new CubeStatePLL(userInput);
 
   if (!interpreter.codeBlockInterpretationFailed) {
-    Object.assign(cubeState, {
-      /*
-       * Generic data:
-       */
-      dimensions: interpreter.cubeDimensions,
-      backgroundColor: interpreter.cubeColor,
-      arrowColor: interpreter.arrowColor,
-      arrowCoordinates: arrowCoordinates,
-      viewBoxDimensions: {
-        width: interpreter.cubeDimensions.width * 100,
-        height: interpreter.cubeDimensions.height * 100
-      },
-      specialFlags: interpreter.specialFlags,
-      /*
-       * PLL-only data:
-       */
-      algorithms: algorithms
-    });
+    /*
+     * Generic data:
+     */
+    cubeState.dimensions = interpreter.cubeDimensions;
+    cubeState.backgroundColor = interpreter.cubeColor;
+    cubeState.arrowColor = interpreter.arrowColor;
+    cubeState.arrowCoordinates = arrowCoordinates;
+    cubeState.viewBoxDimensions = Dimensions.ofPllCubeDimensions(interpreter.cubeDimensions);
+    cubeState.specialFlags = interpreter.specialFlags;
+    /*
+     * PLL-only data:
+     */
+    cubeState.algorithms = algorithms;
   } else {
     cubeState.invalidInput = interpreter.invalidInput;
   }
@@ -277,25 +272,20 @@ export function createOllCube(userInput: UserInput, colors: CubeColors): CubeSta
   let mappedAlgorithms: MappedAlgorithms = interpreter.setupAlgorithmArrowMap();
 
   if (!interpreter.codeBlockInterpretationFailed) {
-    Object.assign(cubeState, {
-      /*
-       * Generic data:
-       */
-      dimensions: interpreter.cubeDimensions,
-      backgroundColor: '#000',
-      arrowColor: interpreter.arrowColor,
-      viewBoxDimensions: {
-        width: interpreter.cubeDimensions.width * 100 + 100,
-        height: interpreter.cubeDimensions.height * 100 + 100
-      },
-      specialFlags: interpreter.specialFlags,
-      /*
-       * OLL-only data:
-       */
-      algorithmToArrows: mappedAlgorithms,
-      selectedAlgorithmHash: interpreter.initialAlgorithmSelectionHash,
-      ollFieldInput: ollFieldInput
-    });
+    /*
+     * Generic data:
+     */
+    cubeState.dimensions = interpreter.cubeDimensions;
+    cubeState.backgroundColor = '#000';
+    cubeState.arrowColor = interpreter.arrowColor;
+    cubeState.viewBoxDimensions = Dimensions.ofOllCubeDimensions(interpreter.cubeDimensions);
+    cubeState.specialFlags = interpreter.specialFlags;
+    /*
+     * OLL-only data:
+     */
+    cubeState.algorithmToArrows = mappedAlgorithms;
+    cubeState.selectedAlgorithmHash = interpreter.initialAlgorithmSelectionHash;
+    cubeState.ollFieldInput = ollFieldInput;
   } else {
     cubeState.invalidInput = interpreter.invalidInput;
   }

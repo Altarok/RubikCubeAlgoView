@@ -100,7 +100,6 @@ export class CubeStatePLL extends CubeState {
   constructor(userInput: UserInput) {
     super(userInput, 'pll');
   }
-
   /** Clock-wise quarter rotation    */
   rotateLeft(): void {
     this.algorithms.rotate(1);
@@ -131,9 +130,7 @@ export class CubeStateOLL extends CubeState {
   algorithmToArrows: MappedAlgorithms;
   selectedAlgorithmHash: string = '';
 
-  constructor(userInput: UserInput
-              // , public readonly ollFieldInput: OllFieldColoring
-  ) {
+  constructor(userInput: UserInput) {
     super(userInput, 'oll');
   }
 
