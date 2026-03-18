@@ -267,7 +267,7 @@ export function createOllCube(userInput: UserInput, colors: CubeColors): CubeSta
 
   interpreter.stickerCoordinates = Build.stickerCoordinates(interpreter.cubeDimensions, 100);
 
-  let cubeState: CubeStateOLL = new CubeStateOLL(userInput/*, ollFieldInput*/);
+  let cubeState: CubeStateOLL = new CubeStateOLL(userInput);
 
   let mappedAlgorithms: MappedAlgorithms = interpreter.setupAlgorithmArrowMap();
 

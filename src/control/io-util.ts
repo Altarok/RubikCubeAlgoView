@@ -11,19 +11,15 @@ export const IO = {
  * @param cubeState
  * @param plugin
  */
-
-
 function unsaveRotation(cubeState: CubeState, plugin: RubikCubeAlgos) {
-  saveRotation2(0, cubeState, plugin);
+  setRotation(0, cubeState, plugin);
 }
 
 function saveRotation(cubeState: CubeState, plugin: RubikCubeAlgos) {
-  saveRotation2(cubeState.currentRotationNormalized, cubeState, plugin);
+  setRotation(cubeState.currentRotationNormalized, cubeState, plugin);
 }
 
-function saveRotation2(valueToSafe: number, cubeState: CubeState, plugin: RubikCubeAlgos) {
-
-
+function setRotation(valueToSafe: number, cubeState: CubeState, plugin: RubikCubeAlgos) {
   let hash: string | undefined = StringUtils.cubeHash(cubeState.id, cubeState.algorithmType);
 
   if (!hash) {
