@@ -20,7 +20,7 @@ import {Templates} from "./model/templates";
  * - [ ] validate actual OLL input
  *
  * ## Rotation
- * - [ ] Change cube rotation to integer type [0-3] // to be multiplied by 90 degrees
+ * - [x] Change cube rotation to integer type [0-3] // to be multiplied by 90 degrees
  *   - turn left -> rotation = (rotation + delta + 4) % 4, then apply rotation
  *   - turn right -> rotation = (rotation - delta + 4) % 4, then apply rotation
  *
@@ -38,20 +38,21 @@ import {Templates} from "./model/templates";
  * ## Flags
  * - [x] add flag: 'no-rotation'
  *   - [ ] then add svg in center sticker "no location change"
- * - [ ] Add flag: 'keep-y-prefix' -> change y on parsing, keep rest
+ * - [ ] add flag: 'keep-y-prefix' -> change y on parsing, keep rest
  *   - do not change algorithm on rotation, only the amount of y prefix
  *   - add rotation as parameter to method Algorithm.toString when using flag 'keep-y-prefix'. Skip y when #y = currentRotation
- * - [ ] Add flag: 'do-not-auto-remove-y-prefix' -> automatically swallow y prefix on parsing
- * - [ ] Add flag: 'point-mirrored'
- * - [ ] Add flag: 'axis-mirrored' vertical a/o(?) horizontal
+ * - [ ] add flag: 'do-not-auto-remove-y-prefix' -> automatically swallow y prefix on parsing
+ * - [ ] add flag: 'point-mirrored'
+ * - [ ] add flag: 'axis-mirrored' vertical a/o(?) horizontal
+ * - [ ] add flag: 'no-buttons'
  *
  * # GUI
  * - [x] Button: rotate cube
  * - [x] Button: reset cube rotation
- * - [ ] Button: save rotation as default
+ * - [x] Button: save rotation as default
  * - [ ] Button: save algorithm as default
  * - [ ] Button: mirror algorithm vertically (when allowed by flag)
- * - [ ] Button: lock rotation
+ * - [x] Button: lock rotation
  * - [ ] Shorten cross arrows by ~10% (see OLL-37, alg 2) -> could/should reduce confusion
  *
  * # Unit tests
