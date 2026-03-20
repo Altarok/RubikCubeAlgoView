@@ -5,7 +5,7 @@ export interface CubeLayout {
   readonly algorithmsDiv: HTMLDivElement;
 }
 
-export function createCubeLayout(container: HTMLElement, skipButtons: boolean): CubeLayout {
+export function createCubeLayout(container: HTMLElement, completelySkipButtons: boolean): CubeLayout {
 
   const mainContainer = container.createEl('div', { cls: 'rubik-cube-div-main-container' });
 
@@ -18,7 +18,7 @@ export function createCubeLayout(container: HTMLElement, skipButtons: boolean): 
 
   let buttonDiv: HTMLDivElement | undefined;
 
-  if (skipButtons) {
+  if (completelySkipButtons) {
     buttonDiv = undefined;
   } else {
     buttonDiv = leftSide.createEl('div', { attr: { id: 'buttonDiv' }, cls: 'button-container' });

@@ -44,7 +44,7 @@ import {Templates} from "./model/templates";
  * - [ ] add flag: 'do-not-auto-remove-y-prefix' -> automatically swallow y prefix on parsing
  * - [ ] add flag: 'point-mirrored'
  * - [ ] add flag: 'axis-mirrored' vertical a/o(?) horizontal
- * - [ ] add flag: 'no-buttons'
+ * - [x] add flag: 'no-buttons'
  *
  * # GUI
  * - [x] Button: rotate cube

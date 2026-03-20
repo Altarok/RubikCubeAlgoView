@@ -79,6 +79,14 @@ function addRotationButtons(cubeRenderer: CubeRenderer, cubeState: CubeState, pl
 
   changeStateOfRotationDependantButtons(cubeRenderer, cubeState);
 
+  if (cubeState.specialFlags.has('no-buttons')) {
+    return;
+  }
+
+  /*
+   * TODO add non-rotation-related button stuff
+   */
+
   if (cubeState.specialFlags.has('no-rotation')) {
     return;
   }
