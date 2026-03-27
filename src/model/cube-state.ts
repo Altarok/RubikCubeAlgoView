@@ -45,7 +45,9 @@ abstract class CubeState {
 
   /** Clock-wise quarter rotation */
   abstract rotateLeft(): void ;
+
   abstract resetRotation(): void;
+
   /** Anti-clock-wise quarter rotation */
   abstract rotateRight(): void;
 
@@ -53,28 +55,29 @@ abstract class CubeState {
     this.currentRotation += 1;
     this.currentRotationNormalized = this.currentRotation % 4;
   }
+
   protected resetCurrentRotation(): void {
     this.currentRotation = this.defaultRotation ?? 0;
     this.currentRotationNormalized = ((this.currentRotation % 4) + 4) % 4;
   }
+
   protected lowerCurrentRotation(): void {
     this.currentRotation -= 1;
     this.currentRotationNormalized = (this.currentRotation + 4) % 4;
   }
+
   setDefaultRotation(defaultRotation: number | undefined) {
+
     if (defaultRotation) {
-      console.debug(`Pre-set rotation found: ${defaultRotation}`);
-      this.currentRotation = defaultRotation;
-      this.currentRotationNormalized = defaultRotation;
-      this.defaultRotation = defaultRotation;
       this.locked = true;
     } else {
-      console.debug(`Pre-set rotation found: ${defaultRotation}`);
-      this.currentRotation = 0;
-      this.currentRotationNormalized = 0;
-      this.defaultRotation = 0;
+      defaultRotation = 0;
       this.locked = false;
     }
+    console.debug(`Pre-set rotation found: ${defaultRotation}`);
+    this.currentRotation = defaultRotation;
+    this.currentRotationNormalized = defaultRotation;
+    this.defaultRotation = defaultRotation;
   }
 }
 
@@ -91,6 +94,7 @@ export class CubeStatePLL extends CubeState {
   constructor(userInput: UserInput) {
     super(userInput, 'pll');
   }
+
   /** Clock-wise quarter rotation    */
   rotateLeft(): void {
     this.algorithms.rotate(1);
