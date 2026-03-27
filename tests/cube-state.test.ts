@@ -51,9 +51,9 @@ function expectRotationValues(co: CubeStateOLL, cp: CubeStatePLL, dr: number, cr
 describe('CubeState hash', () => {
 
   const ollInputWithId: string = validBaseOllInput;
-  const ollInputWithoutId: string = '.10.\n0010\n0010\n.10.'
+  const ollInputWithoutId: string = '.10.\n0010\n0010\n.10.';
   const pllInputWithId: string = validBasePllInput;
-  const pllInputWithoutId: string = 'dimension:3,3\narrows:1+3,6+8'
+  const pllInputWithoutId: string = 'dimension:3,3\narrows:1+3,6+8';
 
   it('should return undefined when not given an id', () => {
     let co: CubeStateOLL = new CubeStateOLL(StringUtils.codeBlockToStrings(ollInputWithoutId));
@@ -188,7 +188,20 @@ describe('CubeState rotation', () => {
 
 });
 
+/**
+ * PLL has static arrows while OLL has variable arrows
+ */
 describe('CubeState arrow coordinates', () => {
+
+  const ollInputWithArrows: string = validBaseOllInput;
+  const ollInputWithoutArrows: string = '.10.\n0010\n0010\n.10.';
+  const pllInputWithArrows: string = validBasePllInput;
+  const pllInputWithoutArrows: string = 'dimension:3,3';
+
+  /*
+   * TODO
+   */
+
 
 });
 
