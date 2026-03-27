@@ -33,6 +33,7 @@ export class UserInput {
   /** PLL only: User input keyed 'dimension'. E.g. '3,3' */
   getDimensions = () => this.listInput.get('dimension')![0] ?? undefined;
   getFlags = () => this.listInput.get('flags')![0] ?? undefined;
+  /** ID for manual identification and caching of rotation */
   getId = () => this.listInput.get('id')![0] ?? undefined;
   getUndeclared = () => this.listInput.get('undeclared');
 
@@ -40,16 +41,20 @@ export class UserInput {
     if (this.isEmpty) return 'empty'; else {
       let s = '';
       for (const key of InputTypes) {
-        if (this.listInput.get(key)!.length > 1 ){
+        if (this.get(key).length > 1 ){
           s = s + key + ' = ' + '\n' + this.listInput.get(key)?.join('\n') + '\n';
-        } else if (this.listInput.get(key)!.length === 1 ){
-            s = s + key + ' = ' + this.listInput.get(key)! + '\n';
+        } else if (this.get(key).length === 1 ){
+            s = s + key + ' = ' + this.get(key) + '\n';
         }
       }
 
       return s.trim();
     }
   };
+
+  private get(key: string): string[] {
+    return this.listInput.get(key) ?? [];
+  }
 }
 
 /**

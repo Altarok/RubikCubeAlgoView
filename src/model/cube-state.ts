@@ -8,11 +8,7 @@ import {StringUtils} from "../parser/string-utils";
 
 abstract class CubeState {
   static index = 1;
-
   uniqueIdForRadioButtons = '' + CubeState.index++;
-
-  /** ID for manual identification and caching of rotation */
-  id?: string;
   /** Container for invalid code block content */
   invalidInput?: InvalidInput;
   /** cube dimensions in stickers (rectangles, not pixels) */
@@ -32,19 +28,14 @@ abstract class CubeState {
   locked: boolean = false;
 
   protected constructor(public readonly userInput: UserInput, public readonly algorithmType: AlgorithmType) {
-    this.id = userInput.getId();
   }
 
   /**
    * Create hash for persisting of metadata.
    */
   getHash(): string | undefined {
-    if (this.id)
-    switch (this.algorithmType){
-      case'pll': return `pll-${this.id}-${StringUtils.hash(this.id)}`;
-      case'oll': return `oll-${this.id}-${StringUtils.hash(this.id)}`;
-    }
-    return undefined;
+    let id = this.userInput.getId();
+    if (id) return `${this.algorithmType}-${id}-${StringUtils.hash(id)}`; else return undefined;
   }
 
   /** @return true if cube size equals 3 by 3 */
