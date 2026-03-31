@@ -3,6 +3,7 @@ import {CubeStateOLL, CubeStatePLL} from "../src/model/cube-state";
 import {StringUtils} from "../src/parser/string-utils";
 import {createOllCube, createPllCube} from "../src/parser/codeblock-interpreter";
 import {CubeColors, DefaultSettings} from "../src/RubikCubeAlgoSettings";
+import {Arrows} from "../src/model/geometry";
 
 const id: string = 'someID';
 /* Default valid OLL field for 3x3 cube. Actual values make no sense. */
@@ -14,7 +15,8 @@ const validBaseOllInput: string = `.110.
 id:${id}
 cubeColor:f0f
 arrowColor:0f0
-alg:R' U' R' F R F' U R U2 == 3+9,2-8-4,1+7
+alg:R' U' R' F R F' U R U2 == 3+9
+alg:F' U R U2 R' U' R' F R == 1-7
 ` /* ends on linebreak */
 const validBasePllInput: string = `
 id:${id}
@@ -26,14 +28,14 @@ alg:R' U2 R U2 R' F R U R' U' R' F' R2 U'
 alg:y R2 B2 U' R' U' R U R U B2 R U' R U
 ` /* ends on linebreak */
 
+const colors: CubeColors = {arrow: "#08f", cube: "#ff0"};
+
 function createOll(): CubeStateOLL {
-  const colors: CubeColors = {arrow: "#08f", cube: "#ff0"};
-  return createOllCube(StringUtils.codeBlockToStrings(validBaseOllInput), colors)
+  return createOllCube(StringUtils.codeBlockToStrings(validBaseOllInput), colors);
 }
 
 function createPll(): CubeStatePLL {
-  const colors: CubeColors = {arrow: "#08f", cube: "#ff0"};
-  return createPllCube(StringUtils.codeBlockToStrings(validBasePllInput), colors)
+  return createPllCube(StringUtils.codeBlockToStrings(validBasePllInput), colors);
 }
 
 function expectRotationValues(co: CubeStateOLL, cp: CubeStatePLL, dr: number, cr: number, crn: number, locked?: boolean): void {
@@ -198,10 +200,89 @@ describe('CubeState arrow coordinates', () => {
   const pllInputWithArrows: string = validBasePllInput;
   const pllInputWithoutArrows: string = 'dimension:3,3';
 
-  /*
-   * TODO
-   */
+  // /*
+  //  * TODO
+  //  */
+  // let co: CubeStateOLL;
+  // let cp: CubeStatePLL;
+  //
+  // beforeEach(() => {
+  //   co = createOll();
+  //   cp = createPll();
+  // });
 
+  /**
+   * No arrows
+   */
+  it('result in empty non-null collections when no arrows given (OLL+PLL)', () => {
+    /*
+     * OLL
+     */
+    let co: CubeStateOLL = createOllCube(StringUtils.codeBlockToStrings(ollInputWithoutArrows), colors);
+
+    expect(co.algorithmToArrows).toBeTruthy();
+    expect(co.algorithmToArrows.size()).toBe(0);
+    expect(co.selectedAlgorithmHash).toBeUndefined();
+
+    const arrowCoords = co.currentArrowCoordinates();
+    expect(arrowCoords).toBeTruthy();
+
+    expect(arrowCoords).toStrictEqual([]);
+
+    /*
+     * PLL
+     */
+    let cp: CubeStatePLL = createPllCube(StringUtils.codeBlockToStrings(pllInputWithoutArrows), colors);
+
+    expect(cp.arrowCoordinates).toBeTruthy();
+    expect(cp.arrowCoordinates.length).toBe(0);
+  });
+
+  /**
+   * PLL with arrows: arrows:1+3,6+8
+   */
+  it('result in static arrow array (PLL)', () => {
+    let cp: CubeStatePLL = createPllCube(StringUtils.codeBlockToStrings(pllInputWithArrows), colors);
+
+    expect(cp.arrowCoordinates).toBeTruthy();
+    expect(cp.arrowCoordinates.length).toBe(4);
+
+    /*
+     * arrows:1+3,6+8
+     *
+     * 1. arrow: 1 -> 3
+     * 2. arrow: 3 -> 1
+     * 3. arrow: 6 -> 8
+     * 4. arrow: 8 -> 6
+     */
+    expect([cp.arrowCoordinates[0]!.start.x, cp.arrowCoordinates[0]!.start.y]).toStrictEqual([50, 50]);
+    expect([cp.arrowCoordinates[0]!.end.x, cp.arrowCoordinates[0]!.end.y]).toStrictEqual([250, 50]);
+
+    expect([cp.arrowCoordinates[1]!.start.x, cp.arrowCoordinates[1]!.start.y]).toStrictEqual([250, 50]);
+    expect([cp.arrowCoordinates[1]!.end.x, cp.arrowCoordinates[1]!.end.y]).toStrictEqual([50, 50]);
+
+    expect([cp.arrowCoordinates[2]!.start.x, cp.arrowCoordinates[2]!.start.y]).toStrictEqual([250, 150]);
+    expect([cp.arrowCoordinates[2]!.end.x, cp.arrowCoordinates[2]!.end.y]).toStrictEqual([150, 250]);
+
+    expect([cp.arrowCoordinates[3]!.start.x, cp.arrowCoordinates[3]!.start.y]).toStrictEqual([150, 250]);
+    expect([cp.arrowCoordinates[3]!.end.x, cp.arrowCoordinates[3]!.end.y]).toStrictEqual([250, 150]);
+  });
+
+  /**
+   * PLL with arrows:
+   * alg:R' U' R F == 3+9
+   * alg:F U R U2 == 1-7
+   */
+  it('result in changeable arrow map (OLL)', () => {
+    let co: CubeStateOLL = createOllCube(StringUtils.codeBlockToStrings(ollInputWithArrows), colors);
+
+    expect(co.algorithmToArrows).toBeTruthy();
+    expect(co.algorithmToArrows.size()).toBe(2);
+    expect(co.selectedAlgorithmHash).toBeDefined();
+
+    const algorithms = co.algorithmToArrows.getAllItems();
+
+  });
 
 });
 

@@ -123,7 +123,7 @@ export class CubeStatePLL extends CubeState {
 export class CubeStateOLL extends CubeState {
   ollFieldInput: OllFieldColoring;
   algorithmToArrows: MappedAlgorithms;
-  selectedAlgorithmHash: string = '';
+  selectedAlgorithmHash: string;
 
   constructor(userInput: UserInput) {
     super(userInput, 'oll');
