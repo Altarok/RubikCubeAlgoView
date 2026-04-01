@@ -2,7 +2,8 @@ import {InputTypes, UserInput} from "../model/codeblock-input";
 import {AlgorithmType} from "../model/algorithms";
 
 export const StringUtils = {
-  hash, cubeHash,
+  hash,
+  cubeHash,
   codeBlockToStrings
 };
 
@@ -76,13 +77,10 @@ function codeBlockToStrings(input: string): UserInput {
     /* Remove comments, if any */
     if (value && value.includes('//')) value = (value.split('//')[0] as string).trim();
 
-
     if (InputTypes.includes(key) && value) {
       userInput.add(key, value);
-      userInput.isEmpty = false;
     } else {
       userInput.addUnmarkedKey(key);
-      userInput.isEmpty = false;
     }
   }
 

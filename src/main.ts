@@ -1,7 +1,7 @@
 import {Plugin} from "obsidian";
 import {MarkdownPostProcessorOLL} from "./MarkdownPostProcessorOLL";
 import {MarkdownPostProcessorPLL} from "./MarkdownPostProcessorPLL";
-import {DefaultSettings, RubikCubeAlgoSettingsTab} from "./RubikCubeAlgoSettings";
+import {DefaultSettings, RubikCubeAlgoSettingsTab} from "./settings/RubikCubeAlgoSettings";
 import {Templates} from "./model/templates";
 
 /*
@@ -88,7 +88,8 @@ export default class RubikCubeAlgos extends Plugin {
 
     this.addCommand({
       id: 'RubikCubeAlgo-add-code-block-template-3x3-OLL',
-      name: 'Add code block template for 3x3 cube: OLL.',
+      // eslint-disable-next-line obsidianmd/ui/sentence-case
+      name: 'Add OLL code block template for 3x3 cube.',
       editorCallback: (editor) => {
         editor.replaceSelection(Templates.OLL_CodeBlock);
       }
@@ -96,7 +97,8 @@ export default class RubikCubeAlgos extends Plugin {
 
     this.addCommand({
       id: 'RubikCubeAlgo-add-code-block-template-3x3-PLL',
-      name: 'Add code block template for 3x3 cube: PLL.',
+      // eslint-disable-next-line obsidianmd/ui/sentence-case
+      name: 'Add PLL code block template for 3x3 cube.',
       editorCallback: (editor) => {
         editor.replaceSelection(Templates.PLL_CodeBlock);
       }
@@ -121,6 +123,7 @@ export default class RubikCubeAlgos extends Plugin {
 
     // Convert the plain object from JSON back into a Map
     this.settings.cubeRotations = new Map(Object.entries(loadedData?.cubeRotations || {}));
+    this.settings.knownIds = new Map(Object.entries(loadedData?.knownIds || {}));
   }
 
   async saveSettings() {

@@ -2,7 +2,7 @@ import {Coordinates, Dimensions, StickerCoords} from "../model/geometry";
 
 export const Build = {
   stickerCoordinates
-};
+}
 
 /**
  * Calculate a cube's stickers' coordinates.

@@ -109,9 +109,6 @@ function drawResetRotateIcon(svg: SVGSVGElement) {
   svg.createSvg('circle', {attr: {cx: 12, cy: 12, r: 11}});
   svg.createSvg('line', {attr: {x1: 7, y1: 7, x2: 17, y2: 17}});
   svg.createSvg('line', {attr: {x1: 17, y1: 7, x2: 7, y2: 17}});
-  // svg.createSvg('rect', {attr: {x: 6, y: 12, width: 12, height: 4, rx: 2, ry: 2,
-  //     'style':'stroke:red;fill:none;stroke-width:5'}});
-  // svg.createSvg('path', {attr: {d: 'M7 10a5 5 0 0 1 5 -5', 'style':'stroke:red;fill:none;stroke-width:3'}});
 }
 
 /**

@@ -20,7 +20,7 @@ function saveRotation(cubeState: CubeState, plugin: RubikCubeAlgos) {
 }
 
 function setRotation(valueToSafe: number, cubeState: CubeState, plugin: RubikCubeAlgos) {
-  let hash: string | undefined = StringUtils.cubeHash(cubeState.id, cubeState.algorithmType);
+  let hash: string | undefined = StringUtils.cubeHash(cubeState.getId(), cubeState.algorithmType);
 
   if (!hash) {
     /* Should not be possible since cubes without id do not get a save button. */

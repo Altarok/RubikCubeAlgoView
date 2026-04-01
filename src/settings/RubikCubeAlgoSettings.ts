@@ -1,14 +1,11 @@
 import {App, PluginSettingTab, Setting} from "obsidian";
-import RubikCubeAlgos from "./main";
+import RubikCubeAlgos from "../main";
 
 export const DefaultSettings = {
   CUBE_COLOR: "#ff0", /* yellow for cube */
   ARROW_COLOR: "#08f" /* sky blue for arrows */
 };
 
-/**
- * A simple way of exporting 2 values
- */
 export interface CubeColors {
   arrow: string;
   cube: string;
@@ -23,6 +20,7 @@ export class RubikCubeAlgoSettingsTab extends PluginSettingTab {
    * value: rotation
    */
   cubeRotations = new Map<string, number>();
+  knownIds = new Map<string, string>();
 
   constructor(app: App, plugin: RubikCubeAlgos) {
     super(app, plugin);

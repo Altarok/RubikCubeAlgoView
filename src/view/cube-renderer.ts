@@ -13,8 +13,8 @@ export abstract class CubeRenderer {
   buttonLeft: HTMLButtonElement;
   buttonRight: HTMLButtonElement;
   buttonResetRotation: HTMLButtonElement;
-  buttonLockRotation: HTMLButtonElement;
-  buttonSaveRotation?: HTMLButtonElement;
+  // buttonLockRotation: HTMLButtonElement;
+  // buttonSaveRotation?: HTMLButtonElement;
   mainCubeSvg: SVGSVGElement;
 
   protected constructor(private readonly cubeState: CubeState) {
@@ -41,7 +41,7 @@ export abstract class CubeRenderer {
 
   displayCubeButtonAndAlgorithms(container: HTMLElement) {
 
-    this.layout = createCubeLayout(container, this.cubeState.specialFlags.has('no-buttons'));
+    this.layout = createCubeLayout(container, this.cubeState.specialFlags);
 
     this.displayCube(this.layout.cubeDiv);
     this.displayButtons(this.layout.buttonDiv);
@@ -114,42 +114,43 @@ export abstract class CubeRenderer {
       return;
     }
 
-    /*
-     * TODO this would be the place for buttons not related to rotation
-     */
-
-    if (!buttonDiv || this.cubeState.specialFlags.has('no-rotation')) {
-      return;
-    }
+    // /*
+    //  * TODO this would be the place for buttons not related to rotation
+    //  */
+    //
+    // if (!buttonDiv || this.cubeState.specialFlags.has('no-rotation')) {
+    //   return;
+    // }
 
     this.buttonLeft = buttonDiv.createEl('button', {'title': 'Rotate left 90 degrees'});
-    let turnLeftSvg: SVGSVGElement = this.buttonLeft.createSvg('svg', {cls: 'rubik-cube-button'});
+    let turnLeftSvg: SVGSVGElement = this.buttonLeft.createSvg('svg', {cls: 'rubik-cube-button'})
     SvgUtils.drawRotateLeftIcon(turnLeftSvg);
 
-    this.buttonRight = buttonDiv.createEl('button', {'title': 'Rotate right 90 degrees'});
-    let turnRightSvg: SVGSVGElement = this.buttonRight.createSvg('svg', {cls: 'rubik-cube-button'});
-    SvgUtils.drawRotateRightIcon(turnRightSvg);
-
-    this.buttonResetRotation = buttonDiv.createEl('button', {'title': 'Reset rotation'});
+    this.buttonResetRotation = buttonDiv.createEl('button', {'title': 'Reset rotation'})
     setIcon(this.buttonResetRotation, 'reset')
 
-    this.buttonLockRotation = buttonDiv.createEl('button', {'title': 'Lock rotation'});
-    setIcon(this.buttonLockRotation, 'lock-open')
+    this.buttonRight = buttonDiv.createEl('button', {'title': 'Rotate right 90 degrees'})
+    let turnRightSvg: SVGSVGElement = this.buttonRight.createSvg('svg', {cls: 'rubik-cube-button'})
+    SvgUtils.drawRotateRightIcon(turnRightSvg)
 
-    if (this.cubeState.id){
-      let title: string;
-      if (this.cubeState.locked) {
-        title = `Un-save default rotation. (current: ${this.cubeState.defaultRotation})`
-      } else {
-        title = 'Save rotation.';
-      }
-      this.buttonSaveRotation = buttonDiv.createEl('button', {title});
-      if (this.cubeState.locked) {
-        setIcon(this.buttonSaveRotation, 'save-off');
-      }else{
-        setIcon(this.buttonSaveRotation, 'save');
-      }
-    }
+
+    // this.buttonLockRotation = buttonDiv.createEl('button', {'title': 'Lock rotation'});
+    // setIcon(this.buttonLockRotation, 'lock-open')
+    //
+    // if (this.cubeState.getId()) {
+    //   let title: string;
+    //   if (this.cubeState.locked) {
+    //     title = `Un-save default rotation. (current: ${this.cubeState.defaultRotation})`
+    //   } else {
+    //     title = 'Save rotation.';
+    //   }
+    //   this.buttonSaveRotation = buttonDiv.createEl('button', {title});
+    //   if (this.cubeState.locked) {
+    //     setIcon(this.buttonSaveRotation, 'save-off');
+    //   } else {
+    //     setIcon(this.buttonSaveRotation, 'save');
+    //   }
+    // }
   }
 }
 
@@ -181,7 +182,7 @@ export class CubeRendererOLL extends CubeRenderer {
   }
 
   displayCubeForeground(svgElement: SVGSVGElement, viewBoxWidth: number, viewBoxHeight: number): void {
-    // debugger;
+
     let cells: OllFieldColoring = this.cubeStateOLL.ollFieldInput;
     const [cubeWidth, cubeHeight] = [this.cubeStateOLL.dimensions.width, this.cubeStateOLL.dimensions.height]; // e.g. 3,3
 

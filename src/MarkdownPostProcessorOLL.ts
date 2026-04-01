@@ -6,7 +6,8 @@ import {MarkdownRenderChild} from "obsidian";
 import {ButtonController} from "./control/button-controller";
 import {StringUtils} from "./parser/string-utils";
 import {UserInput} from "./model/codeblock-input";
-import {CubeColors, DefaultSettings} from "./RubikCubeAlgoSettings";
+import {CubeColors, DefaultSettings} from "./settings/RubikCubeAlgoSettings";
+import {CubeStateBuilder} from "./model/cube-state-builder";
 
 export class MarkdownPostProcessorOLL extends MarkdownRenderChild {
   source: string;
@@ -36,7 +37,6 @@ export class MarkdownPostProcessorOLL extends MarkdownRenderChild {
   display(): void {
     this.element.empty();
     const userInput: UserInput = StringUtils.codeBlockToStrings(this.source);
-
     // console.debug(userInput.toString());
 
     const colors: CubeColors = {
@@ -44,13 +44,23 @@ export class MarkdownPostProcessorOLL extends MarkdownRenderChild {
       cube: this.plugin.settings.cubeColor ?? DefaultSettings.CUBE_COLOR
     };
 
-    let cubeState = createOllCube(userInput, colors);
+    let presetOutline: string | undefined = undefined;
+    let presetRotation: number | undefined = undefined;
+    let id: string | undefined = userInput.getId();
 
-    if (userInput.getId()) {
-      let hash: string = StringUtils.cubeHash(userInput.getId(), 'oll');
-      let defaultRotation: number | undefined = this.plugin.settings.cubeRotations.get(hash);
-      cubeState.setDefaultRotation(defaultRotation);
+    if (id) {
+      let hash: string = StringUtils.cubeHash(id, 'oll');
+      presetRotation = this.plugin.settings.cubeRotations.get(hash);
+      presetOutline = this.plugin.settings.knownIds.get(id);
     }
+
+    let cubeState:CubeStateOLL = createOllCube(userInput, colors, presetOutline);
+
+    if (presetRotation) {
+      cubeState.setDefaultRotation(presetRotation);
+    }
+
+    let cubeStateNew: CubeStateOLL = new CubeStateBuilder(this.source, colors).buildOll();
 
     let cubeRenderer = new CubeRendererOLL(cubeState);
     cubeRenderer.display(this.element);
@@ -59,7 +69,6 @@ export class MarkdownPostProcessorOLL extends MarkdownRenderChild {
     if (!cubeState.codeBlockInterpretationFailed()) {
       this.addButtonFunctions(cubeRenderer, cubeState);
     }
-
   }
 
   private addButtonFunctions(cubeRenderer: CubeRendererOLL, cubeState: CubeStateOLL) {

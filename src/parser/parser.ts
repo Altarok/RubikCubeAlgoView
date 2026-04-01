@@ -4,7 +4,7 @@ import {Dimensions} from "../model/geometry";
 import {RegEx} from "./regex-util";
 import {Flags, FlagType} from "../model/flags";
 
-type Result<T> =
+export type Result<T> =
   | { success: true; data: T }
   | { success: false; error: InvalidInput };
 
@@ -109,6 +109,9 @@ function toFlags(input: string): Result<Set<FlagType>> {
       return {success: false, error: new InvalidInput(input, 'Unknown flags: ' + flag)};
     }
   }
+  /* add 'default' if missing, remove it if redundant */
+  if (flags.has('default') && flags.size > 1) flags.delete('default');
+  else if (flags.size === 0) flags.add('default');
   return {success: true, data: flags};
 }
 
@@ -122,12 +125,12 @@ function toArrows(input: string): Result<string[]> {
   const arrowInput: string[] = cleanedRow.split(',');
 
   if (input.length < 3 || arrowInput.length === 0) {
-    return {success: false, error: InvalidInput.ofArrows(input, `Not enough arrow input: ${input}`)};
+    return {success: false, error: new InvalidInput(input, `Not enough arrow input: ${input}`)};
   }
 
   for (const arrow of arrowInput) {
     if (!RegEx.isChainedArrow(arrow) && !RegEx.isDoubleSidedArrow(arrow)) {
-      return {success: false, error: InvalidInput.ofArrows(input, `Invalid arrow input: ${arrow}`)};
+      return {success: false, error: new InvalidInput(input, `Invalid arrow input: ${arrow}`)};
     }
   }
 

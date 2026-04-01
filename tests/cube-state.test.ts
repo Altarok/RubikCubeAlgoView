@@ -2,7 +2,7 @@ import {describe, it, expect, beforeEach} from 'vitest';
 import {CubeStateOLL, CubeStatePLL} from "../src/model/cube-state";
 import {StringUtils} from "../src/parser/string-utils";
 import {createOllCube, createPllCube} from "../src/parser/codeblock-interpreter";
-import {CubeColors, DefaultSettings} from "../src/RubikCubeAlgoSettings";
+import {CubeColors, DefaultSettings} from "../src/settings/RubikCubeAlgoSettings";
 import {Arrows} from "../src/model/geometry";
 
 const id: string = 'someID';
@@ -50,29 +50,29 @@ function expectRotationValues(co: CubeStateOLL, cp: CubeStatePLL, dr: number, cr
   expect(co.locked).toBe(locked);
 }
 
-describe('CubeState hash', () => {
-
-  const ollInputWithId: string = validBaseOllInput;
-  const ollInputWithoutId: string = '.10.\n0010\n0010\n.10.';
-  const pllInputWithId: string = validBasePllInput;
-  const pllInputWithoutId: string = 'dimension:3,3\narrows:1+3,6+8';
-
-  it('should return undefined when not given an id', () => {
-    let co: CubeStateOLL = new CubeStateOLL(StringUtils.codeBlockToStrings(ollInputWithoutId));
-    let cp: CubeStatePLL = new CubeStatePLL(StringUtils.codeBlockToStrings(pllInputWithoutId));
-
-    expect(co.getHash()).toBeUndefined();
-    expect(cp.getHash()).toBeUndefined();
-  });
-
-  it('should start with cube type + id followed by id', () => {
-    let co: CubeStateOLL = new CubeStateOLL(StringUtils.codeBlockToStrings(ollInputWithId));
-    let cp: CubeStatePLL = new CubeStatePLL(StringUtils.codeBlockToStrings(pllInputWithId));
-
-    expect(co.getHash()).toMatch(new RegExp(`oll-${id}-.*`));
-    expect(cp.getHash()).toMatch(new RegExp(`pll-${id}-.*`));
-  });
-});
+// describe('CubeState hash', () => {
+//
+//   const ollInputWithId: string = validBaseOllInput;
+//   const ollInputWithoutId: string = '.10.\n0010\n0010\n.10.';
+//   const pllInputWithId: string = validBasePllInput;
+//   const pllInputWithoutId: string = 'dimension:3,3\narrows:1+3,6+8';
+//
+//   it('should return undefined when not given an id', () => {
+//     let co: CubeStateOLL = new CubeStateOLL(StringUtils.codeBlockToStrings(ollInputWithoutId));
+//     let cp: CubeStatePLL = new CubeStatePLL(StringUtils.codeBlockToStrings(pllInputWithoutId));
+//
+//     expect(co.getHash()).toBeUndefined();
+//     expect(cp.getHash()).toBeUndefined();
+//   });
+//
+//   it('should start with cube type + id followed by id', () => {
+//     let co: CubeStateOLL = new CubeStateOLL(StringUtils.codeBlockToStrings(ollInputWithId));
+//     let cp: CubeStatePLL = new CubeStatePLL(StringUtils.codeBlockToStrings(pllInputWithId));
+//
+//     expect(co.getHash()).toMatch(new RegExp(`oll-${id}-.*`));
+//     expect(cp.getHash()).toMatch(new RegExp(`pll-${id}-.*`));
+//   });
+// });
 
 describe('CubeState constructor', () => {
 
@@ -199,17 +199,6 @@ describe('CubeState arrow coordinates', () => {
   const ollInputWithoutArrows: string = '.10.\n0010\n0010\n.10.';
   const pllInputWithArrows: string = validBasePllInput;
   const pllInputWithoutArrows: string = 'dimension:3,3';
-
-  // /*
-  //  * TODO
-  //  */
-  // let co: CubeStateOLL;
-  // let cp: CubeStatePLL;
-  //
-  // beforeEach(() => {
-  //   co = createOll();
-  //   cp = createPll();
-  // });
 
   /**
    * No arrows

@@ -1,6 +1,6 @@
 import {describe, it, expect} from 'vitest';
 import {createPllCube, createOllCube} from "../src/parser/codeblock-interpreter";
-import {CubeColors} from "../src/RubikCubeAlgoSettings";
+import {CubeColors} from "../src/settings/RubikCubeAlgoSettings";
 import {StringUtils} from "../src/parser/string-utils";
 import {UserInput} from "../src/model/codeblock-input";
 import CubeState, {CubeStateOLL, CubeStatePLL} from "../src/model/cube-state";

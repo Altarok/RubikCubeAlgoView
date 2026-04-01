@@ -3,10 +3,8 @@ import {Algorithms, MappedAlgorithms, AlgorithmType} from "./algorithms";
 import {Arrows, Dimensions} from "./geometry";
 import {OllFieldColoring} from "./oll-field-coloring";
 import {FlagType} from "./flags";
-import {StringUtils} from "../parser/string-utils";
 
-
-abstract class CubeState {
+export default abstract class CubeState {
   static index = 1;
   uniqueIdForRadioButtons = '' + CubeState.index++;
   /** Container for invalid code block content */
@@ -30,12 +28,8 @@ abstract class CubeState {
   protected constructor(public readonly userInput: UserInput, public readonly algorithmType: AlgorithmType) {
   }
 
-  /**
-   * Create hash for persisting of metadata.
-   */
-  getHash(): string | undefined {
-    let id = this.userInput.getId();
-    if (id) return `${this.algorithmType}-${id}-${StringUtils.hash(id)}`; else return undefined;
+  getId(): string | undefined {
+    return this.userInput.getId();
   }
 
   /** @return true if cube size equals 3 by 3 */
@@ -43,24 +37,18 @@ abstract class CubeState {
 
   codeBlockInterpretationFailed = () => this.invalidInput !== undefined;
 
-  /** Clock-wise quarter rotation */
-  abstract rotateLeft(): void ;
-
+  abstract rotateLeft(): void ; /* Clock-wise quarter rotation */
   abstract resetRotation(): void;
-
-  /** Anti-clock-wise quarter rotation */
-  abstract rotateRight(): void;
+  abstract rotateRight(): void; /* Anti-clock-wise quarter rotation */
 
   protected raiseCurrentRotation(): void {
     this.currentRotation += 1;
     this.currentRotationNormalized = this.currentRotation % 4;
   }
-
   protected resetCurrentRotation(): void {
     this.currentRotation = this.defaultRotation ?? 0;
     this.currentRotationNormalized = ((this.currentRotation % 4) + 4) % 4;
   }
-
   protected lowerCurrentRotation(): void {
     this.currentRotation -= 1;
     this.currentRotationNormalized = (this.currentRotation + 4) % 4;
@@ -80,8 +68,6 @@ abstract class CubeState {
     this.defaultRotation = defaultRotation;
   }
 }
-
-export default CubeState
 
 /**
  * PLL algorithms have an n:1 relation to exchanged cubelets.

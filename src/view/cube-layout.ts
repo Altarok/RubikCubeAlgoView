@@ -1,3 +1,5 @@
+import {FlagType} from "../model/flags";
+
 export interface CubeLayout {
   readonly mainContainer: HTMLDivElement;
   readonly cubeDiv: HTMLDivElement;
@@ -5,7 +7,7 @@ export interface CubeLayout {
   readonly algorithmsDiv: HTMLDivElement;
 }
 
-export function createCubeLayout(container: HTMLElement, completelySkipButtons: boolean): CubeLayout {
+export function createCubeLayout(container: HTMLElement, flags: Set<FlagType>): CubeLayout {
 
   const mainContainer = container.createEl('div', { cls: 'rubik-cube-div-main-container' });
 
@@ -18,7 +20,7 @@ export function createCubeLayout(container: HTMLElement, completelySkipButtons: 
 
   let buttonDiv: HTMLDivElement | undefined;
 
-  if (completelySkipButtons) {
+  if (flags.has('no-buttons')) {
     buttonDiv = undefined;
   } else {
     buttonDiv = leftSide.createEl('div', { attr: { id: 'buttonDiv' }, cls: 'button-container' });

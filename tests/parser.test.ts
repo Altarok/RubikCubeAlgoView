@@ -151,19 +151,19 @@ describe('Parse.toFlags()', () => {
 
   it('should not parse unknown flags', () => {
     expect(Parse.toFlags('i do not exist').success).toBe(false);
-    const existingFlag = 'no-rotation';
+    const existingFlag = 'no-buttons';
     expect(Parse.toFlags(`${existingFlag},i do not exist`).success).toBe(false);
   });
 
   it('should parse known flags', () => {
-    const existingFlag = 'no-rotation';
+    const existingFlag = 'no-buttons';
     let result = Parse.toFlags(`${existingFlag}`);
     expect(result.success).toBe(true);
     if (result.success) expect(result.data.size).toBe(1); else expect.fail('should not reach');
   });
 
   it('should ignore duplicates', () => {
-    const existingFlag = 'no-rotation';
+    const existingFlag = 'no-buttons';
     let result = Parse.toFlags(`${existingFlag},${existingFlag}`);
     expect(result.success).toBe(true);
     if (result.success) expect(result.data.size).toBe(1); else expect.fail('should not reach');

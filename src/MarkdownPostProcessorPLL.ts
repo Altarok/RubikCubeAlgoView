@@ -5,7 +5,7 @@ import {MarkdownRenderChild} from "obsidian";
 import {ButtonController} from "./control/button-controller";
 import {StringUtils} from "./parser/string-utils";
 import {UserInput} from "./model/codeblock-input";
-import {CubeColors, DefaultSettings} from "./RubikCubeAlgoSettings";
+import {CubeColors, DefaultSettings} from "./settings/RubikCubeAlgoSettings";
 
 export class MarkdownPostProcessorPLL extends MarkdownRenderChild {
   source: string;
