@@ -1,17 +1,21 @@
 import {CubeColors} from "../settings/RubikCubeAlgoSettings";
 import {CubeStateOLL} from "./cube-state";
 import {FlagType} from "./flags";
-import {Dimensions} from "./geometry";
+import {Dimensions, StickerCoords} from "./geometry";
 import {Parse, Result} from "../parser/parser";
 import {InvalidInput} from "./codeblock-input";
+import {AlgorithmType} from "./algorithms";
+import {Build} from "../parser/geometry-builder";
 
 const undeclaredInput: string = 'no-key';
+
 const InputKeys: string[] = ['alg', 'arrowColor', 'arrows', 'cubeColor', 'dimension', 'flags', 'id'];
 
-
 type InputKeyType = (typeof InputKeys)[number];
-
 // type InputType = InputKeyType | undeclaredInput;
+
+
+
 
 export class CubeStateBuilder {
   cleanedUserInput: string[];
@@ -20,26 +24,34 @@ export class CubeStateBuilder {
   arrowColor: string;
   arrowsPll: string[] = [];
   cubeColor: string;
-  dimensions: Dimensions;
+  dimensions: Dimensions = Dimensions.default();
+  viewBoxDimensions: Dimensions;
   flags: FlagType[] = [];
   id?: string;
   invalidInput: InvalidInput[] = [];
-
+  stickerCoordinates: StickerCoords;
   /*
    * Common data
    */
   initialCubeRotation: number = 0;
 
-  constructor(rawInput: string, readonly colors: CubeColors) {
+  constructor(rawInput: string, readonly colors: CubeColors, readonly algorithmType: AlgorithmType) {
     // split lines, skip empty lines, empty string is falsy
     this.cleanedUserInput = rawInput.split('\n').map(line => line.trimStart()).filter(Boolean);
     this.arrowColor = colors.arrow;
     this.cubeColor = colors.cube;
 
+    /* sets dimensions for pll */
     this.readRawInput();
 
-    this.createSettingDependantValues();
+    /* sets dimensions for oll */
+
+    /* needs dimensions */
+    this.viewBoxDimensions = this.getViewBoxDimensions();
+    this.stickerCoordinates = this.getStickerCoordinates();
   }
+
+
 
   readRawInput() {
     for (const s of this.cleanedUserInput) {
@@ -81,10 +93,11 @@ export class CubeStateBuilder {
   }
 
   buildOll(): CubeStateOLL {
+
     return null;
   }
 
-  private setArrowColor(result: Result<string>, completeLine: string): void {
+  private setArrowColor(result: Result<string>, completeLine: string) {
     if (result.success) this.arrowColor = result.data; else this.pushError(result.error, completeLine);
   }
 
@@ -92,19 +105,19 @@ export class CubeStateBuilder {
     if (result.success) this.arrowsPll = result.data; else this.pushError(result.error, completeLine);
   }
 
-  private setCubeColor(result: Result<string>, completeLine: string): void {
+  private setCubeColor(result: Result<string>, completeLine: string) {
     if (result.success) this.cubeColor = result.data; else this.pushError(result.error, completeLine);
   }
 
-  private setDimensions(result: Result<Dimensions>, completeLine: string): void {
+  private setDimensions(result: Result<Dimensions>, completeLine: string) {
     if (result.success) this.dimensions = result.data; else this.pushError(result.error, completeLine);
   }
 
-  private setFlags(result: Result<Set<FlagType>>, completeLine: string): void {
+  private setFlags(result: Result<Set<FlagType>>, completeLine: string) {
     if (result.success) this.flags = Array.from(result.data); else this.pushError(result.error, completeLine);
   }
 
-  private setId(id: string): void {
+  private setId(id: string) {
     this.id = id;
   }
 
@@ -114,5 +127,11 @@ export class CubeStateBuilder {
   }
 
 
+  private getStickerCoordinates(): StickerCoords {
+    return Build.stickerCoordinates(this.dimensions, this.algorithmType === 'oll' ? 100 : 50 /* pll -> 50 */);
+  }
+  private getViewBoxDimensions(): Dimensions {
+    return ( this.algorithmType === 'oll' ? Dimensions.ofOllCubeDimensions(this.dimensions) : Dimensions.ofPllCubeDimensions(this.dimensions));
+  }
 }
 

@@ -294,7 +294,7 @@ export function createPllCube(userInput: UserInput, colors: CubeColors): CubeSta
 
 }
 
-const presetOutlinePattern = new RegExp('[lbrt]{3}\.[lrt]{3}\.[lfrt]{3}');
+const presetOutlinePattern = new RegExp(/[lbrt]{3}\.[lrt]{3}\.[lfrt]{3}/);
 
 export function createOllCube(userInput: UserInput, colors: CubeColors, presetOutline: string | undefined): CubeStateOLL {
 

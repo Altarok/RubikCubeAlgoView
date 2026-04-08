@@ -60,7 +60,7 @@ export class MarkdownPostProcessorOLL extends MarkdownRenderChild {
       cubeState.setDefaultRotation(presetRotation);
     }
 
-    let cubeStateNew: CubeStateOLL = new CubeStateBuilder(this.source, colors).buildOll();
+    let cubeStateNew: CubeStateOLL = new CubeStateBuilder(this.source, colors, 'oll').buildOll();
 
     let cubeRenderer = new CubeRendererOLL(cubeState);
     cubeRenderer.display(this.element);

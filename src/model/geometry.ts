@@ -84,7 +84,5 @@ export class Dimensions {
 
   toString = () => `Dimensions[${this.width},${this.height}]`;
 
-  static default(): Dimensions {
-    return new Dimensions(DefaultDimensions.WIDTH, DefaultDimensions.HEIGHT);
-  }
+  static default = (): Dimensions => new Dimensions(DefaultDimensions.WIDTH, DefaultDimensions.HEIGHT);
 }
