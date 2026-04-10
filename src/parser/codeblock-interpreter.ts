@@ -13,12 +13,12 @@ class CodeBlockInterpreter {
   /** cube's dimensions (stickers, not pixels) */
   cubeDimensions: Dimensions = Dimensions.default();
   codeBlockInterpretationFailed: boolean = false;
-  invalidInput?: InvalidInput;
-  stickerCoordinates: StickerCoords;
+  invalidInput: InvalidInput[] = [];
+  stickerCoordinates!: StickerCoords;
   arrowColor!: string;
   cubeColor!: string;
-  specialFlags = new Set<FlagType>();
-  initialAlgorithmSelectionHash: string;
+  specialFlags: FlagType[] = [];
+  initialAlgorithmSelectionHash!: string;
 
   constructor(protected readonly userInput: UserInput, colors: CubeColors) {
     if (userInput.isEmpty) {
@@ -36,12 +36,12 @@ class CodeBlockInterpreter {
   setInvalidInput(errData: InvalidInput): void {
     console.warn(`Failed to parse code block. Error: ${errData.toString()}`);
     this.codeBlockInterpretationFailed = true;
-    this.invalidInput = errData;
+    this.invalidInput.push(errData);
   }
 
   private setupArrowColor(backupValue: string) {
     this.arrowColor = backupValue;
-    if (this.codeBlockInterpretationFailed) return;
+    // if (this.codeBlockInterpretationFailed) return;
 
     let arrowClrInput = this.userInput.getArrowColor();
     if (arrowClrInput) {
@@ -53,7 +53,7 @@ class CodeBlockInterpreter {
 
   private setupCubeColor(backupValue: string): void {
     this.cubeColor = backupValue;
-    if (this.codeBlockInterpretationFailed) return;
+    // if (this.codeBlockInterpretationFailed) return;
 
     let cubeClrInput = this.userInput.getCubeColor();
     if (cubeClrInput) {
@@ -64,8 +64,8 @@ class CodeBlockInterpreter {
   }
 
   private setupFlags(): void {
-    this.specialFlags.add('default');
-    if (this.codeBlockInterpretationFailed) return;
+    this.specialFlags.push('default');
+    // if (this.codeBlockInterpretationFailed) return;
 
     let flags = this.userInput.getFlags();
     const result = Parse.toFlags(flags);
@@ -270,28 +270,9 @@ export function createPllCube(userInput: UserInput, colors: CubeColors): CubeSta
 
   let arrowCoordinates: Arrows = interpreter.setupArrowCoordinates(arrows);
 
-  let cubeState: CubeStatePLL = new CubeStatePLL(userInput);
-
-  if (!interpreter.codeBlockInterpretationFailed) {
-    /*
-     * Generic data:
-     */
-    cubeState.dimensions = interpreter.cubeDimensions;
-    cubeState.backgroundColor = interpreter.cubeColor;
-    cubeState.arrowColor = interpreter.arrowColor;
-    cubeState.arrowCoordinates = arrowCoordinates;
-    cubeState.viewBoxDimensions = Dimensions.ofPllCubeDimensions(interpreter.cubeDimensions);
-    cubeState.specialFlags = interpreter.specialFlags;
-    /*
-     * PLL-only data:
-     */
-    cubeState.algorithms = algorithms;
-  } else {
-    cubeState.invalidInput = interpreter.invalidInput;
-  }
-
-  return cubeState;
-
+  return new CubeStatePLL(userInput, interpreter.arrowColor, interpreter.cubeColor,
+    interpreter.cubeDimensions, interpreter.specialFlags, interpreter.invalidInput,
+    Dimensions.ofPllCubeDimensions(interpreter.cubeDimensions), algorithms, arrowCoordinates);
 }
 
 const presetOutlinePattern = new RegExp(/[lbrt]{3}\.[lrt]{3}\.[lfrt]{3}/);
@@ -312,28 +293,17 @@ export function createOllCube(userInput: UserInput, colors: CubeColors, presetOu
 
   interpreter.stickerCoordinates = Build.stickerCoordinates(interpreter.cubeDimensions, 100);
 
-  let cubeState: CubeStateOLL = new CubeStateOLL(userInput);
-
-  let mappedAlgorithms: MappedAlgorithms = interpreter.setupAlgorithmArrowMap();
-
-  if (!interpreter.codeBlockInterpretationFailed) {
-    /*
-     * Generic data:
-     */
-    cubeState.dimensions = interpreter.cubeDimensions;
-    cubeState.backgroundColor = '#000';
-    cubeState.arrowColor = interpreter.arrowColor;
-    cubeState.viewBoxDimensions = Dimensions.ofOllCubeDimensions(interpreter.cubeDimensions);
-    cubeState.specialFlags = interpreter.specialFlags;
-    /*
-     * OLL-only data:
-     */
-    cubeState.algorithmToArrows = mappedAlgorithms;
-    cubeState.selectedAlgorithmHash = interpreter.initialAlgorithmSelectionHash;
-    cubeState.ollFieldInput = ollFieldInput;
-  } else {
-    cubeState.invalidInput = interpreter.invalidInput;
-  }
-
+  let cubeState: CubeStateOLL = new CubeStateOLL(
+    userInput,
+    interpreter.arrowColor,
+    '#000', // interpreter.cubeColor,
+    interpreter.cubeDimensions,
+    interpreter.specialFlags,
+    interpreter.invalidInput,
+    Dimensions.ofOllCubeDimensions(interpreter.cubeDimensions),
+    interpreter.setupAlgorithmArrowMap(), // algorithmToArrows
+    interpreter.initialAlgorithmSelectionHash, // selectedAlgorithmHash
+    ollFieldInput
+  );
   return cubeState;
 }

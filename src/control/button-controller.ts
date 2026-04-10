@@ -1,5 +1,5 @@
 import {CubeRenderer} from "../view/cube-renderer";
-import CubeState from "../model/cube-state";
+import {CubeState} from "../model/cube-state";
 import {setIcon} from "obsidian";
 import RubikCubeAlgos from "../main";
 import {IO} from "./io-util";
@@ -30,8 +30,8 @@ function changeStateOfRotationDependantButtons(cubeRenderer: CubeRenderer, cubeS
 
 function changeStateOfRotationButtons(cubeRenderer: CubeRenderer, cubeState: CubeState) {
   console.debug('Locked: ' + cubeState.locked);
-  cubeRenderer.buttonLeft.disabled = cubeState.locked;
-  cubeRenderer.buttonRight.disabled = cubeState.locked;
+  cubeRenderer.buttonLeft!.disabled = cubeState.locked;
+  cubeRenderer.buttonRight!.disabled = cubeState.locked;
   changeStateOfRotationDependantButtons(cubeRenderer, cubeState);
 }
 
@@ -42,7 +42,7 @@ function changeStateOfRotationButtons(cubeRenderer: CubeRenderer, cubeState: Cub
  */
 function persistRotationInSettings(cubeState: CubeState, plugin: RubikCubeAlgos) {
 
-  let hash = StringUtils.cubeHash(cubeState.getId(), cubeState.algorithmType);
+  let hash = StringUtils.cubeHash(cubeState.id, cubeState.algorithmType);
 
   if (!hash) {
     /*
@@ -67,7 +67,7 @@ function addRotationButtons(cubeRenderer: CubeRenderer, cubeState: CubeState, pl
 
   changeStateOfRotationDependantButtons(cubeRenderer, cubeState);
 
-  if (cubeState.specialFlags.has('no-buttons')) {
+  if (cubeState.flags.contains('no-buttons')) {
     return;
   }
 
@@ -75,18 +75,18 @@ function addRotationButtons(cubeRenderer: CubeRenderer, cubeState: CubeState, pl
   //  * TODO add non-rotation-related button stuff
   //  */
   //
-  // if (cubeState.specialFlags.has('no-rotation')) {
+  // if (cubeState.flags.has('no-rotation')) {
   //   return;
   // }
 
-  cubeRenderer.buttonLeft.addEventListener('click', () => {
+  cubeRenderer.buttonLeft!.addEventListener('click', () => {
     cubeState.rotateLeft();
     cubeRenderer.rotateCube();
 
     changeStateOfRotationDependantButtons(cubeRenderer, cubeState);
   });
 
-  cubeRenderer.buttonRight.addEventListener('click', () => {
+  cubeRenderer.buttonRight!.addEventListener('click', () => {
     cubeState.rotateRight();
     cubeRenderer.rotateCube();
 
@@ -94,7 +94,7 @@ function addRotationButtons(cubeRenderer: CubeRenderer, cubeState: CubeState, pl
   });
 
 
-  cubeRenderer.buttonResetRotation.addEventListener('click', () => {
+  cubeRenderer.buttonResetRotation!.addEventListener('click', () => {
     cubeState.resetRotation();
     cubeRenderer.rotateCube();
 

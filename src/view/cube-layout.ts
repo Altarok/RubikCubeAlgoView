@@ -7,7 +7,7 @@ export interface CubeLayout {
   readonly algorithmsDiv: HTMLDivElement;
 }
 
-export function createCubeLayout(container: HTMLElement, flags: Set<FlagType>): CubeLayout {
+export function createCubeLayout(container: HTMLElement, flags: FlagType[]): CubeLayout {
 
   const mainContainer = container.createEl('div', { cls: 'rubik-cube-div-main-container' });
 
@@ -16,11 +16,11 @@ export function createCubeLayout(container: HTMLElement, flags: Set<FlagType>): 
   /* right */
   const textSide = mainContainer.createEl('div', { cls: 'rubik-cube-div-right-column' });
 
-  const cubeDiv = leftSide.createEl('div', { /*cls: 'rotatable',*/ cls: 'rubik-cube-div-content' });
+  const cubeDiv = leftSide.createEl('div', { cls: 'rubik-cube-div-content' });
 
   let buttonDiv: HTMLDivElement | undefined;
 
-  if (flags.has('no-buttons')) {
+  if (flags.contains('no-buttons')) {
     buttonDiv = undefined;
   } else {
     buttonDiv = leftSide.createEl('div', { attr: { id: 'buttonDiv' }, cls: 'button-container' });

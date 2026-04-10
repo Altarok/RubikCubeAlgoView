@@ -3,7 +3,7 @@ import {createPllCube, createOllCube} from "../src/parser/codeblock-interpreter"
 import {CubeColors} from "../src/settings/RubikCubeAlgoSettings";
 import {StringUtils} from "../src/parser/string-utils";
 import {UserInput} from "../src/model/codeblock-input";
-import CubeState, {CubeStateOLL, CubeStatePLL} from "../src/model/cube-state";
+import {CubeState, CubeStateOLL, CubeStatePLL} from "../src/model/cube-state";
 import {Algorithm, MappedAlgorithms} from "../src/model/algorithms";
 import {Arrows} from "../src/model/geometry";
 

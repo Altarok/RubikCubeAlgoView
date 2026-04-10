@@ -1,8 +1,8 @@
 import {Arrows} from "./geometry";
 import {StringUtils} from "../parser/string-utils";
 
-export const AlgorithmTypes = ['pll',  'oll'] as const;
-export type AlgorithmType =  (typeof AlgorithmTypes)[number];
+export const AlgorithmTypes = ['pll', 'oll'] as const;
+export type AlgorithmType = (typeof AlgorithmTypes)[number];
 
 export interface Rotatable {
   rotate: (quarterTurns: number) => void;
@@ -64,7 +64,7 @@ const turnCubeLeftMap: TurnCubeMap = {
 export class Algorithm implements Rotatable {
   /** Used as salt for hash value */
   static index = 42;
-  algorithmLabel: HTMLLabelElement;
+  algorithmLabel?: HTMLLabelElement;
   readonly initialHash: string;
 
   constructor(private steps: AlgorithmStep[]) {
@@ -96,12 +96,17 @@ export class Algorithm implements Rotatable {
 export class Algorithms implements Rotatable {
   items: Algorithm[] = [];
 
-  length = () => this.items.length;
+  length(): number {
+    return this.items.length;
+  }
 
-  add = (alg: Algorithm) => this.items.push(alg);
+  add(alg: Algorithm): void {
+    this.items.push(alg)
+  }
 
-  rotate = (quarterTurns: number) =>
+  rotate(quarterTurns: number): void {
     this.items.forEach(algorithm => algorithm.rotate(quarterTurns));
+  }
 }
 
 export class MappedAlgorithm implements Rotatable {
@@ -113,20 +118,30 @@ export class MappedAlgorithm implements Rotatable {
               public readonly arrows: Arrows) {
   }
 
-  rotate = (quarterTurns: number): void => this.algorithm.rotate(quarterTurns);
+  rotate(quarterTurns: number): void {
+    return this.algorithm.rotate(quarterTurns);
+  }
 }
 
 export class MappedAlgorithms implements Rotatable {
 
   map = new Map<string, MappedAlgorithm>();
 
-  size = () => this.map.size;
+  size(): number {
+    return this.map.size
+  }
 
-  add = (mappedAlgorithm: MappedAlgorithm) => this.map.set(mappedAlgorithm.algorithm.initialHash, mappedAlgorithm);
+  add(mappedAlgorithm: MappedAlgorithm) {
+    this.map.set(mappedAlgorithm.algorithm.initialHash, mappedAlgorithm)
+  }
 
-  get = (algHash: string): MappedAlgorithm | undefined => this.map.get(algHash);
+  get(algHash: string): MappedAlgorithm | undefined {
+    return this.map.get(algHash);
+  }
 
-  rotate = (quarterTurns: number): void => this.map.forEach(mappedAlgo => mappedAlgo.algorithm.rotate(quarterTurns));
+  rotate(quarterTurns: number): void {
+    this.map.forEach(mappedAlgo => mappedAlgo.algorithm.rotate(quarterTurns))
+  };
 
   getAllItems(): Algorithm[] {
     let result: Algorithm[] = [];
@@ -136,7 +151,7 @@ export class MappedAlgorithms implements Rotatable {
     return result;
   }
 
-  toString = (): string => {
+  toString(): string {
     let result: string[] = [];
     let index = 0;
     this.map.forEach((mappedAlgo) => {
@@ -147,7 +162,6 @@ export class MappedAlgorithms implements Rotatable {
 
     return result.join('\n');
   }
-
 
 }
 

@@ -80,9 +80,9 @@ export class Dimensions {
   static ofPllCubeDimensions = (cubeDimensions: Dimensions) => new Dimensions(cubeDimensions.width * 100, cubeDimensions.height * 100);
   static ofOllCubeDimensions = (cubeDimensions: Dimensions) => new Dimensions(cubeDimensions.width * 100 + 100, cubeDimensions.height * 100 + 100);
 
-  isDefaultSize = () => this.width === 3 && this.height === 3;
+  isDefaultSize(): boolean { return this.width === 3 && this.height === 3};
 
-  toString = () => `Dimensions[${this.width},${this.height}]`;
+  toString(): string { return `Dimensions[${this.width},${this.height}]`};
 
   static default = (): Dimensions => new Dimensions(DefaultDimensions.WIDTH, DefaultDimensions.HEIGHT);
 }

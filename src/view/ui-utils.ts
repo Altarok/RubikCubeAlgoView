@@ -7,10 +7,20 @@ export const UiUtils = {
   showInvalidInput
 };
 
+function findMatchingError(errors: InvalidInput[], row: string): InvalidInput | undefined {
+  let res: InvalidInput | undefined = undefined;
+  errors.forEach(error => {
+    if (error.isInvalidRow(row)) {
+      res = error;
+    }
+  });
+  return res;
+}
+
 /**
  * Renders a formatted error message when code block interpretation fails.
  */
-function showInvalidInput(container: HTMLElement, rows: string[], error: InvalidInput): void {
+function showInvalidInput(container: HTMLElement, rows: string[], errors: InvalidInput[]): void {
   container.createEl('div', {
     text: 'Code block interpretation failed:',
     cls: 'rubik-cube-warning-text-orange'
@@ -19,17 +29,20 @@ function showInvalidInput(container: HTMLElement, rows: string[], error: Invalid
   if (rows.length === 0) {
     const p = container.createEl('p');
     p.createEl('b', {text: '[empty]', cls: 'rubik-cube-warning-text-red'});
-    p.createEl('span', {text: ` => ${error.reason}`});
+    p.createEl('span', {text: ` => ${errors[0]!.reason}`});
     return;
   }
 
   const listContainer = container.createEl('div', {cls: 'rubik-cube-error-list'});
 
   rows.forEach(row => {
-    if (error.isInvalidRow(row)) {
+
+    let matchingError: InvalidInput | undefined = findMatchingError(errors, row);
+
+    if (matchingError) {
       const errorRow = listContainer.createEl('div');
       errorRow.createEl('b', {text: row, cls: 'rubik-cube-warning-text-red'});
-      errorRow.createEl('span', {text: ` => ${error.reason}`});
+      errorRow.createEl('span', {text: ` => ${matchingError.reason}`});
     } else {
       listContainer.createEl('div', {text: row});
     }

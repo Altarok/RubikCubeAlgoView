@@ -31,7 +31,7 @@ alg:y R2 B2 U' R' U' R U R U B2 R U' R U
 const colors: CubeColors = {arrow: "#08f", cube: "#ff0"};
 
 function createOll(): CubeStateOLL {
-  return createOllCube(StringUtils.codeBlockToStrings(validBaseOllInput), colors);
+  return createOllCube(StringUtils.codeBlockToStrings(validBaseOllInput), colors, undefined);
 }
 
 function createPll(): CubeStatePLL {
@@ -207,7 +207,7 @@ describe('CubeState arrow coordinates', () => {
     /*
      * OLL
      */
-    let co: CubeStateOLL = createOllCube(StringUtils.codeBlockToStrings(ollInputWithoutArrows), colors);
+    let co: CubeStateOLL = createOllCube(StringUtils.codeBlockToStrings(ollInputWithoutArrows), colors, undefined);
 
     expect(co.algorithmToArrows).toBeTruthy();
     expect(co.algorithmToArrows.size()).toBe(0);
@@ -263,7 +263,7 @@ describe('CubeState arrow coordinates', () => {
    * alg:F U R U2 == 1-7
    */
   it('result in changeable arrow map (OLL)', () => {
-    let co: CubeStateOLL = createOllCube(StringUtils.codeBlockToStrings(ollInputWithArrows), colors);
+    let co: CubeStateOLL = createOllCube(StringUtils.codeBlockToStrings(ollInputWithArrows), colors, undefined);
 
     expect(co.algorithmToArrows).toBeTruthy();
     expect(co.algorithmToArrows.size()).toBe(2);

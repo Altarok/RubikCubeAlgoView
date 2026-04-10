@@ -1,13 +1,13 @@
 import RubikCubeAlgos from "./main";
 import {createOllCube} from "./parser/codeblock-interpreter";
-import {CubeStateOLL} from "./model/cube-state";
+import {CubeStateOLL, CubeStateOllNew} from "./model/cube-state";
 import {CubeRendererOLL} from "./view/cube-renderer";
 import {MarkdownRenderChild} from "obsidian";
 import {ButtonController} from "./control/button-controller";
 import {StringUtils} from "./parser/string-utils";
 import {UserInput} from "./model/codeblock-input";
 import {CubeColors, DefaultSettings} from "./settings/RubikCubeAlgoSettings";
-import {CubeStateBuilder} from "./model/cube-state-builder";
+import CubeStateBuilder from "./model/cube-state-builder";
 
 export class MarkdownPostProcessorOLL extends MarkdownRenderChild {
   source: string;
@@ -60,18 +60,19 @@ export class MarkdownPostProcessorOLL extends MarkdownRenderChild {
       cubeState.setDefaultRotation(presetRotation);
     }
 
-    let cubeStateNew: CubeStateOLL = new CubeStateBuilder(this.source, colors, 'oll').buildOll();
+    let cubeStateNew: CubeStateOllNew = new CubeStateBuilder(this.source, colors).buildOll(this.plugin.settings);
 
-    let cubeRenderer = new CubeRendererOLL(cubeState);
+    // debugger;
+
+    let cubeRenderer = new CubeRendererOLL(cubeStateNew);
     cubeRenderer.display(this.element);
-    cubeRenderer.rotateCube();
 
-    if (!cubeState.codeBlockInterpretationFailed()) {
-      this.addButtonFunctions(cubeRenderer, cubeState);
+    if (!cubeStateNew.codeBlockInterpretationFailed()) {
+      this.addButtonFunctions(cubeRenderer, cubeStateNew);
     }
   }
 
-  private addButtonFunctions(cubeRenderer: CubeRendererOLL, cubeState: CubeStateOLL) {
+  private addButtonFunctions(cubeRenderer: CubeRendererOLL, cubeState: CubeStateOllNew) {
 
     if (cubeState.algorithmToArrows.size() > 1) {
 

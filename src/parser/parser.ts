@@ -92,7 +92,7 @@ function toArrowColor(input: string): Result<string> {
 /**
  * @param input - pre-trimmed row containing special flags, no 'flags:'-prefix, no comments
  */
-function toFlags(input: string): Result<Set<FlagType>> {
+function toFlags(input: string): Result<FlagType[]> {
 
   if (!RegEx.isSpecialFlags(input)) {
     return {success: false, error: InvalidInput.ofFlags(input)};
@@ -110,9 +110,9 @@ function toFlags(input: string): Result<Set<FlagType>> {
     }
   }
   /* add 'default' if missing, remove it if redundant */
-  if (flags.has('default') && flags.size > 1) flags.delete('default');
+  if (flags.size > 1 && flags.has('default')) flags.delete('default');
   else if (flags.size === 0) flags.add('default');
-  return {success: true, data: flags};
+  return {success: true, data: Array.from(flags)};
 }
 
 /**
