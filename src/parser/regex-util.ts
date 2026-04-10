@@ -17,7 +17,7 @@ function isPositiveInteger(input: string): boolean {
 const specialFlagsJoined = Flags.types.join('|');
 const specialFlagsRegex = new RegExp(`${specialFlagsJoined}(,${specialFlagsJoined})*`);
 
-function isSpecialFlags (input: string): boolean {
+function isSpecialFlags(input: string): boolean {
   return specialFlagsRegex.test(input);
 }
 

@@ -28,7 +28,7 @@ export class OllFieldColoring {
 
   length(): number {
     return this.parsedRows[0]?.length ?? 0
-  };
+  }
 
   getColor(yRow: number, xCol: number): string {
     let colorIndex: string | undefined = this.parsedRows[yRow]?.[xCol];

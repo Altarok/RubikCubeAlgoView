@@ -35,27 +35,31 @@ export class MarkdownPostProcessorPLL extends MarkdownRenderChild {
 
   display(): void {
     this.element.empty();
-    const userInput: UserInput = StringUtils.codeBlockToStrings(this.source);
+
+    /*
+     * TODO delete old unused stuff
+     */
+    // const userInput: UserInput = StringUtils.codeBlockToStrings(this.source);
 
     // console.debug(userInput.toString());
 
+    /*
+     * TODO move inside settings
+     */
     const colors: CubeColors = {
       arrow: this.plugin.settings.arrowColor ?? DefaultSettings.ARROW_COLOR,
       cube: this.plugin.settings.cubeColor ?? DefaultSettings.CUBE_COLOR
     };
 
-    let cubeState = createPllCube(userInput, colors);
-
-
-    if (userInput.getId()) {
-      let hash = StringUtils.cubeHash(userInput.getId(), 'pll');
-      let defaultRotation: number | undefined = this.plugin.settings.cubeRotations.get(hash);
-      cubeState.setDefaultRotation(defaultRotation);
-    }
+    // let cubeState = createPllCube(userInput, colors);
+    //
+    // if (userInput.getId()) {
+    //   let hash = StringUtils.cubeHash(userInput.getId(), 'pll');
+    //   let defaultRotation: number | undefined = this.plugin.settings.cubeRotations.get(hash);
+    //   cubeState.setDefaultRotation(defaultRotation);
+    // }
 
     let cubeStateNew = new CubeStateBuilder(this.source, colors).buildPll();
-
-    // debugger;
 
     let cubeRenderer: CubeRendererPLL = new CubeRendererPLL(cubeStateNew);
     cubeRenderer.display(this.element);

@@ -126,6 +126,7 @@ export class CubeStateOllNew extends CubeStateCommon {
   ) {
     super('oll', arrowColor, '#000', dimensions, flags, id, algorithmToArrows, viewBoxDimensions, invalidInput, splitCodeBlockInput);
   }
+
   currentArrowCoordinates(): Arrows {
     return this.algorithmToArrows?.get(this.selectedAlgorithmHash)?.arrows ?? /* null or undefined */ [];
   }

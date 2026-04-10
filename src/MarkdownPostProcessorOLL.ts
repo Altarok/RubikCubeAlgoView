@@ -36,33 +36,38 @@ export class MarkdownPostProcessorOLL extends MarkdownRenderChild {
 
   display(): void {
     this.element.empty();
-    const userInput: UserInput = StringUtils.codeBlockToStrings(this.source);
+
+    /*
+   * TODO delete old unused stuff
+   */
+    // const userInput: UserInput = StringUtils.codeBlockToStrings(this.source);
     // console.debug(userInput.toString());
 
+    /*
+     * TODO move inside settings
+     */
     const colors: CubeColors = {
       arrow: this.plugin.settings.arrowColor ?? DefaultSettings.ARROW_COLOR,
       cube: this.plugin.settings.cubeColor ?? DefaultSettings.CUBE_COLOR
     };
 
-    let presetOutline: string | undefined = undefined;
-    let presetRotation: number | undefined = undefined;
-    let id: string | undefined = userInput.getId();
+    // let presetOutline: string | undefined = undefined;
+    // let presetRotation: number | undefined = undefined;
+    // let id: string | undefined = userInput.getId();
 
-    if (id) {
-      let hash: string = StringUtils.cubeHash(id, 'oll');
-      presetRotation = this.plugin.settings.cubeRotations.get(hash);
-      presetOutline = this.plugin.settings.knownIds.get(id);
-    }
+    // if (id) {
+    //   let hash: string = StringUtils.cubeHash(id, 'oll');
+    //   presetRotation = this.plugin.settings.cubeRotations.get(hash);
+    //   presetOutline = this.plugin.settings.knownIds.get(id);
+    // }
 
-    let cubeState:CubeStateOLL = createOllCube(userInput, colors, presetOutline);
+    // let cubeState: CubeStateOLL = createOllCube(userInput, colors, presetOutline);
 
-    if (presetRotation) {
-      cubeState.setDefaultRotation(presetRotation);
-    }
+    // if (presetRotation) {
+    //   cubeState.setDefaultRotation(presetRotation);
+    // }
 
     let cubeStateNew: CubeStateOllNew = new CubeStateBuilder(this.source, colors).buildOll(this.plugin.settings);
-
-    // debugger;
 
     let cubeRenderer = new CubeRendererOLL(cubeStateNew);
     cubeRenderer.display(this.element);

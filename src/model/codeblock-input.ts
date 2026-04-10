@@ -38,19 +38,18 @@ export class UserInput {
   getId = () => this.listInput.get('id')![0] ?? undefined;
   getUndeclared = () => this.listInput.get('undeclared');
 
-  toString = () => {
-    if (this.isEmpty) return 'empty'; else {
-      let s = '';
-      for (const key of InputTypes) {
-        if (this.get(key).length > 1) {
-          s = s + key + ' = ' + '\n' + this.listInput.get(key)?.join('\n') + '\n';
-        } else if (this.get(key).length === 1) {
-          s = s + key + ' = ' + this.get(key).toString() + '\n';
-        }
+  toString(): string {
+    if (this.isEmpty) return 'empty';
+    let s = '';
+    for (const key of InputTypes) {
+      if (this.get(key).length > 1) {
+        s = s + key + ' = ' + '\n' + this.listInput.get(key)?.join('\n') + '\n';
+      } else if (this.get(key).length === 1) {
+        s = s + key + ' = ' + this.get(key).toString() + '\n';
       }
-      return s.trim();
     }
-  };
+    return s.trim();
+  }
 
   private get(key: string): string[] {
     return this.listInput.get(key) ?? [];
@@ -62,15 +61,35 @@ export class InvalidInput {
   /** @param line - the row containing un-interpretable input
    * @param reason - human-readable reason for failure   */
   constructor(public line: string, public readonly reason: string) {
-    debugger;
+    // debugger;
   }
 
-  public isInvalidRow(row: string): boolean { return this.line === row};
-  public toString(): string { return `InvalidInput[line=${this.line},reason=${this.reason}`};
-  static ofCubeColor(line: string): InvalidInput { return new InvalidInput(line, 'Invalid cube color, expected: "cubeColor:[3 (or 6) lowercase hex digits (0-9/a-f)] // optional comment goes here"') };
-  static ofArrowColor(line: string): InvalidInput { return  new InvalidInput(line, 'Invalid arrow color, expected: "cubeColor:[3 (or 6) lowercase hex digits (0-9/a-f)] // optional comment goes here"') };
-  static ofAlgorithm(line: string): InvalidInput { return  new InvalidInput(line, "Invalid algorithm format. Example: alg:R' U2 R U2 R' F R U R' U' R' F' R2 U' (spaces not optional, no comments in this line)") };
-  static ofDimensions(line: string): InvalidInput { return  new InvalidInput(line, 'Invalid dimensions. Expected: "dimension:[2-10],[2-10]" (e.g. "dimension:3,3")') };
-  static ofFlags(line: string): InvalidInput { return  new InvalidInput(line, `Invalid flag. Allowed: ${Flags.types.join(',')}`) };
+  public isInvalidRow(row: string): boolean {
+    return this.line === row
+  }
+
+  public toString(): string {
+    return `InvalidInput[line=${this.line},reason=${this.reason}`
+  }
+
+  static ofCubeColor(line: string): InvalidInput {
+    return new InvalidInput(line, 'Invalid cube color, expected: "cubeColor:[3 (or 6) lowercase hex digits (0-9/a-f)] // optional comment goes here"')
+  }
+
+  static ofArrowColor(line: string): InvalidInput {
+    return new InvalidInput(line, 'Invalid arrow color, expected: "cubeColor:[3 (or 6) lowercase hex digits (0-9/a-f)] // optional comment goes here"')
+  }
+
+  static ofAlgorithm(line: string): InvalidInput {
+    return new InvalidInput(line, "Invalid algorithm format. Example: alg:R' U2 R U2 R' F R U R' U' R' F' R2 U' (spaces not optional, no comments in this line)")
+  }
+
+  static ofDimensions(line: string): InvalidInput {
+    return new InvalidInput(line, 'Invalid dimensions. Expected: "dimension:[2-10],[2-10]" (e.g. "dimension:3,3")')
+  }
+
+  static ofFlags(line: string): InvalidInput {
+    return new InvalidInput(line, `Invalid flag. Allowed: ${Flags.types.join(',')}`)
+  }
 }
 

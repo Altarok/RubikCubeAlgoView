@@ -4,7 +4,7 @@ import RubikCubeAlgos from "../main";
 export const DefaultSettings = {
   CUBE_COLOR: '#ff0', /* yellow for cube */
   ARROW_COLOR: '#08f' /* sky blue for arrows */
-};
+}
 
 export interface CubeColors {
   arrow: string;

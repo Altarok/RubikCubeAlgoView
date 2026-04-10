@@ -10,7 +10,7 @@ export const StringUtils = {
 /**
  * Create hash for persisting of metadata.
  */
-function cubeHash(id: string | undefined, algorithmType: AlgorithmType): string  {
+function cubeHash(id: string | undefined, algorithmType: AlgorithmType): string {
   if (!id) {
     return '';
   }
