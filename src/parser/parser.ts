@@ -30,10 +30,11 @@ function isAlgorithmStep(value: string): value is AlgorithmStep {
 
 /**
  * @param line - pre-trimmed line containing algorithm steps, no 'alg:'-prefix, no comments
+ * @param completeLine - used to mark part of code block if given input is invalid
  */
-function toAlgorithm(line: string): Result<Algorithm> {
+function toAlgorithm(line: string, completeLine: string): Result<Algorithm> {
   if (!RegEx.isAlgorithm(line)) {
-    return {success: false, error: InvalidInput.ofAlgorithm(line)};
+    return {success: false, error: InvalidInput.ofAlgorithm(completeLine)};
   }
 
   let splitSteps: string[] = line.split(' ');
@@ -44,7 +45,7 @@ function toAlgorithm(line: string): Result<Algorithm> {
       steps.push(step);
     } else {
       // This should technically be unreachable if the Regex is perfect
-      return {success: false, error: new InvalidInput(line, 'Unknown rotation step: ' + step)};
+      return {success: false, error: new InvalidInput(completeLine, 'Unknown rotation step: ' + step)};
     }
   }
   return {success: true, data: new Algorithm(steps)};
@@ -52,14 +53,15 @@ function toAlgorithm(line: string): Result<Algorithm> {
 
 /**
  * @param line - pre-trimmed line containing dimensions, no 'dimension:'-prefix, no comments
+ * @param completeLine - used to mark part of code block if given input is invalid
  */
-function toDimensions(line: string): Result<Dimensions> {
+function toDimensions(line: string, completeLine: string): Result<Dimensions> {
   const parts = line.split(',');
   const [w = 0, h = 0] = parts?.map(Number) ?? [];
   if (w >= 2 && w <= 10 && h >= 2 && h <= 10) {
     return {success: true, data: new Dimensions(w, h)};
   } else {
-    return {success: false, error: InvalidInput.ofDimensions(line)};
+    return {success: false, error: InvalidInput.ofDimensions(completeLine)};
   }
 }
 
@@ -77,25 +79,28 @@ function parseHexColor(line: string, errorFactory: () => InvalidInput): Result<s
 
 /**
  * @param input - pre-trimmed row containing a color hex value, no 'cubeColor:'-prefix, no comments
+ * @param completeLine - used to mark part of code block if given input is invalid
  */
-function toCubeColor(input: string): Result<string> {
-  return parseHexColor(input, () => InvalidInput.ofCubeColor(input));
+function toCubeColor(input: string, completeLine: string): Result<string> {
+  return parseHexColor(input, () => InvalidInput.ofCubeColor(completeLine));
 }
 
 /**
  * @param input - pre-trimmed row containing a color hex value, no 'arrowColor:'-prefix, no comments
+ * @param completeLine - used to mark part of code block if given input is invalid
  */
-function toArrowColor(input: string): Result<string> {
-  return parseHexColor(input, () => InvalidInput.ofArrowColor(input));
+function toArrowColor(input: string, completeLine: string): Result<string> {
+  return parseHexColor(input, () => InvalidInput.ofArrowColor(completeLine));
 }
 
 /**
  * @param input - pre-trimmed row containing special flags, no 'flags:'-prefix, no comments
+ * @param completeLine - used to mark part of code block if given input is invalid
  */
-function toFlags(input: string): Result<FlagType[]> {
+function toFlags(input: string, completeLine: string): Result<FlagType[]> {
 
   if (!RegEx.isSpecialFlags(input)) {
-    return {success: false, error: InvalidInput.ofFlags(input)};
+    return {success: false, error: InvalidInput.ofFlags(completeLine)};
   }
 
   let splitFlags: string[] = input.split(',');
@@ -106,7 +111,7 @@ function toFlags(input: string): Result<FlagType[]> {
       flags.add(flag);
     } else {
       // This should technically be unreachable if the Regex is perfect
-      return {success: false, error: new InvalidInput(input, 'Unknown flags: ' + flag)};
+      return {success: false, error: new InvalidInput(completeLine, 'Unknown flag: ' + flag)};
     }
   }
   /* add 'default' if missing, remove it if redundant */
@@ -119,18 +124,19 @@ function toFlags(input: string): Result<FlagType[]> {
  * Splits joined arrow input to array of single arrow input values and check each against a regex.
  * This does not parse to Arrows (with coordinates) yet, as we still have to calculate the cube's dimensions.
  * @param input - string NOT starting with 'arrows:'
+ * @param completeLine - used to mark part of code block if given input is invalid
  */
-function toArrows(input: string): Result<string[]> {
+function toArrows(input: string, completeLine: string): Result<string[]> {
   const cleanedRow = input.trim().split(' ')[0] ?? '';
   const arrowInput: string[] = cleanedRow.split(',');
 
   if (input.length < 3 || arrowInput.length === 0) {
-    return {success: false, error: new InvalidInput(input, `Not enough arrow input: ${input}`)};
+    return {success: false, error: new InvalidInput(completeLine, `Not enough arrow input: ${input}`)};
   }
 
   for (const arrow of arrowInput) {
     if (!RegEx.isChainedArrow(arrow) && !RegEx.isDoubleSidedArrow(arrow)) {
-      return {success: false, error: new InvalidInput(input, `Invalid arrow input: ${arrow}`)};
+      return {success: false, error: new InvalidInput(completeLine, `Invalid arrow input: ${arrow}`)};
     }
   }
 

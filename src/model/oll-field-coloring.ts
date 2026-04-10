@@ -44,6 +44,9 @@ export class OllFieldColoring {
     return this.parsedRows.map(row => row.join('')).join('\n')
   }
 
+  /**
+   * Applies only to 3x3 cubes
+   */
   setupFixedOllInput(presetOutline: string) {
     let row1: string[] = ['-1', '0', '0', '0', '-1'];
     let row2: string[] = ['0', '0', '0', '0', '0'];

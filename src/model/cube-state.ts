@@ -1,4 +1,4 @@
-import {InvalidInput, UserInput} from "./codeblock-input";
+import {InvalidInput} from "./codeblock-input";
 import {Algorithms, MappedAlgorithms, AlgorithmType, Rotatable} from "./algorithms";
 import {Arrows, Dimensions} from "./geometry";
 import {OllFieldColoring} from "./oll-field-coloring";
@@ -22,7 +22,7 @@ export interface CubeState {
   currentRotation: number; /* any integer */
   currentRotationNormalized: number; /* 0-3 */
   defaultRotation: number; /* 0-3 */
-  locked: boolean;
+  locked: boolean; /* True if rotation is blocked */
 
   /** Clock-wise quarter rotation */
   rotateLeft(): void;
@@ -106,7 +106,11 @@ abstract class CubeStateCommon implements CubeState {
   }
 }
 
-export class CubeStatePllNew extends CubeStateCommon {
+/**
+ * PLL algorithms have an n:1 relation to exchanged cubelets.
+ * This means we need 1 set of arrows and n sets of algorithms.
+ */
+export class CubeStatePll extends CubeStateCommon {
   constructor(
     arrowColor: string, cubeColor: string, dimensions: Dimensions,
     flags: FlagType[], id: string | undefined, viewBoxDimensions: Dimensions, invalidInput: InvalidInput[], splitCodeBlockInput: string[],
@@ -116,7 +120,13 @@ export class CubeStatePllNew extends CubeStateCommon {
   }
 }
 
-export class CubeStateOllNew extends CubeStateCommon {
+/**
+ * OLL algorithms have a 1:1 relation to exchanged cubelets.
+ * This means we need 1 map containing
+ * - key: algorithm
+ * - value: set of arrows this algorithm implements
+ */
+export class CubeStateOll extends CubeStateCommon {
   constructor(
     arrowColor: string, dimensions: Dimensions, flags: FlagType[], id: string | undefined, viewBoxDimensions: Dimensions,
     invalidInput: InvalidInput[], splitCodeBlockInput: string[],
@@ -128,52 +138,7 @@ export class CubeStateOllNew extends CubeStateCommon {
   }
 
   currentArrowCoordinates(): Arrows {
-    return this.algorithmToArrows?.get(this.selectedAlgorithmHash)?.arrows ?? /* null or undefined */ [];
-  }
-
-  changeAlgorithm(algorithmId: string): boolean {
-    if (this.selectedAlgorithmHash === algorithmId) return false;
-    this.selectedAlgorithmHash = algorithmId;
-    return true;
-  }
-}
-
-/**
- * PLL algorithms have an n:1 relation to exchanged cubelets.
- * This means we need 1 set of arrows and n sets of algorithms.
- */
-export class CubeStatePLL extends CubeStateCommon {
-  constructor(
-    public readonly userInput: UserInput,
-    arrowColor: string, cubeColor: string, dimensions: Dimensions,
-    flags: FlagType[], invalidInput: InvalidInput[], viewBoxDimensions: Dimensions,
-    public readonly algorithms: Algorithms,
-    public readonly arrowCoordinates: Arrows
-  ) {
-    super('pll', arrowColor, cubeColor, dimensions, flags, userInput.getId(), algorithms, viewBoxDimensions, invalidInput, userInput.completeCodeBlock);
-  }
-}
-
-/**
- * OLL algorithms have a 1:1 relation to exchanged cubelets.
- * This means we need 1 map containing
- * - key: algorithm
- * - value: set of arrows this algorithm implements
- */
-export class CubeStateOLL extends CubeStateCommon {
-  constructor(
-    public readonly userInput: UserInput,
-    arrowColor: string, cubeColor: string, dimensions: Dimensions,
-    flags: FlagType[], invalidInput: InvalidInput[], viewBoxDimensions: Dimensions,
-    public readonly algorithmToArrows: MappedAlgorithms,
-    public selectedAlgorithmHash: string,
-    public readonly ollFieldInput: OllFieldColoring
-  ) {
-    super('oll', arrowColor, cubeColor, dimensions, flags, userInput.getId(), algorithmToArrows, viewBoxDimensions, invalidInput, userInput.completeCodeBlock);
-  }
-
-  currentArrowCoordinates(): Arrows {
-    return this.algorithmToArrows?.get(this.selectedAlgorithmHash)?.arrows ?? /* null or undefined */ [];
+    return this.algorithmToArrows?.get(this.selectedAlgorithmHash)?.arrows ?? [];
   }
 
   changeAlgorithm(algorithmId: string): boolean {

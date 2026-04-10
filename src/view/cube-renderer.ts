@@ -1,4 +1,4 @@
-import {CubeState, CubeStateOllNew, CubeStatePllNew} from "../model/cube-state";
+import {CubeState, CubeStateOll, CubeStatePll} from "../model/cube-state";
 import {Algorithms} from "../model/algorithms";
 import {OllFieldColoring} from "../model/oll-field-coloring";
 import {SvgUtils} from "./svg-utils";
@@ -156,7 +156,7 @@ export abstract class CubeRenderer {
 
 export class CubeRendererPLL extends CubeRenderer {
 
-  constructor(private readonly cubeStatePll: CubeStatePllNew) {
+  constructor(private readonly cubeStatePll: CubeStatePll) {
     super(cubeStatePll);
   }
 
@@ -178,14 +178,14 @@ export class CubeRendererPLL extends CubeRenderer {
 
 export class CubeRendererOLL extends CubeRenderer {
 
-  constructor(private readonly cubeStateOLL: CubeStateOllNew) {
-    super(cubeStateOLL);
+  constructor(private readonly cubeStateOll: CubeStateOll) {
+    super(cubeStateOll);
   }
 
   displayCubeForeground(svgElement: SVGSVGElement, viewBoxWidth: number, viewBoxHeight: number): void {
 
-    let cells: OllFieldColoring = this.cubeStateOLL.ollFieldInput;
-    const [cubeWidth, cubeHeight] = [this.cubeStateOLL.dimensions.width, this.cubeStateOLL.dimensions.height]; // e.g. 3,3
+    let cells: OllFieldColoring = this.cubeStateOll.ollFieldInput;
+    const [cubeWidth, cubeHeight] = [this.cubeStateOll.dimensions.width, this.cubeStateOll.dimensions.height]; // e.g. 3,3
 
     const stickerSize = 100;
     const half = stickerSize / 2;
@@ -220,12 +220,12 @@ export class CubeRendererOLL extends CubeRenderer {
   }
 
   displayArrows(mainSvg: SVGSVGElement): void {
-    const {arrowColor} = this.cubeStateOLL;
-    SvgUtils.drawArrows(mainSvg, this.cubeStateOLL.currentArrowCoordinates(), arrowColor);
+    const {arrowColor} = this.cubeStateOll;
+    SvgUtils.drawArrows(mainSvg, this.cubeStateOll.currentArrowCoordinates(), arrowColor);
   }
 
   displayAlgorithms(container: HTMLDivElement) {
-    const {selectedAlgorithmHash, algorithmToArrows, uniqueIdForRadioButtons} = this.cubeStateOLL;
+    const {selectedAlgorithmHash, algorithmToArrows, uniqueIdForRadioButtons} = this.cubeStateOll;
     if (selectedAlgorithmHash === undefined) return; /* Fail-safe, nothing selected */
     UiUtils.renderAlgorithmSelect(container, algorithmToArrows.getAllItems(), selectedAlgorithmHash, uniqueIdForRadioButtons);
   }

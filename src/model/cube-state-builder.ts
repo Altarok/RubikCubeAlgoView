@@ -1,5 +1,5 @@
 import {CubeColors, RubikCubeAlgoSettingsTab} from "../settings/RubikCubeAlgoSettings";
-import {CubeStateOllNew, CubeStatePllNew} from "./cube-state";
+import {CubeStateOll, CubeStatePll} from "./cube-state";
 import {FlagType} from "./flags";
 import {ArrowCoords, Arrows, Coordinates, Dimensions, StickerCoords} from "./geometry";
 import {Parse, Result} from "../parser/parser";
@@ -22,10 +22,13 @@ export default class CubeStateBuilder {
    */
   algorithmInput = new Map<string, string>();
   arrowColor: string;
+  /** PLL only: User input keyed 'arrows'. E.g. '1+3,4+8' */
   arrowsPll: string[] = [];
   cubeColor: string;
+  /** PLL only: User input keyed 'dimension'. E.g. '3,3' */
   dimensions: Dimensions = Dimensions.default();
   flags: FlagType[] = ['default'];
+  /** ID for manual identification and caching of rotation */
   id?: string = undefined;
   invalidInput: InvalidInput[] = [];
 
@@ -38,11 +41,11 @@ export default class CubeStateBuilder {
 
   initialCubeRotation: number = 0;
 
-  constructor(rawInput: string, private readonly colors: CubeColors) {
+  constructor(rawInput: string, backupColors: CubeColors) {
     // split lines, skip empty lines, empty string is falsy
     this.splitUserInput = rawInput.split('\n').filter(Boolean);
-    this.arrowColor = colors.arrow;
-    this.cubeColor = colors.cube;
+    this.arrowColor = backupColors.arrow;
+    this.cubeColor = backupColors.cube;
 
     /* sets dimensions for pll */
     this.readRawInput();
@@ -76,19 +79,20 @@ export default class CubeStateBuilder {
         this.algorithmInput.set(value, completeLine);
         break;
       case 'arrowColor':
-        return this.setArrowColor(Parse.toArrowColor(value), completeLine);
+        return this.setArrowColor(Parse.toArrowColor(value, completeLine));
       case 'arrows': /* PLL only! */
-        return this.setArrowsPll(Parse.toArrows(value), completeLine);
+        return this.setArrowsPll(Parse.toArrows(value, completeLine));
       case 'cubeColor':
-        return this.setCubeColor(Parse.toCubeColor(value), completeLine);
+        return this.setCubeColor(Parse.toCubeColor(value, completeLine));
       case 'dimension': /* PLL only! */
-        return this.setDimensions(Parse.toDimensions(value), completeLine);
+        return this.setDimensions(Parse.toDimensions(value, completeLine));
       case 'flags':
-        return this.setFlags(Parse.toFlags(value), completeLine);
+        return this.setFlags(Parse.toFlags(value, completeLine));
       case 'id':
         this.id = value;
         break;
-      default: /* TODO ? */
+      default:
+        this.pushError(new InvalidInput(completeLine, `Unknown key '${key}'`));
         break;
     }
   }
@@ -130,22 +134,21 @@ export default class CubeStateBuilder {
     }, []);
   }
 
-  buildPll(): CubeStatePllNew {
+  buildPll(): CubeStatePll {
     this.setupCubeTypeRelatedData('pll');
     let algorithms: Algorithms = new Algorithms();
-    // /* README - this is value first, then key */
-    // this.algorithmInput.forEach((row: string, completeLine: string) => {
+
     for (const [row, completeLine] of this.algorithmInput) {
-      const result = Parse.toAlgorithm(row);
-      if (result.success) algorithms.add(result.data); else this.pushError(result.error, completeLine);
+      const result = Parse.toAlgorithm(row, completeLine);
+      if (result.success) algorithms.add(result.data); else this.pushError(result.error);
     }
     let arrows: Arrows = this.setupArrowCoordinates(this.arrowsPll);
 
-    return new CubeStatePllNew(this.arrowColor, this.cubeColor, this.dimensions, this.flags,
+    return new CubeStatePll(this.arrowColor, this.cubeColor, this.dimensions, this.flags,
       this.id, this.viewBoxDimensions, this.invalidInput, this.splitUserInput, algorithms, arrows);
   }
 
-  buildOll(settings: RubikCubeAlgoSettingsTab): CubeStateOllNew {
+  buildOll(settings: RubikCubeAlgoSettingsTab): CubeStateOll {
 
     let presetRotation: number | undefined = undefined;
     let presetOutline: string | undefined = undefined;
@@ -172,7 +175,7 @@ export default class CubeStateBuilder {
     let algorithmToArrows = new MappedAlgorithms();
     let selectedAlgorithmHash = this.setupAlgorithmArrowMap(algorithmToArrows);
 
-    const cubeState = new CubeStateOllNew(this.arrowColor, this.dimensions, this.flags, this.id, this.viewBoxDimensions,
+    const cubeState = new CubeStateOll(this.arrowColor, this.dimensions, this.flags, this.id, this.viewBoxDimensions,
       this.invalidInput, this.splitUserInput, algorithmToArrows, selectedAlgorithmHash, ollFieldInput);
     if (presetRotation) {
       cubeState.setRotation(presetRotation);
@@ -186,19 +189,17 @@ export default class CubeStateBuilder {
     let initialAlgorithmSelectionHash: string = '';
 
     if (this.algorithmInput.size > 0) {
-      // /* README - this is value first, then key */
-      // this.algorithmInput.forEach((row: string, completeLine: string) => {
       for (const [row, completeLine] of this.algorithmInput) {
 
         const [algInput, arrowInput] = row.split(/ *== */);
 
-        const result = Parse.toAlgorithm(algInput!);
+        const result = Parse.toAlgorithm(algInput!, completeLine);
         if (result.success) {
           let matchingArrows: Arrows = [];
           if (arrowInput) {
-            let result = Parse.toArrows(arrowInput);
-            if (result.success) matchingArrows = this.setupArrowCoordinates(result.data);
-            else this.pushError(result.error, completeLine);
+            let res = Parse.toArrows(arrowInput, completeLine);
+            if (res.success) matchingArrows = this.setupArrowCoordinates(res.data);
+            else this.pushError(res.error);
           }
           let algorithm = result.data;
           if (initialAlgorithmSelectionHash === '') {
@@ -206,7 +207,7 @@ export default class CubeStateBuilder {
           }
           map.add(new MappedAlgorithm(algorithm, matchingArrows));
         } else {
-          this.pushError(result.error, completeLine);
+          this.pushError(result.error);
         }
       }
     }
@@ -226,14 +227,14 @@ export default class CubeStateBuilder {
     let rawOllInput: string[] = this.undeclaredUserInputForOllField;
 
     if (!rawOllInput || rawOllInput.length < 4) {
-      return this.pushError(new InvalidInput("[not enough input]", "Input for OLL should contain at least 4 lines!"), 'OLL FIELD');
+      return this.pushError(new InvalidInput(rawOllInput[0] ?? 'oll field', "Input for OLL should contain at least 4 lines!"));
     }
 
     const firstRow = rawOllInput[0]!;
     const lastRow = rawOllInput[rawOllInput.length - 1]!;
 
     if (!this.isWrappedInDots(firstRow) || !this.isWrappedInDots(lastRow)) {
-      return this.pushError(new InvalidInput(firstRow, `First '${firstRow}' and last '${lastRow}' line should start and end on a dot ('.')!`), 'OLL FIELD');
+      return this.pushError(new InvalidInput(firstRow, `First '${firstRow}' and last '${lastRow}' line should start and end on a dot ('.')!`));
     }
 
     let expectedWidth: number = rawOllInput[0]!.length;
@@ -244,7 +245,7 @@ export default class CubeStateBuilder {
       const row: string = rawOllInput[i]!.trim();
 
       if (row.length !== expectedWidth) {
-        return this.pushError(new InvalidInput(row, `Invalid row length! Expected ${expectedWidth} characters but found ${row.length}.`), 'OLL FIELD');
+        return this.pushError(new InvalidInput(row, `Invalid row length! Expected ${expectedWidth} characters but found ${row.length}.`));
       }
 
       const parsedRow = row.split('').map((char: string, x: number): string => {
@@ -258,28 +259,32 @@ export default class CubeStateBuilder {
     }
   }
 
-  private setArrowColor(result: Result<string>, completeLine: string): void {
-    if (result.success) this.arrowColor = result.data; else this.pushError(result.error, completeLine);
+  private setArrowColor(result: Result<string>): void {
+    if (result.success) this.arrowColor = result.data; else this.pushError(result.error);
   }
 
-  private setArrowsPll(result: Result<string[]>, completeLine: string) {
-    if (result.success) this.arrowsPll = result.data; else this.pushError(result.error, completeLine);
+  private setArrowsPll(result: Result<string[]>) {
+    if (result.success) this.arrowsPll = result.data; else this.pushError(result.error);
   }
 
-  private setCubeColor(result: Result<string>, completeLine: string) {
-    if (result.success) this.cubeColor = result.data; else this.pushError(result.error, completeLine);
+  private setCubeColor(result: Result<string>) {
+    if (result.success) this.cubeColor = result.data; else this.pushError(result.error);
   }
 
-  private setDimensions(result: Result<Dimensions>, completeLine: string) {
-    if (result.success) this.dimensions = result.data; else this.pushError(result.error, completeLine);
+  private setDimensions(result: Result<Dimensions>) {
+    if (result.success) this.dimensions = result.data; else this.pushError(result.error);
   }
 
-  private setFlags(result: Result<FlagType[]>, completeLine: string) {
-    if (result.success) this.flags = result.data; else this.pushError(result.error, completeLine);
+  private setFlags(result: Result<FlagType[]>) {
+    if (result.success) this.flags = result.data; else this.pushError(result.error);
   }
 
-  private pushError(error: InvalidInput, completeLine: string): void {
-    error.line = completeLine;
+  /**
+   * Call when the interpretation of a code block failed.
+   * @param {InvalidInput} error - contains invalid input and description of problem
+   */
+  private pushError(error: InvalidInput): void {
+    console.warn(`Failed to parse code block. Invalid line: ${error.line}`);
     this.invalidInput.push(error);
   }
 

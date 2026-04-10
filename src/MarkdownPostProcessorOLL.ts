@@ -1,12 +1,9 @@
 import RubikCubeAlgos from "./main";
-import {createOllCube} from "./parser/codeblock-interpreter";
-import {CubeStateOLL, CubeStateOllNew} from "./model/cube-state";
+import {CubeStateOll} from "./model/cube-state";
 import {CubeRendererOLL} from "./view/cube-renderer";
 import {MarkdownRenderChild} from "obsidian";
 import {ButtonController} from "./control/button-controller";
-import {StringUtils} from "./parser/string-utils";
-import {UserInput} from "./model/codeblock-input";
-import {CubeColors, DefaultSettings} from "./settings/RubikCubeAlgoSettings";
+import {CubeColors} from "./settings/RubikCubeAlgoSettings";
 import CubeStateBuilder from "./model/cube-state-builder";
 
 export class MarkdownPostProcessorOLL extends MarkdownRenderChild {
@@ -36,48 +33,18 @@ export class MarkdownPostProcessorOLL extends MarkdownRenderChild {
 
   display(): void {
     this.element.empty();
+    const backupColors: CubeColors = this.plugin.settings.createBackupColors();
+    const cubeState: CubeStateOll = new CubeStateBuilder(this.source, backupColors).buildOll(this.plugin.settings);
 
-    /*
-   * TODO delete old unused stuff
-   */
-    // const userInput: UserInput = StringUtils.codeBlockToStrings(this.source);
-    // console.debug(userInput.toString());
-
-    /*
-     * TODO move inside settings
-     */
-    const colors: CubeColors = {
-      arrow: this.plugin.settings.arrowColor ?? DefaultSettings.ARROW_COLOR,
-      cube: this.plugin.settings.cubeColor ?? DefaultSettings.CUBE_COLOR
-    };
-
-    // let presetOutline: string | undefined = undefined;
-    // let presetRotation: number | undefined = undefined;
-    // let id: string | undefined = userInput.getId();
-
-    // if (id) {
-    //   let hash: string = StringUtils.cubeHash(id, 'oll');
-    //   presetRotation = this.plugin.settings.cubeRotations.get(hash);
-    //   presetOutline = this.plugin.settings.knownIds.get(id);
-    // }
-
-    // let cubeState: CubeStateOLL = createOllCube(userInput, colors, presetOutline);
-
-    // if (presetRotation) {
-    //   cubeState.setDefaultRotation(presetRotation);
-    // }
-
-    let cubeStateNew: CubeStateOllNew = new CubeStateBuilder(this.source, colors).buildOll(this.plugin.settings);
-
-    let cubeRenderer = new CubeRendererOLL(cubeStateNew);
+    const cubeRenderer = new CubeRendererOLL(cubeState);
     cubeRenderer.display(this.element);
 
-    if (!cubeStateNew.codeBlockInterpretationFailed()) {
-      this.addButtonFunctions(cubeRenderer, cubeStateNew);
+    if (!cubeState.codeBlockInterpretationFailed()) {
+      this.addButtonFunctions(cubeRenderer, cubeState);
     }
   }
 
-  private addButtonFunctions(cubeRenderer: CubeRendererOLL, cubeState: CubeStateOllNew) {
+  private addButtonFunctions(cubeRenderer: CubeRendererOLL, cubeState: CubeStateOll) {
 
     if (cubeState.algorithmToArrows.size() > 1) {
 

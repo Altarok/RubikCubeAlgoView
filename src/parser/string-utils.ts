@@ -1,10 +1,8 @@
-import {InputTypes, UserInput} from "../model/codeblock-input";
 import {AlgorithmType} from "../model/algorithms";
 
 export const StringUtils = {
   hash,
-  cubeHash,
-  codeBlockToStrings
+  cubeHash
 };
 
 /**
@@ -47,43 +45,4 @@ function hash(str: string, seed = 0): string {
   // console.log(`cyrb53('revenue', 1) -> ${cyrb53('revenue', 1)}`)
   // console.log(`cyrb53('revenue', 2) -> ${cyrb53('revenue', 2)}`)
   // console.log(`cyrb53('revenue', 3) -> ${cyrb53('revenue', 3)}`)
-}
-
-/**
- * Takes complete code block content and returns all non-empty lines in a string array.
- * Removes comments. Removes prefixes.
- * TODO remove comment removal from other code
- * @param input - a code block's complete content
- */
-function codeBlockToStrings(input: string): UserInput {
-  let nonEmptyStrings = input.split('\n') // split lines
-  .map(line => line.trim())
-  .filter(Boolean); // skip empty lines, "" is falsy
-
-  const userInput = new UserInput(nonEmptyStrings);
-
-  for (const nonEmptyString of nonEmptyStrings) {
-
-    /* Skip comment lines */
-    if (nonEmptyString.startsWith('//')) continue;
-
-    let strings = nonEmptyString.split(':');
-    const key: string = strings[0] as string;
-    let value: string = strings[1] as string;
-
-    /* Skip falsy input */
-    if (!key) continue;
-
-    /* Remove comments, if any */
-    if (value && value.includes('//')) value = (value.split('//')[0] as string).trim();
-
-    if (InputTypes.includes(key) && value) {
-      userInput.add(key, value);
-    } else {
-      userInput.addUnmarkedKey(key);
-    }
-  }
-
-  // console.log('User input:\n' + userInput.toString());
-  return userInput;
 }
