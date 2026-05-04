@@ -67,13 +67,6 @@ export class RubikCubeAlgoSettingsTab extends PluginSettingTab {
       }
     ));
   }
-
-  createBackupColors(): CubeColors {
-    return {
-      arrow: this.plugin.settings.arrowColor ?? DefaultSettings.ARROW_COLOR,
-      cube: this.plugin.settings.cubeColor ?? DefaultSettings.CUBE_COLOR
-    };
-  }
 }
 
 

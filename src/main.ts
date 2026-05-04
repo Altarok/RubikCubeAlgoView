@@ -138,7 +138,7 @@ export default class RubikCubeAlgos extends Plugin {
   }
 
   saveSettingsSync() {
-    // Trigger the save but don't 'await' it. It runs in the background.
+    /* Trigger the save but don't 'await' it. It runs in the background. */
     this.saveSettings();
     // .then(() => console.debug("Save successful"))
     // .catch(err => console.error("Save failed", err));

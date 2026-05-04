@@ -4,6 +4,7 @@ import {MarkdownRenderChild} from "obsidian";
 import {ButtonController} from "./control/button-controller";
 import {CubeColors} from "./settings/RubikCubeAlgoSettings";
 import CubeStateBuilder from "./model/cube-state-builder";
+import {createBackupColors} from "./model/cube-color-builder";
 
 export class MarkdownPostProcessorPLL extends MarkdownRenderChild {
   source: string;
@@ -32,7 +33,7 @@ export class MarkdownPostProcessorPLL extends MarkdownRenderChild {
 
   display(): void {
     this.element.empty();
-    const backupColors: CubeColors = this.plugin.settings.createBackupColors();
+    const backupColors: CubeColors = createBackupColors(this.plugin.settings);
     const cubeState = new CubeStateBuilder(this.source, backupColors).buildPll();
 
     const cubeRenderer: CubeRendererPLL = new CubeRendererPLL(cubeState);
