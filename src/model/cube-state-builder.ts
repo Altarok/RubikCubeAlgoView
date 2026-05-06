@@ -53,6 +53,56 @@ export default class CubeStateBuilder {
     /* sets dimensions for oll */
   }
 
+  buildPll(): CubeStatePll {
+    this.setupCubeTypeRelatedData('pll');
+    let algorithms: Algorithms = new Algorithms();
+
+    for (const [row, completeLine] of this.algorithmInput) {
+      const result = Parse.toAlgorithm(row, completeLine);
+      if (result.success) algorithms.add(result.data); else this.pushError(result.error);
+    }
+    let arrows: Arrows = this.setupArrowCoordinates(this.arrowsPll);
+
+    return new CubeStatePll(this.arrowColor, this.cubeColor, this.dimensions, this.flags,
+      this.id, this.viewBoxDimensions, this.invalidInput, this.splitUserInput, algorithms, arrows);
+  }
+
+  buildOll(settings: RubikCubeAlgoSettingsTab): CubeStateOll {
+
+    let presetRotation: number | undefined = undefined;
+    let presetOutline: string | undefined = undefined;
+
+    if (this.id) {
+      let hash: string = StringUtils.cubeHash(this.id, 'oll');
+      presetRotation = settings.cubeRotations.get(hash);
+      presetOutline = settings.knownIds.get(this.id);
+    }
+
+    let ollFieldInput = new OllFieldColoring(this.cubeColor);
+
+    /*
+     * this.cubeDimensions gets set up in here
+     */
+    if (presetOutline && presetOutlinePattern.test(presetOutline)) {
+      ollFieldInput.setupFixedOllInput(presetOutline);
+    } else {
+      this.setupRawOllInput(ollFieldInput);
+    }
+
+    this.setupCubeTypeRelatedData('oll');
+
+    let algorithmToArrows = new MappedAlgorithms();
+    let selectedAlgorithmHash = this.setupAlgorithmArrowMap(algorithmToArrows);
+
+    const cubeState = new CubeStateOll(this.arrowColor, this.dimensions, this.flags, this.id, this.viewBoxDimensions,
+      this.invalidInput, this.splitUserInput, algorithmToArrows, selectedAlgorithmHash, ollFieldInput);
+    if (presetRotation) {
+      cubeState.setRotation(presetRotation);
+    }
+
+    return cubeState;
+  }
+
   private removeComments(input: string | undefined): string | undefined {
     if (input && input.includes('//'))
       return (input.split('//')[0] as string).trim()
@@ -109,8 +159,7 @@ export default class CubeStateBuilder {
 
     if (input.length == 0) return [];
 
-    return input.filter(Boolean)
-    .flatMap((segment) => {
+    return input.filter(Boolean).flatMap((segment) => {
       const isDoubleSided = segment.includes('+');
       const parts = segment.split(/[+-]/); // Split on + OR -
 
@@ -132,56 +181,6 @@ export default class CubeStateBuilder {
       }
       return arrows;
     }, []);
-  }
-
-  buildPll(): CubeStatePll {
-    this.setupCubeTypeRelatedData('pll');
-    let algorithms: Algorithms = new Algorithms();
-
-    for (const [row, completeLine] of this.algorithmInput) {
-      const result = Parse.toAlgorithm(row, completeLine);
-      if (result.success) algorithms.add(result.data); else this.pushError(result.error);
-    }
-    let arrows: Arrows = this.setupArrowCoordinates(this.arrowsPll);
-
-    return new CubeStatePll(this.arrowColor, this.cubeColor, this.dimensions, this.flags,
-      this.id, this.viewBoxDimensions, this.invalidInput, this.splitUserInput, algorithms, arrows);
-  }
-
-  buildOll(settings: RubikCubeAlgoSettingsTab): CubeStateOll {
-
-    let presetRotation: number | undefined = undefined;
-    let presetOutline: string | undefined = undefined;
-
-    if (this.id) {
-      let hash: string = StringUtils.cubeHash(this.id, 'oll');
-      presetRotation = settings.cubeRotations.get(hash);
-      presetOutline = settings.knownIds.get(this.id);
-    }
-
-    let ollFieldInput = new OllFieldColoring(this.cubeColor);
-
-    /*
-     * this.cubeDimensions gets set up in here
-     */
-    if (presetOutline && presetOutlinePattern.test(presetOutline)) {
-      ollFieldInput.setupFixedOllInput(presetOutline);
-    } else {
-      this.setupRawOllInput(ollFieldInput);
-    }
-
-    this.setupCubeTypeRelatedData('oll');
-
-    let algorithmToArrows = new MappedAlgorithms();
-    let selectedAlgorithmHash = this.setupAlgorithmArrowMap(algorithmToArrows);
-
-    const cubeState = new CubeStateOll(this.arrowColor, this.dimensions, this.flags, this.id, this.viewBoxDimensions,
-      this.invalidInput, this.splitUserInput, algorithmToArrows, selectedAlgorithmHash, ollFieldInput);
-    if (presetRotation) {
-      cubeState.setRotation(presetRotation);
-    }
-
-    return cubeState;
   }
 
   private setupAlgorithmArrowMap(map: MappedAlgorithms): string {
