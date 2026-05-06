@@ -53,53 +53,6 @@ export abstract class CubeRenderer {
     this.displayCube(this.layout.cubeDiv);
   }
 
-  private displayCube(cubeDiv: HTMLDivElement): void {
-    const {width: viewBoxWidth, height: viewBoxHeight} = this.cubeState.viewBoxDimensions;
-
-    const mainSvgElement: SVGSVGElement = this.displayCubeBackground(cubeDiv, viewBoxWidth, viewBoxHeight);
-
-    this.displayCubeForeground(mainSvgElement, viewBoxWidth, viewBoxHeight);
-    this.displayArrows(mainSvgElement);
-  }
-
-  /**
-   * @param {HTMLElement} element - HTML element to draw on
-   * @param {number} viewBoxWidth - view box width of image part to zoom in to
-   * @param {number} viewBoxHeight - view box height of image part to zoom in to
-   */
-  private displayCubeBackground(element: HTMLElement, viewBoxWidth: number, viewBoxHeight: number): SVGSVGElement {
-    const isDefault = this.cubeState.isDefaultSize();
-    const imageWidth = isDefault ? 200 : viewBoxWidth;
-    const imageHeight = isDefault ? 200 : viewBoxHeight;
-
-    this.mainCubeSvg = element.createSvg('svg', {
-      attr: {
-        width: imageWidth,
-        height: imageHeight,
-        viewBox: `0 0 ${viewBoxWidth} ${viewBoxHeight}`
-      }, cls: 'rubik-cube-pll'
-    });
-
-    SvgUtils.createArrowHead(this.mainCubeSvg, this.cubeState.arrowColor);
-
-    /* Background rectangle */
-    SvgUtils.drawBackgroundRect(this.mainCubeSvg, this.cubeState.cubeColor);
-
-    return this.mainCubeSvg;
-  }
-
-  /**
-   * Comes up when user's input is not interpretable. Shows complete user input, with the erroneous line marked in red, including a description of the problem.
-   * @param {HTMLElement} element - HTML element to draw on
-   */
-  private displayWarningForInvalidInput(element: HTMLElement): void {
-    const error: InvalidInput[] = this.cubeState.invalidInput;
-
-    if (error) {
-      UiUtils.showInvalidInput(element, this.cubeState.splitCodeBlockInput, error);
-    }
-  }
-
   /**
    * Change current cube rotation.
    */
@@ -151,6 +104,53 @@ export abstract class CubeRenderer {
     //     setIcon(this.buttonSaveRotation, 'save');
     //   }
     // }
+  }
+
+  private displayCube(cubeDiv: HTMLDivElement): void {
+    const {width: viewBoxWidth, height: viewBoxHeight} = this.cubeState.viewBoxDimensions;
+
+    const mainSvgElement: SVGSVGElement = this.displayCubeBackground(cubeDiv, viewBoxWidth, viewBoxHeight);
+
+    this.displayCubeForeground(mainSvgElement, viewBoxWidth, viewBoxHeight);
+    this.displayArrows(mainSvgElement);
+  }
+
+  /**
+   * @param {HTMLElement} element - HTML element to draw on
+   * @param {number} viewBoxWidth - view box width of image part to zoom in to
+   * @param {number} viewBoxHeight - view box height of image part to zoom in to
+   */
+  private displayCubeBackground(element: HTMLElement, viewBoxWidth: number, viewBoxHeight: number): SVGSVGElement {
+    const isDefault = this.cubeState.isDefaultSize();
+    const imageWidth = isDefault ? 200 : viewBoxWidth;
+    const imageHeight = isDefault ? 200 : viewBoxHeight;
+
+    this.mainCubeSvg = element.createSvg('svg', {
+      attr: {
+        width: imageWidth,
+        height: imageHeight,
+        viewBox: `0 0 ${viewBoxWidth} ${viewBoxHeight}`
+      }, cls: 'rubik-cube-pll'
+    });
+
+    SvgUtils.createArrowHead(this.mainCubeSvg, this.cubeState.arrowColor);
+
+    /* Background rectangle */
+    SvgUtils.drawBackgroundRect(this.mainCubeSvg, this.cubeState.cubeColor);
+
+    return this.mainCubeSvg;
+  }
+
+  /**
+   * Comes up when user's input is not interpretable. Shows complete user input, with the erroneous line marked in red, including a description of the problem.
+   * @param {HTMLElement} element - HTML element to draw on
+   */
+  private displayWarningForInvalidInput(element: HTMLElement): void {
+    const error: InvalidInput[] = this.cubeState.invalidInput;
+
+    if (error) {
+      UiUtils.showInvalidInput(element, this.cubeState.splitCodeBlockInput, error);
+    }
   }
 }
 
