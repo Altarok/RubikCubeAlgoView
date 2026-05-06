@@ -77,16 +77,23 @@ export class Dimensions {
   constructor(public readonly width: number, public readonly height: number) {
   }
 
-  static ofPllCubeDimensions = (cubeDimensions: Dimensions) => new Dimensions(cubeDimensions.width * 100, cubeDimensions.height * 100);
-  static ofOllCubeDimensions = (cubeDimensions: Dimensions) => new Dimensions(cubeDimensions.width * 100 + 100, cubeDimensions.height * 100 + 100);
+  static ofPllCubeDimensions(cubeDimensions: Dimensions): Dimensions {
+    return new Dimensions(cubeDimensions.width * 100, cubeDimensions.height * 100);
+  }
+
+  static ofOllCubeDimensions(cubeDimensions: Dimensions): Dimensions {
+    return new Dimensions(cubeDimensions.width * 100 + 100, cubeDimensions.height * 100 + 100);
+  }
+
+  static default(): Dimensions {
+    return new Dimensions(DefaultDimensions.WIDTH, DefaultDimensions.HEIGHT);
+  }
 
   isDefaultSize(): boolean {
     return this.width === 3 && this.height === 3
-  };
+  }
 
   toString(): string {
     return `Dimensions[${this.width},${this.height}]`
-  };
-
-  static default = (): Dimensions => new Dimensions(DefaultDimensions.WIDTH, DefaultDimensions.HEIGHT);
+  }
 }

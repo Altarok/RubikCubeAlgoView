@@ -8,14 +8,6 @@ export class InvalidInput {
     // debugger;
   }
 
-  public isInvalidRow(row: string): boolean {
-    return this.line === row
-  }
-
-  public toString(): string {
-    return `InvalidInput[line=${this.line},reason=${this.reason}`
-  }
-
   static ofCubeColor(line: string): InvalidInput {
     return new InvalidInput(line, 'Invalid cube color, expected: "cubeColor:[3 (or 6) lowercase hex digits (0-9/a-f)] // optional comment goes here"')
   }
@@ -35,5 +27,14 @@ export class InvalidInput {
   static ofFlags(line: string): InvalidInput {
     return new InvalidInput(line, `Invalid flag. Allowed: ${Flags.types.join(',')}`)
   }
+
+  public isInvalidRow(row: string): boolean {
+    return this.line === row
+  }
+
+  public toString(): string {
+    return `InvalidInput[line=${this.line},reason=${this.reason}`
+  }
+
 }
 
