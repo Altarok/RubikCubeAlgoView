@@ -1,9 +1,7 @@
 import {describe, expect, it} from "vitest";
-import {CubeStateOLL, CubeStatePLL} from "../src/model/cube-state";
-import {CubeColors, DefaultSettings} from "../src/settings/RubikCubeAlgoSettings";
+import {CubeColors} from "../src/settings/RubikCubeAlgoSettings";
 import CubeStateBuilder from "../src/model/cube-state-builder";
-import {AlgorithmType} from "../src/model/algorithms";
-import {Dimensions, StickerCoords} from "../src/model/geometry";
+import {Dimensions} from "../src/model/geometry";
 import {InvalidInput} from "../src/model/codeblock-input";
 
 const id: string = 'someID';
@@ -59,7 +57,6 @@ function expectDefaultValues(csb: CubeStateBuilder): void {
 }
 
 describe('CubeStateBuilder constructor', () => {
-
 
 
   it('should ignore empty input', () => {

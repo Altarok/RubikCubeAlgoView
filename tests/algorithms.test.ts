@@ -1,4 +1,4 @@
-import {describe, it, expect, beforeEach} from 'vitest';
+import {beforeEach, describe, expect, it} from 'vitest';
 import {Algorithm, Algorithms, AlgorithmStep, MappedAlgorithm, MappedAlgorithms} from "../src/model/algorithms";
 import {Arrows} from "../src/model/geometry";
 
@@ -231,7 +231,7 @@ describe('MappedAlgorithms (string-MappedAlgorithm map)', () => {
   });
 
   it('should create a readable string representation', () => {
-    const description  = mappedAlgorithms.toString();
+    const description = mappedAlgorithms.toString();
 
     expect(description).toBe('0: [F R U] (0 arrows)\n1: [F L U] (0 arrows)');
   });
