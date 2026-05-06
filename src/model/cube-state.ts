@@ -1,5 +1,5 @@
 import {InvalidInput} from "./codeblock-input";
-import {Algorithms, MappedAlgorithms, AlgorithmType, Rotatable} from "./algorithms";
+import {Algorithms, AlgorithmType, MappedAlgorithms, Rotatable} from "./algorithms";
 import {Arrows, Dimensions} from "./geometry";
 import {OllFieldColoring} from "./oll-field-coloring";
 import {FlagType} from "./flags";
