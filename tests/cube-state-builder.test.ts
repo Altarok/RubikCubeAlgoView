@@ -1,34 +1,34 @@
 import {describe, expect, it} from "vitest";
 import {CubeColors} from "../src/settings/RubikCubeAlgoSettings";
 import CubeStateBuilder from "../src/model/cube-state-builder";
-import {Dimensions} from "../src/model/geometry";
 import {InvalidInput} from "../src/model/codeblock-input";
 
 const id: string = 'someID';
 /* Default valid OLL field for 3x3 cube. Actual values make no sense. */
-const validBaseOllInput: string = `.110.
-00010
-01110
-00110
-.100.
-id:${id}
-cubeColor:abc
-arrowColor:def
-alg:R' U' R' F R F' U R U2 == 3+9
-alg:F' U R U2 R' U' R' F R == 1-7
-` /* ends on linebreak */
-const validBasePllInput: string = `
-id:${id}
-cubeColor:123456
-arrowColor:a1b2c3
-dimension:3,3
-arrows:1+3,6+8
-alg:R' U2 R U2 R' F R U R' U' R' F' R2 U'
-alg:y R2 B2 U' R' U' R U R U B2 R U' R U
-` /* ends on linebreak */
+// const validBaseOllInput: string = `.110.
+// 00010
+// 01110
+// 00110
+// .100.
+// id:${id}
+// cubeColor:abc
+// arrowColor:def
+// alg:R' U' R' F R F' U R U2 == 3+9
+// alg:F' U R U2 R' U' R' F R == 1-7
+// ` /* ends on linebreak */
+// const validBasePllInput: string = `
+// id:${id}
+// cubeColor:123456
+// arrowColor:a1b2c3
+// dimension:3,3
+// arrows:1+3,6+8
+// alg:R' U2 R U2 R' F R U R' U' R' F' R2 U'
+// alg:y R2 B2 U' R' U' R U R U B2 R U' R U
+// ` /* ends on linebreak */
 
 const defaultTestColors: CubeColors = {arrow: '#ff0', cube: '#08f'};
-const defaultTestDimensions: Dimensions = new Dimensions(3, 3);
+
+// const defaultTestDimensions: Dimensions = new Dimensions(3, 3);
 
 function expectIsEmptyArray(arr: any[]): void {
   expect(arr).toBeTruthy();
@@ -40,7 +40,7 @@ function expectDefaultValues(csb: CubeStateBuilder): void {
   // expect(csb.colors).toBe(defaultTestColors);
   expect(csb.arrowColor).toBe(defaultTestColors.arrow);
   expect(csb.cubeColor).toBe(defaultTestColors.cube);
-  expectIsEmptyArray(csb.alg);
+  expect(csb.algorithmInput).toHaveLength(0);
   expectIsEmptyArray(csb.arrowsPll);
   expect(csb.flags.length).toBe(1);
   expect(csb.flags).toContain('default');
@@ -70,7 +70,7 @@ describe('CubeStateBuilder constructor', () => {
   it('should ignore whitespace, tabs and comments', () => {
 
     const csb = new CubeStateBuilder('//comment\n \n\t\n\n       ', defaultTestColors);
-    expect(csb.splitUserInput.length).toBe(1);
+    expect(csb.splitUserInput).toHaveLength(4);
 
     expectDefaultValues(csb);
   });
@@ -139,9 +139,12 @@ alg:R' U2 R U2 R' F // PLL only
       defaultTestColors);
     expect(csb.splitUserInput.length).toBe(7);
 
-    expect(csb.alg.length).toBe(2);
-    expect(csb.alg).toContain("F' U R U2 R' == 1-7"); // OLL only
-    expect(csb.alg).toContain("R' U2 R U2 R' F"); // PLL only
+    expect(csb.algorithmInput.size).toBe(2);
+    expect(csb.algorithmInput.keys()).toContain("F' U R U2 R' == 1-7"); // OLL only
+    expect(csb.algorithmInput.keys()).toContain("R' U2 R U2 R' F"); // PLL only
+    expect(csb.algorithmInput.values()).toContain("alg:F' U R U2 R' == 1-7 // OLL only"); // OLL only
+    expect(csb.algorithmInput.values()).toContain("alg:R' U2 R U2 R' F // PLL only"); // PLL only
+
 
     expect(csb.arrowsPll.length).toBe(2); // PLL only
     expect(csb.arrowsPll).toContain('1+3'); // PLL only

@@ -11,7 +11,12 @@ export interface CubeColors {
   cube: string;
 }
 
-export class RubikCubeAlgoSettingsTab extends PluginSettingTab {
+export interface Settings {
+  cubeRotations: Map<string, number>;
+  knownIds: Map<string, string>;
+}
+
+export class RubikCubeAlgoSettingsTab extends PluginSettingTab implements Settings {
   plugin: RubikCubeAlgos;
   cubeColor!: string;
   arrowColor!: string;

@@ -1,0 +1,1586 @@
+[1mdiff --git a/src/model/cube-state-builder.ts b/src/model/cube-state-builder.ts[m
+[1mindex 2ddff2d..018a53a 100644[m
+[1m--- a/src/model/cube-state-builder.ts[m
+[1m+++ b/src/model/cube-state-builder.ts[m
+[36m@@ -1,4 +1,4 @@[m
+[31m-import {CubeColors, RubikCubeAlgoSettingsTab} from "../settings/RubikCubeAlgoSettings";[m
+[32m+[m[32mimport {CubeColors, Settings} from "../settings/RubikCubeAlgoSettings";[m
+ import {CubeStateOll, CubeStatePll} from "./cube-state";[m
+ import {FlagType} from "./flags";[m
+ import {ArrowCoords, Arrows, Coordinates, Dimensions, StickerCoords} from "./geometry";[m
+[36m@@ -67,7 +67,7 @@[m [mexport default class CubeStateBuilder {[m
+       this.id, this.viewBoxDimensions, this.invalidInput, this.splitUserInput, algorithms, arrows);[m
+   }[m
+ [m
+[31m-  buildOll(settings: RubikCubeAlgoSettingsTab): CubeStateOll {[m
+[32m+[m[32m  buildOll(settings: Settings): CubeStateOll {[m
+ [m
+     let presetRotation: number | undefined = undefined;[m
+     let presetOutline: string | undefined = undefined;[m
+[36m@@ -183,7 +183,7 @@[m [mexport default class CubeStateBuilder {[m
+     }, []);[m
+   }[m
+ [m
+[31m-  private setupAlgorithmArrowMap(map: MappedAlgorithms): string {[m
+[32m+[m[32m  private setupAlgorithmArrowMap(map: MappedAlgorithms): string  {[m
+ [m
+     let initialAlgorithmSelectionHash: string = '';[m
+ [m
+[1mdiff --git a/src/model/geometry.ts b/src/model/geometry.ts[m
+[1mindex 299c016..c7548ff 100644[m
+[1m--- a/src/model/geometry.ts[m
+[1m+++ b/src/model/geometry.ts[m
+[36m@@ -67,8 +67,8 @@[m [mexport class StickerCoords {[m
+ export type Arrows = ArrowCoords[];[m
+ [m
+ const DefaultDimensions = {[m
+[31m-  WIDTH: 3, /* default rubik cube width  */[m
+[31m-  HEIGHT: 3 /* default rubik cube height */[m
+[32m+[m[32m  WIDTH: 3, /* default Rubik's Cube width  */[m
+[32m+[m[32m  HEIGHT: 3 /* default Rubik's Cube height */[m
+ } as const;[m
+ [m
+ [m
+[1mdiff --git a/src/parser/parser.ts b/src/parser/parser.ts[m
+[1mindex fbafa8b..5b16b6e 100644[m
+[1m--- a/src/parser/parser.ts[m
+[1m+++ b/src/parser/parser.ts[m
+[36m@@ -6,7 +6,7 @@[m [mimport {Flags, FlagType} from "../model/flags";[m
+ [m
+ export type Result<T> =[m
+   | { success: true; data: T }[m
+[31m-  | { success: false; error: InvalidInput };[m
+[32m+[m[32m  | { success: false; error: InvalidInput }[m
+ [m
+ /*[m
+  * Object Namespace[m
+[36m@@ -18,7 +18,7 @@[m [mexport const Parse = {[m
+   toCubeColor,[m
+   toDimensions,[m
+   toFlags[m
+[31m-};[m
+[32m+[m[32m}[m
+ [m
+ /**[m
+  * Type Guard: Tells TS that 'value' is specifically an AlgorithmStep.[m
+[1mdiff --git a/src/settings/RubikCubeAlgoSettings.ts b/src/settings/RubikCubeAlgoSettings.ts[m
+[1mindex 1d193b1..4db2082 100644[m
+[1m--- a/src/settings/RubikCubeAlgoSettings.ts[m
+[1m+++ b/src/settings/RubikCubeAlgoSettings.ts[m
+[36m@@ -11,7 +11,12 @@[m [mexport interface CubeColors {[m
+   cube: string;[m
+ }[m
+ [m
+[31m-export class RubikCubeAlgoSettingsTab extends PluginSettingTab {[m
+[32m+[m[32mexport interface Settings {[m
+[32m+[m[32m  cubeRotations: Map<string, number>;[m
+[32m+[m[32m  knownIds: Map<string, string>;[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mexport class RubikCubeAlgoSettingsTab extends PluginSettingTab implements Settings {[m
+   plugin: RubikCubeAlgos;[m
+   cubeColor!: string;[m
+   arrowColor!: string;[m
+[1mdiff --git a/tests/codeblock-interpreter.test.ts b/tests/codeblock-interpreter.test.ts[m
+[1mindex 361f1b6..2471b09 100644[m
+[1m--- a/tests/codeblock-interpreter.test.ts[m
+[1m+++ b/tests/codeblock-interpreter.test.ts[m
+[36m@@ -1,303 +1,300 @@[m
+[31m-// import {describe, it, expect} from 'vitest';[m
+[31m-// import {createPllCube, createOllCube} from "../src/parser/codeblock-interpreter";[m
+[31m-// import {CubeColors} from "../src/settings/RubikCubeAlgoSettings";[m
+[31m-// import {StringUtils} from "../src/parser/string-utils";[m
+[31m-// import {UserInput} from "../src/model/codeblock-input";[m
+[31m-// import {CubeState, CubeStateOLL, CubeStatePLL} from "../src/model/cube-state";[m
+[31m-// import {Algorithm, MappedAlgorithms} from "../src/model/algorithms";[m
+[31m-// import {Arrows} from "../src/model/geometry";[m
+[31m-//[m
+[31m-// /* Default valid OLL field for 3x3 cube. Actual values make no sense. */[m
+[31m-// const validBaseOllInput: string = `.110.[m
+[31m-// 00010[m
+[31m-// 01110[m
+[31m-// 00110[m
+[31m-// .100.[m
+[31m-// ` /* ends on linebreak */[m
+[31m-//[m
+[31m-//[m
+[31m-// const inputEmpty = StringUtils.codeBlockToStrings('');[m
+[31m-// const inputInvalidArrowColor = StringUtils.codeBlockToStrings('arrowColor:FOO');[m
+[31m-// const inputInvalidCubeColor = StringUtils.codeBlockToStrings('cubeColor:FOO');[m
+[31m-// const inputInvalidFlag = StringUtils.codeBlockToStrings('flags:not-a-flag');[m
+[31m-// /* Contains a oll-field to show OLL ignores dimensions */[m
+[31m-// const inputInvalidDimensions = StringUtils.codeBlockToStrings(validBaseOllInput + 'dimension:42,69');[m
+[31m-// /* Contains some dimensions to show PLL ignores oll-field: 'dimension:3,3' */[m
+[31m-// const inputInvalidOllFieldMissingDots = StringUtils.codeBlockToStrings('0110\n0011\n0011\n.01.\ndimension:4,5');[m
+[31m-// /* Works only for PLL: 'dimension:3,3' */[m
+[31m-// const inputInvalidOllFieldTooSmall = StringUtils.codeBlockToStrings('.1.\n011\n.1.\ndimension:3,4');[m
+[31m-// /* Contains a oll-field to show OLL ignores arrows */[m
+[31m-// const inputInvalidArrows = StringUtils.codeBlockToStrings(validBaseOllInput + 'arrows:1+3+2');[m
+[31m-// /* PLL: Double-sided arrows 1<->3 and 4<->6 */[m
+[31m-// const inputDoubleSidedArrowsPll = StringUtils.codeBlockToStrings('arrows:1+2,4+6');[m
+[31m-// /* OLL: Double-sided arrows 1<->3 and 4<->6 */[m
+[31m-// const inputDoubleSidedArrowsOll = StringUtils.codeBlockToStrings(validBaseOllInput + 'alg:F R == 1+2,4+6');[m
+[31m-// /* PLL: Normal arrow 1->3 */[m
+[31m-// const inputSingleArrowPll = StringUtils.codeBlockToStrings('arrows:1-3');[m
+[31m-// /* OLL: Normal arrow 1->3 */[m
+[31m-// const inputSingleArrowOll = StringUtils.codeBlockToStrings(validBaseOllInput + 'alg:F R == 1-3');[m
+[31m-// /* PLL: Chained arrow 1->3->7->9->1 */[m
+[31m-// const inputChainedArrowsPll = StringUtils.codeBlockToStrings('arrows:1-3-7-9');[m
+[31m-// /* OLL: Chained arrow 1->3->7->9->1 */[m
+[31m-// const inputChainedArrowsOll = StringUtils.codeBlockToStrings(validBaseOllInput + 'alg:F R == 1-3-7-9');[m
+[31m-// /* PLL & OLL: valid algorithm */[m
+[31m-// const inputValidAlgorithm = StringUtils.codeBlockToStrings(validBaseOllInput + 'alg:F f');[m
+[31m-// /* PLL: invalid algorithm */[m
+[31m-// const inputInvalidAlgorithmPLL = StringUtils.codeBlockToStrings('alg:F f G');[m
+[31m-// /* OLL: invalid algorithm */[m
+[31m-// const inputInvalidAlgorithmOLL = StringUtils.codeBlockToStrings(validBaseOllInput + 'alg:F R T == 1-3-7-9');[m
+[31m-//[m
+[31m-//[m
+[31m-//[m
+[31m-// const cubeColors: CubeColors = {'arrow': '123', 'cube': '456'};[m
+[31m-//[m
+[31m-// function expectPass(cubeState: CubeState) {[m
+[31m-//   expect(cubeState.codeBlockInterpretationFailed()).toBe(false);[m
+[31m-//   expect(cubeState.invalidInput).toBeFalsy();[m
+[31m-// }[m
+[31m-//[m
+[31m-// function expectFail(cubeState: CubeState) {[m
+[31m-//   expect(cubeState.codeBlockInterpretationFailed()).toBe(true);[m
+[31m-//   expect(cubeState.invalidInput).toBeTruthy();[m
+[31m-// }[m
+[31m-//[m
+[31m-// function expectFourArrowsToBeTwoDoubleSidedArrows(arrows: Arrows) {[m
+[31m-//[m
+[31m-//   expect(arrows).toBeTruthy();[m
+[31m-//   expect(arrows.length).toBe(4);[m
+[31m-//[m
+[31m-//   const arrow1 = arrows[0]!;[m
+[31m-//   const arrow2 = arrows[1]!;[m
+[31m-//   const arrow3 = arrows[2]!;[m
+[31m-//   const arrow4 = arrows[3]!;[m
+[31m-//[m
+[31m-//   expect(arrow1.start).toMatchObject(arrow2.end);[m
+[31m-//   expect(arrow1.end).toMatchObject(arrow2.start);[m
+[31m-//[m
+[31m-//   expect(arrow3.start).toMatchObject(arrow4.end);[m
+[31m-//   expect(arrow3.end).toMatchObject(arrow4.start)[m
+[31m-// }[m
+[31m-//[m
+[31m-// function expectChainedArrows(arrows: Arrows, expectedSize: number) {[m
+[31m-//   expect(expectedSize).toBeGreaterThanOrEqual(3);[m
+[31m-//   expect(expectedSize).toBeLessThanOrEqual(4);[m
+[31m-//   expect(arrows).toBeTruthy();[m
+[31m-//   expect(arrows.length).toBe(expectedSize);[m
+[31m-//[m
+[31m-//   const firstArrow = arrows[0]!;[m
+[31m-//   let lastArrow = firstArrow;[m
+[31m-//   let currArrow;[m
+[31m-//[m
+[31m-//   for (let i = 1; i < expectedSize; i++) { /* start with 1 */[m
+[31m-//     currArrow = arrows[i]!;[m
+[31m-//     expect(lastArrow.end).toMatchObject(currArrow.start);[m
+[31m-//     lastArrow = currArrow;[m
+[31m-//   }[m
+[31m-//[m
+[31m-//   /*[m
+[31m-//    * Expect the arrows to chain from the last one back to the first one[m
+[31m-//    */[m
+[31m-//   expect(lastArrow!.end).toMatchObject(firstArrow.start);[m
+[31m-// }[m
+[31m-//[m
+[31m-// describe('CodeBlockInterpreter.createPllCube()', () => {[m
+[31m-//[m
+[31m-//   function create(userInput: UserInput, colors: CubeColors): CubeStatePLL {[m
+[31m-//     return createPllCube(userInput, colors);[m
+[31m-//   }[m
+[31m-//[m
+[31m-//   it('should fail on empty input', () => {[m
+[31m-//     let cubeState = create(inputEmpty, cubeColors);[m
+[31m-//     expectFail(cubeState);[m
+[31m-//   });[m
+[31m-//[m
+[31m-//   it('should fail on invalid arrow color', () => {[m
+[31m-//     let cubeState = create(inputInvalidArrowColor, cubeColors);[m
+[31m-//     expectFail(cubeState);[m
+[31m-//   });[m
+[31m-//[m
+[31m-//   it('should fail on invalid cube color', () => {[m
+[31m-//     let cubeState = create(inputInvalidCubeColor, cubeColors);[m
+[31m-//     expectFail(cubeState);[m
+[31m-//   });[m
+[31m-//[m
+[31m-//   it('should fail on invalid flag', () => {[m
+[31m-//     let cubeState = create(inputInvalidFlag, cubeColors);[m
+[31m-//     expectFail(cubeState);[m
+[31m-//   });[m
+[31m-//[m
+[31m-//   it('should fail on invalid dimensions', () => {[m
+[31m-//     let cubeState = create(inputInvalidDimensions, cubeColors);[m
+[31m-//     expectFail(cubeState);[m
+[31m-//   });[m
+[31m-//[m
+[31m-//   it('should ignore invalid OLL-field (missing dots)', () => {[m
+[31m-//     let cubeState = create(inputInvalidOllFieldMissingDots, cubeColors);[m
+[31m-//     expectPass(cubeState);[m
+[31m-//     expect(cubeState.dimensions).toMatchObject({width: 4, height: 5});[m
+[31m-//   });[m
+[31m-//[m
+[31m-//   it('should ignore invalid OLL-field (too small)', () => {[m
+[31m-//     let cubeState = create(inputInvalidOllFieldTooSmall, cubeColors);[m
+[31m-//     expectPass(cubeState);[m
+[31m-//     expect(cubeState.dimensions).toMatchObject({width: 3, height: 4});[m
+[31m-//   });[m
+[31m-//[m
+[31m-//   it('should fail on invalid arrows', () => {[m
+[31m-//     let cubeState = create(inputInvalidArrows, cubeColors);[m
+[31m-//     expectFail(cubeState);[m
+[31m-//[m
+[31m-//     /* Invalid; nothing btw commas */[m
+[31m-//     cubeState = create(StringUtils.codeBlockToStrings('arrows:1+3,,2+4'), cubeColors);[m
+[31m-//     expectFail(cubeState);[m
+[31m-//   });[m
+[31m-//[m
+[31m-//   it('should correctly interpret double-sided arrows', () => {[m
+[31m-//     let cubeState = create(inputDoubleSidedArrowsPll, cubeColors);[m
+[31m-//     expectPass(cubeState);[m
+[31m-//[m
+[31m-//     const arrows: Arrows = cubeState.arrowCoordinates;[m
+[31m-//     expectFourArrowsToBeTwoDoubleSidedArrows(arrows);[m
+[31m-//   });[m
+[31m-//[m
+[31m-//   it('should correctly interpret normal arrow', () => {[m
+[31m-//     let cubeState = create(inputSingleArrowPll, cubeColors);[m
+[31m-//     expectPass(cubeState);[m
+[31m-//[m
+[31m-//     const arrows: Arrows = cubeState.arrowCoordinates;[m
+[31m-//     expect(arrows).toBeTruthy();[m
+[31m-//     expect(arrows.length).toBe(1);[m
+[31m-//   });[m
+[31m-//[m
+[31m-//   it('should correctly interpret chained arrows', () => {[m
+[31m-//     let cubeState = create(inputChainedArrowsPll, cubeColors);[m
+[31m-//     expectPass(cubeState);[m
+[31m-//[m
+[31m-//     const arrows: Arrows = cubeState.arrowCoordinates;[m
+[31m-//     expectChainedArrows(arrows, 4);[m
+[31m-//   });[m
+[31m-//[m
+[31m-//   it('should fail on invalid algorithm', () => {[m
+[31m-//     let cubeState = create(inputInvalidAlgorithmPLL, cubeColors);[m
+[31m-//     expectFail(cubeState);[m
+[31m-//   });[m
+[31m-//[m
+[31m-//   it('should correctly interpret algorithm', () => {[m
+[31m-//     let cubeState = create(inputValidAlgorithm, cubeColors);[m
+[31m-//     expectPass(cubeState);[m
+[31m-//[m
+[31m-//     const algorithms: Algorithm[] = cubeState.algorithms.items;[m
+[31m-//     expect(algorithms).toBeTruthy();[m
+[31m-//     expect(algorithms.length).toBe(1);[m
+[31m-//[m
+[31m-//     const algorithm = algorithms[0]!;[m
+[31m-//     expect(algorithm.toString()).toBe('F f');[m
+[31m-//   });[m
+[31m-//[m
+[31m-// });[m
+[31m-//[m
+[31m-// describe('CodeBlockInterpreter.createOllCube()', () => {[m
+[31m-//[m
+[31m-//   function create(userInput: UserInput, colors: CubeColors): CubeStateOLL {[m
+[31m-//     return createOllCube(userInput, colors);[m
+[31m-//   }[m
+[31m-//[m
+[31m-//   it('should fail on empty input', () => {[m
+[31m-//     let cubeState = create(inputEmpty, cubeColors);[m
+[31m-//     expectFail(cubeState);[m
+[31m-//   });[m
+[31m-//[m
+[31m-//   it('should fail on invalid arrow color', () => {[m
+[31m-//     let cubeState = create(inputInvalidArrowColor, cubeColors);[m
+[31m-//     expectFail(cubeState);[m
+[31m-//   });[m
+[31m-//[m
+[31m-//   it('should fail on invalid cube color', () => {[m
+[31m-//     let cubeState = create(inputInvalidCubeColor, cubeColors);[m
+[31m-//     expectFail(cubeState);[m
+[31m-//   });[m
+[31m-//[m
+[31m-//   it('should fail on invalid flag', () => {[m
+[31m-//     let cubeState = create(inputInvalidFlag, cubeColors);[m
+[31m-//     expectFail(cubeState);[m
+[31m-//   });[m
+[31m-//[m
+[31m-//   it('should ignore invalid dimensions (PLL only)', () => {[m
+[31m-//     let cubeState = create(inputInvalidDimensions, cubeColors);[m
+[31m-//     expectPass(cubeState);[m
+[31m-//   });[m
+[31m-//[m
+[31m-//   it('should fail on invalid OLL-field', () => {[m
+[31m-//     let cubeState = create(inputInvalidOllFieldMissingDots, cubeColors);[m
+[31m-//     expectFail(cubeState);[m
+[31m-//[m
+[31m-//     /*[m
+[31m-//      * middle row too long[m
+[31m-//      */[m
+[31m-//     cubeState = create(StringUtils.codeBlockToStrings('.11.\n0011\n01011\n.01.\ndimension:4,5'), cubeColors);[m
+[31m-//     expectFail(cubeState);[m
+[31m-//   });[m
+[31m-//[m
+[31m-//   it('should ignore invalid OLL-field (too small)', () => {[m
+[31m-//     let cubeState = create(inputInvalidOllFieldTooSmall, cubeColors);[m
+[31m-//     expectFail(cubeState);[m
+[31m-//   });[m
+[31m-//[m
+[31m-//   it('should ignore invalid arrows', () => {[m
+[31m-//     let cubeState = create(inputInvalidArrows, cubeColors);[m
+[31m-//     expectPass(cubeState);[m
+[31m-//   });[m
+[31m-//[m
+[31m-//   it('should correctly interpret double-sided arrows', () => {[m
+[31m-//     let cubeState = create(inputDoubleSidedArrowsOll, cubeColors);[m
+[31m-//     expectPass(cubeState);[m
+[31m-//     const mappedAlgorithms: MappedAlgorithms = cubeState.algorithmToArrows;[m
+[31m-//     expect(mappedAlgorithms).toBeTruthy();[m
+[31m-//     expect(mappedAlgorithms.size()).toBe(1);[m
+[31m-//[m
+[31m-//     let arrows: Arrows = mappedAlgorithms.map.entries().next().value[1].arrows;[m
+[31m-//     expectFourArrowsToBeTwoDoubleSidedArrows(arrows);[m
+[31m-//   });[m
+[31m-//[m
+[31m-//   it('should correctly interpret normal arrow', () => {[m
+[31m-//     let cubeState = create(inputSingleArrowOll, cubeColors);[m
+[31m-//     expectPass(cubeState);[m
+[31m-//     const mappedAlgorithms: MappedAlgorithms = cubeState.algorithmToArrows;[m
+[31m-//     expect(mappedAlgorithms).toBeTruthy();[m
+[31m-//     expect(mappedAlgorithms.size()).toBe(1);[m
+[31m-//[m
+[31m-//     let arrows: Arrows = mappedAlgorithms.map.entries().next().value[1].arrows;[m
+[31m-//     expect(arrows).toBeTruthy();[m
+[31m-//     expect(arrows.length).toBe(1);[m
+[31m-//   });[m
+[31m-//[m
+[31m-//   it('should correctly interpret chained arrows', () => {[m
+[31m-//     let cubeState = create(inputChainedArrowsOll, cubeColors);[m
+[31m-//     expectPass(cubeState);[m
+[31m-//[m
+[31m-//     const mappedAlgorithms: MappedAlgorithms = cubeState.algorithmToArrows;[m
+[31m-//     expect(mappedAlgorithms).toBeTruthy();[m
+[31m-//     expect(mappedAlgorithms.size()).toBe(1);[m
+[31m-//[m
+[31m-//     let arrows: Arrows = mappedAlgorithms.map.entries().next().value[1].arrows;[m
+[31m-//     expectChainedArrows(arrows, 4);[m
+[31m-//   });[m
+[31m-//[m
+[31m-//   it('should fail on invalid algorithm', () => {[m
+[31m-//     let cubeState = create(inputInvalidAlgorithmOLL, cubeColors);[m
+[31m-//     expectFail(cubeState);[m
+[31m-//   });[m
+[31m-//[m
+[31m-//   it('should correctly interpret algorithm', () => {[m
+[31m-//     let cubeState = create(inputValidAlgorithm, cubeColors);[m
+[31m-//     expectPass(cubeState);[m
+[31m-//[m
+[31m-//     const algorithms = cubeState.algorithmToArrows;[m
+[31m-//     expect(algorithms).toBeTruthy();[m
+[31m-//     expect(algorithms.size()).toBe(1);[m
+[31m-//[m
+[31m-//     const algorithm = algorithms.map.entries().next().value[1].algorithm;[m
+[31m-//     expect(algorithm.toString()).toBe('F f');[m
+[31m-//   });[m
+[31m-//[m
+[31m-// });[m
+[32m+[m[32mimport {describe, expect, it} from 'vitest';[m
+[32m+[m[32mimport {CubeColors} from "../src/settings/RubikCubeAlgoSettings";[m
+[32m+[m[32mimport {StringUtils} from "../src/parser/string-utils";[m
+[32m+[m[32mimport {CubeState, CubeStateOll, CubeStatePll} from "../src/model/cube-state";[m
+[32m+[m[32mimport {Algorithm, MappedAlgorithms} from "../src/model/algorithms";[m
+[32m+[m[32mimport {Arrows} from "../src/model/geometry";[m
+[32m+[m
+[32m+[m[32m/* Default valid OLL field for 3x3 cube. Actual values make no sense. */[m
+[32m+[m[32mconst validBaseOllInput: string = `.110.[m
+[32m+[m[32m 00010[m
+[32m+[m[32m 01110[m
+[32m+[m[32m 00110[m
+[32m+[m[32m .100.[m
+[32m+[m[32m ` /* ends on linebreak */[m
+[32m+[m
+[32m+[m
+[32m+[m[32mconst inputEmpty = StringUtils.codeBlockToStrings('');[m
+[32m+[m[32mconst inputInvalidArrowColor = StringUtils.codeBlockToStrings('arrowColor:FOO');[m
+[32m+[m[32mconst inputInvalidCubeColor = StringUtils.codeBlockToStrings('cubeColor:FOO');[m
+[32m+[m[32mconst inputInvalidFlag = StringUtils.codeBlockToStrings('flags:not-a-flag');[m
+[32m+[m[32m/* Contains a oll-field to show OLL ignores dimensions */[m
+[32m+[m[32mconst inputInvalidDimensions = StringUtils.codeBlockToStrings(validBaseOllInput + 'dimension:42,69');[m
+[32m+[m[32m/* Contains some dimensions to show PLL ignores oll-field: 'dimension:3,3' */[m
+[32m+[m[32mconst inputInvalidOllFieldMissingDots = StringUtils.codeBlockToStrings('0110\n0011\n0011\n.01.\ndimension:4,5');[m
+[32m+[m[32m/* Works only for PLL: 'dimension:3,3' */[m
+[32m+[m[32mconst inputInvalidOllFieldTooSmall = StringUtils.codeBlockToStrings('.1.\n011\n.1.\ndimension:3,4');[m
+[32m+[m[32m/* Contains a oll-field to show OLL ignores arrows */[m
+[32m+[m[32mconst inputInvalidArrows = StringUtils.codeBlockToStrings(validBaseOllInput + 'arrows:1+3+2');[m
+[32m+[m[32m/* PLL: Double-sided arrows 1<->3 and 4<->6 */[m
+[32m+[m[32mconst inputDoubleSidedArrowsPll = StringUtils.codeBlockToStrings('arrows:1+2,4+6');[m
+[32m+[m[32m/* OLL: Double-sided arrows 1<->3 and 4<->6 */[m
+[32m+[m[32mconst inputDoubleSidedArrowsOll = StringUtils.codeBlockToStrings(validBaseOllInput + 'alg:F R == 1+2,4+6');[m
+[32m+[m[32m/* PLL: Normal arrow 1->3 */[m
+[32m+[m[32mconst inputSingleArrowPll = StringUtils.codeBlockToStrings('arrows:1-3');[m
+[32m+[m[32m/* OLL: Normal arrow 1->3 */[m
+[32m+[m[32mconst inputSingleArrowOll = StringUtils.codeBlockToStrings(validBaseOllInput + 'alg:F R == 1-3');[m
+[32m+[m[32m/* PLL: Chained arrow 1->3->7->9->1 */[m
+[32m+[m[32mconst inputChainedArrowsPll = StringUtils.codeBlockToStrings('arrows:1-3-7-9');[m
+[32m+[m[32m/* OLL: Chained arrow 1->3->7->9->1 */[m
+[32m+[m[32mconst inputChainedArrowsOll = StringUtils.codeBlockToStrings(validBaseOllInput + 'alg:F R == 1-3-7-9');[m
+[32m+[m[32m/* PLL & OLL: valid algorithm */[m
+[32m+[m[32mconst inputValidAlgorithm = StringUtils.codeBlockToStrings(validBaseOllInput + 'alg:F f');[m
+[32m+[m[32m/* PLL: invalid algorithm */[m
+[32m+[m[32mconst inputInvalidAlgorithmPLL = StringUtils.codeBlockToStrings('alg:F f G');[m
+[32m+[m[32m/* OLL: invalid algorithm */[m
+[32m+[m[32mconst inputInvalidAlgorithmOLL = StringUtils.codeBlockToStrings(validBaseOllInput + 'alg:F R T == 1-3-7-9');[m
+[32m+[m
+[32m+[m
+[32m+[m[32mconst cubeColors: CubeColors = {'arrow': '123', 'cube': '456'};[m
+[32m+[m
+[32m+[m[32mfunction expectPass(cubeState: CubeState) {[m
+[32m+[m[32m  expect(cubeState.codeBlockInterpretationFailed()).toBe(false);[m
+[32m+[m[32m  expect(cubeState.invalidInput).toBeFalsy();[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mfunction expectFail(cubeState: CubeState) {[m
+[32m+[m[32m  expect(cubeState.codeBlockInterpretationFailed()).toBe(true);[m
+[32m+[m[32m  expect(cubeState.invalidInput).toBeTruthy();[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mfunction expectFourArrowsToBeTwoDoubleSidedArrows(arrows: Arrows) {[m
+[32m+[m
+[32m+[m[32m  expect(arrows).toBeTruthy();[m
+[32m+[m[32m  expect(arrows.length).toBe(4);[m
+[32m+[m
+[32m+[m[32m  const arrow1 = arrows[0]!;[m
+[32m+[m[32m  const arrow2 = arrows[1]!;[m
+[32m+[m[32m  const arrow3 = arrows[2]!;[m
+[32m+[m[32m  const arrow4 = arrows[3]!;[m
+[32m+[m
+[32m+[m[32m  expect(arrow1.start).toMatchObject(arrow2.end);[m
+[32m+[m[32m  expect(arrow1.end).toMatchObject(arrow2.start);[m
+[32m+[m
+[32m+[m[32m  expect(arrow3.start).toMatchObject(arrow4.end);[m
+[32m+[m[32m  expect(arrow3.end).toMatchObject(arrow4.start)[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mfunction expectChainedArrows(arrows: Arrows, expectedSize: number) {[m
+[32m+[m[32m  expect(expectedSize).toBeGreaterThanOrEqual(3);[m
+[32m+[m[32m  expect(expectedSize).toBeLessThanOrEqual(4);[m
+[32m+[m[32m  expect(arrows).toBeTruthy();[m
+[32m+[m[32m  expect(arrows.length).toBe(expectedSize);[m
+[32m+[m
+[32m+[m[32m  const firstArrow = arrows[0]!;[m
+[32m+[m[32m  let lastArrow = firstArrow;[m
+[32m+[m[32m  let currArrow;[m
+[32m+[m
+[32m+[m[32m  for (let i = 1; i < expectedSize; i++) { /* start with 1 */[m
+[32m+[m[32m    currArrow = arrows[i]!;[m
+[32m+[m[32m    expect(lastArrow.end).toMatchObject(currArrow.start);[m
+[32m+[m[32m    lastArrow = currArrow;[m
+[32m+[m[32m  }[m
+[32m+[m
+[32m+[m[32m  /*[m
+[32m+[m[32m   * Expect the arrows to chain from the last one back to the first one[m
+[32m+[m[32m   */[m
+[32m+[m[32m  expect(lastArrow!.end).toMatchObject(firstArrow.start);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mdescribe('CodeBlockInterpreter.createPllCube()', () => {[m
+[32m+[m
+[32m+[m[32m  function create(userInput: UserInput, colors: CubeColors): CubeStatePLL {[m
+[32m+[m[32m    return createPllCube(userInput, colors);[m
+[32m+[m[32m  }[m
+[32m+[m
+[32m+[m[32m  it('should fail on empty input', () => {[m
+[32m+[m[32m    let cubeState = create(inputEmpty, cubeColors);[m
+[32m+[m[32m    expectFail(cubeState);[m
+[32m+[m[32m  });[m
+[32m+[m
+[32m+[m[32m  it('should fail on invalid arrow color', () => {[m
+[32m+[m[32m    let cubeState = create(inputInvalidArrowColor, cubeColors);[m
+[32m+[m[32m    expectFail(cubeState);[m
+[32m+[m[32m  });[m
+[32m+[m
+[32m+[m[32m  it('should fail on invalid cube color', () => {[m
+[32m+[m[32m    let cubeState = create(inputInvalidCubeColor, cubeColors);[m
+[32m+[m[32m    expectFail(cubeState);[m
+[32m+[m[32m  });[m
+[32m+[m
+[32m+[m[32m  it('should fail on invalid flag', () => {[m
+[32m+[m[32m    let cubeState = create(inputInvalidFlag, cubeColors);[m
+[32m+[m[32m    expectFail(cubeState);[m
+[32m+[m[32m  });[m
+[32m+[m
+[32m+[m[32m  it('should fail on invalid dimensions', () => {[m
+[32m+[m[32m    let cubeState = create(inputInvalidDimensions, cubeColors);[m
+[32m+[m[32m    expectFail(cubeState);[m
+[32m+[m[32m  });[m
+[32m+[m
+[32m+[m[32m  it('should ignore invalid OLL-field (missing dots)', () => {[m
+[32m+[m[32m    let cubeState = create(inputInvalidOllFieldMissingDots, cubeColors);[m
+[32m+[m[32m    expectPass(cubeState);[m
+[32m+[m[32m    expect(cubeState.dimensions).toMatchObject({width: 4, height: 5});[m
+[32m+[m[32m  });[m
+[32m+[m
+[32m+[m[32m  it('should ignore invalid OLL-field (too small)', () => {[m
+[32m+[m[32m    let cubeState = create(inputInvalidOllFieldTooSmall, cubeColors);[m
+[32m+[m[32m    expectPass(cubeState);[m
+[32m+[m[32m    expect(cubeState.dimensions).toMatchObject({width: 3, height: 4});[m
+[32m+[m[32m  });[m
+[32m+[m
+[32m+[m[32m  it('should fail on invalid arrows', () => {[m
+[32m+[m[32m    let cubeState = create(inputInvalidArrows, cubeColors);[m
+[32m+[m[32m    expectFail(cubeState);[m
+[32m+[m
+[32m+[m[32m    /* Invalid; nothing btw commas */[m
+[32m+[m[32m    cubeState = create(StringUtils.codeBlockToStrings('arrows:1+3,,2+4'), cubeColors);[m
+[32m+[m[32m    expectFail(cubeState);[m
+[32m+[m[32m  });[m
+[32m+[m
+[32m+[m[32m  it('should correctly interpret double-sided arrows', () => {[m
+[32m+[m[32m    let cubeState = create(inputDoubleSidedArrowsPll, cubeColors);[m
+[32m+[m[32m    expectPass(cubeState);[m
+[32m+[m
+[32m+[m[32m    const arrows: Arrows = cubeState.arrowCoordinates;[m
+[32m+[m[32m    expectFourArrowsToBeTwoDoubleSidedArrows(arrows);[m
+[32m+[m[32m  });[m
+[32m+[m
+[32m+[m[32m  it('should correctly interpret normal arrow', () => {[m
+[32m+[m[32m    let cubeState = create(inputSingleArrowPll, cubeColors);[m
+[32m+[m[32m    expectPass(cubeState);[m
+[32m+[m
+[32m+[m[32m    const arrows: Arrows = cubeState.arrowCoordinates;[m
+[32m+[m[32m    expect(arrows).toBeTruthy();[m
+[32m+[m[32m    expect(arrows.length).toBe(1);[m
+[32m+[m[32m  });[m
+[32m+[m
+[32m+[m[32m  it('should correctly interpret chained arrows', () => {[m
+[32m+[m[32m    let cubeState = create(inputChainedArrowsPll, cubeColors);[m
+[32m+[m[32m    expectPass(cubeState);[m
+[32m+[m
+[32m+[m[32m    const arrows: Arrows = cubeState.arrowCoordinates;[m
+[32m+[m[32m    expectChainedArrows(arrows, 4);[m
+[32m+[m[32m  });[m
+[32m+[m
+[32m+[m[32m  it('should fail on invalid algorithm', () => {[m
+[32m+[m[32m    let cubeState = create(inputInvalidAlgorithmPLL, cubeColors);[m
+[32m+[m[32m    expectFail(cubeState);[m
+[32m+[m[32m  });[m
+[32m+[m
+[32m+[m[32m  it('should correctly interpret algorithm', () => {[m
+[32m+[m[32m    let cubeState = create(inputValidAlgorithm, cubeColors);[m
+[32m+[m[32m    expectPass(cubeState);[m
+[32m+[m
+[32m+[m[32m    const algorithms: Algorithm[] = cubeState.algorithms.items;[m
+[32m+[m[32m    expect(algorithms).toBeTruthy();[m
+[32m+[m[32m    expect(algorithms.length).toBe(1);[m
+[32m+[m
+[32m+[m[32m    const algorithm = algorithms[0]!;[m
+[32m+[m[32m    expect(algorithm.toString()).toBe('F f');[m
+[32m+[m[32m  });[m
+[32m+[m
+[32m+[m[32m});[m
+[32m+[m
+[32m+[m[32mdescribe('CodeBlockInterpreter.createOllCube()', () => {[m
+[32m+[m
+[32m+[m[32m  function create(userInput: UserInput, colors: CubeColors): CubeStateOLL {[m
+[32m+[m[32m    return createOllCube(userInput, colors);[m
+[32m+[m[32m  }[m
+[32m+[m
+[32m+[m[32m  it('should fail on empty input', () => {[m
+[32m+[m[32m    let cubeState = create(inputEmpty, cubeColors);[m
+[32m+[m[32m    expectFail(cubeState);[m
+[32m+[m[32m  });[m
+[32m+[m
+[32m+[m[32m  it('should fail on invalid arrow color', () => {[m
+[32m+[m[32m    let cubeState = create(inputInvalidArrowColor, cubeColors);[m
+[32m+[m[32m    expectFail(cubeState);[m
+[32m+[m[32m  });[m
+[32m+[m
+[32m+[m[32m  it('should fail on invalid cube color', () => {[m
+[32m+[m[32m    let cubeState = create(inputInvalidCubeColor, cubeColors);[m
+[32m+[m[32m    expectFail(cubeState);[m
+[32m+[m[32m  });[m
+[32m+[m
+[32m+[m[32m  it('should fail on invalid flag', () => {[m
+[32m+[m[32m    let cubeState = create(inputInvalidFlag, cubeColors);[m
+[32m+[m[32m    expectFail(cubeState);[m
+[32m+[m[32m  });[m
+[32m+[m
+[32m+[m[32m  it('should ignore invalid dimensions (PLL only)', () => {[m
+[32m+[m[32m    let cubeState = create(inputInvalidDimensions, cubeColors);[m
+[32m+[m[32m    expectPass(cubeState);[m
+[32m+[m[32m  });[m
+[32m+[m
+[32m+[m[32m  it('should fail on invalid OLL-field', () => {[m
+[32m+[m[32m    let cubeState = create(inputInvalidOllFieldMissingDots, cubeColors);[m
+[32m+[m[32m    expectFail(cubeState);[m
+[32m+[m
+[32m+[m[32m    /*[m
+[32m+[m[32m     * middle row too long[m
+[32m+[m[32m     */[m
+[32m+[m[32m    cubeState = create(StringUtils.codeBlockToStrings('.11.\n0011\n01011\n.01.\ndimension:4,5'), cubeColors);[m
+[32m+[m[32m    expectFail(cubeState);[m
+[32m+[m[32m  });[m
+[32m+[m
+[32m+[m[32m  it('should ignore invalid OLL-field (too small)', () => {[m
+[32m+[m[32m    let cubeState = create(inputInvalidOllFieldTooSmall, cubeColors);[m
+[32m+[m[32m    expectFail(cubeState);[m
+[32m+[m[32m  });[m
+[32m+[m
+[32m+[m[32m  it('should ignore invalid arrows', () => {[m
+[32m+[m[32m    let cubeState = create(inputInvalidArrows, cubeColors);[m
+[32m+[m[32m    expectPass(cubeState);[m
+[32m+[m[32m  });[m
+[32m+[m
+[32m+[m[32m  it('should correctly interpret double-sided arrows', () => {[m
+[32m+[m[32m    let cubeState = create(inputDoubleSidedArrowsOll, cubeColors);[m
+[32m+[m[32m    expectPass(cubeState);[m
+[32m+[m[32m    const mappedAlgorithms: MappedAlgorithms = cubeState.algorithmToArrows;[m
+[32m+[m[32m    expect(mappedAlgorithms).toBeTruthy();[m
+[32m+[m[32m    expect(mappedAlgorithms.size()).toBe(1);[m
+[32m+[m
+[32m+[m[32m    let arrows: Arrows = mappedAlgorithms.map.entries().next().value[1].arrows;[m
+[32m+[m[32m    expectFourArrowsToBeTwoDoubleSidedArrows(arrows);[m
+[32m+[m[32m  });[m
+[32m+[m
+[32m+[m[32m  it('should correctly interpret normal arrow', () => {[m
+[32m+[m[32m    let cubeState = create(inputSingleArrowOll, cubeColors);[m
+[32m+[m[32m    expectPass(cubeState);[m
+[32m+[m[32m    const mappedAlgorithms: MappedAlgorithms = cubeState.algorithmToArrows;[m
+[32m+[m[32m    expect(mappedAlgorithms).toBeTruthy();[m
+[32m+[m[32m    expect(mappedAlgorithms.size()).toBe(1);[m
+[32m+[m
+[32m+[m[32m    let arrows: Arrows = mappedAlgorithms.map.entries().next().value[1].arrows;[m
+[32m+[m[32m    expect(arrows).toBeTruthy();[m
+[32m+[m[32m    expect(arrows.length).toBe(1);[m
+[32m+[m[32m  });[m
+[32m+[m
+[32m+[m[32m  it('should correctly interpret chained arrows', () => {[m
+[32m+[m[32m    let cubeState = create(inputChainedArrowsOll, cubeColors);[m
+[32m+[m[32m    expectPass(cubeState);[m
+[32m+[m
+[32m+[m[32m    const mappedAlgorithms: MappedAlgorithms = cubeState.algorithmToArrows;[m
+[32m+[m[32m    expect(mappedAlgorithms).toBeTruthy();[m
+[32m+[m[32m    expect(mappedAlgorithms.size()).toBe(1);[m
+[32m+[m
+[32m+[m[32m    let arrows: Arrows = mappedAlgorithms.map.entries().next().value[1].arrows;[m
+[32m+[m[32m    expectChainedArrows(arrows, 4);[m
+[32m+[m[32m  });[m
+[32m+[m
+[32m+[m[32m  it('should fail on invalid algorithm', () => {[m
+[32m+[m[32m    let cubeState = create(inputInvalidAlgorithmOLL, cubeColors);[m
+[32m+[m[32m    expectFail(cubeState);[m
+[32m+[m[32m  });[m
+[32m+[m
+[32m+[m[32m  it('should correctly interpret algorithm', () => {[m
+[32m+[m[32m    let cubeState = create(inputValidAlgorithm, cubeColors);[m
+[32m+[m[32m    expectPass(cubeState);[m
+[32m+[m
+[32m+[m[32m    const algorithms = cubeState.algorithmToArrows;[m
+[32m+[m[32m    expect(algorithms).toBeTruthy();[m
+[32m+[m[32m    expect(algorithms.size()).toBe(1);[m
+[32m+[m
+[32m+[m[32m    const algorithm = algorithms.map.entries().next().value[1].algorithm;[m
+[32m+[m[32m    expect(algorithm.toString()).toBe('F f');[m
+[32m+[m[32m  });[m
+[32m+[m
+[32m+[m[32m});[m
+[1mdiff --git a/tests/cube-state-builder.test.ts b/tests/cube-state-builder.test.ts[m
+[1mindex e737099..87ed6f0 100644[m
+[1m--- a/tests/cube-state-builder.test.ts[m
+[1m+++ b/tests/cube-state-builder.test.ts[m
+[36m@@ -1,34 +1,34 @@[m
+ import {describe, expect, it} from "vitest";[m
+ import {CubeColors} from "../src/settings/RubikCubeAlgoSettings";[m
+ import CubeStateBuilder from "../src/model/cube-state-builder";[m
+[31m-import {Dimensions} from "../src/model/geometry";[m
+ import {InvalidInput} from "../src/model/codeblock-input";[m
+ [m
+ const id: string = 'someID';[m
+ /* Default valid OLL field for 3x3 cube. Actual values make no sense. */[m
+[31m-const validBaseOllInput: string = `.110.[m
+[31m-00010[m
+[31m-01110[m
+[31m-00110[m
+[31m-.100.[m
+[31m-id:${id}[m
+[31m-cubeColor:abc[m
+[31m-arrowColor:def[m
+[31m-alg:R' U' R' F R F' U R U2 == 3+9[m
+[31m-alg:F' U R U2 R' U' R' F R == 1-7[m
+[31m-` /* ends on linebreak */[m
+[31m-const validBasePllInput: string = `[m
+[31m-id:${id}[m
+[31m-cubeColor:123456[m
+[31m-arrowColor:a1b2c3[m
+[31m-dimension:3,3[m
+[31m-arrows:1+3,6+8[m
+[31m-alg:R' U2 R U2 R' F R U R' U' R' F' R2 U'[m
+[31m-alg:y R2 B2 U' R' U' R U R U B2 R U' R U[m
+[31m-` /* ends on linebreak */[m
+[32m+[m[32m// const validBaseOllInput: string = `.110.[m
+[32m+[m[32m// 00010[m
+[32m+[m[32m// 01110[m
+[32m+[m[32m// 00110[m
+[32m+[m[32m// .100.[m
+[32m+[m[32m// id:${id}[m
+[32m+[m[32m// cubeColor:abc[m
+[32m+[m[32m// arrowColor:def[m
+[32m+[m[32m// alg:R' U' R' F R F' U R U2 == 3+9[m
+[32m+[m[32m// alg:F' U R U2 R' U' R' F R == 1-7[m
+[32m+[m[32m// ` /* ends on linebreak */[m
+[32m+[m[32m// const validBasePllInput: string = `[m
+[32m+[m[32m// id:${id}[m
+[32m+[m[32m// cubeColor:123456[m
+[32m+[m[32m// arrowColor:a1b2c3[m
+[32m+[m[32m// dimension:3,3[m
+[32m+[m[32m// arrows:1+3,6+8[m
+[32m+[m[32m// alg:R' U2 R U2 R' F R U R' U' R' F' R2 U'[m
+[32m+[m[32m// alg:y R2 B2 U' R' U' R U R U B2 R U' R U[m
+[32m+[m[32m// ` /* ends on linebreak */[m
+ [m
+ const defaultTestColors: CubeColors = {arrow: '#ff0', cube: '#08f'};[m
+[31m-const defaultTestDimensions: Dimensions = new Dimensions(3, 3);[m
+[32m+[m
+[32m+[m[32m// const defaultTestDimensions: Dimensions = new Dimensions(3, 3);[m
+ [m
+ function expectIsEmptyArray(arr: any[]): void {[m
+   expect(arr).toBeTruthy();[m
+[36m@@ -40,7 +40,7 @@[m [mfunction expectDefaultValues(csb: CubeStateBuilder): void {[m
+   // expect(csb.colors).toBe(defaultTestColors);[m
+   expect(csb.arrowColor).toBe(defaultTestColors.arrow);[m
+   expect(csb.cubeColor).toBe(defaultTestColors.cube);[m
+[31m-  expectIsEmptyArray(csb.alg);[m
+[32m+[m[32m  expect(csb.algorithmInput).toHaveLength(0);[m
+   expectIsEmptyArray(csb.arrowsPll);[m
+   expect(csb.flags.length).toBe(1);[m
+   expect(csb.flags).toContain('default');[m
+[36m@@ -70,7 +70,7 @@[m [mdescribe('CubeStateBuilder constructor', () => {[m
+   it('should ignore whitespace, tabs and comments', () => {[m
+ [m
+     const csb = new CubeStateBuilder('//comment\n \n\t\n\n       ', defaultTestColors);[m
+[31m-    expect(csb.splitUserInput.length).toBe(1);[m
+[32m+[m[32m    expect(csb.splitUserInput).toHaveLength(4);[m
+ [m
+     expectDefaultValues(csb);[m
+   });[m
+[36m@@ -139,9 +139,12 @@[m [malg:R' U2 R U2 R' F // PLL only[m
+       defaultTestColors);[m
+     expect(csb.splitUserInput.length).toBe(7);[m
+ [m
+[31m-    expect(csb.alg.length).toBe(2);[m
+[31m-    expect(csb.alg).toContain("F' U R U2 R' == 1-7"); // OLL only[m
+[31m-    expect(csb.alg).toContain("R' U2 R U2 R' F"); // PLL only[m
+[32m+[m[32m    expect(csb.algorithmInput.size).toBe(2);[m
+[32m+[m[32m    expect(csb.algorithmInput.keys()).toContain("F' U R U2 R' == 1-7"); // OLL only[m
+[32m+[m[32m    expect(csb.algorithmInput.keys()).toContain("R' U2 R U2 R' F"); // PLL only[m
+[32m+[m[32m    expect(csb.algorithmInput.values()).toContain("alg:F' U R U2 R' == 1-7 // OLL only"); // OLL only[m
+[32m+[m[32m    expect(csb.algorithmInput.values()).toContain("alg:R' U2 R U2 R' F // PLL only"); // PLL only[m
+[32m+[m
+ [m
+     expect(csb.arrowsPll.length).toBe(2); // PLL only[m
+     expect(csb.arrowsPll).toContain('1+3'); // PLL only[m
+[1mdiff --git a/tests/cube-state.test.ts b/tests/cube-state.test.ts[m
+[1mindex 9cb51a6..a8bfe47 100644[m
+[1m--- a/tests/cube-state.test.ts[m
+[1m+++ b/tests/cube-state.test.ts[m
+[36m@@ -1,277 +1,301 @@[m
+[31m-// import {describe, it, expect, beforeEach} from 'vitest';[m
+[31m-// import {CubeStateOLL, CubeStatePLL} from "../src/model/cube-state";[m
+[31m-// import {StringUtils} from "../src/parser/string-utils";[m
+[31m-// import {createOllCube, createPllCube} from "../src/parser/codeblock-interpreter";[m
+[31m-// import {CubeColors, DefaultSettings} from "../src/settings/RubikCubeAlgoSettings";[m
+[31m-// import {Arrows} from "../src/model/geometry";[m
+[31m-//[m
+[31m-// const id: string = 'someID';[m
+[31m-// /* Default valid OLL field for 3x3 cube. Actual values make no sense. */[m
+[31m-// const validBaseOllInput: string = `.110.[m
+[31m-// 00010[m
+[31m-// 01110[m
+[31m-// 00110[m
+[31m-// .100.[m
+[31m-// id:${id}[m
+[31m-// cubeColor:f0f[m
+[31m-// arrowColor:0f0[m
+[31m-// alg:R' U' R' F R F' U R U2 == 3+9[m
+[31m-// alg:F' U R U2 R' U' R' F R == 1-7[m
+[31m-// ` /* ends on linebreak */[m
+[31m-// const validBasePllInput: string = `[m
+[31m-// id:${id}[m
+[31m-// cubeColor:123456[m
+[31m-// arrowColor:a2cd3f[m
+[31m-// dimension:3,3[m
+[31m-// arrows:1+3,6+8[m
+[31m-// alg:R' U2 R U2 R' F R U R' U' R' F' R2 U'[m
+[31m-// alg:y R2 B2 U' R' U' R U R U B2 R U' R U[m
+[31m-// ` /* ends on linebreak */[m
+[31m-//[m
+[31m-// const colors: CubeColors = {arrow: "#08f", cube: "#ff0"};[m
+[31m-//[m
+[31m-// function createOll(): CubeStateOLL {[m
+[31m-//   return createOllCube(StringUtils.codeBlockToStrings(validBaseOllInput), colors, undefined);[m
+[31m-// }[m
+[31m-//[m
+[31m-// function createPll(): CubeStatePLL {[m
+[31m-//   return createPllCube(StringUtils.codeBlockToStrings(validBasePllInput), colors);[m
+[31m-// }[m
+[31m-//[m
+[31m-// function expectRotationValues(co: CubeStateOLL, cp: CubeStatePLL, dr: number, cr: number, crn: number, locked?: boolean): void {[m
+[31m-//   expect(co.defaultRotation).toBe(dr);[m
+[31m-//   expect(co.currentRotation).toBe(cr);[m
+[31m-//   expect(co.currentRotationNormalized).toBe(crn);[m
+[31m-//   expect(co.locked).toBe(locked);[m
+[31m-//[m
+[31m-//   expect(cp.defaultRotation).toBe(dr);[m
+[31m-//   expect(cp.currentRotation).toBe(cr);[m
+[31m-//   expect(cp.currentRotationNormalized).toBe(crn);[m
+[31m-//   expect(co.locked).toBe(locked);[m
+[31m-// }[m
+[31m-//[m
+[31m-// // describe('CubeState hash', () => {[m
+[31m-// //[m
+[31m-// //   const ollInputWithId: string = validBaseOllInput;[m
+[31m-// //   const ollInputWithoutId: string = '.10.\n0010\n0010\n.10.';[m
+[31m-// //   const pllInputWithId: string = validBasePllInput;[m
+[31m-// //   const pllInputWithoutId: string = 'dimension:3,3\narrows:1+3,6+8';[m
+[31m-// //[m
+[31m-// //   it('should return undefined when not given an id', () => {[m
+[31m-// //     let co: CubeStateOLL = new CubeStateOLL(StringUtils.codeBlockToStrings(ollInputWithoutId));[m
+[31m-// //     let cp: CubeStatePLL = new CubeStatePLL(StringUtils.codeBlockToStrings(pllInputWithoutId));[m
+[31m-// //[m
+[31m-// //     expect(co.getHash()).toBeUndefined();[m
+[31m-// //     expect(cp.getHash()).toBeUndefined();[m
+[31m-// //   });[m
+[31m-// //[m
+[31m-// //   it('should start with cube type + id followed by id', () => {[m
+[31m-// //     let co: CubeStateOLL = new CubeStateOLL(StringUtils.codeBlockToStrings(ollInputWithId));[m
+[31m-// //     let cp: CubeStatePLL = new CubeStatePLL(StringUtils.codeBlockToStrings(pllInputWithId));[m
+[31m-// //[m
+[31m-// //     expect(co.getHash()).toMatch(new RegExp(`oll-${id}-.*`));[m
+[31m-// //     expect(cp.getHash()).toMatch(new RegExp(`pll-${id}-.*`));[m
+[31m-// //   });[m
+[31m-// // });[m
+[31m-//[m
+[31m-// describe('CubeState constructor', () => {[m
+[31m-//[m
+[31m-//   it('should not fail no matter the input', () => {[m
+[31m-//     // @ts-ignore[m
+[31m-//     new CubeStateOLL(null);[m
+[31m-//     // @ts-ignore[m
+[31m-//     new CubeStateOLL(undefined);[m
+[32m+[m[32mimport {beforeEach, describe, expect, it} from 'vitest';[m
+[32m+[m[32mimport {CubeStateOll, CubeStatePll} from "../src/model/cube-state";[m
+[32m+[m[32mimport {CubeColors, Settings} from "../src/settings/RubikCubeAlgoSettings";[m
+[32m+[m[32mimport CubeStateBuilder from "../src/model/cube-state-builder";[m
+[32m+[m
+[32m+[m[32mconst id: string = 'someID';[m
+[32m+[m[32m/* Default valid OLL field for 3x3 cube. Actual values make no sense. */[m
+[32m+[m[32mconst validBaseOllInput: string = `.110.[m
+[32m+[m[32m00010[m
+[32m+[m[32m01110[m
+[32m+[m[32m00110[m
+[32m+[m[32m.100.[m
+[32m+[m[32mid:${id}[m
+[32m+[m[32mcubeColor:f0f[m
+[32m+[m[32marrowColor:0f0[m
+[32m+[m[32malg:R' U' R' F R F' U R U2 == 3+9[m
+[32m+[m[32malg:F' U R U2 R' U' R' F R == 1-7[m
+[32m+[m[32m` /* ends on linebreak */[m
+[32m+[m[32mconst validBaseOllInputWithoutId: string = `.110.[m
+[32m+[m[32m00010[m
+[32m+[m[32m01110[m
+[32m+[m[32m00110[m
+[32m+[m[32m.100.[m
+[32m+[m[32mcubeColor:f0f[m
+[32m+[m[32marrowColor:0f0[m
+[32m+[m[32malg:R' U' R' F R F' U R U2 == 3+9[m
+[32m+[m[32malg:F' U R U2 R' U' R' F R == 1-7[m
+[32m+[m[32m` /* ends on linebreak */[m
+[32m+[m[32mconst validBasePllInput: string = `[m
+[32m+[m[32mid:${id}[m
+[32m+[m[32mcubeColor:123456[m
+[32m+[m[32marrowColor:a2cd3f[m
+[32m+[m[32mdimension:3,3[m
+[32m+[m[32marrows:1+3,6+8[m
+[32m+[m[32malg:R' U2 R U2 R' F R U R' U' R' F' R2 U'[m
+[32m+[m[32malg:y R2 B2 U' R' U' R U R U B2 R U' R U[m
+[32m+[m[32m` /* ends on linebreak */[m
+[32m+[m
+[32m+[m[32mconst colors: CubeColors = {[m
+[32m+[m[32m  arrow: "#08f",[m
+[32m+[m[32m  cube: "#ff0"[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mconst settings: Settings = {[m
+[32m+[m[32m  cubeRotations: new Map<string, number>(),[m
+[32m+[m[32m  knownIds: new Map<string, string>()[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mfunction createOll(): CubeStateOll {[m
+[32m+[m[32m  return createOll2(validBaseOllInput);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mfunction createOll2(ollInput: string): CubeStateOll {[m
+[32m+[m[32m  return new CubeStateBuilder(ollInput, colors).buildOll(settings);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mfunction createPll(): CubeStatePll {[m
+[32m+[m[32m  return createPll2(validBasePllInput);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mfunction createPll2(pllInput: string): CubeStatePll {[m
+[32m+[m[32m  return new CubeStateBuilder(pllInput, colors).buildPll();[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mfunction expectRotationValues(co: CubeStateOll, cp: CubeStatePll, dr: number, cr: number, crn: number, locked?: boolean): void {[m
+[32m+[m[32m  expect(co.defaultRotation).toBe(dr);[m
+[32m+[m[32m  expect(co.currentRotation).toBe(cr);[m
+[32m+[m[32m  expect(co.currentRotationNormalized).toBe(crn);[m
+[32m+[m[32m  expect(co.locked).toBe(locked);[m
+[32m+[m
+[32m+[m[32m  expect(cp.defaultRotation).toBe(dr);[m
+[32m+[m[32m  expect(cp.currentRotation).toBe(cr);[m
+[32m+[m[32m  expect(cp.currentRotationNormalized).toBe(crn);[m
+[32m+[m[32m  expect(co.locked).toBe(locked);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32m// describe('CubeState hash', () => {[m
+[32m+[m[32m//[m
+[32m+[m[32m//   const ollInputWithId: string = validBaseOllInput;[m
+[32m+[m[32m//   const ollInputWithoutId: string = '.10.\n0010\n0010\n.10.';[m
+[32m+[m[32m//   const pllInputWithId: string = validBasePllInput;[m
+[32m+[m[32m//   const pllInputWithoutId: string = 'dimension:3,3\narrows:1+3,6+8';[m
+[32m+[m[32m//[m
+[32m+[m[32m//   it('should return undefined when not given an id', () => {[m
+[32m+[m[32m//     let co: CubeStateOLL = new CubeStateOLL(StringUtils.codeBlockToStrings(ollInputWithoutId));[m
+[32m+[m[32m//     let cp: CubeStatePLL = new CubeStatePLL(StringUtils.codeBlockToStrings(pllInputWithoutId));[m
+[32m+[m[32m//[m
+[32m+[m[32m//     expect(co.getHash()).toBeUndefined();[m
+[32m+[m[32m//     expect(cp.getHash()).toBeUndefined();[m
+ //   });[m
+ //[m
+[31m-//   it('should pre-set cube type ', () => {[m
+[31m-//     // @ts-ignore[m
+[31m-//     expect(new CubeStateOLL(null).algorithmType).toBe('oll');[m
+[31m-//     // @ts-ignore[m
+[31m-//     expect(new CubeStatePLL(null).algorithmType).toBe('pll');[m
+[31m-//   });[m
+[31m-//[m
+[31m-//   it('should pre-set rotation values', () => {[m
+[31m-//     let co: CubeStateOLL = new CubeStateOLL(StringUtils.codeBlockToStrings(validBaseOllInput));[m
+[31m-//     let cp: CubeStatePLL = new CubeStatePLL(StringUtils.codeBlockToStrings(validBasePllInput));[m
+[32m+[m[32m//   it('should start with cube type + id followed by id', () => {[m
+[32m+[m[32m//     let co: CubeStateOLL = new CubeStateOLL(StringUtils.codeBlockToStrings(ollInputWithId));[m
+[32m+[m[32m//     let cp: CubeStatePLL = new CubeStatePLL(StringUtils.codeBlockToStrings(pllInputWithId));[m
+ //[m
+[31m-//     expectRotationValues(co, cp, 0, 0, 0, false);[m
+[32m+[m[32m//     expect(co.getHash()).toMatch(new RegExp(`oll-${id}-.*`));[m
+[32m+[m[32m//     expect(cp.getHash()).toMatch(new RegExp(`pll-${id}-.*`));[m
+ //   });[m
+ // });[m
+[31m-//[m
+[31m-// describe('CubeState rotation', () => {[m
+[31m-//[m
+[31m-//   let co: CubeStateOLL;[m
+[31m-//   let cp: CubeStatePLL;[m
+[31m-//[m
+[31m-//   beforeEach(() => {[m
+[31m-//     co = createOll();[m
+[31m-//     cp = createPll();[m
+[31m-//   });[m
+[31m-//[m
+[31m-//   it('left works as expected', () => {[m
+[31m-//     expectRotationValues(co, cp, 0, 0, 0, false);[m
+[31m-//[m
+[31m-//     co.rotateLeft();[m
+[31m-//     cp.rotateLeft();[m
+[31m-//[m
+[31m-//     expectRotationValues(co, cp, 0, 1, 1, false);[m
+[31m-//[m
+[31m-//     co.rotateLeft();[m
+[31m-//     cp.rotateLeft();[m
+[31m-//     co.rotateLeft();[m
+[31m-//     cp.rotateLeft();[m
+[31m-//[m
+[31m-//     expectRotationValues(co, cp, 0, 3, 3, false);[m
+[31m-//[m
+[31m-//     co.rotateLeft();[m
+[31m-//     cp.rotateLeft();[m
+[31m-//     co.rotateLeft();[m
+[31m-//     cp.rotateLeft();[m
+[31m-//[m
+[31m-//     expectRotationValues(co, cp, 0, 5, 1, false);[m
+[31m-//   });[m
+[31m-//[m
+[31m-//   it('right works as expected', () => {[m
+[31m-//     expectRotationValues(co, cp, 0, 0, 0, false);[m
+[31m-//[m
+[31m-//     co.rotateRight();[m
+[31m-//     cp.rotateRight();[m
+[31m-//[m
+[31m-//     expectRotationValues(co, cp, 0, -1, 3, false);[m
+[31m-//   });[m
+[31m-//[m
+[31m-//   it('reset works as expected', () => {[m
+[31m-//     expectRotationValues(co, cp, 0, 0, 0, false);[m
+[31m-//[m
+[31m-//     co.rotateRight();[m
+[31m-//     cp.rotateRight();[m
+[31m-//[m
+[31m-//     expectRotationValues(co, cp, 0, -1, 3, false);[m
+[31m-//[m
+[31m-//     co.resetRotation();[m
+[31m-//     cp.resetRotation();[m
+[31m-//[m
+[31m-//     expectRotationValues(co, cp, 0, 0, 0, false);[m
+[31m-//   });[m
+[31m-//[m
+[31m-//   it('should be able to have a default', () => {[m
+[31m-//     expectRotationValues(co, cp, 0, 0, 0, false);[m
+[31m-//[m
+[31m-//     /* rotate without default */[m
+[31m-//     co.rotateRight();[m
+[31m-//     cp.rotateRight();[m
+[31m-//[m
+[31m-//     expectRotationValues(co, cp, 0, -1, 3, false);[m
+[31m-//[m
+[31m-//     /* set default */[m
+[31m-//     co.setDefaultRotation(1);[m
+[31m-//     cp.setDefaultRotation(1);[m
+[31m-//[m
+[31m-//     expectRotationValues(co, cp, 1, 1, 1, true);[m
+[31m-//[m
+[31m-//     /* rotate with default */[m
+[31m-//     co.rotateRight();[m
+[31m-//     cp.rotateRight();[m
+[31m-//[m
+[31m-//     expectRotationValues(co, cp, 1, 0, 0, true);[m
+[31m-//[m
+[31m-//     /* reset to default */[m
+[31m-//     co.resetRotation();[m
+[31m-//     cp.resetRotation();[m
+[31m-//[m
+[31m-//     expectRotationValues(co, cp, 1, 1, 1, true);[m
+[31m-//[m
+[31m-//     /* delete default */[m
+[31m-//     co.setDefaultRotation(undefined);[m
+[31m-//     cp.setDefaultRotation(undefined);[m
+[31m-//[m
+[31m-//     expectRotationValues(co, cp, 0, 0, 0, false);[m
+[31m-//   });[m
+[31m-//[m
+[31m-// });[m
+[31m-//[m
+[31m-// /**[m
+[31m-//  * PLL has static arrows while OLL has variable arrows[m
+[31m-//  */[m
+[31m-// describe('CubeState arrow coordinates', () => {[m
+[31m-//[m
+[31m-//   const ollInputWithArrows: string = validBaseOllInput;[m
+[31m-//   const ollInputWithoutArrows: string = '.10.\n0010\n0010\n.10.';[m
+[31m-//   const pllInputWithArrows: string = validBasePllInput;[m
+[31m-//   const pllInputWithoutArrows: string = 'dimension:3,3';[m
+[31m-//[m
+[31m-//   /**[m
+[31m-//    * No arrows[m
+[31m-//    */[m
+[31m-//   it('result in empty non-null collections when no arrows given (OLL+PLL)', () => {[m
+[31m-//     /*[m
+[31m-//      * OLL[m
+[31m-//      */[m
+[31m-//     let co: CubeStateOLL = createOllCube(StringUtils.codeBlockToStrings(ollInputWithoutArrows), colors, undefined);[m
+[31m-//[m
+[31m-//     expect(co.algorithmToArrows).toBeTruthy();[m
+[31m-//     expect(co.algorithmToArrows.size()).toBe(0);[m
+[31m-//     expect(co.selectedAlgorithmHash).toBeUndefined();[m
+[31m-//[m
+[31m-//     const arrowCoords = co.currentArrowCoordinates();[m
+[31m-//     expect(arrowCoords).toBeTruthy();[m
+[31m-//[m
+[31m-//     expect(arrowCoords).toStrictEqual([]);[m
+[31m-//[m
+[31m-//     /*[m
+[31m-//      * PLL[m
+[31m-//      */[m
+[31m-//     let cp: CubeStatePLL = createPllCube(StringUtils.codeBlockToStrings(pllInputWithoutArrows), colors);[m
+[31m-//[m
+[31m-//     expect(cp.arrowCoordinates).toBeTruthy();[m
+[31m-//     expect(cp.arrowCoordinates.length).toBe(0);[m
+[31m-//   });[m
+[31m-//[m
+[31m-//   /**[m
+[31m-//    * PLL with arrows: arrows:1+3,6+8[m
+[31m-//    */[m
+[31m-//   it('result in static arrow array (PLL)', () => {[m
+[31m-//     let cp: CubeStatePLL = createPllCube(StringUtils.codeBlockToStrings(pllInputWithArrows), colors);[m
+[31m-//[m
+[31m-//     expect(cp.arrowCoordinates).toBeTruthy();[m
+[31m-//     expect(cp.arrowCoordinates.length).toBe(4);[m
+[31m-//[m
+[31m-//     /*[m
+[31m-//      * arrows:1+3,6+8[m
+[31m-//      *[m
+[31m-//      * 1. arrow: 1 -> 3[m
+[31m-//      * 2. arrow: 3 -> 1[m
+[31m-//      * 3. arrow: 6 -> 8[m
+[31m-//      * 4. arrow: 8 -> 6[m
+[31m-//      */[m
+[31m-//     expect([cp.arrowCoordinates[0]!.start.x, cp.arrowCoordinates[0]!.start.y]).toStrictEqual([50, 50]);[m
+[31m-//     expect([cp.arrowCoordinates[0]!.end.x, cp.arrowCoordinates[0]!.end.y]).toStrictEqual([250, 50]);[m
+[31m-//[m
+[31m-//     expect([cp.arrowCoordinates[1]!.start.x, cp.arrowCoordinates[1]!.start.y]).toStrictEqual([250, 50]);[m
+[31m-//     expect([cp.arrowCoordinates[1]!.end.x, cp.arrowCoordinates[1]!.end.y]).toStrictEqual([50, 50]);[m
+[31m-//[m
+[31m-//     expect([cp.arrowCoordinates[2]!.start.x, cp.arrowCoordinates[2]!.start.y]).toStrictEqual([250, 150]);[m
+[31m-//     expect([cp.arrowCoordinates[2]!.end.x, cp.arrowCoordinates[2]!.end.y]).toStrictEqual([150, 250]);[m
+[31m-//[m
+[31m-//     expect([cp.arrowCoordinates[3]!.start.x, cp.arrowCoordinates[3]!.start.y]).toStrictEqual([150, 250]);[m
+[31m-//     expect([cp.arrowCoordinates[3]!.end.x, cp.arrowCoordinates[3]!.end.y]).toStrictEqual([250, 150]);[m
+[31m-//   });[m
+[31m-//[m
+[31m-//   /**[m
+[31m-//    * PLL with arrows:[m
+[31m-//    * alg:R' U' R F == 3+9[m
+[31m-//    * alg:F U R U2 == 1-7[m
+[31m-//    */[m
+[31m-//   it('result in changeable arrow map (OLL)', () => {[m
+[31m-//     let co: CubeStateOLL = createOllCube(StringUtils.codeBlockToStrings(ollInputWithArrows), colors, undefined);[m
+[31m-//[m
+[31m-//     expect(co.algorithmToArrows).toBeTruthy();[m
+[31m-//     expect(co.algorithmToArrows.size()).toBe(2);[m
+[31m-//     expect(co.selectedAlgorithmHash).toBeDefined();[m
+[31m-//[m
+[31m-//     const algorithms = co.algorithmToArrows.getAllItems();[m
+[31m-//[m
+[31m-//   });[m
+[31m-//[m
+[31m-// });[m
+[31m-//[m
+[32m+[m
+[32m+[m[32mdescribe('CubeState constructor', () => {[m
+[32m+[m
+[32m+[m[32m//  it('should not fail no matter the input', () => {[m
+[32m+[m[32m//    // @ts-ignore[m
+[32m+[m[32m//    new CubeStateOll(null);[m
+[32m+[m[32m//    // @ts-ignore[m
+[32m+[m[32m//    new CubeStateOll(undefined);[m
+[32m+[m[32m//  });[m
+[32m+[m[32m//[m
+[32m+[m[32m//  it('should pre-set cube type ', () => {[m
+[32m+[m[32m//    // @ts-ignore[m
+[32m+[m[32m//    expect(new CubeStateOLL(null).algorithmType).toBe('oll');[m
+[32m+[m[32m//    // @ts-ignore[m
+[32m+[m[32m//    expect(new CubeStatePLL(null).algorithmType).toBe('pll');[m
+[32m+[m[32m//  });[m
+[32m+[m
+[32m+[m[32m  it('should pre-set rotation values', () => {[m
+[32m+[m[32m    let co: CubeStateOll = createOll(); // new CubeStateOll(StringUtils.codeBlockToStrings(validBaseOllInput));[m
+[32m+[m[32m    let cp: CubeStatePll = createPll(); // new CubeStatePll(StringUtils.codeBlockToStrings(validBasePllInput));[m
+[32m+[m
+[32m+[m[32m    expectRotationValues(co, cp, 0, 0, 0, false);[m
+[32m+[m[32m  });[m
+[32m+[m[32m});[m
+[32m+[m
+[32m+[m[32mdescribe('CubeState rotation', () => {[m
+[32m+[m
+[32m+[m[32m  let co: CubeStateOll;[m
+[32m+[m[32m  let cp: CubeStatePll;[m
+[32m+[m
+[32m+[m[32m  beforeEach(() => {[m
+[32m+[m[32m    co = createOll();[m
+[32m+[m[32m    cp = createPll();[m
+[32m+[m[32m  });[m
+[32m+[m
+[32m+[m[32m  it('left works as expected', () => {[m
+[32m+[m[32m    expectRotationValues(co, cp, 0, 0, 0, false);[m
+[32m+[m
+[32m+[m[32m    co.rotateLeft();[m
+[32m+[m[32m    cp.rotateLeft();[m
+[32m+[m
+[32m+[m[32m    expectRotationValues(co, cp, 0, 1, 1, false);[m
+[32m+[m
+[32m+[m[32m    co.rotateLeft();[m
+[32m+[m[32m    cp.rotateLeft();[m
+[32m+[m[32m    co.rotateLeft();[m
+[32m+[m[32m    cp.rotateLeft();[m
+[32m+[m
+[32m+[m[32m    expectRotationValues(co, cp, 0, 3, 3, false);[m
+[32m+[m
+[32m+[m[32m    co.rotateLeft();[m
+[32m+[m[32m    cp.rotateLeft();[m
+[32m+[m[32m    co.rotateLeft();[m
+[32m+[m[32m    cp.rotateLeft();[m
+[32m+[m
+[32m+[m[32m    expectRotationValues(co, cp, 0, 5, 1, false);[m
+[32m+[m[32m  });[m
+[32m+[m
+[32m+[m[32m  it('right works as expected', () => {[m
+[32m+[m[32m    expectRotationValues(co, cp, 0, 0, 0, false);[m
+[32m+[m
+[32m+[m[32m    co.rotateRight();[m
+[32m+[m[32m    cp.rotateRight();[m
+[32m+[m
+[32m+[m[32m    expectRotationValues(co, cp, 0, -1, 3, false);[m
+[32m+[m[32m  });[m
+[32m+[m
+[32m+[m[32m  it('reset works as expected', () => {[m
+[32m+[m[32m    expectRotationValues(co, cp, 0, 0, 0, false);[m
+[32m+[m
+[32m+[m[32m    co.rotateRight();[m
+[32m+[m[32m    cp.rotateRight();[m
+[32m+[m
+[32m+[m[32m    expectRotationValues(co, cp, 0, -1, 3, false);[m
+[32m+[m
+[32m+[m[32m    co.resetRotation();[m
+[32m+[m[32m    cp.resetRotation();[m
+[32m+[m
+[32m+[m[32m    expectRotationValues(co, cp, 0, 0, 0, false);[m
+[32m+[m[32m  });[m
+[32m+[m
+[32m+[m[32m  it('should be able to have a default', () => {[m
+[32m+[m[32m    expectRotationValues(co, cp, 0, 0, 0, false);[m
+[32m+[m
+[32m+[m[32m    /* rotate without default */[m
+[32m+[m[32m    co.rotateRight();[m
+[32m+[m[32m    cp.rotateRight();[m
+[32m+[m
+[32m+[m[32m    expectRotationValues(co, cp, 0, -1, 3, false);[m
+[32m+[m
+[32m+[m[32m    /* set default */[m
+[32m+[m[32m    co.setDefaultRotation(1);[m
+[32m+[m[32m    cp.setDefaultRotation(1);[m
+[32m+[m
+[32m+[m[32m    expectRotationValues(co, cp, 1, 1, 1, true);[m
+[32m+[m
+[32m+[m[32m    /* rotate with default */[m
+[32m+[m[32m    co.rotateRight();[m
+[32m+[m[32m    cp.rotateRight();[m
+[32m+[m
+[32m+[m[32m    expectRotationValues(co, cp, 1, 0, 0, true);[m
+[32m+[m
+[32m+[m[32m    /* reset to default */[m
+[32m+[m[32m    co.resetRotation();[m
+[32m+[m[32m    cp.resetRotation();[m
+[32m+[m
+[32m+[m[32m    expectRotationValues(co, cp, 1, 1, 1, true);[m
+[32m+[m
+[32m+[m[32m    /* delete default */[m
+[32m+[m[32m    co.setDefaultRotation(undefined);[m
+[32m+[m[32m    cp.setDefaultRotation(undefined);[m
+[32m+[m
+[32m+[m[32m    expectRotationValues(co, cp, 0, 0, 0, false);[m
+[32m+[m[32m  });[m
+[32m+[m
+[32m+[m[32m});[m
+[32m+[m
+[32m+[m[32m/**[m
+[32m+[m[32m * PLL has static arrows while OLL has variable arrows[m
+[32m+[m[32m */[m
+[32m+[m[32mdescribe('CubeState arrow coordinates', () => {[m
+[32m+[m
+[32m+[m[32m  const ollInputWithArrows: string = validBaseOllInput;[m
+[32m+[m[32m  const ollInputWithoutArrows: string = '.10.\n0010\n0010\n.10.';[m
+[32m+[m[32m  const pllInputWithArrows: string = validBasePllInput;[m
+[32m+[m[32m  const pllInputWithoutArrows: string = 'dimension:3,3';[m
+[32m+[m
+[32m+[m[32m  /**[m
+[32m+[m[32m   * No arrows[m
+[32m+[m[32m   */[m
+[32m+[m[32m  it('result in empty non-null collections when no arrows given (OLL+PLL)', () => {[m
+[32m+[m[32m    /*[m
+[32m+[m[32m     * OLL[m
+[32m+[m[32m     */[m
+[32m+[m[32m    let co: CubeStateOll = createOll2(ollInputWithoutArrows);[m
+[32m+[m
+[32m+[m[32m    expect(co.algorithmToArrows).toBeTruthy();[m
+[32m+[m[32m    expect(co.algorithmToArrows.size()).toBe(0);[m
+[32m+[m[32m    expect(co.selectedAlgorithmHash).toBe('');[m
+[32m+[m
+[32m+[m[32m    const arrowCoords = co.currentArrowCoordinates();[m
+[32m+[m[32m    expect(arrowCoords).toBeTruthy();[m
+[32m+[m
+[32m+[m[32m    expect(arrowCoords).toStrictEqual([]);[m
+[32m+[m
+[32m+[m[32m    /*[m
+[32m+[m[32m     * PLL[m
+[32m+[m[32m     */[m
+[32m+[m[32m    let cp: CubeStatePll = createPll2(pllInputWithoutArrows);[m
+[32m+[m
+[32m+[m[32m    expect(cp.arrowCoordinates).toBeTruthy();[m
+[32m+[m[32m    expect(cp.arrowCoordinates.length).toBe(0);[m
+[32m+[m[32m  });[m
+[32m+[m
+[32m+[m[32m  /**[m
+[32m+[m[32m   * PLL with arrows: arrows:1+3,6+8[m
+[32m+[m[32m   */[m
+[32m+[m[32m  it('result in static arrow array (PLL)', () => {[m
+[32m+[m[32m    let cp: CubeStatePll = createPll2(pllInputWithArrows);[m
+[32m+[m
+[32m+[m[32m    expect(cp.arrowCoordinates).toBeTruthy();[m
+[32m+[m[32m    expect(cp.arrowCoordinates.length).toBe(4);[m
+[32m+[m
+[32m+[m[32m    /*[m
+[32m+[m[32m     * arrows:1+3,6+8[m
+[32m+[m[32m     *[m
+[32m+[m[32m     * 1. arrow: 1 -> 3[m
+[32m+[m[32m     * 2. arrow: 3 -> 1[m
+[32m+[m[32m     * 3. arrow: 6 -> 8[m
+[32m+[m[32m     * 4. arrow: 8 -> 6[m
+[32m+[m[32m     */[m
+[32m+[m[32m    expect([cp.arrowCoordinates[0]!.start.x, cp.arrowCoordinates[0]!.start.y]).toStrictEqual([50, 50]);[m
+[32m+[m[32m    expect([cp.arrowCoordinates[0]!.end.x, cp.arrowCoordinates[0]!.end.y]).toStrictEqual([250, 50]);[m
+[32m+[m
+[32m+[m[32m    expect([cp.arrowCoordinates[1]!.start.x, cp.arrowCoordinates[1]!.start.y]).toStrictEqual([250, 50]);[m
+[32m+[m[32m    expect([cp.arrowCoordinates[1]!.end.x, cp.arrowCoordinates[1]!.end.y]).toStrictEqual([50, 50]);[m
+[32m+[m
+[32m+[m[32m    expect([cp.arrowCoordinates[2]!.start.x, cp.arrowCoordinates[2]!.start.y]).toStrictEqual([250, 150]);[m
+[32m+[m[32m    expect([cp.arrowCoordinates[2]!.end.x, cp.arrowCoordinates[2]!.end.y]).toStrictEqual([150, 250]);[m
+[32m+[m
+[32m+[m[32m    expect([cp.arrowCoordinates[3]!.start.x, cp.arrowCoordinates[3]!.start.y]).toStrictEqual([150, 250]);[m
+[32m+[m[32m    expect([cp.arrowCoordinates[3]!.end.x, cp.arrowCoordinates[3]!.end.y]).toStrictEqual([250, 150]);[m
+[32m+[m[32m  });[m
+[32m+[m
+[32m+[m[32m  /**[m
+[32m+[m[32m   * PLL with arrows:[m
+[32m+[m[32m   * alg:R' U' R F == 3+9[m
+[32m+[m[32m   * alg:F U R U2 == 1-7[m
+[32m+[m[32m   */[m
+[32m+[m[32m  it('result in changeable arrow map (OLL)', () => {[m
+[32m+[m[32m    let co: CubeStateOll = createOll2(ollInputWithArrows);[m
+[32m+[m
+[32m+[m[32m    expect(co.algorithmToArrows).toBeTruthy();[m
+[32m+[m[32m    expect(co.algorithmToArrows.size()).toBe(2);[m
+[32m+[m[32m    expect(co.selectedAlgorithmHash).not.toBe('');[m
+[32m+[m
+[32m+[m[32m    const algorithms = co.algorithmToArrows.getAllItems();[m
+[32m+[m
+[32m+[m[32m  });[m
+[32m+[m
+[32m+[m[32m});[m
+[41m+[m
+[1mdiff --git a/tests/parser.test.ts b/tests/parser.test.ts[m
+[1mindex 062b6b8..07b2300 100644[m
+[1m--- a/tests/parser.test.ts[m
+[1m+++ b/tests/parser.test.ts[m
+[36m@@ -4,22 +4,22 @@[m [mimport {Parse} from "../src/parser/parser";[m
+ describe('Parse.toAlgorithm()', () => {[m
+ [m
+   it(`should not parse strings not starting with 'alg:'`, () => {[m
+[31m-    expect(Parse.toAlgorithm('').success).toBe(false);[m
+[31m-    expect(Parse.toAlgorithm('  ').success).toBe(false);[m
+[31m-    expect(Parse.toAlgorithm('foo').success).toBe(false);[m
+[32m+[m[32m    expect(Parse.toAlgorithm('', 'foo').success).toBe(false);[m
+[32m+[m[32m    expect(Parse.toAlgorithm('  ', 'foo').success).toBe(false);[m
+[32m+[m[32m    expect(Parse.toAlgorithm('foo', 'foo').success).toBe(false);[m
+   });[m
+ [m
+   it('should not parse invalid algorithms', () => {[m
+[31m-    expect(Parse.toAlgorithm(`#ff2233`).success).toBe(false);[m
+[31m-    expect(Parse.toAlgorithm(`fRUR'U'f`).success).toBe(false);[m
+[31m-    expect(Parse.toAlgorithm(`3,3`).success).toBe(false);[m
+[31m-    expect(Parse.toAlgorithm(`x,y,z`).success).toBe(false);[m
+[31m-    expect(Parse.toAlgorithm(`X y Z`).success).toBe(false);[m
+[31m-    expect(Parse.toAlgorithm(`y0 f r u`).success).toBe(false);[m
+[32m+[m[32m    expect(Parse.toAlgorithm(`#ff2233`, 'foo').success).toBe(false);[m
+[32m+[m[32m    expect(Parse.toAlgorithm(`fRUR'U'f`, 'foo').success).toBe(false);[m
+[32m+[m[32m    expect(Parse.toAlgorithm(`3,3`, 'foo').success).toBe(false);[m
+[32m+[m[32m    expect(Parse.toAlgorithm(`x,y,z`, 'foo').success).toBe(false);[m
+[32m+[m[32m    expect(Parse.toAlgorithm(`X y Z`, 'foo').success).toBe(false);[m
+[32m+[m[32m    expect(Parse.toAlgorithm(`y0 f r u`, 'foo').success).toBe(false);[m
+   });[m
+ [m
+   it('should parse valid algorithms', () => {[m
+[31m-    let result = Parse.toAlgorithm(`F R U R' U' F'`);[m
+[32m+[m[32m    let result = Parse.toAlgorithm(`F R U R' U' F'`, 'foo');[m
+     expect(result.success).toBe(true);[m
+     if (result.success) expect(result.data.toString()).toBe(`F R U R' U' F'`); else expect.fail();[m
+   });[m
+[36m@@ -29,26 +29,26 @@[m [mdescribe('Parse.toAlgorithm()', () => {[m
+ describe('Parse.toArrowColor()', () => {[m
+ [m
+   it(`should not parse strings not starting with 'arrowColor:'`, () => {[m
+[31m-    expect(Parse.toArrowColor('').success).toBe(false);[m
+[31m-    expect(Parse.toArrowColor('  ').success).toBe(false);[m
+[31m-    expect(Parse.toArrowColor('foo').success).toBe(false);[m
+[32m+[m[32m    expect(Parse.toArrowColor('', 'foo').success).toBe(false);[m
+[32m+[m[32m    expect(Parse.toArrowColor('  ', 'foo').success).toBe(false);[m
+[32m+[m[32m    expect(Parse.toArrowColor('foo', 'foo').success).toBe(false);[m
+   });[m
+ [m
+   it('should not parse invalid arrow colors', () => {[m
+[31m-    expect(Parse.toArrowColor('#ff2233').success).toBe(false);[m
+[31m-    expect(Parse.toArrowColor('#f23').success).toBe(false);[m
+[31m-    expect(Parse.toArrowColor('FOO').success).toBe(false);[m
+[31m-    expect(Parse.toArrowColor('foo').success).toBe(false);[m
+[31m-    expect(Parse.toArrowColor('f000').success).toBe(false);[m
+[31m-    expect(Parse.toArrowColor('ff').success).toBe(false);[m
+[32m+[m[32m    expect(Parse.toArrowColor('#ff2233', 'foo').success).toBe(false);[m
+[32m+[m[32m    expect(Parse.toArrowColor('#f23', 'foo').success).toBe(false);[m
+[32m+[m[32m    expect(Parse.toArrowColor('FOO', 'foo').success).toBe(false);[m
+[32m+[m[32m    expect(Parse.toArrowColor('foo', 'foo').success).toBe(false);[m
+[32m+[m[32m    expect(Parse.toArrowColor('f000', 'foo').success).toBe(false);[m
+[32m+[m[32m    expect(Parse.toArrowColor('ff', 'foo').success).toBe(false);[m
+   });[m
+ [m
+   it('should parse valid arrow colors', () => {[m
+[31m-    let result = Parse.toArrowColor('f00');[m
+[32m+[m[32m    let result = Parse.toArrowColor('f00', 'foo');[m
+     expect(result.success).toBe(true);[m
+     if (result.success) expect(result.data).toBe('#f00'); else expect.fail();[m
+ [m
+[31m-    result = Parse.toArrowColor('ff0000');[m
+[32m+[m[32m    result = Parse.toArrowColor('ff0000', 'foo');[m
+     expect(result.success).toBe(true);[m
+     if (result.success) expect(result.data).toBe('#ff0000'); else expect.fail();[m
+   });[m
+[36m@@ -59,24 +59,24 @@[m [mdescribe('Parse.toArrowColor()', () => {[m
+ describe('Parse.toArrows()', () => {[m
+ [m
+   it(`should not parse invalid input`, () => {[m
+[31m-    expect(Parse.toArrows('').success).toBe(false);[m
+[31m-    expect(Parse.toArrows('  ').success).toBe(false);[m
+[31m-    expect(Parse.toArrows('foo').success).toBe(false);[m
+[31m-    expect(Parse.toArrows('1+2+3').success).toBe(false);[m
+[31m-    expect(Parse.toArrows('1--2').success).toBe(false);[m
+[31m-    expect(Parse.toArrows('1-2-3-4-5').success).toBe(false);[m
+[32m+[m[32m    expect(Parse.toArrows('', 'foo').success).toBe(false);[m
+[32m+[m[32m    expect(Parse.toArrows('  ', 'foo').success).toBe(false);[m
+[32m+[m[32m    expect(Parse.toArrows('foo', 'foo').success).toBe(false);[m
+[32m+[m[32m    expect(Parse.toArrows('1+2+3', 'foo').success).toBe(false);[m
+[32m+[m[32m    expect(Parse.toArrows('1--2', 'foo').success).toBe(false);[m
+[32m+[m[32m    expect(Parse.toArrows('1-2-3-4-5', 'foo').success).toBe(false);[m
+   });[m
+ [m
+   it(`should parse valid input`, () => {[m
+[31m-    let result = Parse.toArrows('1-2');[m
+[32m+[m[32m    let result = Parse.toArrows('1-2', 'foo');[m
+     expect(result.success).toBe(true);[m
+     if (result.success) expect(result.data).toMatchObject(['1-2']); else expect.fail();[m
+ [m
+[31m-    result = Parse.toArrows('6+8');[m
+[32m+[m[32m    result = Parse.toArrows('6+8', 'foo');[m
+     expect(result.success).toBe(true);[m
+     if (result.success) expect(result.data).toMatchObject(['6+8']); else expect.fail();[m
+ [m
+[31m-    result = Parse.toArrows('9-7-3');[m
+[32m+[m[32m    result = Parse.toArrows('9-7-3', 'foo');[m
+     expect(result.success).toBe(true);[m
+     if (result.success) expect(result.data).toMatchObject(['9-7-3']); else expect.fail();[m
+   });[m
+[36m@@ -87,26 +87,26 @@[m [mdescribe('Parse.toArrows()', () => {[m
+ describe('Parse.toCubeColor()', () => {[m
+ [m
+   it(`should not parse strings not starting with 'cubeColor:'`, () => {[m
+[31m-    expect(Parse.toCubeColor('').success).toBe(false);[m
+[31m-    expect(Parse.toCubeColor('  ').success).toBe(false);[m
+[31m-    expect(Parse.toCubeColor('foo').success).toBe(false);[m
+[32m+[m[32m    expect(Parse.toCubeColor('', 'foo').success).toBe(false);[m
+[32m+[m[32m    expect(Parse.toCubeColor('  ', 'foo').success).toBe(false);[m
+[32m+[m[32m    expect(Parse.toCubeColor('foo', 'foo').success).toBe(false);[m
+   });[m
+ [m
+   it('should not parse invalid cube colors', () => {[m
+[31m-    expect(Parse.toCubeColor('#ff2233').success).toBe(false);[m
+[31m-    expect(Parse.toCubeColor('#f23').success).toBe(false);[m
+[31m-    expect(Parse.toCubeColor('FOO').success).toBe(false);[m
+[31m-    expect(Parse.toCubeColor('foo').success).toBe(false);[m
+[31m-    expect(Parse.toCubeColor('f000').success).toBe(false);[m
+[31m-    expect(Parse.toCubeColor('ff').success).toBe(false);[m
+[32m+[m[32m    expect(Parse.toCubeColor('#ff2233', 'foo').success).toBe(false);[m
+[32m+[m[32m    expect(Parse.toCubeColor('#f23', 'foo').success).toBe(false);[m
+[32m+[m[32m    expect(Parse.toCubeColor('FOO', 'foo').success).toBe(false);[m
+[32m+[m[32m    expect(Parse.toCubeColor('foo', 'foo').success).toBe(false);[m
+[32m+[m[32m    expect(Parse.toCubeColor('f000', 'foo').success).toBe(false);[m
+[32m+[m[32m    expect(Parse.toCubeColor('ff', 'foo').success).toBe(false);[m
+   });[m
+ [m
+   it('should parse valid cube colors', () => {[m
+[31m-    let result = Parse.toCubeColor('f00');[m
+[32m+[m[32m    let result = Parse.toCubeColor('f00', 'foo');[m
+     expect(result.success).toBe(true);[m
+     if (result.success) expect(result.data).toBe('#f00'); else expect.fail();[m
+ [m
+[31m-    result = Parse.toCubeColor('ff0000');[m
+[32m+[m[32m    result = Parse.toCubeColor('ff0000', 'foo');[m
+     expect(result.success).toBe(true);[m
+     if (result.success) expect(result.data).toBe('#ff0000'); else expect.fail();[m
+   });[m
+[36m@@ -116,25 +116,25 @@[m [mdescribe('Parse.toCubeColor()', () => {[m
+ describe('Parse.toDimensions()', () => {[m
+ [m
+   it(`should not parse strings not starting with 'dimension:'`, () => {[m
+[31m-    expect(Parse.toDimensions('').success).toBe(false);[m
+[31m-    expect(Parse.toDimensions('  ').success).toBe(false);[m
+[31m-    expect(Parse.toDimensions('foo').success).toBe(false);[m
+[32m+[m[32m    expect(Parse.toDimensions('', 'foo').success).toBe(false);[m
+[32m+[m[32m    expect(Parse.toDimensions('  ', 'foo').success).toBe(false);[m
+[32m+[m[32m    expect(Parse.toDimensions('foo', 'foo').success).toBe(false);[m
+   });[m
+ [m
+   it('should not parse invalid dimensions', () => {[m
+[31m-    expect(Parse.toDimensions('').success).toBe(false);[m
+[31m-    expect(Parse.toDimensions('2').success).toBe(false);[m
+[31m-    expect(Parse.toDimensions('2,33').success).toBe(false);[m
+[31m-    expect(Parse.toDimensions('1,2').success).toBe(false);[m
+[31m-    expect(Parse.toDimensions('-3,3').success).toBe(false);[m
+[32m+[m[32m    expect(Parse.toDimensions('', 'foo').success).toBe(false);[m
+[32m+[m[32m    expect(Parse.toDimensions('2', 'foo').success).toBe(false);[m
+[32m+[m[32m    expect(Parse.toDimensions('2,33', 'foo').success).toBe(false);[m
+[32m+[m[32m    expect(Parse.toDimensions('1,2', 'foo').success).toBe(false);[m
+[32m+[m[32m    expect(Parse.toDimensions('-3,3', 'foo').success).toBe(false);[m
+   });[m
+ [m
+   it('should parse valid dimensions', () => {[m
+[31m-    let result = Parse.toDimensions('2,3');[m
+[32m+[m[32m    let result = Parse.toDimensions('2,3', 'foo');[m
+     expect(result.success).toBe(true);[m
+     if (result.success) expect(result.data).toMatchObject({width: 2, height: 3}); else expect.fail();[m
+ [m
+[31m-    result = Parse.toDimensions('3,4');[m
+[32m+[m[32m    result = Parse.toDimensions('3,4', 'foo');[m
+     expect(result.success).toBe(true);[m
+     if (result.success) expect(result.data).toMatchObject({width: 3, height: 4}); else expect.fail();[m
+   });[m
+[36m@@ -144,29 +144,29 @@[m [mdescribe('Parse.toDimensions()', () => {[m
+ describe('Parse.toFlags()', () => {[m
+ [m
+   it(`should not parse strings not starting with 'flags:'`, () => {[m
+[31m-    expect(Parse.toFlags('').success).toBe(false);[m
+[31m-    expect(Parse.toFlags('  ').success).toBe(false);[m
+[31m-    expect(Parse.toFlags('foo').success).toBe(false);[m
+[32m+[m[32m    expect(Parse.toFlags('', '').success).toBe(false);[m
+[32m+[m[32m    expect(Parse.toFlags('  ', '  ').success).toBe(false);[m
+[32m+[m[32m    expect(Parse.toFlags('foo', 'foo').success).toBe(false);[m
+   });[m
+ [m
+   it('should not parse unknown flags', () => {[m
+[31m-    expect(Parse.toFlags('i do not exist').success).toBe(false);[m
+[32m+[m[32m    expect(Parse.toFlags('i do not exist', 'i do not exist').success).toBe(false);[m
+     const existingFlag = 'no-buttons';[m
+[31m-    expect(Parse.toFlags(`${existingFlag},i do not exist`).success).toBe(false);[m
+[32m+[m[32m    expect(Parse.toFlags(`${existingFlag},i do not exist`, 'foo').success).toBe(false);[m
+   });[m
+ [m
+   it('should parse known flags', () => {[m
+     const existingFlag = 'no-buttons';[m
+[31m-    let result = Parse.toFlags(`${existingFlag}`);[m
+[32m+[m[32m    let result = Parse.toFlags(`${existingFlag}`, 'foo');[m
+     expect(result.success).toBe(true);[m
+[31m-    if (result.success) expect(result.data.size).toBe(1); else expect.fail('should not reach');[m
+[32m+[m[32m    if (result.success) expect(result.data.length).toBe(1); else expect.fail('should not reach');[m
+   });[m
+ [m
+   it('should ignore duplicates', () => {[m
+     const existingFlag = 'no-buttons';[m
+[31m-    let result = Parse.toFlags(`${existingFlag},${existingFlag}`);[m
+[32m+[m[32m    let result = Parse.toFlags(`${existingFlag},${existingFlag}`, 'foo');[m
+     expect(result.success).toBe(true);[m
+[31m-    if (result.success) expect(result.data.size).toBe(1); else expect.fail('should not reach');[m
+[32m+[m[32m    if (result.success) expect(result.data.length).toBe(1); else expect.fail('should not reach');[m
+   });[m
+ [m
+ });[m

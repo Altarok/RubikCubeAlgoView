@@ -6,7 +6,7 @@ import {Flags, FlagType} from "../model/flags";
 
 export type Result<T> =
   | { success: true; data: T }
-  | { success: false; error: InvalidInput };
+  | { success: false; error: InvalidInput }
 
 /*
  * Object Namespace
@@ -18,7 +18,7 @@ export const Parse = {
   toCubeColor,
   toDimensions,
   toFlags
-};
+}
 
 /**
  * Type Guard: Tells TS that 'value' is specifically an AlgorithmStep.

@@ -67,8 +67,8 @@ export class StickerCoords {
 export type Arrows = ArrowCoords[];
 
 const DefaultDimensions = {
-  WIDTH: 3, /* default rubik cube width  */
-  HEIGHT: 3 /* default rubik cube height */
+  WIDTH: 3, /* default Rubik's Cube width  */
+  HEIGHT: 3 /* default Rubik's Cube height */
 } as const;
 
 
