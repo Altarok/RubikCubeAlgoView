@@ -19,6 +19,10 @@ import {Templates} from "./model/templates";
  * - [x] remove 'y0'
  * - [ ] validate actual OLL input
  *
+ * Default data
+ * - [ ] remove data.json from release
+ * - [ ] replace it with hardcoded values
+ *
  * ## Rotation
  * - [x] Change cube rotation to integer type [0-3] // to be multiplied by 90 degrees
  *   - turn left -> rotation = (rotation + delta + 4) % 4, then apply rotation
