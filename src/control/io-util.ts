@@ -32,11 +32,11 @@ function setRotation(valueToSafe: number, cubeState: CubeState, plugin: RubikCub
   if (valueToSafe !== undefined) {
     if (valueToSafe !== 0) {
       /* Save new value */
-      plugin.settings.cubeRotations.set(hash, valueToSafe);
+      plugin.settings.cubeRotations[hash] = valueToSafe;
       cubeState.defaultRotation = valueToSafe;
     } else {
       /* Delete value */
-      plugin.settings.cubeRotations.delete(hash);
+      delete plugin.settings.cubeRotations[hash];
       cubeState.defaultRotation = 0;
     }
   }

@@ -1,31 +1,35 @@
 import {App, PluginSettingTab, Setting} from "obsidian";
 import RubikCubeAlgos from "../main";
 
-export const DefaultSettings = {
-  CUBE_COLOR: '#ff0', /* yellow for cube */
-  ARROW_COLOR: '#08f' /* sky blue for arrows */
-}
+
 
 export interface CubeColors {
-  arrow: string;
-  cube: string;
+  arrowColor: string;
+  cubeColor: string;
+}
+export interface Settings extends CubeColors {
+  cubeRotations: Record<string, number>;
+  knownIds: Record<string, string>;
 }
 
-export interface Settings {
-  cubeRotations: Map<string, number>;
-  knownIds: Map<string, string>;
+export const DefaultSettings = {
+  CUBE_COLOR: '#ff0', /* yellow for cube */
+  ARROW_COLOR: '#08f', /* sky blue for arrows */
+  cubeRotations: {},
+  knownIds: {}
 }
+
 
 export class RubikCubeAlgoSettingsTab extends PluginSettingTab implements Settings {
   plugin: RubikCubeAlgos;
-  cubeColor!: string;
   arrowColor!: string;
+  cubeColor!: string;
   /**
    * key: string with cube hash(?)
    * value: rotation
    */
-  cubeRotations = new Map<string, number>();
-  knownIds = new Map<string, string>();
+  cubeRotations = {} as Record<string, number>;
+  knownIds = {} as Record<string, string>;
 
   constructor(app: App, plugin: RubikCubeAlgos) {
     super(app, plugin);

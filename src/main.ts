@@ -116,27 +116,17 @@ export default class RubikCubeAlgos extends Plugin {
   }
 
   async loadSettings() {
-    const loadedData = (await this.loadData()) || {};
-
+    const loadedData = await this.loadData();
     this.settings = Object.assign({}, DefaultSettings, loadedData);
-
-    // Convert the plain object from JSON back into a Map
-    this.settings.cubeRotations = new Map<string, number>(
-      Object.entries(loadedData.cubeRotations || {}) as unknown as [string, number][]
-    );
-
-    this.settings.knownIds = new Map<string, string>(
-      Object.entries(loadedData.knownIds || {}) as unknown as [string, string][]
-    );
   }
 
   async saveSettings() {
-    const storageData = {
-      ...this.settings,
-      cubeRotations: Object.fromEntries(this.settings.cubeRotations)
-    };
+    // const storageData = {
+    //   ...this.settings,
+    //   cubeRotations: Object.fromEntries(this.settings)
+    // };
 
-    await this.saveData(storageData);
+    await this.saveData(this.settings);
     this.app.workspace.trigger("rubik:rerender-markdown-code-block-processors");
     // console.debug('Settings updated');
   }

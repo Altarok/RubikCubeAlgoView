@@ -44,8 +44,8 @@ export default class CubeStateBuilder {
   constructor(rawInput: string, backupColors: CubeColors) {
     // split lines, skip empty lines, empty string is falsy
     this.splitUserInput = rawInput.split('\n').filter(Boolean);
-    this.arrowColor = backupColors.arrow;
-    this.cubeColor = backupColors.cube;
+    this.arrowColor = backupColors.arrowColor;
+    this.cubeColor = backupColors.cubeColor;
 
     /* sets dimensions for pll */
     this.readRawInput();
@@ -74,8 +74,8 @@ export default class CubeStateBuilder {
 
     if (this.id) {
       let hash: string = StringUtils.cubeHash(this.id, 'oll');
-      presetRotation = settings.cubeRotations.get(hash);
-      presetOutline = settings.knownIds.get(this.id);
+      presetRotation = settings.cubeRotations[hash];
+      presetOutline = settings.knownIds[this.id];
     }
 
     let ollFieldInput = new OllFieldColoring(this.cubeColor);

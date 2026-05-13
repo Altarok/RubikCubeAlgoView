@@ -2,7 +2,7 @@ import {CubeColors, DefaultSettings, RubikCubeAlgoSettingsTab} from "../settings
 
 export function createBackupColors(settings: RubikCubeAlgoSettingsTab): CubeColors {
   return {
-    arrow: settings.arrowColor ?? DefaultSettings.ARROW_COLOR,
-    cube: settings.cubeColor ?? DefaultSettings.CUBE_COLOR
+    arrowColor: settings.arrowColor ?? DefaultSettings.ARROW_COLOR,
+    cubeColor: settings.cubeColor ?? DefaultSettings.CUBE_COLOR
   };
 }
