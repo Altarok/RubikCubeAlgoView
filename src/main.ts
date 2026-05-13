@@ -1,7 +1,7 @@
 import {Plugin} from "obsidian";
 import {MarkdownPostProcessorOLL} from "./MarkdownPostProcessorOLL";
 import {MarkdownPostProcessorPLL} from "./MarkdownPostProcessorPLL";
-import {DefaultSettings, RubikCubeAlgoSettingsTab} from "./settings/RubikCubeAlgoSettings";
+import {DefaultSettings, Settings, RubikCubeAlgoSettingsTab} from "./settings/RubikCubeAlgoSettings";
 import {Templates} from "./model/templates";
 
 /*
@@ -66,7 +66,7 @@ import {Templates} from "./model/templates";
  *   - [x] string-util.ts
  */
 export default class RubikCubeAlgos extends Plugin {
-  settings!: RubikCubeAlgoSettingsTab;
+  settings!: Settings;
 
   async onload() {
 
@@ -116,19 +116,15 @@ export default class RubikCubeAlgos extends Plugin {
   }
 
   async loadSettings() {
-    const loadedData = await this.loadData();
+    let loadedData: Partial<Settings>;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    loadedData = (await this.loadData()) || {};
     this.settings = Object.assign({}, DefaultSettings, loadedData);
   }
 
   async saveSettings() {
-    // const storageData = {
-    //   ...this.settings,
-    //   cubeRotations: Object.fromEntries(this.settings)
-    // };
-
     await this.saveData(this.settings);
     this.app.workspace.trigger("rubik:rerender-markdown-code-block-processors");
-    // console.debug('Settings updated');
   }
 
   saveSettingsSync() {

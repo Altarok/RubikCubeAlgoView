@@ -1,6 +1,6 @@
-import {CubeColors, DefaultSettings, RubikCubeAlgoSettingsTab} from "../settings/RubikCubeAlgoSettings";
+import {CubeColors, DefaultSettings, Settings} from "../settings/RubikCubeAlgoSettings";
 
-export function createBackupColors(settings: RubikCubeAlgoSettingsTab): CubeColors {
+export function createBackupColors(settings: Settings): CubeColors {
   return {
     arrowColor: settings.arrowColor ?? DefaultSettings.ARROW_COLOR,
     cubeColor: settings.cubeColor ?? DefaultSettings.CUBE_COLOR

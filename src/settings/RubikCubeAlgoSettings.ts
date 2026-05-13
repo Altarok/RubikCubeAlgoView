@@ -1,8 +1,6 @@
 import {App, PluginSettingTab, Setting} from "obsidian";
 import RubikCubeAlgos from "../main";
 
-
-
 export interface CubeColors {
   arrowColor: string;
   cubeColor: string;
@@ -12,13 +10,12 @@ export interface Settings extends CubeColors {
   knownIds: Record<string, string>;
 }
 
-export const DefaultSettings = {
-  CUBE_COLOR: '#ff0', /* yellow for cube */
-  ARROW_COLOR: '#08f', /* sky blue for arrows */
+export const DefaultSettings: Settings = {
+  cubeColor: '#ff0', /* yellow for cube */
+  arrowColor: '#08f', /* sky blue for arrows */
   cubeRotations: {},
   knownIds: {}
 }
-
 
 export class RubikCubeAlgoSettingsTab extends PluginSettingTab implements Settings {
   plugin: RubikCubeAlgos;
@@ -53,7 +50,7 @@ export class RubikCubeAlgoSettingsTab extends PluginSettingTab implements Settin
           this.cubeColor = value;
           // console.info('Change default cube color: ' + this.cubeColor);
         } else {
-          this.cubeColor = DefaultSettings.CUBE_COLOR;
+          this.cubeColor = DefaultSettings.cubeColor;
           // console.info('Reset default cube color: ' + this.cubeColor);
         }
         await this.plugin.saveSettings();
@@ -70,7 +67,7 @@ export class RubikCubeAlgoSettingsTab extends PluginSettingTab implements Settin
         if (value.match('^#([a-f0-9]{3}){1,2}$')) {
           this.arrowColor = value;
         } else {
-          this.arrowColor = DefaultSettings.ARROW_COLOR;
+          this.arrowColor = DefaultSettings.arrowColor;
         }
         await this.plugin.saveSettings();
       }
