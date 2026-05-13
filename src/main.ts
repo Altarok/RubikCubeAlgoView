@@ -114,10 +114,8 @@ export default class RubikCubeAlgos extends Plugin {
   }
 
   async loadSettings() {
-    let loadedData: Partial<Settings>;
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    loadedData = (await this.loadData()) || {};
-    this.settings = Object.assign({}, DefaultSettings, loadedData);
+    let loadedData = (await this.loadData()) as Partial<Settings> || {};
+    this.settings = Object.assign({}, DefaultSettings, loadedData || {} );
   }
 
   async saveSettings() {
