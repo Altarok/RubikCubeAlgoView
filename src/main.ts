@@ -2,7 +2,7 @@ import {Plugin} from "obsidian";
 import {MarkdownPostProcessorOLL} from "./MarkdownPostProcessorOLL";
 import {MarkdownPostProcessorPLL} from "./MarkdownPostProcessorPLL";
 import {DefaultSettings, Settings, RubikCubeAlgoSettingsTab} from "./settings/RubikCubeAlgoSettings";
-import {Templates} from "./model/templates";
+import {addAppCommands} from "./plugin-command-builder";
 
 /*
  * # Logic
@@ -88,21 +88,7 @@ export default class RubikCubeAlgos extends Plugin {
       }
     );
 
-    this.addCommand({
-      id: 'RubikCubeAlgo-add-code-block-template-3x3-OLL',
-      name: 'Add OLL code block template for 3x3 cube',
-      editorCallback: (editor) => {
-        editor.replaceSelection(Templates.OLL_CodeBlock);
-      }
-    });
-
-    this.addCommand({
-      id: 'RubikCubeAlgo-add-code-block-template-3x3-PLL',
-      name: 'Add PLL code block template for 3x3 cube',
-      editorCallback: (editor) => {
-        editor.replaceSelection(Templates.PLL_CodeBlock);
-      }
-    });
+    addAppCommands(this)
 
     this.addSettingTab(
       new RubikCubeAlgoSettingsTab(
