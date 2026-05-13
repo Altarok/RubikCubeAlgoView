@@ -17,7 +17,6 @@ jobs:
       attestations: write
     steps:
       - uses: actions/checkout@v4
-
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
@@ -30,7 +29,7 @@ jobs:
           npm run build
 
       - name: Generate build attestation
-        uses: actions/attest@v4
+        uses: actions/attest-build-provenance@v2
         with:
           subject-path: |
             main.js
