@@ -74,8 +74,6 @@ export default class RubikCubeAlgos extends Plugin {
 
   async onload() {
 
-    // console.log('>> onload');
-
     await this.loadSettings();
 
     this.registerMarkdownCodeBlockProcessor("rubikCubeOLL",
