@@ -39,32 +39,32 @@
     flex-direction: column; /* Forces vertical stacking */
     align-items: flex-start;
     gap: 0.5rem; /* small gap btw buttons and */
-    padding-left: 0 !important;
-    padding-right: 0 !important;
+    padding-left: 0;
+    padding-right: 0;
     width: 100%;
   }
   .rubik-cube-div-left-column {
     flex: 0 0 auto;
     width: 100%;
-    margin: 0 !important;
-    padding: 0 !important;
+    margin: 0;
+    padding: 0;
   }
   .rubik-cube-div-right-column {
     flex: 0 0 auto; /* no growing */
     width: 100%;
-    margin: 0 !important;
-    padding: 0 !important;
+    margin: 0;
+    padding: 0;
     min-height: 0; /* Prevents browser from enforcing a default height */
   }
   .rubik-cube-div-algorithms-list ul {
-    margin: 0 !important;
-    padding: 0 !important;
+    margin: 0;
+    padding: 0;
     list-style-position: inside; /* Helps prevent left-side overflow */
     width: 100%;
   }
   /*.rubik-cube-div-content {*/
-  /*  margin-left: 0 !important;*/
-  /*  margin-right: 0 !important;*/
+  /*  margin-left: 0;*/
+  /*  margin-right: 0;*/
   /*  width: 100%;*/
   /*}*/
 }
@@ -136,7 +136,8 @@
   stroke: #6c6c6c; /* Changes the icon color to match the disabled text */
   fill: none;
 }
-/* --- Debug Tool --- */
+/* --- Debug Tool
 .div {
   outline: 1px solid red !important;
 }
+--- */
