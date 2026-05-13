@@ -29,7 +29,8 @@ jobs:
         run: |
           tag="${GITHUB_REF#refs/tags/}"
 
-          gh release create "$tag" \
-            --title="$tag" \
-            --draft \
-            main.js manifest.json styles.css
+          # Create the release draft first
+          gh release create "$tag" --title "$tag" --draft --generate-notes
+
+          # Upload the assets separately (this is the "Obsidian Way")
+          gh release upload "$tag" main.js manifest.json styles.css
