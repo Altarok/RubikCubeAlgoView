@@ -66,7 +66,7 @@ import {Templates} from "./model/templates";
  *   - [x] string-util.ts
  */
 export default class RubikCubeAlgos extends Plugin {
-  settings: RubikCubeAlgoSettingsTab;
+  settings!: RubikCubeAlgoSettingsTab;
 
   async onload() {
 
