@@ -26,7 +26,7 @@ const id: string = 'someID';
 // alg:y R2 B2 U' R' U' R U R U B2 R U' R U
 // ` /* ends on linebreak */
 
-const defaultTestColors: CubeColors = {arrow: '#ff0', cube: '#08f'};
+const defaultTestColors: CubeColors = {arrowColor: '#ff0', cubeColor: '#08f'};
 
 // const defaultTestDimensions: Dimensions = new Dimensions(3, 3);
 
@@ -38,8 +38,8 @@ function expectIsEmptyArray(arr: any[]): void {
 function expectDefaultValues(csb: CubeStateBuilder): void {
 
   // expect(csb.colors).toBe(defaultTestColors);
-  expect(csb.arrowColor).toBe(defaultTestColors.arrow);
-  expect(csb.cubeColor).toBe(defaultTestColors.cube);
+  expect(csb.arrowColor).toBe(defaultTestColors.arrowColor);
+  expect(csb.cubeColor).toBe(defaultTestColors.cubeColor);
   expect(csb.algorithmInput).toHaveLength(0);
   expectIsEmptyArray(csb.arrowsPll);
   expect(csb.flags.length).toBe(1);
@@ -80,8 +80,8 @@ describe('CubeStateBuilder constructor', () => {
     const csb = new CubeStateBuilder('cubeColor:123456\narrowColor:654321', defaultTestColors);
     expect(csb.splitUserInput.length).toBe(2);
 
-    expect(csb.arrowColor).not.toBe(defaultTestColors.arrow);
-    expect(csb.cubeColor).not.toBe(defaultTestColors.cube);
+    expect(csb.arrowColor).not.toBe(defaultTestColors.arrowColor);
+    expect(csb.cubeColor).not.toBe(defaultTestColors.cubeColor);
 
     expect(csb.arrowColor).toBe('#654321');
     expect(csb.cubeColor).toBe('#123456');
@@ -173,7 +173,7 @@ describe('CubeStateBuilder error handling', () => {
 
     const csb = new CubeStateBuilder('cubeColor:klm//airline, not a color\ndimension:1,10 // 1 is too low', defaultTestColors);
 
-    expect(csb.cubeColor).toBe(defaultTestColors.cube);
+    expect(csb.cubeColor).toBe(defaultTestColors.cubeColor);
     expect(csb.dimensions.isDefaultSize()).toBe(true);
 
     expect(csb.invalidInput.length).toBe(2);

@@ -22,6 +22,16 @@ export default tseslint.config(
 		},
 	},
 	...obsidianmd.configs.recommended,
+  {
+    plugins: {
+      obsidianmd: obsidianmd,
+    },
+    rules: {
+      "obsidianmd/ui/sentence-case": [ "error", {
+        "acronyms": ["PLL", "OLL", "F2L", "CFOP"]
+      }]
+    },
+  },
 	globalIgnores([
 		"node_modules",
 		"esbuild.config.mjs",

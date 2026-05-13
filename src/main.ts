@@ -88,8 +88,7 @@ export default class RubikCubeAlgos extends Plugin {
 
     this.addCommand({
       id: 'RubikCubeAlgo-add-code-block-template-3x3-OLL',
-      // eslint-disable-next-line obsidianmd/ui/sentence-case
-      name: 'Add OLL code block template for 3x3 cube.',
+      name: 'Add OLL code block template for 3x3 cube',
       editorCallback: (editor) => {
         editor.replaceSelection(Templates.OLL_CodeBlock);
       }
@@ -97,8 +96,7 @@ export default class RubikCubeAlgos extends Plugin {
 
     this.addCommand({
       id: 'RubikCubeAlgo-add-code-block-template-3x3-PLL',
-      // eslint-disable-next-line obsidianmd/ui/sentence-case
-      name: 'Add PLL code block template for 3x3 cube.',
+      name: 'Add PLL code block template for 3x3 cube',
       editorCallback: (editor) => {
         editor.replaceSelection(Templates.PLL_CodeBlock);
       }
