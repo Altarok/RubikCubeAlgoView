@@ -23,9 +23,6 @@ Well with this you can.
 <img width="781" height="732" alt="image" src="https://github.com/user-attachments/assets/1ace1a85-a8b1-4d5c-8839-48fd3476dba3" />
 [GIF of cube rotation with algorithm changes!](https://github.com/user-attachments/assets/c1324ae8-e120-4b4d-a99f-9f82d01d8159)
 
-# Input example
-<img width="789" height="578" alt="image" src="https://github.com/user-attachments/assets/e8dc06df-5817-4918-87f0-847ed7fbae08" />
-
 # Configuration
 ## Single Code Block Configuration
 - this cube's size, width and height from 2 to 10, independently
