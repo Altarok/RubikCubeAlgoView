@@ -3,7 +3,7 @@ name: Release Obsidian plugin
 on:
   push:
     tags:
-      - "test-*"
+      - "*"
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -45,4 +45,4 @@ jobs:
           gh release create "$tag" --title "$tag" --draft --generate-notes
 
           # Upload the assets separately
-          gh release upload "$tag" main.js manifest.json styles.css
+          gh release upload "$tag" main.js manifest.json styles.css data.json
