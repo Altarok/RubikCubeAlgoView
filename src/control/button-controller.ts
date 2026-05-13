@@ -3,7 +3,7 @@ import {CubeState} from "../model/cube-state";
 // import {setIcon} from "obsidian";
 import RubikCubeAlgos from "../main";
 // import {IO} from "./io-util";
-import {StringUtils} from "../parser/string-utils";
+// import {StringUtils} from "../parser/string-utils";
 
 export const ButtonController = {
   addRotationButtons
@@ -28,48 +28,48 @@ function changeStateOfRotationDependantButtons(cubeRenderer: CubeRenderer, cubeS
   // }
 }
 
-/**
- * TODO currently unused (see underscore), keep for out-commented options
- *
- * @param cubeRenderer
- * @param cubeState
- */
-function _changeStateOfRotationButtons(cubeRenderer: CubeRenderer, cubeState: CubeState) {
-  console.debug('Locked: ' + cubeState.locked);
-  cubeRenderer.buttonLeft!.disabled = cubeState.locked;
-  cubeRenderer.buttonRight!.disabled = cubeState.locked;
-  changeStateOfRotationDependantButtons(cubeRenderer, cubeState);
-}
-
-/**
- * Save cube's current rotation to data.json.
- *
- * TODO currently unused (see underscore), keep for out-commented options
- *
- * @param cubeState
- * @param plugin
- */
-function _persistRotationInSettings(cubeState: CubeState, plugin: RubikCubeAlgos) {
-
-  let hash = StringUtils.cubeHash(cubeState.id, cubeState.algorithmType);
-
-  if (!hash) {
-    /*
-     * Should not be possible since cubes without id do not get a save button.
-     */
-    console.warn('Cube has no hashable ID, will no persist.');
-    return;
-  }
-  console.debug(`Cube hash: ${hash}, will persist current rotation: ${cubeState.currentRotationNormalized}`);
-  if (cubeState.currentRotationNormalized !== undefined) {
-    if (cubeState.currentRotationNormalized !== 0)
-      plugin.settings.cubeRotations.set(hash, cubeState.currentRotationNormalized);
-    else
-      plugin.settings.cubeRotations.delete(hash);
-  }
-
-  plugin.saveSettingsSync();
-}
+// /**
+//  * TODO currently unused (see underscore), keep for out-commented options
+//  *
+//  * @param cubeRenderer
+//  * @param cubeState
+//  */
+// function _changeStateOfRotationButtons(cubeRenderer: CubeRenderer, cubeState: CubeState) {
+//   console.debug('Locked: ' + cubeState.locked);
+//   cubeRenderer.buttonLeft!.disabled = cubeState.locked;
+//   cubeRenderer.buttonRight!.disabled = cubeState.locked;
+//   changeStateOfRotationDependantButtons(cubeRenderer, cubeState);
+// }
+//
+// /**
+//  * Save cube's current rotation to data.json.
+//  *
+//  * TODO currently unused (see underscore), keep for out-commented options
+//  *
+//  * @param cubeState
+//  * @param plugin
+//  */
+// function _persistRotationInSettings(cubeState: CubeState, plugin: RubikCubeAlgos) {
+//
+//   let hash = StringUtils.cubeHash(cubeState.id, cubeState.algorithmType);
+//
+//   if (!hash) {
+//     /*
+//      * Should not be possible since cubes without id do not get a save button.
+//      */
+//     console.warn('Cube has no hashable ID, will no persist.');
+//     return;
+//   }
+//   console.debug(`Cube hash: ${hash}, will persist current rotation: ${cubeState.currentRotationNormalized}`);
+//   if (cubeState.currentRotationNormalized !== undefined) {
+//     if (cubeState.currentRotationNormalized !== 0)
+//       plugin.settings.cubeRotations.set(hash, cubeState.currentRotationNormalized);
+//     else
+//       plugin.settings.cubeRotations.delete(hash);
+//   }
+//
+//   plugin.saveSettingsSync();
+// }
 
 
 function addRotationButtons(cubeRenderer: CubeRenderer, cubeState: CubeState, plugin: RubikCubeAlgos) {

@@ -1,7 +1,7 @@
 import {Plugin} from "obsidian";
 import {MarkdownPostProcessorOLL} from "./MarkdownPostProcessorOLL";
 import {MarkdownPostProcessorPLL} from "./MarkdownPostProcessorPLL";
-import {DefaultSettings, RubikCubeAlgoSettingsTab, Settings} from "./settings/RubikCubeAlgoSettings";
+import {DefaultSettings, RubikCubeAlgoSettingsTab} from "./settings/RubikCubeAlgoSettings";
 import {Templates} from "./model/templates";
 
 /*
@@ -116,17 +116,15 @@ export default class RubikCubeAlgos extends Plugin {
   }
 
   async loadSettings() {
-    // @ts-ignore: loadedData is complex JSON and we handle the conversion below
+    /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access */
     const loadedData = await this.loadData();
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     this.settings = Object.assign({}, DefaultSettings, loadedData);
 
     // Convert the plain object from JSON back into a Map
-    // @ts-ignore
     this.settings.cubeRotations = new Map(Object.entries(loadedData?.cubeRotations || {}));
-    // @ts-ignore
     this.settings.knownIds = new Map(Object.entries(loadedData?.knownIds || {}));
+    /* eslint-enable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access */
   }
 
   async saveSettings() {
