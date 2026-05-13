@@ -1,4 +1,5 @@
-# Visualization of Rubik's Cube algorithms: OLL & PLL
+# Rubik Cube algorithms
+Visualization of Rubik's Cube algorithms: OLL & PLL
 Obsidian plugin you can use to visualize Rubik's Cubes algorithms.
 
 Ever wondered how an algorithm would look like after turning a cube?
