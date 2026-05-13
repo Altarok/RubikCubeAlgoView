@@ -12,6 +12,4 @@ main.js
 *.iml
 .DS_Store
 
-# Git
-/.github
 
