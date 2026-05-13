@@ -116,15 +116,18 @@ export default class RubikCubeAlgos extends Plugin {
   }
 
   async loadSettings() {
-    /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access */
-    const loadedData = await this.loadData();
+    const loadedData = (await this.loadData()) || {};
 
     this.settings = Object.assign({}, DefaultSettings, loadedData);
 
     // Convert the plain object from JSON back into a Map
-    this.settings.cubeRotations = new Map(Object.entries(loadedData?.cubeRotations || {}));
-    this.settings.knownIds = new Map(Object.entries(loadedData?.knownIds || {}));
-    /* eslint-enable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access */
+    this.settings.cubeRotations = new Map<string, number>(
+      Object.entries(loadedData.cubeRotations || {}) as unknown as [string, number][]
+    );
+
+    this.settings.knownIds = new Map<string, string>(
+      Object.entries(loadedData.knownIds || {}) as unknown as [string, string][]
+    );
   }
 
   async saveSettings() {
