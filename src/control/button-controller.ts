@@ -1,8 +1,8 @@
 import {CubeRenderer} from "../view/cube-renderer";
 import {CubeState} from "../model/cube-state";
-import {setIcon} from "obsidian";
+// import {setIcon} from "obsidian";
 import RubikCubeAlgos from "../main";
-import {IO} from "./io-util";
+// import {IO} from "./io-util";
 import {StringUtils} from "../parser/string-utils";
 
 export const ButtonController = {
@@ -28,7 +28,13 @@ function changeStateOfRotationDependantButtons(cubeRenderer: CubeRenderer, cubeS
   // }
 }
 
-function changeStateOfRotationButtons(cubeRenderer: CubeRenderer, cubeState: CubeState) {
+/**
+ * TODO currently unused (see underscore), keep for out-commented options
+ *
+ * @param cubeRenderer
+ * @param cubeState
+ */
+function _changeStateOfRotationButtons(cubeRenderer: CubeRenderer, cubeState: CubeState) {
   console.debug('Locked: ' + cubeState.locked);
   cubeRenderer.buttonLeft!.disabled = cubeState.locked;
   cubeRenderer.buttonRight!.disabled = cubeState.locked;
@@ -37,10 +43,13 @@ function changeStateOfRotationButtons(cubeRenderer: CubeRenderer, cubeState: Cub
 
 /**
  * Save cube's current rotation to data.json.
+ *
+ * TODO currently unused (see underscore), keep for out-commented options
+ *
  * @param cubeState
  * @param plugin
  */
-function persistRotationInSettings(cubeState: CubeState, plugin: RubikCubeAlgos) {
+function _persistRotationInSettings(cubeState: CubeState, plugin: RubikCubeAlgos) {
 
   let hash = StringUtils.cubeHash(cubeState.id, cubeState.algorithmType);
 
