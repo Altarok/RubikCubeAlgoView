@@ -50,100 +50,16 @@ export class RubikCubeAlgoSettingsTab extends PluginSettingTab {
 
     containerEl.empty();
 
-    const dateDesc = document.createDocumentFragment();
-    dateDesc.createEl('li', {text: 'Commands: Use "Cmd/Ctrl + P" and search "Rubik" to insert templates.'});
-    dateDesc.createEl('li', {text: 'Notation: Algorithm notation updates automatically when rotating.'});
-    dateDesc.createEl('li', {text: 'Customization: Set width, height (2-10), and hex colors per block.'});
+    this.addQuickStartGuide(containerEl);
+    this.addTipForLazyUser(containerEl);
+    this.addHorizontalSeparator(containerEl);
+    this.addColorSettingsHeader(containerEl);
+    this.addColorSettingsCube(containerEl);
+    this.addColorSettingsArrows(containerEl);
+    this.addColorSettingsReset(containerEl);
+  }
 
-    new Setting(containerEl)
-      .setName('Quick start guide')
-      // .setHeading()
-      .setDesc(dateDesc)
-
-    new Setting(containerEl)
-      .setName('Lazy? :)')
-      .setDesc('Copy full OLL and PLL examples files from my GitHub.')
-      .addButton((btn) => btn
-        .setButtonText('Open GitHub')
-        .onClick(() => {
-          window.open('https://github.com/Altarok/RubikCubeAlgoView/tree/main/examples')
-        })
-      );
-
-    containerEl.createEl('hr'); // Visual separator before the actual settings
-
-    new Setting(containerEl).setName('Appearance defaults').setHeading()
-      .setDesc('Values are validated and displayed on the fly. Save button persists to data.json.')
-
-    new Setting(containerEl)
-      .setName('Cube color')
-      .setDesc('Default color for cube faces. Resets to #ff0 if invalid. (yellow)')
-      .addText((text) => text
-        .setPlaceholder('3 or 6 digit hex value')
-        .setValue(this.plugin.settings.cubeColor)
-        .onChange((value) => {
-            this.tempColorInput.cubeColor = value;
-            if (isValidColorInput(value)) {
-              value = addHashPrefixIfMissing(value);
-              if (this.plugin.settings.cubeColor !== value) {
-                this.plugin.settings.cubeColor = value;
-                // await this.plugin.saveSettings();
-                this.plugin.rerenderCodeblocks()
-                this.display();
-              }
-            }
-          }
-        ))
-      .addExtraButton(button => button
-        .setTooltip('Save to data.json')
-        .setIcon('save')
-        .onClick(async () => {
-            let isValid: boolean = isValidColorInput(this.tempColorInput.cubeColor)
-            let valueToSafe = isValid ? addHashPrefixIfMissing(this.tempColorInput.cubeColor) : DefaultSettings.cubeColor
-            this.tempColorInput.cubeColor = valueToSafe
-            // if (this.plugin.settings.cubeColor !== valueToSafe) {
-            this.plugin.settings.cubeColor = valueToSafe;
-            await this.plugin.saveSettings();
-            this.display();
-            // }
-          }
-        ))
-
-
-    new Setting(containerEl)
-      .setName('Arrow color')
-      .setDesc('Default color for algorithm arrows. Resets to #08f if invalid. (sky blue)')
-      .addText((text) => text
-        .setPlaceholder('3 or 6 digit hex value')
-        .setValue(this.plugin.settings.arrowColor)
-        .onChange((value) => {
-            this.tempColorInput.arrowColor = value;
-            if (isValidColorInput(value)) {
-              value = addHashPrefixIfMissing(value);
-              if (this.plugin.settings.arrowColor !== value) {
-                this.plugin.settings.arrowColor = value;
-                // await this.plugin.saveSettings();
-                this.plugin.rerenderCodeblocks()
-                this.display();
-              }
-            }
-          }
-        ))
-      .addExtraButton(button => button
-        .setTooltip('Save to data.json')
-        .setIcon('save')
-        .onClick(async () => {
-            let isValid: boolean = isValidColorInput(this.tempColorInput.arrowColor)
-            let valueToSafe = isValid ? addHashPrefixIfMissing(this.tempColorInput.arrowColor) : DefaultSettings.arrowColor
-            this.tempColorInput.arrowColor = valueToSafe
-            // if (this.plugin.settings.arrowColor !== valueToSafe) {
-            this.plugin.settings.arrowColor = valueToSafe;
-            await this.plugin.saveSettings();
-            this.display();
-            // }
-          }
-        ))
-
+  private addColorSettingsReset(containerEl: HTMLElement) {
     new Setting(containerEl).setName('Reset colors')
       .setDesc('Restore colors to their default values.')
       .addButton((cb) => cb
@@ -158,6 +74,103 @@ export class RubikCubeAlgoSettingsTab extends PluginSettingTab {
       );
   }
 
+  private addColorSettingsArrows(containerEl: HTMLElement) {
+    new Setting(containerEl)
+      .setName('Arrow color')
+      .setDesc('Default color for algorithm arrows. Resets to #08f if invalid. (sky blue)')
+      .addText((text) => text
+        .setPlaceholder('3 or 6 digit hex value')
+        .setValue(this.plugin.settings.arrowColor)
+        .onChange((value) => {
+            this.tempColorInput.arrowColor = value;
+            if (isValidColorInput(value)) {
+              value = addHashPrefixIfMissing(value);
+              if (this.plugin.settings.arrowColor !== value) {
+                this.plugin.settings.arrowColor = value;
+                this.plugin.rerenderCodeblocks()
+                this.display();
+              }
+            }
+          }
+        ))
+      .addExtraButton(button => button
+        .setTooltip('Save to data.json')
+        .setIcon('save')
+        .onClick(async () => {
+            let isValid: boolean = isValidColorInput(this.tempColorInput.arrowColor)
+            let valueToSafe = isValid ? addHashPrefixIfMissing(this.tempColorInput.arrowColor) : DefaultSettings.arrowColor
+            this.tempColorInput.arrowColor = valueToSafe
+            this.plugin.settings.arrowColor = valueToSafe;
+            await this.plugin.saveSettings();
+            this.display();
+          }
+        ))
+  }
+
+  private addColorSettingsCube(containerEl: HTMLElement) {
+    new Setting(containerEl)
+      .setName('Cube color')
+      .setDesc('Default color for cube faces. Resets to #ff0 if invalid. (yellow)')
+      .addText((text) => text
+        .setPlaceholder('3 or 6 digit hex value')
+        .setValue(this.plugin.settings.cubeColor)
+        .onChange((value) => {
+            this.tempColorInput.cubeColor = value;
+            if (isValidColorInput(value)) {
+              value = addHashPrefixIfMissing(value);
+              if (this.plugin.settings.cubeColor !== value) {
+                this.plugin.settings.cubeColor = value;
+                this.plugin.rerenderCodeblocks()
+                this.display();
+              }
+            }
+          }
+        ))
+      .addExtraButton(button => button
+        .setTooltip('Save to data.json')
+        .setIcon('save')
+        .onClick(async () => {
+            let isValid: boolean = isValidColorInput(this.tempColorInput.cubeColor)
+            let valueToSafe = isValid ? addHashPrefixIfMissing(this.tempColorInput.cubeColor) : DefaultSettings.cubeColor
+            this.tempColorInput.cubeColor = valueToSafe
+            this.plugin.settings.cubeColor = valueToSafe;
+            await this.plugin.saveSettings();
+            this.display();
+          }
+        ))
+  }
+
+  private addColorSettingsHeader(containerEl: HTMLElement) {
+    new Setting(containerEl).setName('Appearance defaults').setHeading()
+      .setDesc('Values are validated and displayed on the fly. Save button persists to data.json.')
+  }
+
+  private addHorizontalSeparator(containerEl: HTMLElement) {
+    containerEl.createEl('hr')
+  }
+
+  private addTipForLazyUser(containerEl: HTMLElement) {
+    new Setting(containerEl)
+      .setName('Lazy? :)')
+      .setDesc('Copy full OLL and PLL examples files from my GitHub.')
+      .addButton((btn) => btn
+        .setButtonText('Open GitHub')
+        .onClick(() => {
+          window.open('https://github.com/Altarok/RubikCubeAlgoView/tree/main/examples')
+        })
+      );
+  }
+
+  private addQuickStartGuide(containerEl: HTMLElement) {
+    const dateDesc = document.createDocumentFragment();
+    dateDesc.createEl('li', {text: 'Commands: Use "Cmd/Ctrl + P" and search "Rubik" to insert templates.'});
+    dateDesc.createEl('li', {text: 'Notation: Algorithm notation updates automatically when rotating.'});
+    dateDesc.createEl('li', {text: 'Customization: Set width, height (2-10), and hex colors per block.'});
+
+    new Setting(containerEl)
+      .setName('Quick start guide')
+      .setDesc(dateDesc)
+  }
 }
 
 
