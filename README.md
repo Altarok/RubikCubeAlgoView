@@ -22,11 +22,15 @@ The easiest way to start is using the built-in commands:
 If you prefer a hands-on approach, download [my example Markdown](https://github.com/Altarok/RubikCubeAlgoView/tree/main/examples) files and drop them directly into your vault.
 
 # Visual Preview
-## Static view
+<details>
+<summary>Click to see screenshot</summary>
 <img width="781" height="732" alt="image" src="https://github.com/user-attachments/assets/1ace1a85-a8b1-4d5c-8839-48fd3476dba3"/>
-
-## Interactive rotation
+</details>
+<details>
+<summary>Click to see animation</summary>
 <img width="750" height="300" alt="image" src="https://github.com/user-attachments/assets/c1324ae8-e120-4b4d-a99f-9f82d01d8159"/>
+</details>
+
 
 # Configuration options
 ## Per-Block Settings
