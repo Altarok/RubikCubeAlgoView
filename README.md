@@ -41,8 +41,8 @@ Set your defaults in the Plugin Settings menu:
 - Default Arrow Color
 
 # Change log
-- 0.2.x Increased user experience: Overhauled README, added in-plugin tutorials, commands and description in settings view.
-- 0.1.x Prepared for Obsidian's official community release.
+- 0.2._ Increased user experience: Overhauled README, added in-plugin tutorials, commands and description in settings view.
+- 0.1._ Prepared for Obsidian's official community release.
 - 0.0.4 Added full mobile support.
 - 0.0.3 Introduced rotation buttons and dynamic algorithm updates.
 - 0.0.2 Added arrows and initial rotation support.
