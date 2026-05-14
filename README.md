@@ -9,7 +9,7 @@ Bring your Rubik's Cube study to life. This plugin allows you to visualize OLL, 
 
 # Where to start?
 ## 1. Installation
-Find Rubik Cube Algo View in the Obsidian Community Plugins gallery and click Install.
+Find 'Rubik Cube algorithms' in the Obsidian Community Plugins gallery and click Install.
 ## 2. Fast-Track with Templates
 The easiest way to start is using the built-in commands:
 1. Open the Command Palette (Cmd/Ctrl + P).
@@ -28,7 +28,6 @@ If you prefer a hands-on approach, download the example Markdown files and drop 
 <summary>Click to see animation</summary>
 <img width="750" height="300" alt="Animated cube visualization example" src="https://github.com/user-attachments/assets/c1324ae8-e120-4b4d-a99f-9f82d01d8159"/>
 </details>
-
 
 # Configuration options
 ## Per-Block Settings
