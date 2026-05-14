@@ -1,39 +1,49 @@
 # Rubik Cube algorithms
-Visualization of Rubik's Cube algorithms: OLL & PLL. F2L and other puzzles to come.
+Bring your Rubik's Cube study to life. This plugin allows you to visualize OLL, PLL, and custom algorithms directly within your notes using interactive 2D cubes and dynamic arrows.
 
-Ever wondered how an algorithm would look like after turning a cube? Well now you can.
+F2L and other puzzles to come.
 
-## Features
-(all fully configurable)
-- Visualize OLL and PLL algorithms
-- Visualize arrows
-- Algorithms as well as arrow- and cube-colors set by you
-- Buttons: rotate cube, reset cube rotation
-- Algorithms change according to rotation
+# Key Features
+- **Interactive Controls**: Rotate the cube or reset to the default view with integrated buttons.
+- **Smart Rotation**: Algorithm notation automatically updates based on your current cube orientation.
+- **Fully Customizable**: Tailor your experience with custom cube sizes, hex-code colors, and directional arrows.
+- **Coming Soon**: Support for F2L and additional twisty puzzles.
 
-## Where to start?
-- You may copy Markdown (.md) files from this folder directly into your obsidian vault: https://github.com/Altarok/RubikCubeAlgoView/tree/main/examples
-- The plugin features several *commands* to insert code block templates into your note. Press `Cmd + P` and enter `'rubik'` to search for them
-  - Template commands add blank codeblocks with comments for you to work with.
-  - Example commands add multiple prepared codeblocks. 
+# Where to start?
+## 1. Installation
+Find Rubik Cube Algo View in the Obsidian Community Plugins gallery and click Install.
+## 2. Fast-Track with Templates
+The easiest way to start is using the built-in commands:
+1. Open the Command Palette (Cmd/Ctrl + P).
+2. Type 'Rubik' to see available commands.
+3. Select "Template" for a blank, commented code block.
+4. Select "Example" to see a pre-configured block in action.
+## 3. Learn by Example
+If you prefer a hands-on approach, download [my example Markdown](https://github.com/Altarok/RubikCubeAlgoView/tree/main/examples) files and drop them directly into your vault.
 
-## Output example
-<img width="781" height="732" alt="image" src="https://github.com/user-attachments/assets/1ace1a85-a8b1-4d5c-8839-48fd3476dba3" />
-GIF of cube rotation with algorithm changes: https://github.com/user-attachments/assets/c1324ae8-e120-4b4d-a99f-9f82d01d8159
+# Visual Preview
+## Static view
+<img width="781" height="732" alt="image" src="https://github.com/user-attachments/assets/1ace1a85-a8b1-4d5c-8839-48fd3476dba3"/>
 
-## Possible Configuration
-### Single Code Block Configuration
-- cube width & height from 2 to 10, independently
-- cube & arrow color, 3- or 6- digit hex-value
-- arrows
-### General Plugin Configuration
-- default cube color & default arrow color
+## Interactive rotation
+<img width="750" height="300" alt="image" src="https://github.com/user-attachments/assets/c1324ae8-e120-4b4d-a99f-9f82d01d8159"/>
 
-## Change log
-- 0.2.x change README, settings and add tutorial for increased user-friendliness
-- 0.1.x changes done for Obsidian's automated release process
-- 0.0.4 mobile support 
-- 0.0.3 added buttons for rotation, algorithms change according to rotation
-- 0.0.2 added arrows, algorithms, rotation
-- 0.0.1 visualize cube
+# Configuration options
+## Per-Block Settings
+You can customize individual cubes within their code blocks:
+- **Dimensions**: Set width and height independently (Scale 2 to 10).
+- **Styling**: Custom colors for cube and arrow (3- or 6-digit hex values).
+- **Arrows**: Define custom arrow paths to visualize layer movements.
+## Global Settings
+Set your defaults in the Plugin Settings menu:
+- Default Cube Color
+- Default Arrow Color
+
+# Change log
+- 0.2.x Increased user experience: Overhauled README, added in-plugin tutorials, commands and description in settings view.
+- 0.1.x Prepared for Obsidian's official community release.
+- 0.0.4 Added full mobile support.
+- 0.0.3 Introduced rotation buttons and dynamic algorithm updates.
+- 0.0.2 Added arrows and initial rotation support.
+- 0.0.1 Basic cube visualization.
 
