@@ -28,7 +28,7 @@ If you prefer a hands-on approach, download the example Markdown files and drop 
 <summary>Click to see animation</summary>
 <img width="750" height="300" alt="Animated cube visualization example" src="https://github.com/user-attachments/assets/c1324ae8-e120-4b4d-a99f-9f82d01d8159"/>
 </details>
-
+<p>
 # Configuration options
 ## Per-Block Settings
 You can customize individual cubes within their code blocks:
