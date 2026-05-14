@@ -32,8 +32,7 @@ function isValidColorInput(color: string): boolean {
   return color.match(validColorPattern) !== null
 }
 
-
-export class RubikCubeAlgoSettingsTab extends PluginSettingTab {
+export default class RubikCubeAlgoSettingsTab extends PluginSettingTab {
   tempColorInput: CubeColors
 
   constructor(app: App, readonly plugin: RubikCubeAlgos) {
@@ -162,15 +161,14 @@ export class RubikCubeAlgoSettingsTab extends PluginSettingTab {
   }
 
   private addQuickStartGuide(containerEl: HTMLElement) {
-    const dateDesc = document.createDocumentFragment();
+    const dateDesc = activeDocument.createDocumentFragment();
     dateDesc.createEl('li', {text: 'Commands: Use "Cmd/Ctrl + P" and search "Rubik" to insert templates.'});
-    dateDesc.createEl('li', {text: 'Notation: Algorithm notation updates automatically when rotating.'});
-    dateDesc.createEl('li', {text: 'Customization: Set width, height (2-10), and hex colors per block.'});
+    dateDesc.createEl('li', {text: 'Algorithm notation updates automatically when rotating.'});
+    dateDesc.createEl('li', {text: 'Customize width, height (2-10), and hex colors per block.'});
 
     new Setting(containerEl)
       .setName('Quick start guide')
       .setDesc(dateDesc)
+
   }
 }
-
-

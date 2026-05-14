@@ -1,7 +1,7 @@
 import {Plugin} from "obsidian";
 import {MarkdownPostProcessorOLL} from "./MarkdownPostProcessorOLL";
 import {MarkdownPostProcessorPLL} from "./MarkdownPostProcessorPLL";
-import {DefaultSettings, Settings, RubikCubeAlgoSettingsTab} from "./settings/plugin-settings-tab";
+import RubikCubeAlgoSettingsTab, {DefaultSettings, Settings} from "./settings/plugin-settings-tab";
 import {addAppCommands} from "./plugin-command-builder";
 
 /*
