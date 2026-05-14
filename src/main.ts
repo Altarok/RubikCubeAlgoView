@@ -102,7 +102,7 @@ export default class RubikCubeAlgos extends Plugin {
   }
 
   async loadSettings() {
-    let loadedData = (await this.loadData()) as Partial<Settings> || {};
+    let loadedData: Partial<Settings> = (await this.loadData()) as Partial<Settings> || {};
     this.settings = Object.assign({}, DefaultSettings, loadedData || {} );
   }
 

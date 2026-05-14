@@ -39,12 +39,15 @@ export class RubikCubeAlgoSettingsTab extends PluginSettingTab {
 
     containerEl.empty();
 
+    const dateDesc = document.createDocumentFragment();
+    dateDesc.createEl('li', { text : 'Commands: Use "Cmd/Ctrl + P" and search "Rubik" to insert templates.'});
+    dateDesc.createEl('li', { text : 'Notation: Algorithm notation updates automatically when rotating.'});
+    dateDesc.createEl('li', { text : 'Customization: Set width, height (2-10), and hex colors per block.'});
+
     new Setting(containerEl)
       .setName('Quick start guide')
       .setHeading()
-      .setDesc('Commands: Use "Cmd/Ctrl + P" and search "Rubik" to insert templates.')
-    new Setting(containerEl).setName('Notation: Algorithm notation updates automatically when rotating.');
-    new Setting(containerEl).setName('Customization: Set width, height (2-10), and hex colors per block.');
+      .setDesc(dateDesc)
 
     new Setting(containerEl)
       .setName('Lazy?')
