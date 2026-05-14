@@ -151,7 +151,7 @@ export default class RubikCubeAlgoSettingsTab extends PluginSettingTab {
   private addTipForLazyUser(containerEl: HTMLElement) {
     new Setting(containerEl)
       .setName('Lazy? :)')
-      .setDesc(`Copy full OLL and PLL examples files from the repository"s examples folder: https://github.com/Altarok/RubikCubeAlgoView/tree/main/examples`)
+      .setDesc(`Copy full OLL and PLL examples files from the repository's examples folder.`)
   }
 
   private addQuickStartGuide(containerEl: HTMLElement) {
