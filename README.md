@@ -15,9 +15,9 @@ Find Rubik Cube Algo View in the Obsidian Community Plugins gallery and click In
 ## 2. Fast-Track with Templates
 The easiest way to start is using the built-in commands:
 1. Open the Command Palette (Cmd/Ctrl + P).
-2. Type 'Rubik' to see available commands.
-3. Select "Template" for a blank, commented code block.
-4. Select "Example" to see a pre-configured block in action.
+2. Type 'Rubik' to see available commands:
+  - Select "Template" for a blank, commented code block.
+  - Select "Example" to see a pre-configured block in action.
 ## 3. Learn by Example
 If you prefer a hands-on approach, download [my example Markdown](https://github.com/Altarok/RubikCubeAlgoView/tree/main/examples) files and drop them directly into your vault.
 
