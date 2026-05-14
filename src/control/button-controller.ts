@@ -1,9 +1,9 @@
-import {CubeRenderer} from "../view/cube-renderer";
-import {CubeState} from "../model/cube-state";
-// import {setIcon} from "obsidian";
-import RubikCubeAlgos from "../main";
-// import {IO} from "./io-util";
-// import {StringUtils} from "../parser/string-utils";
+import {CubeRenderer} from "../view/cube-renderer"
+import {CubeState} from "../model/cube-state"
+// import {setIcon} from "obsidian"
+import RubikCubeAlgos from "../main"
+// import {IO} from "./io-util"
+// import {StringUtils} from "../parser/string-utils"
 
 export const ButtonController = {
   addRotationButtons
@@ -12,18 +12,18 @@ export const ButtonController = {
 function changeStateOfRotationDependantButtons(cubeRenderer: CubeRenderer, cubeState: CubeState) {
   if (cubeRenderer.buttonResetRotation) {
     if (cubeState.locked)
-      cubeRenderer.buttonResetRotation.disabled = cubeState.currentRotationNormalized === cubeState.defaultRotation;
+      cubeRenderer.buttonResetRotation.disabled = cubeState.currentRotationNormalized === cubeState.defaultRotation
     else
-      cubeRenderer.buttonResetRotation.disabled = cubeState.currentRotationNormalized === 0;
+      cubeRenderer.buttonResetRotation.disabled = cubeState.currentRotationNormalized === 0
   }
 
   // if (cubeRenderer.buttonSaveRotation) {
   //   if (cubeState.locked) {
   //     /* if there is a backup - always allow un-saving the backup */
-  //     cubeRenderer.buttonSaveRotation.disabled = false;
+  //     cubeRenderer.buttonSaveRotation.disabled = false
   //   } else {
   //     /* if there is no backup - prevent creation of backup when rotation is zero */
-  //     cubeRenderer.buttonSaveRotation.disabled = cubeState.currentRotationNormalized === 0;
+  //     cubeRenderer.buttonSaveRotation.disabled = cubeState.currentRotationNormalized === 0
   //   }
   // }
 }
@@ -35,10 +35,10 @@ function changeStateOfRotationDependantButtons(cubeRenderer: CubeRenderer, cubeS
 //  * @param cubeState
 //  */
 // function _changeStateOfRotationButtons(cubeRenderer: CubeRenderer, cubeState: CubeState) {
-//   console.debug('Locked: ' + cubeState.locked);
-//   cubeRenderer.buttonLeft!.disabled = cubeState.locked;
-//   cubeRenderer.buttonRight!.disabled = cubeState.locked;
-//   changeStateOfRotationDependantButtons(cubeRenderer, cubeState);
+//   console.debug('Locked: ' + cubeState.locked)
+//   cubeRenderer.buttonLeft!.disabled = cubeState.locked
+//   cubeRenderer.buttonRight!.disabled = cubeState.locked
+//   changeStateOfRotationDependantButtons(cubeRenderer, cubeState)
 // }
 //
 // /**
@@ -51,33 +51,33 @@ function changeStateOfRotationDependantButtons(cubeRenderer: CubeRenderer, cubeS
 //  */
 // function _persistRotationInSettings(cubeState: CubeState, plugin: RubikCubeAlgos) {
 //
-//   let hash = StringUtils.cubeHash(cubeState.id, cubeState.algorithmType);
+//   let hash = StringUtils.cubeHash(cubeState.id, cubeState.algorithmType)
 //
 //   if (!hash) {
 //     /*
 //      * Should not be possible since cubes without id do not get a save button.
 //      */
-//     console.warn('Cube has no hashable ID, will no persist.');
-//     return;
+//     console.warn('Cube has no hashable ID, will no persist.')
+//     return
 //   }
-//   console.debug(`Cube hash: ${hash}, will persist current rotation: ${cubeState.currentRotationNormalized}`);
+//   console.debug(`Cube hash: ${hash}, will persist current rotation: ${cubeState.currentRotationNormalized}`)
 //   if (cubeState.currentRotationNormalized !== undefined) {
 //     if (cubeState.currentRotationNormalized !== 0)
-//       plugin.settings.cubeRotations.set(hash, cubeState.currentRotationNormalized);
+//       plugin.settings.cubeRotations.set(hash, cubeState.currentRotationNormalized)
 //     else
-//       plugin.settings.cubeRotations.delete(hash);
+//       plugin.settings.cubeRotations.delete(hash)
 //   }
 //
-//   plugin.saveSettingsSync();
+//   plugin.saveSettingsSync()
 // }
 
 
 function addRotationButtons(cubeRenderer: CubeRenderer, cubeState: CubeState, plugin: RubikCubeAlgos) {
 
-  changeStateOfRotationDependantButtons(cubeRenderer, cubeState);
+  changeStateOfRotationDependantButtons(cubeRenderer, cubeState)
 
   if (cubeState.flags.contains('no-buttons')) {
-    return;
+    return
   }
 
   // /*
@@ -85,43 +85,43 @@ function addRotationButtons(cubeRenderer: CubeRenderer, cubeState: CubeState, pl
   //  */
   //
   // if (cubeState.flags.has('no-rotation')) {
-  //   return;
+  //   return
   // }
 
   cubeRenderer.buttonLeft!.addEventListener('click', () => {
-    cubeState.rotateLeft();
-    cubeRenderer.rotateCube();
+    cubeState.rotateLeft()
+    cubeRenderer.rotateCube()
 
-    changeStateOfRotationDependantButtons(cubeRenderer, cubeState);
-  });
+    changeStateOfRotationDependantButtons(cubeRenderer, cubeState)
+  })
 
   cubeRenderer.buttonRight!.addEventListener('click', () => {
-    cubeState.rotateRight();
-    cubeRenderer.rotateCube();
+    cubeState.rotateRight()
+    cubeRenderer.rotateCube()
 
-    changeStateOfRotationDependantButtons(cubeRenderer, cubeState);
-  });
+    changeStateOfRotationDependantButtons(cubeRenderer, cubeState)
+  })
 
 
   cubeRenderer.buttonResetRotation!.addEventListener('click', () => {
-    cubeState.resetRotation();
-    cubeRenderer.rotateCube();
+    cubeState.resetRotation()
+    cubeRenderer.rotateCube()
 
-    changeStateOfRotationDependantButtons(cubeRenderer, cubeState);
-  });
+    changeStateOfRotationDependantButtons(cubeRenderer, cubeState)
+  })
 
   // cubeRenderer.buttonLockRotation.addEventListener('click', () => {
   //
-  //   cubeState.locked = !cubeState.locked;
+  //   cubeState.locked = !cubeState.locked
   //
   //   if (cubeState.locked) {
-  //     setIcon(cubeRenderer.buttonLockRotation, 'lock');
+  //     setIcon(cubeRenderer.buttonLockRotation, 'lock')
   //   } else {
-  //     setIcon(cubeRenderer.buttonLockRotation, 'lock-open');
+  //     setIcon(cubeRenderer.buttonLockRotation, 'lock-open')
   //   }
   //
-  //   changeStateOfRotationButtons(cubeRenderer, cubeState);
-  // });
+  //   changeStateOfRotationButtons(cubeRenderer, cubeState)
+  // })
 
 
   /*
@@ -129,7 +129,7 @@ function addRotationButtons(cubeRenderer: CubeRenderer, cubeState: CubeState, pl
    */
   // if (cubeState.getId() && cubeRenderer.buttonSaveRotation) {
   //   /* If an ID is given, the button exists */
-  //   let buttonSaveRotation = cubeRenderer.buttonSaveRotation!;
+  //   let buttonSaveRotation = cubeRenderer.buttonSaveRotation!
   //   buttonSaveRotation.addEventListener('click', () => {
   //
   //     if (cubeState.locked) {
@@ -137,14 +137,14 @@ function addRotationButtons(cubeRenderer: CubeRenderer, cubeState: CubeState, pl
   //       /*
   //        * Unlock default rotation
   //        */
-  //       cubeState.defaultRotation = 0;
+  //       cubeState.defaultRotation = 0
   //       setIcon(buttonSaveRotation, 'save'); // reset icon
-  //       console.debug('Reset default rotation.');
+  //       console.debug('Reset default rotation.')
   //       buttonSaveRotation.setText('Save rotation.'); // reset mouse over
-  //       cubeState.locked = false;
+  //       cubeState.locked = false
   //
-  //       IO.unsaveRotation(cubeState, plugin);
-  //       changeStateOfRotationDependantButtons(cubeRenderer, cubeState);
+  //       IO.unsaveRotation(cubeState, plugin)
+  //       changeStateOfRotationDependantButtons(cubeRenderer, cubeState)
   //
   //     } else {
   //
@@ -154,7 +154,7 @@ function addRotationButtons(cubeRenderer: CubeRenderer, cubeState: CubeState, pl
   //          * Do nothing, as the current rotation is already at default
   //          * TODO button should be deactivated
   //          */
-  //         console.warn('Nothing to save. Current rotation already is default. TODO button should be deactivated!');
+  //         console.warn('Nothing to save. Current rotation already is default. TODO button should be deactivated!')
   //
   //       } else {
   //
@@ -162,17 +162,17 @@ function addRotationButtons(cubeRenderer: CubeRenderer, cubeState: CubeState, pl
   //          * Save current rotation as new default
   //          * TODO save current rotation as new default rotation
   //          */
-  //         cubeState.defaultRotation = cubeState.currentRotationNormalized;
+  //         cubeState.defaultRotation = cubeState.currentRotationNormalized
   //         setIcon(buttonSaveRotation, 'save-off'); // change icon to 'un-save'
-  //         console.debug('New default rotation: ' + cubeState.defaultRotation);
-  //         buttonSaveRotation.setText(`Un-save default rotation. (current: ${cubeState.defaultRotation})`);
-  //         cubeState.locked = true;
+  //         console.debug('New default rotation: ' + cubeState.defaultRotation)
+  //         buttonSaveRotation.setText(`Un-save default rotation. (current: ${cubeState.defaultRotation})`)
+  //         cubeState.locked = true
   //
-  //         IO.saveRotation(cubeState, plugin);
-  //         changeStateOfRotationDependantButtons(cubeRenderer, cubeState);
+  //         IO.saveRotation(cubeState, plugin)
+  //         changeStateOfRotationDependantButtons(cubeRenderer, cubeState)
   //       }
   //
   //     }
-  //   });
+  //   })
   // }
 }

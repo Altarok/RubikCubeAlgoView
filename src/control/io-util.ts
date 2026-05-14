@@ -1,6 +1,6 @@
-import {CubeState} from "../model/cube-state";
-import RubikCubeAlgos from "../main";
-import {StringUtils} from "../parser/string-utils";
+import {CubeState} from "../model/cube-state"
+import RubikCubeAlgos from "../main"
+import {StringUtils} from "../parser/string-utils"
 
 export const IO = {
   saveRotation, unsaveRotation
@@ -12,34 +12,34 @@ export const IO = {
  * @param plugin
  */
 function unsaveRotation(cubeState: CubeState, plugin: RubikCubeAlgos) {
-  setRotation(0, cubeState, plugin);
+  setRotation(0, cubeState, plugin)
 }
 
 function saveRotation(cubeState: CubeState, plugin: RubikCubeAlgos) {
-  setRotation(cubeState.currentRotationNormalized, cubeState, plugin);
+  setRotation(cubeState.currentRotationNormalized, cubeState, plugin)
 }
 
 function setRotation(valueToSafe: number, cubeState: CubeState, plugin: RubikCubeAlgos) {
-  let hash: string | undefined = StringUtils.cubeHash(cubeState.id, cubeState.algorithmType);
+  let hash: string | undefined = StringUtils.cubeHash(cubeState.id, cubeState.algorithmType)
 
   if (!hash) {
     /* Should not be possible since cubes without id do not get a save button. */
-    console.warn('Cube has no hashable ID, will no persist.');
-    return;
+    console.warn('Cube has no hashable ID, will no persist.')
+    return
   }
 
-  console.debug(`Cube hash: ${hash}, will persist current rotation: ${valueToSafe}`);
+  console.debug(`Cube hash: ${hash}, will persist current rotation: ${valueToSafe}`)
   if (valueToSafe !== undefined) {
     if (valueToSafe !== 0) {
       /* Save new value */
-      plugin.settings.cubeRotations[hash] = valueToSafe;
-      cubeState.defaultRotation = valueToSafe;
+      plugin.settings.cubeRotations[hash] = valueToSafe
+      cubeState.defaultRotation = valueToSafe
     } else {
       /* Delete value */
-      delete plugin.settings.cubeRotations[hash];
-      cubeState.defaultRotation = 0;
+      delete plugin.settings.cubeRotations[hash]
+      cubeState.defaultRotation = 0
     }
   }
 
-  plugin.saveSettingsSync();
+  plugin.saveSettingsSync()
 }

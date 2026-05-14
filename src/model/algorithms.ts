@@ -1,11 +1,11 @@
-import {Arrows} from "./geometry";
-import {StringUtils} from "../parser/string-utils";
+import {Arrows} from "./geometry"
+import {StringUtils} from "../parser/string-utils"
 
-export const AlgorithmTypes = ['pll', 'oll'] as const;
-export type AlgorithmType = (typeof AlgorithmTypes)[number];
+export const AlgorithmTypes = ['pll', 'oll'] as const
+export type AlgorithmType = (typeof AlgorithmTypes)[number]
 
 export interface Rotatable {
-  rotate: (quarterTurns: number) => void;
+  rotate: (quarterTurns: number) => void
 }
 
 export const possibleSteps = [
@@ -29,11 +29,11 @@ export const possibleSteps = [
   "M", "M'", "M2", // vertical middle layer, around X axis, 90 degrees to the front (like L or R-prime)
   "S", "S'", "S2", // vertical middle layer, around Z axis, 90 degrees to the right (like F or B-prime)
   "E", "E'", "E2"  // horizontal middle layer, around Y axis, 90 degrees to the right (like D or U-prime)
-] as const;
+] as const
 
-export type AlgorithmStep = (typeof possibleSteps)[number];
+export type AlgorithmStep = (typeof possibleSteps)[number]
 
-type TurnCubeMap = Record<AlgorithmStep, AlgorithmStep>;
+type TurnCubeMap = Record<AlgorithmStep, AlgorithmStep>
 
 const turnCubeLeftMap: TurnCubeMap = {
   "R": "F", "R'": "F'", "R2": "F2",
@@ -55,7 +55,7 @@ const turnCubeLeftMap: TurnCubeMap = {
   "M": "S'", "M'": "S", "M2": "S2", // !! non-linear changes
   "S": "M", "S'": "M'", "S2": "M2", // !! non-linear changes
   "E": "E", "E'": "E'", "E2": "E2"
-};
+}
 
 /**
  * A Rubik's Cube algorithm is a sequence of rotations
@@ -63,41 +63,41 @@ const turnCubeLeftMap: TurnCubeMap = {
  */
 export class Algorithm implements Rotatable {
   /** Used as salt for hash value */
-  static index = 42;
-  algorithmLabel?: HTMLLabelElement;
-  readonly initialHash: string;
+  static index = 42
+  algorithmLabel?: HTMLLabelElement
+  readonly initialHash: string
 
   constructor(private steps: AlgorithmStep[]) {
-    this.initialHash = StringUtils.hash(steps.join('') + Algorithm.index++, 1337);
+    this.initialHash = StringUtils.hash(steps.join('') + Algorithm.index++, 1337)
   }
 
   rotate(quarterTurns: number): void {
-    const turns = ((quarterTurns % 4) + 4) % 4;
-    if (turns === 0) return;
+    const turns = ((quarterTurns % 4) + 4) % 4
+    if (turns === 0) return
 
     this.steps = this.steps.map(step => {
-      let current = step;
+      let current = step
       for (let i = 0; i < turns; i++) {
-        current = turnCubeLeftMap[current];
+        current = turnCubeLeftMap[current]
       }
-      return current;
-    });
+      return current
+    })
 
     if (this.algorithmLabel) {
-      this.algorithmLabel.setText(this.toString());
+      this.algorithmLabel.setText(this.toString())
     }
   }
 
   toString(): string {
-    return this.steps.join(' ');
+    return this.steps.join(' ')
   }
 }
 
 export class Algorithms implements Rotatable {
-  items: Algorithm[] = [];
+  items: Algorithm[] = []
 
   length(): number {
-    return this.items.length;
+    return this.items.length
   }
 
   add(alg: Algorithm): void {
@@ -105,7 +105,7 @@ export class Algorithms implements Rotatable {
   }
 
   rotate(quarterTurns: number): void {
-    this.items.forEach(algorithm => algorithm.rotate(quarterTurns));
+    this.items.forEach(algorithm => algorithm.rotate(quarterTurns))
   }
 }
 
@@ -119,13 +119,13 @@ export class MappedAlgorithm implements Rotatable {
   }
 
   rotate(quarterTurns: number): void {
-    return this.algorithm.rotate(quarterTurns);
+    return this.algorithm.rotate(quarterTurns)
   }
 }
 
 export class MappedAlgorithms implements Rotatable {
 
-  map = new Map<string, MappedAlgorithm>();
+  map = new Map<string, MappedAlgorithm>()
 
   size(): number {
     return this.map.size
@@ -136,31 +136,31 @@ export class MappedAlgorithms implements Rotatable {
   }
 
   get(algHash: string): MappedAlgorithm | undefined {
-    return this.map.get(algHash);
+    return this.map.get(algHash)
   }
 
   rotate(quarterTurns: number): void {
     this.map.forEach(mappedAlgo => mappedAlgo.algorithm.rotate(quarterTurns))
-  };
+  }
 
   getAllItems(): Algorithm[] {
-    let result: Algorithm[] = [];
+    let result: Algorithm[] = []
     this.map.forEach(mappedAlgo => {
-      result.push(mappedAlgo.algorithm);
-    });
-    return result;
+      result.push(mappedAlgo.algorithm)
+    })
+    return result
   }
 
   toString(): string {
-    let result: string[] = [];
-    let index = 0;
+    let result: string[] = []
+    let index = 0
     this.map.forEach((mappedAlgo) => {
-      const algStr = mappedAlgo.algorithm.toString();
-      const arrowCount = mappedAlgo.arrows.length;
-      result.push(`${index++}: [${algStr}] (${arrowCount} arrows)`);
-    });
+      const algStr = mappedAlgo.algorithm.toString()
+      const arrowCount = mappedAlgo.arrows.length
+      result.push(`${index++}: [${algStr}] (${arrowCount} arrows)`)
+    })
 
-    return result.join('\n');
+    return result.join('\n')
   }
 
 }
