@@ -151,7 +151,7 @@ export default class RubikCubeAlgoSettingsTab extends PluginSettingTab {
   private addTipForLazyUser(containerEl: HTMLElement) {
     new Setting(containerEl)
       .setName('Lazy? :)')
-      .setDesc(`Copy full OLL and PLL example files from the repository's examples folder.`)
+      .setDesc(`Copy complete OLL and PLL algorithm lists from the repository's examples folder.`)
   }
 
   private addQuickStartGuide(containerEl: HTMLElement) {
