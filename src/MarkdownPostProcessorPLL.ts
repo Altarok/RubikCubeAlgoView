@@ -2,7 +2,7 @@ import RubikCubeAlgos from "./main";
 import {CubeRendererPLL} from "./view/cube-renderer";
 import {MarkdownRenderChild} from "obsidian";
 import {ButtonController} from "./control/button-controller";
-import {CubeColors} from "./settings/RubikCubeAlgoSettings";
+import {CubeColors} from "./settings/plugin-settings-tab";
 import CubeStateBuilder from "./model/cube-state-builder";
 import {createBackupColors} from "./model/cube-color-builder";
 

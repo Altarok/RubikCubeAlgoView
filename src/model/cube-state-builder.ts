@@ -1,4 +1,4 @@
-import {CubeColors, Settings} from "../settings/RubikCubeAlgoSettings";
+import {CubeColors, Settings} from "../settings/plugin-settings-tab";
 import {CubeStateOll, CubeStatePll} from "./cube-state";
 import {FlagType} from "./flags";
 import {ArrowCoords, Arrows, Coordinates, Dimensions, StickerCoords} from "./geometry";

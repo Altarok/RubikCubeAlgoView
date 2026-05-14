@@ -1,5 +1,5 @@
 import {describe, expect, it} from "vitest";
-import {CubeColors} from "../src/settings/RubikCubeAlgoSettings";
+import {CubeColors} from "../src/settings/plugin-settings-tab";
 import CubeStateBuilder from "../src/model/cube-state-builder";
 import {InvalidInput} from "../src/model/codeblock-input";
 

@@ -1,4 +1,4 @@
-import {CubeColors, DefaultSettings, Settings} from "../settings/RubikCubeAlgoSettings";
+import {CubeColors, DefaultSettings, Settings} from "../settings/plugin-settings-tab";
 
 export function createBackupColors(settings: Settings): CubeColors {
   return {

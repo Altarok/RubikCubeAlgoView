@@ -1,6 +1,6 @@
 import {beforeEach, describe, expect, it} from 'vitest';
 import {CubeStateOll, CubeStatePll} from "../src/model/cube-state";
-import {CubeColors, Settings} from "../src/settings/RubikCubeAlgoSettings";
+import {CubeColors, Settings} from "../src/settings/plugin-settings-tab";
 import CubeStateBuilder from "../src/model/cube-state-builder";
 
 const id: string = 'someID';
