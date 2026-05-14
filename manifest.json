@@ -1,8 +1,8 @@
 {
 	"id": "rubik-cube-algorithms",
 	"name": "Rubik Cube algorithms",
-	"version": "0.2.0",
-	"minAppVersion": "0.15.0",
+	"version": "0.2.1",
+	"minAppVersion": "1.1.0",
 	"description": "Visualizes Rubik Cube algorithms.",
 	"author": "Altarok",
 	"isDesktopOnly": false
