@@ -37,13 +37,15 @@ alg:y R2 B2 U' R' U' R U R U B2 R U' R U
 ` /* ends on linebreak */
 
 const colors: CubeColors = {
-  arrow: "#08f",
-  cube: "#ff0"
+  arrowColor: "#08f",
+  cubeColor: "#ff0"
 }
 
 const settings: Settings = {
-  cubeRotations: new Map<string, number>(),
-  knownIds: new Map<string, string>()
+  arrowColor: "#08f",
+  cubeColor: "#ff0",
+  cubeRotations: {},
+  knownIds: {}
 }
 
 function createOll(): CubeStateOll {

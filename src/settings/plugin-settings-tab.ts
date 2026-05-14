@@ -25,12 +25,23 @@ function addHashPrefixIfMissing(color: string) {
   return color
 }
 
-export class RubikCubeAlgoSettingsTab extends PluginSettingTab {
-  plugin: RubikCubeAlgos;
+/* TODO move to regex class */
+const validColorPattern = '^#?([a-f0-9]{3}){1,2}$';
 
-  constructor(app: App, plugin: RubikCubeAlgos) {
+function isValidColorInput(color: string): boolean {
+  return color.match(validColorPattern) !== null
+}
+
+
+export class RubikCubeAlgoSettingsTab extends PluginSettingTab {
+  tempColorInput: CubeColors
+
+  constructor(app: App, readonly plugin: RubikCubeAlgos) {
     super(app, plugin);
-    this.plugin = plugin;
+    this.tempColorInput = {
+      arrowColor: plugin.settings.arrowColor,
+      cubeColor: plugin.settings.cubeColor
+    }
   }
 
   display(): void {
@@ -40,67 +51,98 @@ export class RubikCubeAlgoSettingsTab extends PluginSettingTab {
     containerEl.empty();
 
     const dateDesc = document.createDocumentFragment();
-    dateDesc.createEl('li', { text : 'Commands: Use "Cmd/Ctrl + P" and search "Rubik" to insert templates.'});
-    dateDesc.createEl('li', { text : 'Notation: Algorithm notation updates automatically when rotating.'});
-    dateDesc.createEl('li', { text : 'Customization: Set width, height (2-10), and hex colors per block.'});
+    dateDesc.createEl('li', {text: 'Commands: Use "Cmd/Ctrl + P" and search "Rubik" to insert templates.'});
+    dateDesc.createEl('li', {text: 'Notation: Algorithm notation updates automatically when rotating.'});
+    dateDesc.createEl('li', {text: 'Customization: Set width, height (2-10), and hex colors per block.'});
 
     new Setting(containerEl)
       .setName('Quick start guide')
-      .setHeading()
+      // .setHeading()
       .setDesc(dateDesc)
 
     new Setting(containerEl)
-      .setName('Lazy?')
+      .setName('Lazy? :)')
       .setDesc('Copy full OLL and PLL examples files from my GitHub.')
       .addButton((btn) => btn
         .setButtonText('Open GitHub')
         .onClick(() => {
-          window.open('https://github.com/Altarok/RubikCubeAlgoView/tree/main/examples');
+          window.open('https://github.com/Altarok/RubikCubeAlgoView/tree/main/examples')
         })
       );
 
-    // new Setting(containerEl).addSlider()
-
     containerEl.createEl('hr'); // Visual separator before the actual settings
 
-
     new Setting(containerEl).setName('Appearance defaults').setHeading()
+      .setDesc('Values are validated and displayed on the fly. Save button persists to data.json.')
 
     new Setting(containerEl)
       .setName('Cube color')
-      .setDesc('Default hex color for cube faces. Resets to #ff0 if invalid. (yellow)')
+      .setDesc('Default color for cube faces. Resets to #ff0 if invalid. (yellow)')
       .addText((text) => text
         .setPlaceholder('3 or 6 digit hex value')
         .setValue(this.plugin.settings.cubeColor)
-        .onChange(async (value) => {
-            if (value.match('^#?([a-f0-9]{3}){1,2}$')) {
+        .onChange((value) => {
+            this.tempColorInput.cubeColor = value;
+            if (isValidColorInput(value)) {
               value = addHashPrefixIfMissing(value);
               if (this.plugin.settings.cubeColor !== value) {
                 this.plugin.settings.cubeColor = value;
-                await this.plugin.saveSettings();
+                // await this.plugin.saveSettings();
+                this.plugin.rerenderCodeblocks()
                 this.display();
               }
             }
           }
-        ));
+        ))
+      .addExtraButton(button => button
+        .setTooltip('Save to data.json')
+        .setIcon('save')
+        .onClick(async () => {
+            let isValid: boolean = isValidColorInput(this.tempColorInput.cubeColor)
+            let valueToSafe = isValid ? addHashPrefixIfMissing(this.tempColorInput.cubeColor) : DefaultSettings.cubeColor
+            this.tempColorInput.cubeColor = valueToSafe
+            // if (this.plugin.settings.cubeColor !== valueToSafe) {
+            this.plugin.settings.cubeColor = valueToSafe;
+            await this.plugin.saveSettings();
+            this.display();
+            // }
+          }
+        ))
+
 
     new Setting(containerEl)
       .setName('Arrow color')
-      .setDesc('Default hex color for algorithm arrows. Resets to #08f if invalid. (sky blue)')
+      .setDesc('Default color for algorithm arrows. Resets to #08f if invalid. (sky blue)')
       .addText((text) => text
         .setPlaceholder('3 or 6 digit hex value')
         .setValue(this.plugin.settings.arrowColor)
-        .onChange(async (value) => {
-            if (value.match('^#?([a-f0-9]{3}){1,2}$')) {
+        .onChange((value) => {
+            this.tempColorInput.arrowColor = value;
+            if (isValidColorInput(value)) {
               value = addHashPrefixIfMissing(value);
               if (this.plugin.settings.arrowColor !== value) {
                 this.plugin.settings.arrowColor = value;
-                await this.plugin.saveSettings();
+                // await this.plugin.saveSettings();
+                this.plugin.rerenderCodeblocks()
                 this.display();
               }
             }
           }
-        ));
+        ))
+      .addExtraButton(button => button
+        .setTooltip('Save to data.json')
+        .setIcon('save')
+        .onClick(async () => {
+            let isValid: boolean = isValidColorInput(this.tempColorInput.arrowColor)
+            let valueToSafe = isValid ? addHashPrefixIfMissing(this.tempColorInput.arrowColor) : DefaultSettings.arrowColor
+            this.tempColorInput.arrowColor = valueToSafe
+            // if (this.plugin.settings.arrowColor !== valueToSafe) {
+            this.plugin.settings.arrowColor = valueToSafe;
+            await this.plugin.saveSettings();
+            this.display();
+            // }
+          }
+        ))
 
     new Setting(containerEl).setName('Reset colors')
       .setDesc('Restore colors to their default values.')
@@ -115,7 +157,6 @@ export class RubikCubeAlgoSettingsTab extends PluginSettingTab {
         })
       );
   }
-
 
 }
 

@@ -108,6 +108,10 @@ export default class RubikCubeAlgos extends Plugin {
 
   async saveSettings() {
     await this.saveData(this.settings);
+    this.rerenderCodeblocks()
+  }
+
+  rerenderCodeblocks(): void{
     this.app.workspace.trigger("rubik:rerender-markdown-code-block-processors");
   }
 
