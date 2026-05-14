@@ -5,6 +5,7 @@ export interface CubeColors {
   arrowColor: string;
   cubeColor: string;
 }
+
 export interface Settings extends CubeColors {
   cubeRotations: Record<string, number>;
   knownIds: Record<string, string>;
@@ -40,38 +41,36 @@ export class RubikCubeAlgoSettingsTab extends PluginSettingTab implements Settin
     containerEl.empty();
 
     new Setting(containerEl)
-    .setName('Default cube color')
-    .setDesc('Starting value: #ff0 (yellow)')
-    .addText((text) => text
-    .setPlaceholder('3 or 6 digit hex value')
-    .setValue(this.cubeColor)
-    .onChange(async (value) => {
-        if (value.match('^#([a-f0-9]{3}){1,2}$')) {
-          this.cubeColor = value;
-          // console.info('Change default cube color: ' + this.cubeColor);
-        } else {
-          this.cubeColor = DefaultSettings.cubeColor;
-          // console.info('Reset default cube color: ' + this.cubeColor);
-        }
-        await this.plugin.saveSettings();
-      }
-    ));
+      .setName('Cube color')
+      .setDesc('Default hex color for cube faces. Resets to #ff0 if invalid. (yellow)')
+      .addText((text) => text
+        .setPlaceholder('#ff0')
+        .setValue(this.cubeColor)
+        .onChange(async (value) => {
+            if (value.match('^#([a-f0-9]{3}){1,2}$')) {
+              this.cubeColor = value;
+            } else {
+              this.cubeColor = DefaultSettings.cubeColor;
+            }
+            await this.plugin.saveSettings();
+          }
+        ));
 
     new Setting(containerEl)
-    .setName('Default arrow color')
-    .setDesc('Starting value: #08f (sky blue)')
-    .addText((text) => text
-    .setPlaceholder('3 or 6 digit hex value')
-    .setValue(this.plugin.settings.arrowColor)
-    .onChange(async (value) => {
-        if (value.match('^#([a-f0-9]{3}){1,2}$')) {
-          this.arrowColor = value;
-        } else {
-          this.arrowColor = DefaultSettings.arrowColor;
-        }
-        await this.plugin.saveSettings();
-      }
-    ));
+      .setName('Arrow color')
+      .setDesc('Default hex color for algorithm arrows. Resets to #08f if invalid. (sky blue)')
+      .addText((text) => text
+        .setPlaceholder('3 or 6 digit hex value')
+        .setValue(this.plugin.settings.arrowColor)
+        .onChange(async (value) => {
+            if (value.match('^#([a-f0-9]{3}){1,2}$')) {
+              this.arrowColor = value;
+            } else {
+              this.arrowColor = DefaultSettings.arrowColor;
+            }
+            await this.plugin.saveSettings();
+          }
+        ));
   }
 }
 
