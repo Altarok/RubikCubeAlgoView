@@ -151,24 +151,14 @@ export default class RubikCubeAlgoSettingsTab extends PluginSettingTab {
   private addTipForLazyUser(containerEl: HTMLElement) {
     new Setting(containerEl)
       .setName('Lazy? :)')
-      .setDesc('Copy full OLL and PLL examples files from my GitHub.')
-      .addButton((btn) => btn
-        .setButtonText('Open GitHub')
-        .onClick(() => {
-          window.open('https://github.com/Altarok/RubikCubeAlgoView/tree/main/examples')
-        })
-      );
+      .setDesc(`Copy full OLL and PLL examples files from the repository"s examples folder: https://github.com/Altarok/RubikCubeAlgoView/tree/main/examples`)
   }
 
   private addQuickStartGuide(containerEl: HTMLElement) {
-    const dateDesc = activeDocument.createDocumentFragment();
-    dateDesc.createEl('li', {text: 'Commands: Use "Cmd/Ctrl + P" and search "Rubik" to insert templates.'});
-    dateDesc.createEl('li', {text: 'Algorithm notation updates automatically when rotating.'});
-    dateDesc.createEl('li', {text: 'Customize width, height (2-10), and hex colors per block.'});
-
-    new Setting(containerEl)
-      .setName('Quick start guide')
-      .setDesc(dateDesc)
+    new Setting(containerEl).setName('Quick start guide')
+    new Setting(containerEl).setName('Commands').setDesc('Use "Cmd/Ctrl + P" and search "Rubik" to insert templates.')
+    new Setting(containerEl).setName('Notation').setDesc('Algorithm notation updates automatically when rotating.')
+    new Setting(containerEl).setName('Customization').setDesc('Set width, height (2-10), and hex colors per block.')
 
   }
 }
