@@ -10,8 +10,7 @@ Bring your Rubik's Cube study to life. This plugin allows you to visualize OLL, 
 # Where to start?
 ## 1. Installation
 Find 'Rubik Cube algorithms' in the Obsidian Community Plugins gallery and click Install.
-## 2. Fast-Track with Templates
-The easiest way to start is using the built-in commands:
+## 2. Fast-Track with built-in commands
 1. Open the Command Palette (Cmd/Ctrl + P).
 2. Type 'Rubik' to see available commands:
   - Select "Template" for a blank, commented code block.
