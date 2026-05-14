@@ -1,8 +1,6 @@
 # Rubik Cube algorithms
 Bring your Rubik's Cube study to life. This plugin allows you to visualize OLL, PLL, and custom algorithms directly within your notes using interactive 2D cubes and dynamic arrows.
 
-F2L and other puzzles to come.
-
 # Key Features
 - **Interactive Controls**: Rotate the cube or reset to the default view with integrated buttons.
 - **Smart Rotation**: Algorithm notation automatically updates based on your current cube orientation.
@@ -19,7 +17,7 @@ The easiest way to start is using the built-in commands:
   - Select "Template" for a blank, commented code block.
   - Select "Example" to see a pre-configured block in action.
 ## 3. Learn by Example
-If you prefer a hands-on approach, download [my example Markdown](https://github.com/Altarok/RubikCubeAlgoView/tree/main/examples) files and drop them directly into your vault.
+If you prefer a hands-on approach, download the example Markdown files and drop them directly into your vault: https://github.com/Altarok/RubikCubeAlgoView/tree/main/examples
 
 # Visual Preview
 <details>
