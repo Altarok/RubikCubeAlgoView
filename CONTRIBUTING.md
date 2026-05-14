@@ -1,8 +1,11 @@
-# Contributing to Rubik Cube Algo View
+# Contributing to Rubik's Cube algorithms
 
 First off, thanks for taking the time to contribute! 
 
 ## How can you contribute?
+
+### Share examples
+- Feel free to send me nice examples of what you did.
 
 ### Reporting Bugs
 - Use the GitHub [Issues] tab.
