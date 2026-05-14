@@ -25,16 +25,8 @@ function addHashPrefixIfMissing(color: string) {
   return color
 }
 
-export class RubikCubeAlgoSettingsTab extends PluginSettingTab implements Settings {
+export class RubikCubeAlgoSettingsTab extends PluginSettingTab {
   plugin: RubikCubeAlgos;
-  arrowColor!: string;
-  cubeColor!: string;
-  /**
-   * key: string with cube hash(?)
-   * value: rotation
-   */
-  cubeRotations = {} as Record<string, number>;
-  knownIds = {} as Record<string, string>;
 
   constructor(app: App, plugin: RubikCubeAlgos) {
     super(app, plugin);
@@ -47,9 +39,32 @@ export class RubikCubeAlgoSettingsTab extends PluginSettingTab implements Settin
 
     containerEl.empty();
 
+    new Setting(containerEl)
+      .setName('Quick start guide')
+      .setHeading()
+      .setDesc('Commands: Use "Cmd/Ctrl + P" and search "Rubik" to insert templates.')
+    new Setting(containerEl).setName('Notation: Algorithm notation updates automatically when rotating.');
+    new Setting(containerEl).setName('Customization: Set width, height (2-10), and hex colors per block.');
+
+    new Setting(containerEl)
+      .setName('Lazy?')
+      .setDesc('Copy full OLL and PLL examples files from my GitHub.')
+      .addButton((btn) => btn
+        .setButtonText('Open GitHub')
+        .onClick(() => {
+          window.open('https://github.com/Altarok/RubikCubeAlgoView/tree/main/examples');
+        })
+      );
+
+    // new Setting(containerEl).addSlider()
+
+    containerEl.createEl('hr'); // Visual separator before the actual settings
+
+
     new Setting(containerEl).setName('Appearance defaults').setHeading()
 
-    new Setting(containerEl).setName('Cube color')
+    new Setting(containerEl)
+      .setName('Cube color')
       .setDesc('Default hex color for cube faces. Resets to #ff0 if invalid. (yellow)')
       .addText((text) => text
         .setPlaceholder('3 or 6 digit hex value')
@@ -60,17 +75,14 @@ export class RubikCubeAlgoSettingsTab extends PluginSettingTab implements Settin
               if (this.plugin.settings.cubeColor !== value) {
                 this.plugin.settings.cubeColor = value;
                 await this.plugin.saveSettings();
-                this.display(); // Refresh the settings UI to show the new values
+                this.display();
               }
-              // } else {
-              //   this.plugin.settings.cubeColor = DefaultSettings.cubeColor;
             }
-            // await this.plugin.saveSettings();
-            // this.display(); // Refresh the settings UI to show the new values
           }
         ));
 
-    new Setting(containerEl).setName('Arrow color')
+    new Setting(containerEl)
+      .setName('Arrow color')
       .setDesc('Default hex color for algorithm arrows. Resets to #08f if invalid. (sky blue)')
       .addText((text) => text
         .setPlaceholder('3 or 6 digit hex value')
@@ -81,13 +93,9 @@ export class RubikCubeAlgoSettingsTab extends PluginSettingTab implements Settin
               if (this.plugin.settings.arrowColor !== value) {
                 this.plugin.settings.arrowColor = value;
                 await this.plugin.saveSettings();
-                this.display(); // Refresh the settings UI to show the new values
+                this.display();
               }
-              // } else {
-              //   this.plugin.settings.arrowColor = DefaultSettings.arrowColor;
             }
-            // await this.plugin.saveSettings();
-            // this.display(); // Refresh the settings UI to show the new values
           }
         ));
 
@@ -95,12 +103,12 @@ export class RubikCubeAlgoSettingsTab extends PluginSettingTab implements Settin
       .setDesc('Restore colors to their default values.')
       .addButton((cb) => cb
         .setButtonText('Reset')
-        .setWarning() // Makes the button red to show it's an "action"
+        .setWarning() // -> red
         .onClick(async () => {
           this.plugin.settings.cubeColor = DefaultSettings.cubeColor;
           this.plugin.settings.arrowColor = DefaultSettings.arrowColor;
           await this.plugin.saveSettings();
-          this.display(); // Refresh the settings UI to show the new values
+          this.display();
         })
       );
   }
