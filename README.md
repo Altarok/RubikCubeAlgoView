@@ -5,7 +5,7 @@ Bring your Rubik's Cube study to life. This plugin allows you to visualize OLL, 
 - **Interactive Controls**: Rotate the cube or reset to the default view with integrated buttons.
 - **Smart Rotation**: Algorithm notation automatically updates based on your current cube orientation.
 - **Fully Customizable**: Tailor your experience with custom cube sizes, hex-code colors, and directional arrows.
-- **Coming Soon**: Support for F2L and additional twisty puzzles.
+- **Planned Features**: Support for F2L and additional twisty puzzles.
 
 # Where to start?
 ## 1. Installation
@@ -22,11 +22,11 @@ If you prefer a hands-on approach, download the example Markdown files and drop 
 # Visual Preview
 <details>
 <summary>Click to see screenshot</summary>
-<img width="781" height="732" alt="image" src="https://github.com/user-attachments/assets/1ace1a85-a8b1-4d5c-8839-48fd3476dba3"/>
+<img width="781" height="732" alt="Cube visualization example" src="https://github.com/user-attachments/assets/1ace1a85-a8b1-4d5c-8839-48fd3476dba3"/>
 </details>
 <details>
 <summary>Click to see animation</summary>
-<img width="750" height="300" alt="image" src="https://github.com/user-attachments/assets/c1324ae8-e120-4b4d-a99f-9f82d01d8159"/>
+<img width="750" height="300" alt="Animated cube visualization example" src="https://github.com/user-attachments/assets/c1324ae8-e120-4b4d-a99f-9f82d01d8159"/>
 </details>
 
 
