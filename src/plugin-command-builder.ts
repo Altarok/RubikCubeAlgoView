@@ -26,18 +26,26 @@ export function addAppCommands(plugin: Plugin): void {
   });
 
   plugin.addCommand({
-    id: 'RubikCubeAlgo-add-codeblocks-for-3x3x2-PLL',
-    name: `Add 4 PLL examples for a ${dominoCube} (partial list)`,
+    id: 'RubikCubeAlgo-add-pll-codeblocks-for-domino-cube',
+    name: `Add partial PLL algorithm list for a ${dominoCube}. (21 code blocks)`,
     editorCallback: (editor) => {
       editor.replaceSelection(CodeBlocks.dominoCube_4_PllAlgorithms);
     }
   });
 
   plugin.addCommand({
-    id: 'RubikCubeAlgo-add-codeblocks-for-3x3x2-PLL',
-    name: `Add 21 PLL Examples for a ${rubikCube} (complete list)`,
+    id: 'RubikCubeAlgo-add-pll-codeblocks-for-rubik-cube',
+    name: `Add complete PLL algorithm list for a ${rubikCube}. (21 code blocks)`,
     editorCallback: (editor) => {
-      editor.replaceSelection(CodeBlocks.dominoCube_4_PllAlgorithms);
+      editor.replaceSelection(CodeBlocks.rubikCube_21_PllAlgorithms);
+    }
+  });
+
+  plugin.addCommand({
+    id: 'RubikCubeAlgo-add-oll-codeblocks-for-rubik-cube',
+    name: `Add complete OLL algorithm list for a ${rubikCube}. (57 code blocks)`,
+    editorCallback: (editor) => {
+      editor.replaceSelection(CodeBlocks.rubikCube_57_OllAlgorithms);
     }
   });
 

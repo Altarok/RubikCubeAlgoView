@@ -44,8 +44,7 @@ const colors: CubeColors = {
 const settings: Settings = {
   arrowColor: "#08f",
   cubeColor: "#ff0",
-  cubeRotations: {},
-  knownIds: {}
+  cubeRotations: {}
 }
 
 function createOll(): CubeStateOll {
