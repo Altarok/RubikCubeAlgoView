@@ -1,6 +1,8 @@
 # *Rubik Cube algorithms*
 Bring your Rubik's Cube study to life. This plugin allows you to visualize OLL, PLL, and custom algorithms directly within your notes using interactive 2D cubes and dynamic arrows.
 
+For a detailed guide, run the 'Insert quick start guide' command directly inside Obsidian, or view the full documentation here.
+
 # *Key Features*
 - **Interactive Controls**: Rotate the cube or reset to the default view with integrated buttons.
 - **Smart Rotation**: Algorithm notation automatically updates based on your current cube orientation.
