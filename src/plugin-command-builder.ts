@@ -1,5 +1,6 @@
 import {Plugin} from "obsidian";
-import {CodeBlocks} from "./consts/templates";
+import {CodeBlocks} from "./consts/code-blocks";
+import {quickStartGuide} from "./consts/quick-start-guide";
 
 const dominoCube: string = 'Domino Cube (3x3x2)'
 const rubikCube: string = 'Rubik Cube'
@@ -49,4 +50,11 @@ export function addAppCommands(plugin: Plugin): void {
     }
   });
 
+  plugin.addCommand({
+    id: 'RubikCubeAlgo-add-quick-start-guide',
+    name: `Insert quick start guide. (~10k characters)`,
+    editorCallback: (editor) => {
+      editor.replaceSelection(quickStartGuide);
+    }
+  });
 }
