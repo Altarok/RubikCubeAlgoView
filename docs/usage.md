@@ -127,7 +127,7 @@ arrows:3+9,4+6
 <div>
 <details>
 <summary>Expand for screenshot</summary>
-<img width="230" height="250" alt="Cube with changed colors" src="https://raw.githubusercontent.com/Altarok/RubikCubeAlgoView/master/screenshots/PllCubeExample_6_GreenCubeWithRedArrows.png"/>
+<img width="230" height="250" alt="Cube with changed colors" src="https://raw.githubusercontent.com/Altarok/RubikCubeAlgoView/master/screenshots/PllCubeExample_6_GreenCubeWithRedArrows_230x250.png"/>
 </details>
 </div>
 
@@ -172,12 +172,12 @@ The following contains properties only valid for
 - ***key***: "alg"
 - ***value***: Any Rubik's cube algorithm followed by optional arrows separated by `' == '`
   - Example: "R' U' R' F R F' U R U2 == 1+9,3+7"
-### 3.2.3. Property: *Id*
+### 3.2.2. Property: *Id*
 - ***key***: "id"
 - ***value***: "oll-1" .. "oll-57", related to the 57 OLL algorithms.
   This was added to save the user the very complicated input of a oll cube by hand. See the following menu point for an example of manual input.
 ### 3.2.3. *Manual OLL-cube input*
-Don't, just don't! ;) See [[#3.2.3. Property *Id*| Property Id]] for shortcut.
+Don't, just don't! ;) See menu 3.2.2. for shortcut.
 But if you really want to, look at these examples and what they do.
 Letters (r, g, b, y, o, w) represent face colors; numbers 0 and 1 toggle stickers off or on.
 
@@ -203,7 +203,7 @@ owwbw
 <div>
 <details>
 <summary>Expand for screenshot</summary>
-<img width="230" height="520" alt="Differently colored OLL cubes" src="https://raw.githubusercontent.com/Altarok/RubikCubeAlgoView/master/screenshots/OllCubeExample_1_ManualInput.png"/>
+<img width="230" height="520" alt="Differently colored OLL cubes" src="https://raw.githubusercontent.com/Altarok/RubikCubeAlgoView/master/screenshots/OllCubeExample_1_ManualInput_230x520.png"/>
 </details>
 </div>
 
