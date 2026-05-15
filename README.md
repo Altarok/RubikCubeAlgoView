@@ -42,7 +42,7 @@ Set your defaults in the Plugin Settings menu:
 - Default Arrow Color
 
 # *Change log*
-- 0.2.0 Increased UX via README, built-in commands and tutorials, description in settings view
+- 0.2.0 UX: README, built-in commands and tutorials, description in settings view
 - 0.1.0 Prepared for Obsidian's official community release.
 - 0.0.4 Added full mobile support.
 - 0.0.3 Introduced rotation buttons and dynamic algorithm updates.
@@ -54,6 +54,6 @@ Set your defaults in the Plugin Settings menu:
 - Persist favorite rotation
 - Persist favorite algorithm
 - Add stopwatch to cubes
- - Persist 'best' and 'ao5' 
+  - Persist 'best' and 'ao5' 
 - Support for F2L
 - Add additional twisty puzzles
