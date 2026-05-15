@@ -35,7 +35,7 @@ export function addAppCommands(plugin: Plugin): void {
 
   plugin.addCommand({
     id: 'RubikCubeAlgo-add-codeblocks-for-3x3x2-PLL',
-    name: `Add 21 PLL examples for a ${rubikCube} (complete list)`,
+    name: `Add 21 PLL Examples for a ${rubikCube} (complete list)`,
     editorCallback: (editor) => {
       editor.replaceSelection(CodeBlocks.dominoCube_4_PllAlgorithms);
     }
