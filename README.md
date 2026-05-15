@@ -53,6 +53,7 @@ Set your defaults in the Plugin Settings menu:
 
 # *Planned Features*
 - Add property 'setup' to make training easier
+- Add property 'sticker-size' (pixel/percent)
 - Persist favorite rotation
 - Persist favorite algorithm
 - Add stopwatch to cubes
