@@ -1,7 +1,13 @@
 import {Flags} from "../model/flags"
 
 export const RegEx = {
-  isAlgorithm, isChainedArrow, isDoubleSidedArrow, isPositiveInteger, isSpecialFlags, isColorHexValue
+  isAlgorithm,
+  isChainedArrow,
+  isDoubleSidedArrow,
+  isPositiveInteger,
+  isSpecialFlags,
+  isColorHexValueWithoutPrefix,
+  isColorHexValueWithOptionalPrefix
 }
 
 /*
@@ -51,6 +57,11 @@ function isDoubleSidedArrow(input: string): boolean {
 }
 
 /** @return true if input is a valid lower-case 3 or 6 digit hex value, like e.g. 'f12' or 'bada55' */
-function isColorHexValue(input: string): boolean {
+function isColorHexValueWithoutPrefix(input: string): boolean {
   return /^([a-f0-9]{3}){1,2}$/i.test(input)
+}
+
+/** @return true if input is a valid lower-case 3 or 6 digit hex value, like e.g. '#f12' or 'bada55' */
+function isColorHexValueWithOptionalPrefix(input: string): boolean {
+  return /^#?([a-f0-9]{3}){1,2}$/i.test(input)
 }

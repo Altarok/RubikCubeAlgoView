@@ -8,9 +8,6 @@ export type Result<T> =
   | { success: true; data: T }
   | { success: false; error: InvalidInput }
 
-/*
- * Object Namespace
- */
 export const Parse = {
   toAlgorithm,
   toArrowColor,
@@ -70,7 +67,7 @@ function toDimensions(line: string, completeLine: string): Result<Dimensions> {
  * @param errorFactory - use when input is not a color hex value
  */
 function parseHexColor(line: string, errorFactory: () => InvalidInput): Result<string> {
-  if (RegEx.isColorHexValue(line)) {
+  if (RegEx.isColorHexValueWithoutPrefix(line)) {
     return {success: true, data: '#' + line}
   } else {
     return {success: false, error: errorFactory()}
