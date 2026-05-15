@@ -19,8 +19,8 @@ import {addAppCommands} from "./plugin-command-builder"
  * - [x] remove 'y0'
  * - [ ] validate actual OLL input
  *
- * Default data
- * - [ ] remove data.json from release
+ * Default consts
+ * - [ ] remove consts.json from release
  * - [ ] replace it with hardcoded values
  *
  * ## Rotation

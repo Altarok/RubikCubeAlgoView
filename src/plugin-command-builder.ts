@@ -1,5 +1,5 @@
 import {Plugin} from "obsidian";
-import {CodeBlocks} from "./model/templates";
+import {CodeBlocks} from "./consts/templates";
 
 const dominoCube: string = 'Domino Cube (3x3x2)'
 const rubikCube: string = 'Rubik Cube'

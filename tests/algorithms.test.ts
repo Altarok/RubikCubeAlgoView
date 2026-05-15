@@ -177,12 +177,12 @@ describe('MappedAlgorithms (string-MappedAlgorithm map)', () => {
     emptyAlgorithms.rotate(1);
   });
 
-  it('should not provide data with wrong hash', () => {
+  it('should not provide consts with wrong hash', () => {
     const mappedAlgorithm = mappedAlgorithms.get('asdf');
     expect(mappedAlgorithm).toBeUndefined();
   });
 
-  it("should provide proper data with algorithm's hash", () => {
+  it("should provide proper consts with algorithm's hash", () => {
     expect(alg1FRU.initialHash).not.toBe(alg2FLU.initialHash);
 
     let mappedAlgorithm: MappedAlgorithm = mappedAlgorithms.get(alg1FRU.initialHash)!;
@@ -192,7 +192,7 @@ describe('MappedAlgorithms (string-MappedAlgorithm map)', () => {
     expect(mappedAlgorithm).toEqual(mappedAlgorithm2);
   });
 
-  it("should provide proper data with algorithm's hash - after rotation", () => {
+  it("should provide proper consts with algorithm's hash - after rotation", () => {
     expect(alg1FRU.initialHash).not.toBe(alg2FLU.initialHash);
 
     let mappedAlgorithm: MappedAlgorithm = mappedAlgorithms.get(alg1FRU.initialHash)!;

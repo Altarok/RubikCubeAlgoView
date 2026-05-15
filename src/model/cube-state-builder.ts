@@ -8,7 +8,7 @@ import {Algorithms, AlgorithmType, MappedAlgorithm, MappedAlgorithms} from "./al
 import {Build} from "../parser/geometry-builder"
 import {OllFieldColoring} from "./oll-field-coloring"
 import {StringUtils} from "../parser/string-utils"
-import {knownOllIds} from "../data/oll-id"
+import {knownOllIds} from "../consts/oll-id"
 
 const InputKeys: string[] = ['alg', 'arrowColor', 'arrows', 'cubeColor', 'dimension', 'flags', 'id']
 const presetOutlinePattern = new RegExp(/[lbrt]{3}\.[lrt]{3}\.[lfrt]{3}/)

@@ -826,7 +826,7 @@ alg:R U R' U' M' U R U' r' == 2-8-6
 \`\`\`
 `
 
-/** Ready-to-use code blocks */
+/* Ready-to-use code blocks */
 export const CodeBlocks = {
   template_3x3_oll,
   template_3x3_pll,

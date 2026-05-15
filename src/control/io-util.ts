@@ -7,7 +7,7 @@ export const IO = {
 }
 
 /**
- * Save cube's current rotation to data.json.
+ * Save cube's current rotation to consts.json.
  * @param cubeState
  * @param plugin
  */

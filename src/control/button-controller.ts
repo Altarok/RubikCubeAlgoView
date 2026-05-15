@@ -42,7 +42,7 @@ function changeStateOfRotationDependantButtons(cubeRenderer: CubeRenderer, cubeS
 // }
 //
 // /**
-//  * Save cube's current rotation to data.json.
+//  * Save cube's current rotation to consts.json.
 //  *
 //  * TODO currently unused (see underscore), keep for out-commented options
 //  *

@@ -92,7 +92,7 @@ export default class RubikCubeAlgoSettingsTab extends PluginSettingTab {
       }
     ))
     .addExtraButton(button => button
-    .setTooltip('Save to data.json')
+    .setTooltip('Save to consts.json')
     .setIcon('save')
     .onClick(async () => {
         let isValid: boolean = isValidColorInput(this.tempColorInput.arrowColor)
@@ -125,7 +125,7 @@ export default class RubikCubeAlgoSettingsTab extends PluginSettingTab {
       }
     ))
     .addExtraButton(button => button
-    .setTooltip('Save to data.json')
+    .setTooltip('Save to consts.json')
     .setIcon('save')
     .onClick(async () => {
         let isValid: boolean = isValidColorInput(this.tempColorInput.cubeColor)
@@ -140,7 +140,7 @@ export default class RubikCubeAlgoSettingsTab extends PluginSettingTab {
 
   private addColorSettingsHeader(containerEl: HTMLElement) {
     new Setting(containerEl).setName('Appearance defaults').setHeading()
-    .setDesc('Values are validated and displayed on the fly. Save button persists to data.json.')
+    .setDesc('Values are validated and displayed on the fly. Save button persists to consts.json.')
   }
 
   private addHorizontalSeparator(containerEl: HTMLElement) {
