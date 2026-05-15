@@ -1,8 +1,8 @@
-import {Plugin} from "obsidian";
-import {MarkdownPostProcessorOLL} from "./MarkdownPostProcessorOLL";
-import {MarkdownPostProcessorPLL} from "./MarkdownPostProcessorPLL";
-import RubikCubeAlgoSettingsTab, {DefaultSettings, Settings} from "./settings/plugin-settings-tab";
-import {addAppCommands} from "./plugin-command-builder";
+import {Plugin} from "obsidian"
+import {MarkdownPostProcessorOLL} from "./MarkdownPostProcessorOLL"
+import {MarkdownPostProcessorPLL} from "./MarkdownPostProcessorPLL"
+import RubikCubeAlgoSettingsTab, {DefaultSettings, Settings} from "./settings/plugin-settings-tab"
+import {addAppCommands} from "./plugin-command-builder"
 
 /*
  * # Logic
@@ -70,23 +70,23 @@ import {addAppCommands} from "./plugin-command-builder";
  *   - [x] string-util.ts
  */
 export default class RubikCubeAlgos extends Plugin {
-  settings!: Settings;
+  settings!: Settings
 
   async onload() {
 
-    await this.loadSettings();
+    await this.loadSettings()
 
     this.registerMarkdownCodeBlockProcessor("rubikCubeOLL",
       (source, el, ctx) => {
-        ctx.addChild(new MarkdownPostProcessorOLL(source, this, el));
+        ctx.addChild(new MarkdownPostProcessorOLL(source, this, el))
       }
-    );
+    )
 
     this.registerMarkdownCodeBlockProcessor("rubikCubePLL",
       (source, el, ctx) => {
-        ctx.addChild(new MarkdownPostProcessorPLL(source, this, el));
+        ctx.addChild(new MarkdownPostProcessorPLL(source, this, el))
       }
-    );
+    )
 
     addAppCommands(this)
 
@@ -95,30 +95,30 @@ export default class RubikCubeAlgos extends Plugin {
         this.app,
         this
       )
-    );
+    )
   }
 
   onunload() {
   }
 
   async loadSettings() {
-    let loadedData: Partial<Settings> = (await this.loadData()) as Partial<Settings> || {};
-    this.settings = Object.assign({}, DefaultSettings, loadedData || {} );
+    let loadedData: Partial<Settings> = (await this.loadData()) as Partial<Settings> || {}
+    this.settings = Object.assign({}, DefaultSettings, loadedData || {} )
   }
 
   async saveSettings() {
-    await this.saveData(this.settings);
+    await this.saveData(this.settings)
     this.rerenderCodeblocks()
   }
 
   rerenderCodeblocks(): void{
-    this.app.workspace.trigger("rubik:rerender-markdown-code-block-processors");
+    this.app.workspace.trigger("rubik:rerender-markdown-code-block-processors")
   }
 
   saveSettingsSync() {
     /* Trigger the save but don't 'await' it. It runs in the background. */
-    void this.saveSettings();
+    void this.saveSettings()
     // .then(() => console.debug("Save successful"))
-    // .catch(err => console.error("Save failed", err));
+    // .catch(err => console.error("Save failed", err))
   }
 }

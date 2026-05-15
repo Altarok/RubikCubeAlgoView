@@ -1,14 +1,14 @@
-import {App, PluginSettingTab, Setting} from "obsidian";
-import RubikCubeAlgos from "../main";
+import {App, PluginSettingTab, Setting} from "obsidian"
+import RubikCubeAlgos from "../main"
 
 export interface CubeColors {
-  arrowColor: string;
-  cubeColor: string;
+  arrowColor: string
+  cubeColor: string
 }
 
 
 export interface Settings extends CubeColors {
-  cubeRotations: Record<string, number>;
+  cubeRotations: Record<string, number>
 }
 
 export const DefaultSettings: Settings = {
@@ -25,7 +25,7 @@ function addHashPrefixIfMissing(color: string) {
 }
 
 /* TODO move to regex class */
-const validColorPattern = '^#?([a-f0-9]{3}){1,2}$';
+const validColorPattern = '^#?([a-f0-9]{3}){1,2}$'
 
 function isValidColorInput(color: string): boolean {
   return color.match(validColorPattern) !== null
@@ -35,7 +35,7 @@ export default class RubikCubeAlgoSettingsTab extends PluginSettingTab {
   tempColorInput: CubeColors
 
   constructor(app: App, readonly plugin: RubikCubeAlgos) {
-    super(app, plugin);
+    super(app, plugin)
     this.tempColorInput = {
       arrowColor: plugin.settings.arrowColor,
       cubeColor: plugin.settings.cubeColor
@@ -44,17 +44,17 @@ export default class RubikCubeAlgoSettingsTab extends PluginSettingTab {
 
   display(): void {
 
-    const {containerEl} = this;
+    const {containerEl} = this
 
-    containerEl.empty();
+    containerEl.empty()
 
-    this.addQuickStartGuide(containerEl);
-    this.addTipForLazyUser(containerEl);
-    this.addHorizontalSeparator(containerEl);
-    this.addColorSettingsHeader(containerEl);
-    this.addColorSettingsCube(containerEl);
-    this.addColorSettingsArrows(containerEl);
-    this.addColorSettingsReset(containerEl);
+    this.addQuickStartGuide(containerEl)
+    this.addTipForLazyUser(containerEl)
+    this.addHorizontalSeparator(containerEl)
+    this.addColorSettingsHeader(containerEl)
+    this.addColorSettingsCube(containerEl)
+    this.addColorSettingsArrows(containerEl)
+    this.addColorSettingsReset(containerEl)
   }
 
   private addColorSettingsReset(containerEl: HTMLElement) {
@@ -64,12 +64,12 @@ export default class RubikCubeAlgoSettingsTab extends PluginSettingTab {
       .setButtonText('Reset')
       .setWarning() // -> red
       .onClick(async () => {
-        this.plugin.settings.cubeColor = DefaultSettings.cubeColor;
-        this.plugin.settings.arrowColor = DefaultSettings.arrowColor;
-        await this.plugin.saveSettings();
-        this.display();
+        this.plugin.settings.cubeColor = DefaultSettings.cubeColor
+        this.plugin.settings.arrowColor = DefaultSettings.arrowColor
+        await this.plugin.saveSettings()
+        this.display()
       })
-    );
+    )
   }
 
   private addColorSettingsArrows(containerEl: HTMLElement) {
@@ -80,13 +80,13 @@ export default class RubikCubeAlgoSettingsTab extends PluginSettingTab {
     .setPlaceholder('3 or 6 digit hex value')
     .setValue(this.plugin.settings.arrowColor)
     .onChange((value) => {
-        this.tempColorInput.arrowColor = value;
+        this.tempColorInput.arrowColor = value
         if (isValidColorInput(value)) {
-          value = addHashPrefixIfMissing(value);
+          value = addHashPrefixIfMissing(value)
           if (this.plugin.settings.arrowColor !== value) {
-            this.plugin.settings.arrowColor = value;
+            this.plugin.settings.arrowColor = value
             this.plugin.rerenderCodeblocks()
-            this.display();
+            this.display()
           }
         }
       }
@@ -98,9 +98,9 @@ export default class RubikCubeAlgoSettingsTab extends PluginSettingTab {
         let isValid: boolean = isValidColorInput(this.tempColorInput.arrowColor)
         let valueToSafe = isValid ? addHashPrefixIfMissing(this.tempColorInput.arrowColor) : DefaultSettings.arrowColor
         this.tempColorInput.arrowColor = valueToSafe
-        this.plugin.settings.arrowColor = valueToSafe;
-        await this.plugin.saveSettings();
-        this.display();
+        this.plugin.settings.arrowColor = valueToSafe
+        await this.plugin.saveSettings()
+        this.display()
       }
     ))
   }
@@ -113,13 +113,13 @@ export default class RubikCubeAlgoSettingsTab extends PluginSettingTab {
     .setPlaceholder('3 or 6 digit hex value')
     .setValue(this.plugin.settings.cubeColor)
     .onChange((value) => {
-        this.tempColorInput.cubeColor = value;
+        this.tempColorInput.cubeColor = value
         if (isValidColorInput(value)) {
-          value = addHashPrefixIfMissing(value);
+          value = addHashPrefixIfMissing(value)
           if (this.plugin.settings.cubeColor !== value) {
-            this.plugin.settings.cubeColor = value;
+            this.plugin.settings.cubeColor = value
             this.plugin.rerenderCodeblocks()
-            this.display();
+            this.display()
           }
         }
       }
@@ -131,9 +131,9 @@ export default class RubikCubeAlgoSettingsTab extends PluginSettingTab {
         let isValid: boolean = isValidColorInput(this.tempColorInput.cubeColor)
         let valueToSafe = isValid ? addHashPrefixIfMissing(this.tempColorInput.cubeColor) : DefaultSettings.cubeColor
         this.tempColorInput.cubeColor = valueToSafe
-        this.plugin.settings.cubeColor = valueToSafe;
-        await this.plugin.saveSettings();
-        this.display();
+        this.plugin.settings.cubeColor = valueToSafe
+        await this.plugin.saveSettings()
+        this.display()
       }
     ))
   }

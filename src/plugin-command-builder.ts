@@ -19,7 +19,7 @@ export function addAppCommands(plugin: Plugin): void {
 
   plugin.addCommand({
     id: 'RubikCubeAlgo-add-code-block-template-3x3-PLL',
-    name: 'Add PLL code block template for 3x3 cube',
+    name: 'Add PLL code block template for 3x3 cube.',
     editorCallback: (editor) => {
       editor.replaceSelection(CodeBlocks.template_3x3_pll);
     }

@@ -1,31 +1,31 @@
-import {FlagType} from "../model/flags";
+import {FlagType} from "../model/flags"
 
 export interface CubeLayout {
-  readonly mainContainer: HTMLDivElement;
-  readonly cubeDiv: HTMLDivElement;
-  readonly buttonDiv: HTMLDivElement | undefined;
-  readonly algorithmsDiv: HTMLDivElement;
+  readonly mainContainer: HTMLDivElement
+  readonly cubeDiv: HTMLDivElement
+  readonly buttonDiv: HTMLDivElement | undefined
+  readonly algorithmsDiv: HTMLDivElement
 }
 
 export function createCubeLayout(container: HTMLElement, flags: FlagType[]): CubeLayout {
 
-  const mainContainer = container.createEl('div', {cls: 'rubik-cube-div-main-container'});
+  const mainContainer = container.createEl('div', {cls: 'rubik-cube-div-main-container'})
 
   /* left */
-  const leftSide = mainContainer.createEl('div', {cls: 'rubik-cube-div-left-column'});
+  const leftSide = mainContainer.createEl('div', {cls: 'rubik-cube-div-left-column'})
   /* right */
-  const textSide = mainContainer.createEl('div', {cls: 'rubik-cube-div-right-column'});
+  const textSide = mainContainer.createEl('div', {cls: 'rubik-cube-div-right-column'})
 
-  const cubeDiv = leftSide.createEl('div', {cls: 'rubik-cube-div-content'});
+  const cubeDiv = leftSide.createEl('div', {cls: 'rubik-cube-div-content'})
 
-  let buttonDiv: HTMLDivElement | undefined;
+  let buttonDiv: HTMLDivElement | undefined
 
   if (flags.contains('no-buttons')) {
-    buttonDiv = undefined;
+    buttonDiv = undefined
   } else {
-    buttonDiv = leftSide.createEl('div', {attr: {id: 'buttonDiv'}, cls: 'button-container'});
+    buttonDiv = leftSide.createEl('div', {attr: {id: 'buttonDiv'}, cls: 'button-container'})
   }
-  const algorithmsDiv = textSide.createEl('div', {attr: {id: 'algorithmsDiv'}, cls: 'rubik-cube-div-algorithms-list'});
+  const algorithmsDiv = textSide.createEl('div', {attr: {id: 'algorithmsDiv'}, cls: 'rubik-cube-div-algorithms-list'})
 
-  return {mainContainer, cubeDiv, buttonDiv, algorithmsDiv};
+  return {mainContainer, cubeDiv, buttonDiv, algorithmsDiv}
 }

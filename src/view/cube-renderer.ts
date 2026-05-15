@@ -4,23 +4,23 @@ import {OllFieldColoring} from "../model/oll-field-coloring";
 import {SvgUtils} from "./svg-utils";
 import {UiUtils} from "./ui-utils";
 import {applyRotation} from "./dom-rotation";
-import {createCubeLayout, CubeLayout} from "./cube-layout";
-import {setIcon} from "obsidian";
-import {InvalidInput} from "../model/codeblock-input";
+import {createCubeLayout, CubeLayout} from "./cube-layout"
+import {setIcon} from "obsidian"
+import {InvalidInput} from "../model/codeblock-input"
 
 
 export abstract class CubeRenderer {
-  layout!: CubeLayout;
-  buttonLeft?: HTMLButtonElement;
-  buttonRight?: HTMLButtonElement;
-  buttonResetRotation?: HTMLButtonElement;
-  // buttonLockRotation: HTMLButtonElement;
-  // buttonSaveRotation?: HTMLButtonElement;
-  mainCubeSvg?: SVGSVGElement;
-  isInvalidInput: boolean;
+  layout!: CubeLayout
+  buttonLeft?: HTMLButtonElement
+  buttonRight?: HTMLButtonElement
+  buttonResetRotation?: HTMLButtonElement
+  // buttonLockRotation: HTMLButtonElement
+  // buttonSaveRotation?: HTMLButtonElement
+  mainCubeSvg?: SVGSVGElement
+  isInvalidInput: boolean
 
   protected constructor(private readonly cubeState: CubeState) {
-    this.isInvalidInput = cubeState.codeBlockInterpretationFailed();
+    this.isInvalidInput = cubeState.codeBlockInterpretationFailed()
   }
 
   /**
@@ -29,42 +29,42 @@ export abstract class CubeRenderer {
   display(element: HTMLElement): void {
 
     if (this.isInvalidInput) {
-      this.displayWarningForInvalidInput(element);
-      return;
+      this.displayWarningForInvalidInput(element)
+      return
     }
 
-    this.layout = createCubeLayout(element, this.cubeState.flags);
+    this.layout = createCubeLayout(element, this.cubeState.flags)
 
-    this.displayCube(this.layout.cubeDiv);
-    this.displayButtons(this.layout.buttonDiv);
-    this.displayAlgorithms(this.layout.algorithmsDiv);
-    this.rotateCube();
+    this.displayCube(this.layout.cubeDiv)
+    this.displayButtons(this.layout.buttonDiv)
+    this.displayAlgorithms(this.layout.algorithmsDiv)
+    this.rotateCube()
   }
 
-  abstract displayCubeForeground(container: SVGSVGElement, viewBoxWidth: number, viewBoxHeight: number): void;
+  abstract displayCubeForeground(container: SVGSVGElement, viewBoxWidth: number, viewBoxHeight: number): void
 
-  abstract displayAlgorithms(container: HTMLDivElement): void;
+  abstract displayAlgorithms(container: HTMLDivElement): void
 
-  abstract displayArrows(container: SVGSVGElement): void;
+  abstract displayArrows(container: SVGSVGElement): void
 
   redrawCube(): void {
-    if (this.isInvalidInput) return;
-    this.layout.cubeDiv.removeChild(this.mainCubeSvg!);
-    this.displayCube(this.layout.cubeDiv);
+    if (this.isInvalidInput) return
+    this.layout.cubeDiv.removeChild(this.mainCubeSvg!)
+    this.displayCube(this.layout.cubeDiv)
   }
 
   /**
    * Change current cube rotation.
    */
   rotateCube(): void {
-    const degrees = this.cubeState.currentRotation * 90;
-    applyRotation(this.layout.cubeDiv, degrees);
+    const degrees = this.cubeState.currentRotation * 90
+    applyRotation(this.layout.cubeDiv, degrees)
   }
 
   displayButtons(buttonDiv: HTMLDivElement | undefined): void {
 
     if (!buttonDiv || this.cubeState.flags.contains('no-buttons')) {
-      return;
+      return
     }
 
     // /*
@@ -72,12 +72,12 @@ export abstract class CubeRenderer {
     //  */
     //
     // if (!buttonDiv || this.cubeState.specialFlags.has('no-rotation')) {
-    //   return;
+    //   return
     // }
 
-    this.buttonLeft = buttonDiv.createEl('button', {'title': 'Rotate left 90 degrees'});
+    this.buttonLeft = buttonDiv.createEl('button', {'title': 'Rotate left 90 degrees'})
     let turnLeftSvg: SVGSVGElement = this.buttonLeft.createSvg('svg', {cls: 'rubik-cube-button'})
-    SvgUtils.drawRotateLeftIcon(turnLeftSvg);
+    SvgUtils.drawRotateLeftIcon(turnLeftSvg)
 
     this.buttonResetRotation = buttonDiv.createEl('button', {'title': 'Reset rotation'})
     setIcon(this.buttonResetRotation, 'reset')
@@ -87,32 +87,32 @@ export abstract class CubeRenderer {
     SvgUtils.drawRotateRightIcon(turnRightSvg)
 
 
-    // this.buttonLockRotation = buttonDiv.createEl('button', {'title': 'Lock rotation'});
+    // this.buttonLockRotation = buttonDiv.createEl('button', {'title': 'Lock rotation'})
     // setIcon(this.buttonLockRotation, 'lock-open')
     //
     // if (this.cubeState.getId()) {
-    //   let title: string;
+    //   let title: string
     //   if (this.cubeState.locked) {
     //     title = `Un-save default rotation. (current: ${this.cubeState.defaultRotation})`
     //   } else {
-    //     title = 'Save rotation.';
+    //     title = 'Save rotation.'
     //   }
-    //   this.buttonSaveRotation = buttonDiv.createEl('button', {title});
+    //   this.buttonSaveRotation = buttonDiv.createEl('button', {title})
     //   if (this.cubeState.locked) {
-    //     setIcon(this.buttonSaveRotation, 'save-off');
+    //     setIcon(this.buttonSaveRotation, 'save-off')
     //   } else {
-    //     setIcon(this.buttonSaveRotation, 'save');
+    //     setIcon(this.buttonSaveRotation, 'save')
     //   }
     // }
   }
 
   private displayCube(cubeDiv: HTMLDivElement): void {
-    const {width: viewBoxWidth, height: viewBoxHeight} = this.cubeState.viewBoxDimensions;
+    const {width: viewBoxWidth, height: viewBoxHeight} = this.cubeState.viewBoxDimensions
 
-    const mainSvgElement: SVGSVGElement = this.displayCubeBackground(cubeDiv, viewBoxWidth, viewBoxHeight);
+    const mainSvgElement: SVGSVGElement = this.displayCubeBackground(cubeDiv, viewBoxWidth, viewBoxHeight)
 
-    this.displayCubeForeground(mainSvgElement, viewBoxWidth, viewBoxHeight);
-    this.displayArrows(mainSvgElement);
+    this.displayCubeForeground(mainSvgElement, viewBoxWidth, viewBoxHeight)
+    this.displayArrows(mainSvgElement)
   }
 
   /**
@@ -121,9 +121,9 @@ export abstract class CubeRenderer {
    * @param {number} viewBoxHeight - view box height of image part to zoom in to
    */
   private displayCubeBackground(element: HTMLElement, viewBoxWidth: number, viewBoxHeight: number): SVGSVGElement {
-    const isDefault = this.cubeState.isDefaultSize();
-    const imageWidth = isDefault ? 200 : viewBoxWidth;
-    const imageHeight = isDefault ? 200 : viewBoxHeight;
+    const isDefault = this.cubeState.isDefaultSize()
+    const imageWidth = isDefault ? 200 : viewBoxWidth
+    const imageHeight = isDefault ? 200 : viewBoxHeight
 
     this.mainCubeSvg = element.createSvg('svg', {
       attr: {
@@ -131,14 +131,14 @@ export abstract class CubeRenderer {
         height: imageHeight,
         viewBox: `0 0 ${viewBoxWidth} ${viewBoxHeight}`
       }, cls: 'rubik-cube-pll'
-    });
+    })
 
-    SvgUtils.createArrowHead(this.mainCubeSvg, this.cubeState.arrowColor);
+    SvgUtils.createArrowHead(this.mainCubeSvg, this.cubeState.arrowColor)
 
     /* Background rectangle */
-    SvgUtils.drawBackgroundRect(this.mainCubeSvg, this.cubeState.cubeColor);
+    SvgUtils.drawBackgroundRect(this.mainCubeSvg, this.cubeState.cubeColor)
 
-    return this.mainCubeSvg;
+    return this.mainCubeSvg
   }
 
   /**
@@ -146,10 +146,10 @@ export abstract class CubeRenderer {
    * @param {HTMLElement} element - HTML element to draw on
    */
   private displayWarningForInvalidInput(element: HTMLElement): void {
-    const error: InvalidInput[] = this.cubeState.invalidInput;
+    const error: InvalidInput[] = this.cubeState.invalidInput
 
     if (error) {
-      UiUtils.showInvalidInput(element, this.cubeState.splitCodeBlockInput, error);
+      UiUtils.showInvalidInput(element, this.cubeState.splitCodeBlockInput, error)
     }
   }
 }
@@ -157,21 +157,21 @@ export abstract class CubeRenderer {
 export class CubeRendererPLL extends CubeRenderer {
 
   constructor(private readonly cubeStatePll: CubeStatePll) {
-    super(cubeStatePll);
+    super(cubeStatePll)
   }
 
   displayCubeForeground(svgElement: SVGSVGElement, viewBoxWidth: number, viewBoxHeight: number): void {
-    SvgUtils.drawGrid(svgElement, viewBoxWidth, viewBoxHeight, 100);
+    SvgUtils.drawGrid(svgElement, viewBoxWidth, viewBoxHeight, 100)
   }
 
   displayArrows(mainSvg: SVGSVGElement): void {
-    SvgUtils.drawArrows(mainSvg, this.cubeStatePll.arrowCoordinates, this.cubeStatePll.arrowColor);
+    SvgUtils.drawArrows(mainSvg, this.cubeStatePll.arrowCoordinates, this.cubeStatePll.arrowColor)
   }
 
   displayAlgorithms(container: HTMLDivElement): void {
-    const algorithms: Algorithms = this.cubeStatePll.algorithms;
+    const algorithms: Algorithms = this.cubeStatePll.algorithms
     if (!algorithms || algorithms.items.length === 0) return;  /* Fail-safe, algorithms are optional */
-    UiUtils.renderAlgorithmList(container, algorithms.items);
+    UiUtils.renderAlgorithmList(container, algorithms.items)
   }
 }
 
@@ -179,55 +179,55 @@ export class CubeRendererPLL extends CubeRenderer {
 export class CubeRendererOLL extends CubeRenderer {
 
   constructor(private readonly cubeStateOll: CubeStateOll) {
-    super(cubeStateOll);
+    super(cubeStateOll)
   }
 
   displayCubeForeground(svgElement: SVGSVGElement, viewBoxWidth: number, viewBoxHeight: number): void {
 
-    let cells: OllFieldColoring = this.cubeStateOll.ollFieldInput;
+    let cells: OllFieldColoring = this.cubeStateOll.ollFieldInput
     const [cubeWidth, cubeHeight] = [this.cubeStateOll.dimensions.width, this.cubeStateOll.dimensions.height]; // e.g. 3,3
 
-    const stickerSize = 100;
-    const half = stickerSize / 2;
-    const gridLen = cells.length();
+    const stickerSize = 100
+    const half = stickerSize / 2
+    const gridLen = cells.length()
 
     /* Upper and lower edges */
     for (let x = 0; x < cubeWidth; x++) {
-      const xPos = half + x * stickerSize;
-      SvgUtils.drawSticker(svgElement, xPos, 0, stickerSize, half, cells.getColor(0, x + 1));
-      SvgUtils.drawSticker(svgElement, xPos, viewBoxHeight - half, stickerSize, half, cells.getColor(gridLen - 1, x + 1));
+      const xPos = half + x * stickerSize
+      SvgUtils.drawSticker(svgElement, xPos, 0, stickerSize, half, cells.getColor(0, x + 1))
+      SvgUtils.drawSticker(svgElement, xPos, viewBoxHeight - half, stickerSize, half, cells.getColor(gridLen - 1, x + 1))
     }
 
     /* Left and right edges */
     for (let y = 0; y < cubeHeight; y++) {
-      const yPos = half + y * stickerSize;
-      SvgUtils.drawSticker(svgElement, 0, yPos, half, stickerSize, cells.getColor(y + 1, 0));
-      SvgUtils.drawSticker(svgElement, viewBoxWidth - half, yPos, half, stickerSize, cells.getColor(y + 1, gridLen - 1));
+      const yPos = half + y * stickerSize
+      SvgUtils.drawSticker(svgElement, 0, yPos, half, stickerSize, cells.getColor(y + 1, 0))
+      SvgUtils.drawSticker(svgElement, viewBoxWidth - half, yPos, half, stickerSize, cells.getColor(y + 1, gridLen - 1))
     }
 
     /* Center rows/columns */
     for (let y = 0; y < cubeHeight; y++) {
       for (let x = 0; x < cubeWidth; x++) {
-        SvgUtils.drawSticker(svgElement, half + x * stickerSize, half + y * stickerSize, stickerSize, stickerSize, cells.getColor(y + 1, x + 1), true);
+        SvgUtils.drawSticker(svgElement, half + x * stickerSize, half + y * stickerSize, stickerSize, stickerSize, cells.getColor(y + 1, x + 1), true)
       }
     }
 
-    SvgUtils.drawGrid(svgElement, viewBoxWidth, viewBoxHeight, half);
+    SvgUtils.drawGrid(svgElement, viewBoxWidth, viewBoxHeight, half)
   }
 
   redrawArrows(): void {
-    super.redrawCube();
+    super.redrawCube()
   }
 
   displayArrows(mainSvg: SVGSVGElement): void {
-    const {arrowColor} = this.cubeStateOll;
-    SvgUtils.drawArrows(mainSvg, this.cubeStateOll.currentArrowCoordinates(), arrowColor);
+    const {arrowColor} = this.cubeStateOll
+    SvgUtils.drawArrows(mainSvg, this.cubeStateOll.currentArrowCoordinates(), arrowColor)
   }
 
   displayAlgorithms(container: HTMLDivElement) {
-    const {selectedAlgorithmHash, algorithmToArrows, uniqueIdForRadioButtons} = this.cubeStateOll;
-    if (selectedAlgorithmHash === undefined) return; /* Fail-safe, nothing selected */
-    UiUtils.renderAlgorithmSelect(container, algorithmToArrows.getAllItems(), selectedAlgorithmHash, uniqueIdForRadioButtons);
+    const {selectedAlgorithmHash, algorithmToArrows, uniqueIdForRadioButtons} = this.cubeStateOll
+    if (selectedAlgorithmHash === undefined) return /* Fail-safe, nothing selected */
+    UiUtils.renderAlgorithmSelect(container, algorithmToArrows.getAllItems(), selectedAlgorithmHash, uniqueIdForRadioButtons)
   }
 }
 

@@ -1,20 +1,20 @@
-import {InvalidInput} from "../model/codeblock-input";
-import {Algorithm} from "../model/algorithms";
+import {InvalidInput} from "../model/codeblock-input"
+import {Algorithm} from "../model/algorithms"
 
 export const UiUtils = {
   renderAlgorithmList,
   renderAlgorithmSelect,
   showInvalidInput
-};
+}
 
 function findMatchingError(errors: InvalidInput[], row: string): InvalidInput | undefined {
-  let res: InvalidInput | undefined = undefined;
+  let res: InvalidInput | undefined = undefined
   errors.forEach(error => {
     if (error.isInvalidRow(row)) {
-      res = error;
+      res = error
     }
-  });
-  return res;
+  })
+  return res
 }
 
 /**
@@ -24,42 +24,42 @@ function showInvalidInput(container: HTMLElement, rows: string[], errors: Invali
   container.createEl('div', {
     text: 'Code block interpretation failed:',
     cls: 'rubik-cube-warning-text-orange'
-  });
+  })
 
   if (rows.length === 0) {
-    const p = container.createEl('p');
-    p.createEl('b', {text: '[empty]', cls: 'rubik-cube-warning-text-red'});
-    p.createEl('span', {text: ` => ${errors[0]!.reason}`});
-    return;
+    const p = container.createEl('p')
+    p.createEl('b', {text: '[empty]', cls: 'rubik-cube-warning-text-red'})
+    p.createEl('span', {text: ` => ${errors[0]!.reason}`})
+    return
   }
 
-  const listContainer = container.createEl('div', {cls: 'rubik-cube-error-list'});
+  const listContainer = container.createEl('div', {cls: 'rubik-cube-error-list'})
 
   rows.forEach(row => {
 
-    let matchingError: InvalidInput | undefined = findMatchingError(errors, row);
+    let matchingError: InvalidInput | undefined = findMatchingError(errors, row)
 
     if (matchingError) {
-      const errorRow = listContainer.createEl('div');
-      errorRow.createEl('b', {text: row, cls: 'rubik-cube-warning-text-red'});
-      errorRow.createEl('span', {text: ` => ${matchingError.reason}`});
+      const errorRow = listContainer.createEl('div')
+      errorRow.createEl('b', {text: row, cls: 'rubik-cube-warning-text-red'})
+      errorRow.createEl('span', {text: ` => ${matchingError.reason}`})
     } else {
-      listContainer.createEl('div', {text: row});
+      listContainer.createEl('div', {text: row})
     }
-  });
+  })
 }
 
 /**
  * Renders a simple bullet point list of algorithms (used by PLL).
  */
 function renderAlgorithmList(container: HTMLElement, algorithms: Algorithm[]): void {
-  if (algorithms.length === 0) return;
+  if (algorithms.length === 0) return
 
-  const ul = container.createEl('ul');
+  const ul = container.createEl('ul')
   algorithms.forEach(item => {
     let li = ul.createEl('li'); // { text: item.toString() }
-    item.algorithmLabel = li.createEl('label', {text: item.toString()});
-  });
+    item.algorithmLabel = li.createEl('label', {text: item.toString()})
+  })
 }
 
 /**
@@ -67,16 +67,16 @@ function renderAlgorithmList(container: HTMLElement, algorithms: Algorithm[]): v
  */
 function renderAlgorithmSelect(
   container: HTMLElement, algorithms: Algorithm[], selectedIndex: string, uniqueIdForRadioButtons: string): void {
-  const ul = container.createEl('ul');
-  const radioDiv = ul.createEl('div', {attr: {id: 'oll-radio-buttons-div'}});
+  const ul = container.createEl('ul')
+  const radioDiv = ul.createEl('div', {attr: {id: 'oll-radio-buttons-div'}})
 
   algorithms.forEach((item, i) => {
-    const isChecked = selectedIndex === item.initialHash;
+    const isChecked = selectedIndex === item.initialHash
 
-    const uniqueId = item.initialHash;
+    const uniqueId = item.initialHash
     // uniqueIdForRadioButtons + i.toString(); // unique identifier for EACH element
 
-    // console.log(`draw algorithm (${uniqueId}): ${item.toString()}, checked:${isChecked}`);
+    // console.log(`draw algorithm (${uniqueId}): ${item.toString()}, checked:${isChecked}`)
 
     radioDiv.createEl('input', { // create HTMLInputElement
       attr: {
@@ -86,7 +86,7 @@ function renderAlgorithmSelect(
         value: i.toString(), // data sent to the script ("backend") when the form is submitted
         ...(isChecked && {checked: true}) // only add checked attribute if true
       }
-    });
+    })
 
     let radioBtnLabel: HTMLLabelElement = radioDiv.createEl('label', {
       attr: {
@@ -94,9 +94,9 @@ function renderAlgorithmSelect(
         id: 'forBtn' + uniqueId
       },
       text: item.toString()
-    });
-    radioDiv.createEl('br');
+    })
+    radioDiv.createEl('br')
 
-    item.algorithmLabel = radioBtnLabel;
-  });
+    item.algorithmLabel = radioBtnLabel
+  })
 }
