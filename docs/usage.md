@@ -162,7 +162,7 @@ flags:no-buttons
 ````
 
 # 3. *Specific code block properties*
-The following contains properties only valid for
+The following contains properties only valid for specific code blocks.
 ## 3.1. Code block: *rubikCubePLL*
 ### 3.1.1. Property: *Algorithms*
 - ***key***: "alg"
