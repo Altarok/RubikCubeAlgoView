@@ -3,12 +3,12 @@ import {CubeStateOll, CubeStatePll} from "./cube-state"
 import {FlagType} from "./flags"
 import {ArrowCoords, Arrows, Coordinates, Dimensions, StickerCoords} from "./geometry"
 import {Parse, Result} from "../parser/parser"
-import {InvalidInput} from "./codeblock-input"
 import {Algorithms, AlgorithmType, MappedAlgorithm, MappedAlgorithms} from "./algorithms"
 import {Build} from "../parser/geometry-builder"
 import {OllFieldColoring} from "./oll-field-coloring"
 import {StringUtils} from "../parser/string-utils"
 import {knownOllIds} from "../consts/oll-id"
+import {InvalidInput} from "./invalid-input-container";
 
 const InputKeys: string[] = ['alg', 'arrowColor', 'arrows', 'cubeColor', 'dimension', 'flags', 'id']
 const presetOutlinePattern = new RegExp(/[lbrt]{3}\.[lrt]{3}\.[lfrt]{3}/)

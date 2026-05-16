@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'vitest';
-import {InvalidInput} from "../src/model/codeblock-input";
 import {Flags} from "../src/model/flags";
+import {InvalidInput} from "../src/model/invalid-input-container";
 
 describe('InvalidInput', () => {
 

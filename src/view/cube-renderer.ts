@@ -6,7 +6,7 @@ import {UiUtils} from "./ui-utils";
 import {applyRotation} from "./dom-rotation";
 import {createCubeLayout, CubeLayout} from "./cube-layout"
 import {setIcon} from "obsidian"
-import {InvalidInput} from "../model/codeblock-input"
+import {InvalidInput} from "../model/invalid-input-container";
 
 
 export abstract class CubeRenderer {

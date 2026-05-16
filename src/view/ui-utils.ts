@@ -1,5 +1,5 @@
-import {InvalidInput} from "../model/codeblock-input"
 import {Algorithm} from "../model/algorithms"
+import {InvalidInput} from "../model/invalid-input-container";
 
 export const UiUtils = {
   renderAlgorithmList,
