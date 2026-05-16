@@ -5,7 +5,6 @@ export class InvalidInput {
   /** @param line - the row containing un-interpretable input TODO replace
    * @param reason - human-readable reason for failure   */
   constructor(public line: string, public readonly reason: string) {
-    // debugger
   }
 
   static ofCubeColor(line: string): InvalidInput {

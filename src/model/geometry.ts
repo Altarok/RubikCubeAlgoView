@@ -9,7 +9,7 @@ export class Coordinates {
   constructor(public readonly x: number, public readonly y: number) {
   }
 
-  toString = () => `${this.x},${this.y}`
+  toString(): string { return `${this.x},${this.y}`}
 }
 
 /** Coordinates for -one- arrow. */
@@ -21,7 +21,9 @@ export class ArrowCoords {
   constructor(public readonly start: Coordinates, public readonly end: Coordinates) {
   }
 
-  toString = () => `Arrow[from'${this.start.toString()}', to'${this.end.toString()}']`
+  toString(): string {
+    return `Arrow[from'${this.start.toString()}', to'${this.end.toString()}']`
+  }
 }
 
 /** Coordinates of a cube's stickers. References the stickers' center. */
