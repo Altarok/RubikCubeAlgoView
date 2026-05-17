@@ -1,31 +1,41 @@
-import {FlagType} from "../model/flags"
+import {CubeState} from "../model/cube-state";
 
 export interface CubeLayout {
   readonly mainContainer: HTMLDivElement
   readonly cubeDiv: HTMLDivElement
+  readonly setupDiv: HTMLDivElement | undefined
   readonly buttonDiv: HTMLDivElement | undefined
   readonly algorithmsDiv: HTMLDivElement
 }
 
-export function createCubeLayout(container: HTMLElement, flags: FlagType[]): CubeLayout {
+export function createCubeLayout(container: HTMLElement, cubeState: CubeState): CubeLayout {
 
   const mainContainer = container.createEl('div', {cls: 'rubik-cube-div-main-container'})
 
-  /* left */
   const leftSide = mainContainer.createEl('div', {cls: 'rubik-cube-div-left-column'})
-  /* right */
-  const textSide = mainContainer.createEl('div', {cls: 'rubik-cube-div-right-column'})
+  const rightSide = mainContainer.createEl('div', {cls: 'rubik-cube-div-right-column'})
 
   const cubeDiv = leftSide.createEl('div', {cls: 'rubik-cube-div-content'})
 
-  let buttonDiv: HTMLDivElement | undefined
+  let setupDiv: HTMLDivElement | undefined = undefined
+  let buttonDiv: HTMLDivElement | undefined = undefined
 
-  if (flags.contains('no-buttons')) {
-    buttonDiv = undefined
-  } else {
+  if (shouldCreateSetupAlgorithmDiv(cubeState))
+    setupDiv = rightSide.createEl('div', {attr: {id: 'setupDiv'}, cls: 'rubik-cube-algorithms-monotone-box'})
+
+  if (shouldCreateButtonDiv(cubeState))
     buttonDiv = leftSide.createEl('div', {attr: {id: 'buttonDiv'}, cls: 'button-container'})
-  }
-  const algorithmsDiv = textSide.createEl('div', {attr: {id: 'algorithmsDiv'}, cls: 'rubik-cube-div-algorithms-list'})
 
-  return {mainContainer, cubeDiv, buttonDiv, algorithmsDiv}
+  const algorithmsDiv = rightSide.createEl('div', {attr: {id: 'algorithmsDiv'}, cls: 'rubik-cube-div-algorithms-list'})
+
+  return {mainContainer, cubeDiv, setupDiv, buttonDiv, algorithmsDiv}
 }
+
+function shouldCreateSetupAlgorithmDiv(cubeState: CubeState): boolean {
+  return !cubeState.flags.contains('no-setup') && cubeState.setup !== undefined
+}
+
+function shouldCreateButtonDiv(cubeState: CubeState): boolean {
+  return !cubeState.flags.contains('no-buttons')
+}
+

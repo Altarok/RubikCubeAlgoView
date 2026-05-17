@@ -33,10 +33,11 @@ export abstract class CubeRenderer {
       return
     }
 
-    this.layout = createCubeLayout(element, this.cubeState.flags)
+    this.layout = createCubeLayout(element, this.cubeState)
 
     this.displayCube(this.layout.cubeDiv)
     this.displayButtons(this.layout.buttonDiv)
+    this.displaySetupAlgorithm(this.layout.setupDiv)
     this.displayAlgorithms(this.layout.algorithmsDiv)
     this.rotateCube()
   }
@@ -44,6 +45,8 @@ export abstract class CubeRenderer {
   abstract displayCubeForeground(container: SVGSVGElement, viewBoxWidth: number, viewBoxHeight: number): void
 
   abstract displayAlgorithms(container: HTMLDivElement): void
+
+  // abstract displaySetupAlgorithm(container: SVGSVGElement): void
 
   abstract displayArrows(container: SVGSVGElement): void
 
@@ -115,6 +118,14 @@ export abstract class CubeRenderer {
     this.displayArrows(mainSvgElement)
   }
 
+  private displaySetupAlgorithm(container?: HTMLDivElement) {
+    if (!container || this.cubeState.flags.contains('no-setup')) return
+
+    const {setup} = this.cubeState
+    if (setup === undefined) return /* Fail-safe, nothing selected */
+    UiUtils.renderAlgorithmSetup(container, setup)
+  }
+
   /**
    * @param {HTMLElement} element - HTML element to draw on
    * @param {number} viewBoxWidth - view box width of image part to zoom in to
@@ -170,7 +181,7 @@ export class CubeRendererPLL extends CubeRenderer {
 
   displayAlgorithms(container: HTMLDivElement): void {
     const algorithms: Algorithms = this.cubeStatePll.algorithms
-    if (!algorithms || algorithms.items.length === 0) return;  /* Fail-safe, algorithms are optional */
+    if (algorithms && algorithms.items.length > 0)   /* Fail-safe, algorithms are optional */
     UiUtils.renderAlgorithmList(container, algorithms.items)
   }
 }

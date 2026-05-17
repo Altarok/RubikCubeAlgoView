@@ -7,7 +7,7 @@ Alternative data:
 - https://www.cubeskills.com/uploads/pdf/tutorials/oll-algorithms.pdf
 - https://www.cubeskills.com/uploads/pdf/tutorials/pll-algorithms.pdf
 Min. Plugin version:
-- 0.0.4
+- 0.3.0
 
 1. PLL-Aa Adjacent Corner Swap
 ```rubikCubePLL

@@ -3,6 +3,7 @@ import {InvalidInput} from "../model/invalid-input-container";
 
 export const UiUtils = {
   renderAlgorithmList,
+  renderAlgorithmSetup,
   renderAlgorithmSelect,
   showInvalidInput
 }
@@ -57,9 +58,19 @@ function renderAlgorithmList(container: HTMLElement, algorithms: Algorithm[]): v
 
   const ul = container.createEl('ul')
   algorithms.forEach(item => {
-    let li = ul.createEl('li'); // { text: item.toString() }
+    let li = ul.createEl('li');
     item.algorithmLabel = li.createEl('label', {text: item.toString()})
   })
+}
+
+function renderAlgorithmSetup(container: HTMLElement, setupAlgorithm?: Algorithm): void {
+  if (!setupAlgorithm) return
+
+  // const ul =
+  container.createEl('div', {text: `Setup: ${setupAlgorithm.toString()}`})
+
+  // let li = ul.createEl('li');
+  // item.algorithmLabel = li.createEl('label', {text: item.toString()})
 }
 
 /**

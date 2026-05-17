@@ -2,7 +2,14 @@
  * 'no-buttons' - removes all buttons entirely
  * 'no-rotation' - removes all buttons related to rotation, which rn, are all of them TODO re-add
  */
-const types = ['default', 'no-buttons'] as const
+const types = [
+  /* Does nothing */
+  'default',
+  /* Removes buttons (not only hide) */
+  'no-buttons',
+  /* Removes setup algorithm (not only hide) */
+  'no-setup',
+] as const
 
 export type FlagType = (typeof types)[number]
 
