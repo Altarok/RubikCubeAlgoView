@@ -148,6 +148,50 @@
   line-height: 1; /* Snaps the line height tight to the text */
   width: max-content; /* Forces the box to shrink to the exact width of the text */
 }
+
+/* Center the content inside the modal wrapper */
+.rubik-cube-algorithms-training-timer-modal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  text-align: center;
+}
+
+/* Make the timer numbers massive and monospace so they don't jitter while counting */
+.rubik-cube-algorithms-training-timer-display {
+  font-size: 5rem;
+  font-family: var(--font-monospace);
+  font-weight: 700;
+  margin: 1rem 0;
+  color: var(--text-normal);
+  transition: color 0.15s ease-in-out;
+}
+
+/* Visual indicator change while the clock is actively running */
+.rubik-cube-algorithms-training-timer-display.timer-running {
+  color: var(--interactive-accent);
+}
+
+/* Subtle, muted styling for the help/hint text below the timer */
+.rubik-cube-algorithms-training-timer-hint {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+/* Color when holding spacebar down to prime the timer */
+.rubik-cube-algorithms-training-timer-display.timer-readying {
+  color: var(--text-error); /* Dark/Light theme safe red */
+}
+
+/* Optional: If you want a stackmat "inspection ready" green phase
+   after holding it for a specific duration, you could swap this class in */
+.rubik-cube-algorithms-training-timer-display.timer-primed {
+  color: var(--text-success); /* Dark/Light theme safe green */
+}
 /* --- Debug Tool * /
 .div {
   outline: 1px solid red !important;
