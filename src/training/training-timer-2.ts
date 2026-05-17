@@ -1,9 +1,10 @@
-import { App, Modal } from 'obsidian';
+import {App, Modal} from 'obsidian';
 
 export class TimerModal extends Modal {
   private isRunning: boolean = false;
   private isReadyToStart: boolean = false;
   private isHoldingSpace: boolean = false;
+  private isShowingResult: boolean = false;
 
   private startTime: number = 0;
   private timerInterval: NodeJS.Timeout | null = null;
@@ -18,12 +19,25 @@ export class TimerModal extends Modal {
   }
 
   onOpen() {
-    const { contentEl } = this;
+    const {contentEl} = this;
     contentEl.empty();
     contentEl.addClass('cube-timer-modal');
 
-    this.displayEl = contentEl.createEl('h1', { text: '0.00', cls: 'rubik-cube-algorithms-training-timer-display' });
-    contentEl.createEl('p', { text: 'Hold SPACE to ready, release to start.', cls: 'rubik-cube-algorithms-training-timer-hint' });
+    this.displayEl = contentEl.createEl('h1', {text: '0.00', cls: 'rubik-cube-algorithms-training-timer-display'});
+    // contentEl.createEl('p', {
+    //   text: 'Hold SPACE to ready, release to start.',
+    //   cls: 'rubik-cube-algorithms-training-timer-hint'
+    // });
+
+
+    contentEl.createEl('p', {
+      text: 'Hold space bar. Release to start.',
+      cls: 'rubik-cube-algorithms-training-timer-hint'
+    });
+    contentEl.createEl('p', {
+      text: 'Press space bar to stop / reset.',
+      cls: 'rubik-cube-algorithms-training-timer-hint'
+    });
 
     // Attach event listeners to the modal container window
     window.addEventListener('keydown', this.handleKeyDownBound);
@@ -50,10 +64,12 @@ export class TimerModal extends Modal {
     if (this.isRunning) {
       // Instantly stop the clock on down-press
       this.stopTimerLogic();
+    } else if (this.isShowingResult) {
+      this.resetTimerLogic();
     } else {
       // Readying the state: Turn timer red/green to show it's primed
       this.isReadyToStart = true;
-      this.displayEl.addClass('timer-readying');
+      this.displayEl.addClass('rubik-cube-algorithms-training-timer-display.timer-readying');
     }
   }
 
@@ -63,7 +79,7 @@ export class TimerModal extends Modal {
 
     if (this.isReadyToStart) {
       this.isReadyToStart = false;
-      this.displayEl.removeClass('timer-readying');
+      this.displayEl.removeClass('rubik-cube-algorithms-training-timer-display.timer-readying');
       this.startTimerLogic();
     }
   }
@@ -71,7 +87,7 @@ export class TimerModal extends Modal {
   private startTimerLogic() {
     this.isRunning = true;
     this.startTime = Date.now();
-    this.displayEl.addClass('timer-running');
+    this.displayEl.addClass('rubik-cube-algorithms-training-timer-display.timer-running');
 
     this.timerInterval = setInterval(() => {
       const elapsed = (Date.now() - this.startTime) / 1000;
@@ -82,7 +98,7 @@ export class TimerModal extends Modal {
   private stopTimerLogic() {
     if (!this.isRunning) return;
     this.isRunning = false;
-    this.displayEl.removeClass('timer-running');
+    this.displayEl.removeClass('rubik-cube-algorithms-training-timer-display.timer-running');
 
     if (this.timerInterval) {
       clearInterval(this.timerInterval);
@@ -91,5 +107,22 @@ export class TimerModal extends Modal {
 
     const finalTime = ((Date.now() - this.startTime) / 1000).toFixed(2);
     this.displayEl.setText(finalTime);
+    this.isShowingResult = true
   }
+
+
+  private resetTimerLogic() {
+    if (!this.isShowingResult) return;
+    this.isShowingResult = false;
+    // this.displayEl.removeClass('rubik-cube-algorithms-training-timer-running');
+
+    if (this.timerInterval) {
+      clearInterval(this.timerInterval);
+      this.timerInterval = null;
+    }
+
+    const finalTime = '0.00';
+    this.displayEl.setText(finalTime);
+  }
+
 }
