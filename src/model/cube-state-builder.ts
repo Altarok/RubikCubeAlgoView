@@ -3,14 +3,32 @@ import {CubeStateOll, CubeStatePll} from "./cube-state"
 import {FlagType} from "./flags"
 import {ArrowCoords, Arrows, Coordinates, Dimensions, StickerCoords} from "./geometry"
 import {Parse, Result} from "../parser/parser"
-import {Algorithms, AlgorithmType, MappedAlgorithm, MappedAlgorithms} from "./algorithms"
+import {Algorithm, Algorithms, AlgorithmType, MappedAlgorithm, MappedAlgorithms} from "./algorithms"
 import {Build} from "../parser/geometry-builder"
 import {OllFieldColoring} from "./oll-field-coloring"
 import {StringUtils} from "../parser/string-utils"
 import {knownOllIds} from "../consts/oll-id"
 import {InvalidInput} from "./invalid-input-container";
 
-const InputKeys: string[] = ['alg', 'arrowColor', 'arrows', 'cubeColor', 'dimension', 'flags', 'id']
+const InputKeys: string[] = [
+  /* Algorithm input, 0-n lines */
+  'alg',
+  /* Arrow color, 0-1 lines */
+  'arrowColor',
+  /* Arrows: 0-1 lines */
+  'arrows',
+  /* Cube color: 0-1 lines */
+  'cubeColor',
+  /* Arrow definitions: 0-1 lines */
+  'dimension',
+  /* Special flags: 0-1 lines */
+  'flags',
+  /* Algorithm case, like T-Perm: 0-1 lines */
+  'id',
+  /* Setup instruction for given algorithm, 0-1 lines */
+  'setup'
+]
+
 const presetOutlinePattern = new RegExp(/[lbrt]{3}\.[lrt]{3}\.[lfrt]{3}/)
 
 export default class CubeStateBuilder {
@@ -31,6 +49,7 @@ export default class CubeStateBuilder {
   flags: FlagType[] = ['default']
   /** ID for manual identification and caching of rotation */
   id?: string = undefined
+  setup?: Algorithm = undefined
   invalidInput: InvalidInput[] = []
 
   /*
@@ -65,7 +84,7 @@ export default class CubeStateBuilder {
     let arrows: Arrows = this.setupArrowCoordinates(this.arrowsPll)
 
     return new CubeStatePll(this.arrowColor, this.cubeColor, this.dimensions, this.flags,
-      this.id, this.viewBoxDimensions, this.invalidInput, this.splitUserInput, algorithms, arrows)
+      this.id, this.viewBoxDimensions, this.invalidInput, this.splitUserInput, this.setup, algorithms, arrows)
   }
 
   buildOll(settings: Settings): CubeStateOll {
@@ -81,9 +100,7 @@ export default class CubeStateBuilder {
 
     let ollFieldInput = new OllFieldColoring(this.cubeColor)
 
-    /*
-     * this.cubeDimensions gets set up in here
-     */
+    /* this.cubeDimensions gets set up in here */
     if (presetOutline && presetOutlinePattern.test(presetOutline)) {
       ollFieldInput.setupFixedOllInput(presetOutline)
     } else {
@@ -96,7 +113,7 @@ export default class CubeStateBuilder {
     let selectedAlgorithmHash = this.setupAlgorithmArrowMap(algorithmToArrows)
 
     const cubeState = new CubeStateOll(this.arrowColor, this.dimensions, this.flags, this.id, this.viewBoxDimensions,
-      this.invalidInput, this.splitUserInput, algorithmToArrows, selectedAlgorithmHash, ollFieldInput)
+      this.invalidInput, this.splitUserInput, this.setup, algorithmToArrows, selectedAlgorithmHash, ollFieldInput)
     if (presetRotation) {
       cubeState.setRotation(presetRotation)
     }
@@ -124,6 +141,11 @@ export default class CubeStateBuilder {
     }
   }
 
+  /**
+   * @param key left of :
+   * @param value right of :
+   * @param completeLine key:value // comment
+   */
   private interpretKnownInput(key: string, value: string, completeLine: string): void {
     switch (key) {
       case 'alg':
@@ -142,6 +164,8 @@ export default class CubeStateBuilder {
       case 'id':
         this.id = value
         break
+      case 'setup':
+        return this.setSetup(Parse.toAlgorithm(value, completeLine))
       default:
         this.pushError(new InvalidInput(completeLine, `Unknown key '${key}'`))
         break
@@ -184,7 +208,7 @@ export default class CubeStateBuilder {
     }, [])
   }
 
-  private setupAlgorithmArrowMap(map: MappedAlgorithms): string  {
+  private setupAlgorithmArrowMap(map: MappedAlgorithms): string {
 
     let initialAlgorithmSelectionHash: string = ''
 
@@ -277,6 +301,10 @@ export default class CubeStateBuilder {
 
   private setFlags(result: Result<FlagType[]>) {
     if (result.success) this.flags = result.data; else this.pushError(result.error)
+  }
+
+  private setSetup(result: Result<Algorithm>) {
+    if (result.success) this.setup = result.data; else this.pushError(result.error)
   }
 
   /**

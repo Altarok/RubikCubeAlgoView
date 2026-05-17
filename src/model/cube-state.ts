@@ -1,4 +1,4 @@
-import {Algorithms, AlgorithmType, MappedAlgorithms, Rotatable} from "./algorithms"
+import {Algorithm, Algorithms, AlgorithmType, MappedAlgorithms, Rotatable} from "./algorithms"
 import {Arrows, Dimensions} from "./geometry"
 import {OllFieldColoring} from "./oll-field-coloring"
 import {FlagType} from "./flags"
@@ -12,6 +12,7 @@ export interface CubeState {
   readonly dimensions: Dimensions
   readonly flags: FlagType[]
   readonly id?: string
+  readonly setup?: Algorithm
   /** SVG metadata */
   readonly viewBoxDimensions: Dimensions
   /** Container for invalid code block content */
@@ -59,7 +60,8 @@ abstract class CubeStateCommon implements CubeState {
     readonly rotatable: Rotatable,
     public readonly viewBoxDimensions: Dimensions,
     public readonly invalidInput: InvalidInput[],
-    public readonly splitCodeBlockInput: string[]) {
+    public readonly splitCodeBlockInput: string[],
+    public readonly setup: Algorithm | undefined) {
   }
 
   isDefaultSize(): boolean {
@@ -113,10 +115,10 @@ abstract class CubeStateCommon implements CubeState {
 export class CubeStatePll extends CubeStateCommon {
   constructor(
     arrowColor: string, cubeColor: string, dimensions: Dimensions,
-    flags: FlagType[], id: string | undefined, viewBoxDimensions: Dimensions, invalidInput: InvalidInput[], splitCodeBlockInput: string[],
+    flags: FlagType[], id: string | undefined, viewBoxDimensions: Dimensions, invalidInput: InvalidInput[], splitCodeBlockInput: string[], setup: Algorithm | undefined,
     public readonly algorithms: Algorithms,
     public readonly arrowCoordinates: Arrows) {
-    super('pll', arrowColor, cubeColor, dimensions, flags, id, algorithms, viewBoxDimensions, invalidInput, splitCodeBlockInput)
+    super('pll', arrowColor, cubeColor, dimensions, flags, id, algorithms, viewBoxDimensions, invalidInput, splitCodeBlockInput, setup)
   }
 }
 
@@ -129,12 +131,12 @@ export class CubeStatePll extends CubeStateCommon {
 export class CubeStateOll extends CubeStateCommon {
   constructor(
     arrowColor: string, dimensions: Dimensions, flags: FlagType[], id: string | undefined, viewBoxDimensions: Dimensions,
-    invalidInput: InvalidInput[], splitCodeBlockInput: string[],
+    invalidInput: InvalidInput[], splitCodeBlockInput: string[], setup: Algorithm | undefined,
     public readonly algorithmToArrows: MappedAlgorithms,
     public selectedAlgorithmHash: string,
     public readonly ollFieldInput: OllFieldColoring
   ) {
-    super('oll', arrowColor, '#000', dimensions, flags, id, algorithmToArrows, viewBoxDimensions, invalidInput, splitCodeBlockInput)
+    super('oll', arrowColor, '#000', dimensions, flags, id, algorithmToArrows, viewBoxDimensions, invalidInput, splitCodeBlockInput, setup)
   }
 
   currentArrowCoordinates(): Arrows {
