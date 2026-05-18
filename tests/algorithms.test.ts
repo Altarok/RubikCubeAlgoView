@@ -182,24 +182,21 @@ describe('MappedAlgorithms (string-MappedAlgorithm map)', () => {
     expect(mappedAlgorithm).toBeUndefined()
   })
 
-  it("should provide proper consts with algorithm's hash", () => {
+  function checkHashValues(): MappedAlgorithm {
     expect(alg1FRU.initialHash).not.toBe(alg2FLU.initialHash)
-
     let mappedAlgorithm: MappedAlgorithm = mappedAlgorithms.get(alg1FRU.initialHash)!
     expect(mappedAlgorithm).toEqual(mappedAlgorithm1)
-
     mappedAlgorithm = mappedAlgorithms.get(alg2FLU.initialHash)!
     expect(mappedAlgorithm).toEqual(mappedAlgorithm2)
+    return mappedAlgorithm
+  }
+
+  it("should provide proper consts with algorithm's hash", () => {
+    checkHashValues();
   })
 
   it("should provide proper consts with algorithm's hash - after rotation", () => {
-    expect(alg1FRU.initialHash).not.toBe(alg2FLU.initialHash)
-
-    let mappedAlgorithm: MappedAlgorithm = mappedAlgorithms.get(alg1FRU.initialHash)!
-    expect(mappedAlgorithm).toEqual(mappedAlgorithm1)
-
-    mappedAlgorithm = mappedAlgorithms.get(alg2FLU.initialHash)!
-    expect(mappedAlgorithm).toEqual(mappedAlgorithm2)
+    let mappedAlgorithm = checkHashValues();
 
     mappedAlgorithms.rotate(1)
 

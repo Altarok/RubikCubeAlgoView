@@ -167,6 +167,7 @@ describe('CubeStateBuilder error handling', () => {
     const csb = new CubeStateBuilder('', defaultTestColors)
 
     expectIsEmptyArray(csb.invalidInput)
+  })
 
   it('should collect multiple errors without throwing exceptions', () => {
 
@@ -180,5 +181,6 @@ describe('CubeStateBuilder error handling', () => {
     expect(csb.invalidInput[0]).toEqual(InvalidInput.ofCubeColor('cubeColor:klm//airline, not a color'))
     expect(csb.invalidInput[1]).toEqual(InvalidInput.ofDimensions('dimension:1,10 // 1 is too low'))
   })
+
 
 })

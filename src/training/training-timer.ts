@@ -1,8 +1,11 @@
-import {App, Modal, Platform} from 'obsidian'
+import {App, Modal} from 'obsidian'
+import {generateScramble} from "./algorithm-scrambler";
 
 /** Number of digits to measure */
 const fractionDigits: number = 3
 const noTime: string = `0.${'0'.repeat(fractionDigits)}`
+// Variable type updates to use animation frames
+
 
 /**
  * Stack mat
@@ -14,8 +17,10 @@ export class TimerModal extends Modal {
   private isShowingResult: boolean = false
 
   private startTime: number = 0
-  private timerInterval: ReturnType<typeof setInterval> | null = null
+  // private timerInterval: ReturnType<typeof setInterval> | null = null
+  private scrambleEl!: HTMLElement
   private displayEl!: HTMLElement
+  private timerAnimationFrame: number | null = null
 
   // Bound listeners for clean setup/destruction
   private handleKeyDownBound = this.handleKeyDown.bind(this)
@@ -28,23 +33,23 @@ export class TimerModal extends Modal {
   }
 
   onOpen() {
-    const {contentEl} = this
+    const {contentEl, modalEl} = this
     contentEl.empty()
-    contentEl.addClass('rubik-cube-algorithms-timer-modal')
+
+    /*Add a class to the outermost modal container for full-screen CSS overrides*/
+    if (this.isOnMobile) modalEl.addClass('rubik-cube-algorithms-fullscreen-modal');
+    else contentEl.addClass('rubik-cube-algorithms-timer-modal')
+
+    this.scrambleEl = contentEl.createEl('p', {text: generateScramble(), cls: 'rubik-cube-algorithms-timer-hint'})
 
     this.displayEl = contentEl.createEl('h1', {text: noTime, cls: 'rubik-cube-algorithms-timer-display'})
 
-    // Change hint text based on the platform
+    this.addHints(contentEl);
 
-    const hintText1: string = this.isOnMobile ? 'Tap and hold anywhere to ready, release to start.' : 'Hold space bar. Release to start.'
-    const hintText2: string = this.isOnMobile ? 'Tap anywhere to stop / reset.' : 'Press space bar to stop / reset.'
-    contentEl.createEl('p', {text: hintText1, cls: 'rubik-cube-algorithms-timer-hint'})
-    contentEl.createEl('p', {text: hintText2, cls: 'rubik-cube-algorithms-timer-hint'})
-
-    if (Platform.isMobile) {
-      // Mobile: Listen for touch interactions on the entire modal content area
-      contentEl.addEventListener('touchstart', this.handleTouchStartBound)
-      contentEl.addEventListener('touchend', this.handleTouchEndBound)
+    if (this.isOnMobile) {
+      // Mobile: Listen for touch interactions on the entire screen
+      modalEl.addEventListener('touchstart', this.handleTouchStartBound)
+      modalEl.addEventListener('touchend', this.handleTouchEndBound)
     } else {
       // Desktop: Keep the classic keyboard listener behavior
       window.addEventListener('keydown', this.handleKeyDownBound)
@@ -52,17 +57,26 @@ export class TimerModal extends Modal {
     }
   }
 
+  /** Change hint text based on the platform */
+  private addHints(contentEl: HTMLElement) {
+    const hintText1: string = this.isOnMobile ? 'Tap and hold anywhere to ready, release to start.' : 'Hold space bar. Release to start.'
+    const hintText2: string = this.isOnMobile ? 'Tap anywhere to stop / reset.' : 'Press space bar to stop / reset.'
+    contentEl.createEl('p', {text: hintText1, cls: 'rubik-cube-algorithms-timer-hint'})
+    contentEl.createEl('p', {text: hintText2, cls: 'rubik-cube-algorithms-timer-hint'})
+  }
+
   onClose() {
+    this.stopTimerLogic()
+
     // Unbind everything depending on platform to prevent leaks
-    if (Platform.isMobile) {
-      this.contentEl.removeEventListener('touchstart', this.handleTouchStartBound)
-      this.contentEl.removeEventListener('touchend', this.handleTouchEndBound)
+    if (this.isOnMobile) {
+      this.modalEl.removeEventListener('touchstart', this.handleTouchStartBound)
+      this.modalEl.removeEventListener('touchend', this.handleTouchEndBound)
     } else {
       window.removeEventListener('keydown', this.handleKeyDownBound)
       window.removeEventListener('keyup', this.handleKeyUpBound)
-    }
 
-    this.stopTimerLogic()
+    }
     this.contentEl.empty()
   }
 
@@ -120,10 +134,19 @@ export class TimerModal extends Modal {
     this.startTime = Date.now()
     this.displayEl.addClass('rubik-cube-algorithms-timer-running')
 
-    this.timerInterval = setInterval(() => {
+    const updateDisplay = () => {
+      if (!this.isRunning) return
       const elapsed = (Date.now() - this.startTime) / 1000
       this.displayEl.setText(elapsed.toFixed(fractionDigits))
-    }, 10)
+      this.timerAnimationFrame = requestAnimationFrame(updateDisplay)
+    }
+
+    this.timerAnimationFrame = requestAnimationFrame(updateDisplay)
+
+    // this.timerInterval = setInterval(() => {
+    //   const elapsed = (Date.now() - this.startTime) / 1000
+    //   this.displayEl.setText(elapsed.toFixed(fractionDigits))
+    // }, 10)
   }
 
   private stopTimerLogic() {
@@ -141,14 +164,19 @@ export class TimerModal extends Modal {
   private resetTimerLogic() {
     if (!this.isShowingResult) return
     this.isShowingResult = false
-    this.clearInterval()
+    // this.clearInterval()
     this.displayEl.setText(noTime)
+    this.scrambleEl.setText(generateScramble())
   }
 
   private clearInterval() {
-    if (this.timerInterval) {
-      clearInterval(this.timerInterval)
-      this.timerInterval = null
+    // if (this.timerInterval) {
+    //   clearInterval(this.timerInterval)
+    //   this.timerInterval = null
+    // }
+    if (this.timerAnimationFrame) {
+      cancelAnimationFrame(this.timerAnimationFrame)
+      this.timerAnimationFrame = null
     }
   }
 }

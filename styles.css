@@ -187,6 +187,45 @@
 .rubik-cube-algorithms-timer-primed {
   color: var(--text-success); /* Dark/Light theme safe green */
 }
+/* By combining .modal and your custom class without a space,
+   we target an element that has BOTH classes, making it
+   stronger than Obsidian's default rules. */
+.modal.rubik-cube-algorithms-fullscreen-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  max-width: 100vw;
+  max-height: 100vh;
+  border-radius: 0;
+  margin: 0;
+  padding: 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* These remain the same as they already have high specificity */
+.rubik-cube-algorithms-fullscreen-modal .modal-close-button {
+  display: none;
+}
+
+.rubik-cube-algorithms-fullscreen-modal .modal-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
 /* Debug Tool * /
 .div {
   outline: 1px solid red !important;
