@@ -7,7 +7,7 @@ import {Algorithm, Algorithms, AlgorithmType, MappedAlgorithm, MappedAlgorithms}
 import {Build} from "../parser/geometry-builder"
 import {OllFieldColoring} from "./oll-field-coloring"
 import {StringUtils} from "../parser/string-utils"
-import {knownOllIds} from "../consts/oll-id"
+import {knownOllIds, PredefinedCaseRubikOll} from "../consts/predefined-cases"
 import {InvalidInput} from "./invalid-input-container"
 
 const InputKeys: string[] = [
@@ -93,9 +93,12 @@ export default class CubeStateBuilder {
     let presetOutline: string | undefined = undefined
 
     if (this.id) {
-      let hash: string = StringUtils.cubeHash(this.id, 'oll')
-      presetRotation = settings.cubeRotations[hash]
-      presetOutline = knownOllIds[this.id]
+      let ollCaseData: PredefinedCaseRubikOll | undefined = knownOllIds[this.id]
+      if (ollCaseData) {
+        let hash: string = StringUtils.cubeHash(this.id, 'oll')
+        presetRotation = settings.cubeRotations[hash]
+        presetOutline = ollCaseData.ollPattern
+      }
     }
 
     let ollFieldInput = new OllFieldColoring(this.cubeColor)
