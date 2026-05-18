@@ -2,7 +2,7 @@ import {Algorithm, Algorithms, AlgorithmType, MappedAlgorithms, Rotatable} from 
 import {Arrows, Dimensions} from "./geometry"
 import {OllFieldColoring} from "./oll-field-coloring"
 import {FlagType} from "./flags"
-import {InvalidInput} from "./invalid-input-container";
+import {InvalidInput} from "./invalid-input-container"
 
 export interface CubeState {
   readonly algorithmType: AlgorithmType
@@ -20,10 +20,10 @@ export interface CubeState {
   readonly splitCodeBlockInput: string[]
 
   /* Rotation variables */
-  currentRotation: number; /* any integer */
-  currentRotationNormalized: number; /* 0-3 */
-  defaultRotation: number; /* 0-3 */
-  locked: boolean; /* True if rotation is blocked */
+  currentRotation: number /* any integer */
+  currentRotationNormalized: number /* 0-3 */
+  defaultRotation: number /* 0-3 */
+  locked: boolean /* True if rotation is blocked */
 
   /** Clock-wise quarter rotation */
   rotateLeft(): void

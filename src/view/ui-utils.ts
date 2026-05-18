@@ -1,5 +1,5 @@
 import {Algorithm} from "../model/algorithms"
-import {InvalidInput} from "../model/invalid-input-container";
+import {InvalidInput} from "../model/invalid-input-container"
 
 export const UiUtils = {
   renderAlgorithmList,
@@ -58,7 +58,7 @@ function renderAlgorithmList(container: HTMLElement, algorithms: Algorithm[]): v
 
   const ul = container.createEl('ul')
   algorithms.forEach(item => {
-    let li = ul.createEl('li');
+    let li = ul.createEl('li')
     item.algorithmLabel = li.createEl('label', {text: item.toString()})
   })
 }
@@ -69,7 +69,7 @@ function renderAlgorithmSetup(container: HTMLElement, setupAlgorithm?: Algorithm
   // const ul =
   container.createEl('div', {text: `Setup: ${setupAlgorithm.toString()}`})
 
-  // let li = ul.createEl('li');
+  // let li = ul.createEl('li')
   // item.algorithmLabel = li.createEl('label', {text: item.toString()})
 }
 
@@ -85,7 +85,7 @@ function renderAlgorithmSelect(
     const isChecked = selectedIndex === item.initialHash
 
     const uniqueId = item.initialHash
-    // uniqueIdForRadioButtons + i.toString(); // unique identifier for EACH element
+    // uniqueIdForRadioButtons + i.toString() // unique identifier for EACH element
 
     // console.log(`draw algorithm (${uniqueId}): ${item.toString()}, checked:${isChecked}`)
 

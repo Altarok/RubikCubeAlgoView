@@ -138,9 +138,9 @@ function addRotationButtons(cubeRenderer: CubeRenderer, cubeState: CubeState, pl
   //        * Unlock default rotation
   //        */
   //       cubeState.defaultRotation = 0
-  //       setIcon(buttonSaveRotation, 'save'); // reset icon
+  //       setIcon(buttonSaveRotation, 'save') // reset icon
   //       console.debug('Reset default rotation.')
-  //       buttonSaveRotation.setText('Save rotation.'); // reset mouse over
+  //       buttonSaveRotation.setText('Save rotation.') // reset mouse over
   //       cubeState.locked = false
   //
   //       IO.unsaveRotation(cubeState, plugin)
@@ -163,7 +163,7 @@ function addRotationButtons(cubeRenderer: CubeRenderer, cubeState: CubeState, pl
   //          * TODO save current rotation as new default rotation
   //          */
   //         cubeState.defaultRotation = cubeState.currentRotationNormalized
-  //         setIcon(buttonSaveRotation, 'save-off'); // change icon to 'un-save'
+  //         setIcon(buttonSaveRotation, 'save-off') // change icon to 'un-save'
   //         console.debug('New default rotation: ' + cubeState.defaultRotation)
   //         buttonSaveRotation.setText(`Un-save default rotation. (current: ${cubeState.defaultRotation})`)
   //         cubeState.locked = true

@@ -1,6 +1,6 @@
 import {App, PluginSettingTab, Setting} from "obsidian"
 import RubikCubeAlgos from "../main"
-import {RegEx} from "../parser/regex-util";
+import {RegEx} from "../parser/regex-util"
 
 export interface CubeColors {
   arrowColor: string

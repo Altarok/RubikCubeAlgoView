@@ -33,7 +33,7 @@ Copy and paste this snippet into any Obsidian note. It will create a blank 3x3 c
 To add some life to it you may add some of the following properties:
 
 | **Property** | **Short description**                          | **Range / Format**       | Example            | Default (if not set) |
-|--------------| ---------------------------------------------- |--------------------------| ------------------ | -------------------- |
+|--------------|------------------------------------------------|--------------------------|--------------------|----------------------|
 | dimension    | Sets the visual size of the cube.              | 2 to 10                  | `dimension:2,2`    | `3,3`                |
 | cubeColor    | The color of the stickers.                     | Hex code (3 or 6 digits) | `cubeColor:ff0`    | `#ffff00`            |
 | arrowColor   | The color of the arrows.                       | Hex code (3 or 6 digits) | `arrowColor:08f`   | `#0088ff`            |

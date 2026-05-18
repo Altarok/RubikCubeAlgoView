@@ -1,12 +1,12 @@
-import {CubeState, CubeStateOll, CubeStatePll} from "../model/cube-state";
-import {Algorithms} from "../model/algorithms";
-import {OllFieldColoring} from "../model/oll-field-coloring";
-import {SvgUtils} from "./svg-utils";
-import {UiUtils} from "./ui-utils";
-import {applyRotation} from "./dom-rotation";
+import {CubeState, CubeStateOll, CubeStatePll} from "../model/cube-state"
+import {Algorithms} from "../model/algorithms"
+import {OllFieldColoring} from "../model/oll-field-coloring"
+import {SvgUtils} from "./svg-utils"
+import {UiUtils} from "./ui-utils"
+import {applyRotation} from "./dom-rotation"
 import {createCubeLayout, CubeLayout} from "./cube-layout"
 import {setIcon} from "obsidian"
-import {InvalidInput} from "../model/invalid-input-container";
+import {InvalidInput} from "../model/invalid-input-container"
 
 
 export abstract class CubeRenderer {
@@ -196,7 +196,7 @@ export class CubeRendererOLL extends CubeRenderer {
   displayCubeForeground(svgElement: SVGSVGElement, viewBoxWidth: number, viewBoxHeight: number): void {
 
     let cells: OllFieldColoring = this.cubeStateOll.ollFieldInput
-    const [cubeWidth, cubeHeight] = [this.cubeStateOll.dimensions.width, this.cubeStateOll.dimensions.height]; // e.g. 3,3
+    const [cubeWidth, cubeHeight] = [this.cubeStateOll.dimensions.width, this.cubeStateOll.dimensions.height] // e.g. 3,3
 
     const stickerSize = 100
     const half = stickerSize / 2

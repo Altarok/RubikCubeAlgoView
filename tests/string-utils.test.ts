@@ -1,20 +1,20 @@
-import {describe, expect, it} from 'vitest';
-import {StringUtils} from "../src/parser/string-utils";
+import {describe, expect, it} from 'vitest'
+import {StringUtils} from "../src/parser/string-utils"
 
 
 describe('cubeHash(string, AlgorithmType)', () => {
 
   it('should not fail on undefined input', () => {
-    let result = StringUtils.cubeHash(undefined, 'pll');
-    expect(result).toBe('');
-  });
+    let result = StringUtils.cubeHash(undefined, 'pll')
+    expect(result).toBe('')
+  })
 
   it('should result in a hash starting with given AlgorithmType and id', () => {
-    let result = StringUtils.cubeHash('foo', 'pll');
-    expect(result).toSatisfy((v: string) => v.startsWith('pll-foo-'));
+    let result = StringUtils.cubeHash('foo', 'pll')
+    expect(result).toSatisfy((v: string) => v.startsWith('pll-foo-'))
 
-    result = StringUtils.cubeHash('bar', 'oll');
-    expect(result).toSatisfy((v: string) => v.startsWith('oll-bar-'));
-  });
+    result = StringUtils.cubeHash('bar', 'oll')
+    expect(result).toSatisfy((v: string) => v.startsWith('oll-bar-'))
+  })
 
-});
+})

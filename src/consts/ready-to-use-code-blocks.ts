@@ -833,6 +833,6 @@ export const CodeBlocks = {
   dominoCube_4_PllAlgorithms,
   rubikCube_21_PllAlgorithms,
   rubikCube_57_OllAlgorithms
-} as const;
+} as const
 
 

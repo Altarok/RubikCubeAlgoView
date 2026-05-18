@@ -8,7 +8,7 @@ import {Build} from "../parser/geometry-builder"
 import {OllFieldColoring} from "./oll-field-coloring"
 import {StringUtils} from "../parser/string-utils"
 import {knownOllIds} from "../consts/oll-id"
-import {InvalidInput} from "./invalid-input-container";
+import {InvalidInput} from "./invalid-input-container"
 
 const InputKeys: string[] = [
   /* Algorithm input, 0-n lines */
@@ -131,9 +131,9 @@ export default class CubeStateBuilder {
   private readRawInput() {
     for (const singleLine of this.splitUserInput) {
       let s: string = singleLine.trim()
-      if (s.startsWith('//')) continue; /* skip comment lines */
+      if (s.startsWith('//')) continue /* skip comment lines */
       let strings = s.split(':')
-      if (!strings[0]) continue;  /* skip falsy input (should not happen by now ) */
+      if (!strings[0]) continue  /* skip falsy input (should not happen by now ) */
       let key: string = this.removeComments(strings[0].trim())!
       let value: string | undefined = this.removeComments(strings[1]?.trim() ?? undefined)
       if (InputKeys.includes(key) && value) this.interpretKnownInput(key, value, singleLine)
@@ -186,7 +186,7 @@ export default class CubeStateBuilder {
 
     return input.filter(Boolean).flatMap((segment) => {
       const isDoubleSided = segment.includes('+')
-      const parts = segment.split(/[+-]/); // Split on + OR -
+      const parts = segment.split(/[+-]/) // Split on + OR -
 
       // Map the string IDs to their coordinate objects immediately
       const coords = parts.map(id => this.stickerCoordinates.getStickerCenter(id))

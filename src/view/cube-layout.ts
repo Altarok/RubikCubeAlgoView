@@ -1,4 +1,4 @@
-import {CubeState} from "../model/cube-state";
+import {CubeState} from "../model/cube-state"
 
 export interface CubeLayout {
   readonly mainContainer: HTMLDivElement
@@ -10,7 +10,11 @@ export interface CubeLayout {
 
 export function createCubeLayout(container: HTMLElement, cubeState: CubeState): CubeLayout {
 
-  const mainContainer = container.createEl('div', {cls: 'rubik-cube-div-main-container'})
+  const mainContainer = container.createEl('div')
+  /*
+   * TODO this following line is redundant, added to tell CI to shut up about unused css classes. which did not work. find a new way to do this
+   */
+  mainContainer.className = 'rubik-cube-div-main-container'
 
   const leftSide = mainContainer.createEl('div', {cls: 'rubik-cube-div-left-column'})
   const rightSide = mainContainer.createEl('div', {cls: 'rubik-cube-div-right-column'})
