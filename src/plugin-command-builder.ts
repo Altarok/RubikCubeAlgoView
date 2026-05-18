@@ -1,7 +1,8 @@
-import {Plugin} from "obsidian";
+import {Platform, Plugin} from "obsidian";
 import {quickStartGuide} from "./consts/quick-start-guide";
 import {CodeBlocks} from "./consts/ready-to-use-code-blocks";
-import {TimerModal} from "./training/training-timer-2";
+// import {TimerModal as StackMatDesktop} from "./training/training-timer-desktop";
+import {TimerModal} from "./training/training-timer";
 
 const dominoCube: string = 'Domino Cube (3x3x2)'
 const rubikCube: string = 'Rubik Cube'
@@ -63,7 +64,7 @@ export function addAppCommands(plugin: Plugin): void {
     id: 'RubikCubeAlgo-open-cube-timer',
     name: 'Open training timer',
     callback: () => {
-      new TimerModal(plugin.app).open();
+      new TimerModal(plugin.app, Platform.isMobile).open();
     }
   });
 }
