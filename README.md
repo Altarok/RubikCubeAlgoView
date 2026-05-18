@@ -1,13 +1,18 @@
 # *Rubik Cube algorithms*
-Bring your Rubik's Cube study to life. This plugin allows you to visualize OLL, PLL, and custom algorithms directly within your notes using interactive 2D cubes and dynamic arrows.
+Bring your Rubik's Cube study to life.
+
+- Create your own fully customizable algorithm library.
+- Look at algorithms from different angles.
+- Train yourself with integrated timer.
 
 For a detailed guide, run the 'Insert quick start guide' command directly inside Obsidian, or view the full documentation [here](https://github.com/Altarok/RubikCubeAlgoView/blob/main/docs/usage.md).
 
 # *Key Features*
+- **Integrated timer**: Includes standard scrambled algorithm.
 - **Interactive Controls**: Rotate the cube or reset to the default view with integrated buttons.
 - **Smart Rotation**: Algorithm notation automatically updates based on your current cube orientation.
 - **Fully Customizable**: Tailor your experience with custom cube sizes, hex-code colors, and directional arrows.
-- **Planned Features**: Support for F2L and additional twisty puzzles. See EOF for more.
+- **Mobile support**
 
 # *Where to start?*
 ## 1. Installation
@@ -44,6 +49,7 @@ Set your defaults in the Plugin Settings menu:
 - Default Arrow Color
 
 # *Change log*
+- 0.4.0 (work in progress) Added timer with scrambled algorithms
 - 0.3.0 UX: Added property 'setup' to make training easier
 - 0.2.0 UX: README, built-in commands and tutorials, description in settings view
 - 0.1.0 Prepared for Obsidian's official community release.
@@ -53,6 +59,8 @@ Set your defaults in the Plugin Settings menu:
 - 0.0.1 Basic cube visualization.
 
 # *Planned Features*
+- Display PLL with overhanging stickers (optional) for blocks and headlight recognition
+- Change arrows to optional
 - Add property 'sticker-size' (pixel/percent)
 - Persist favorite rotation
 - Persist favorite algorithm
