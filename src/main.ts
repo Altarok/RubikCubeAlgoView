@@ -1,6 +1,6 @@
 import {Plugin} from "obsidian"
-import {MarkdownPostProcessorOLL} from "./MarkdownPostProcessorOLL"
-import {MarkdownPostProcessorPLL} from "./MarkdownPostProcessorPLL"
+import {MarkdownProcessorOll} from "./markdown-processor-oll"
+import {MarkdownProcessorPll} from "./markdown-processor-pll"
 import RubikCubeAlgoSettingsTab, {DefaultSettings, Settings} from "./settings/plugin-settings-tab"
 import {addAppCommands} from "./plugin-command-builder"
 import {TimerRenderChild} from "./markdown-processor-timer";
@@ -79,13 +79,13 @@ export default class RubikCubeAlgos extends Plugin {
 
     this.registerMarkdownCodeBlockProcessor("rubikCubeOLL",
       (source, el, ctx) => {
-        ctx.addChild(new MarkdownPostProcessorOLL(source, this, el))
+        ctx.addChild(new MarkdownProcessorOll(source, this, el))
       }
     )
 
     this.registerMarkdownCodeBlockProcessor("rubikCubePLL",
       (source, el, ctx) => {
-        ctx.addChild(new MarkdownPostProcessorPLL(source, this, el))
+        ctx.addChild(new MarkdownProcessorPll(source, this, el))
       }
     )
 

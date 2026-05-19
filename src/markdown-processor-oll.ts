@@ -7,7 +7,7 @@ import {CubeColors} from "./settings/plugin-settings-tab"
 import CubeStateBuilder from "./model/cube-state-builder"
 import {createBackupColors} from "./model/cube-color-builder"
 
-export class MarkdownPostProcessorOLL extends MarkdownRenderChild {
+export class MarkdownProcessorOll extends MarkdownRenderChild {
   source: string
   plugin: RubikCubeAlgos
   element: HTMLElement
@@ -21,9 +21,7 @@ export class MarkdownPostProcessorOLL extends MarkdownRenderChild {
   }
 
   onload(): void {
-    /*
-     * Register listener which instantly redraws Rubik's Cubes while changing plugin settings.
-     */
+    /* Register listener which instantly redraws Rubik's Cubes while changing plugin settings.  */
     this.registerEvent(
       // @ts-ignore
       this.plugin.app.workspace.on("rubik:rerender-markdown-code-block-processors",

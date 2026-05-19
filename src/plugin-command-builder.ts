@@ -2,7 +2,7 @@ import {Platform, Plugin} from "obsidian"
 import {quickStartGuide} from "./consts/quick-start-guide"
 import {CodeBlocks} from "./consts/ready-to-use-code-blocks"
 // import {TimerModal as StackMatDesktop} from "./training/training-timer-desktop"
-import {TimerModal} from "./training/training-timer"
+import {TimerModal} from "./training/training-timer-modal"
 
 const dominoCube: string = 'Domino Cube (3x3x2)'
 const rubikCube: string = 'Rubik Cube'
