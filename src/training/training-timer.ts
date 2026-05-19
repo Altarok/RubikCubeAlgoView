@@ -1,59 +1,54 @@
-import {App, Modal} from 'obsidian'
 import {generateScramble} from "./algorithm-scrambler";
 
 /** Number of digits to measure */
 const fractionDigits: number = 3
 const noTime: string = `0.${'0'.repeat(fractionDigits)}`
-// Variable type updates to use animation frames
 
 
 /**
  * Stack mat
  */
-export class TimerModal extends Modal {
+export class TrainingTimer {
   private isRunning: boolean = false
   private isReadyToStart: boolean = false
   private isHolding: boolean = false
   private isShowingResult: boolean = false
 
   private startTime: number = 0
-  // private timerInterval: ReturnType<typeof setInterval> | null = null
   private scrambleEl!: HTMLElement
   private displayEl!: HTMLElement
   private timerAnimationFrame: number | null = null
 
-  // Bound listeners for clean setup/destruction
   private handleKeyDownBound = this.handleKeyDown.bind(this)
   private handleKeyUpBound = this.handleKeyUp.bind(this)
   private handleTouchStartBound = this.handleTouchStart.bind(this)
   private handleTouchEndBound = this.handleTouchEnd.bind(this)
+  private onBlur = this.handleBlur.bind(this)
 
-  constructor(app: App, readonly isOnMobile: boolean) {
-    super(app)
+  constructor(readonly contentEl: HTMLElement, readonly modalEl: HTMLElement, readonly isOnMobile: boolean) {
   }
 
   onOpen() {
-    const {contentEl, modalEl} = this
-    contentEl.empty()
 
     /*Add a class to the outermost modal container for full-screen CSS overrides*/
-    if (this.isOnMobile) modalEl.addClass('rubik-cube-algorithms-fullscreen-modal');
-    else contentEl.addClass('rubik-cube-algorithms-timer-modal')
+    if (this.isOnMobile) this.modalEl.addClass('rubik-cube-algorithms-fullscreen-modal');
+    else this.contentEl.addClass('rubik-cube-algorithms-timer-modal')
 
-    this.scrambleEl = contentEl.createEl('p', {text: generateScramble(), cls: 'rubik-cube-algorithms-timer-hint'})
+    this.scrambleEl = this.contentEl.createEl('p', {text: generateScramble(), cls: 'rubik-cube-algorithms-timer-hint'})
 
-    this.displayEl = contentEl.createEl('h1', {text: noTime, cls: 'rubik-cube-algorithms-timer-display'})
+    this.displayEl = this.contentEl.createEl('h1', {text: noTime, cls: 'rubik-cube-algorithms-timer-display'})
 
-    this.addHints(contentEl);
+    this.addHints(this.contentEl);
 
     if (this.isOnMobile) {
       // Mobile: Listen for touch interactions on the entire screen
-      modalEl.addEventListener('touchstart', this.handleTouchStartBound)
-      modalEl.addEventListener('touchend', this.handleTouchEndBound)
+      this.modalEl.addEventListener('touchstart', this.handleTouchStartBound)
+      this.modalEl.addEventListener('touchend', this.handleTouchEndBound)
     } else {
       // Desktop: Keep the classic keyboard listener behavior
       window.addEventListener('keydown', this.handleKeyDownBound)
       window.addEventListener('keyup', this.handleKeyUpBound)
+      window.addEventListener('blur', this.onBlur)
     }
   }
 
@@ -66,7 +61,7 @@ export class TimerModal extends Modal {
   }
 
   onClose() {
-    this.stopTimerLogic()
+    this.stopTimer()
 
     // Unbind everything depending on platform to prevent leaks
     if (this.isOnMobile) {
@@ -75,7 +70,7 @@ export class TimerModal extends Modal {
     } else {
       window.removeEventListener('keydown', this.handleKeyDownBound)
       window.removeEventListener('keyup', this.handleKeyUpBound)
-
+      window.removeEventListener('blur', this.onBlur)
     }
     this.contentEl.empty()
   }
@@ -86,7 +81,7 @@ export class TimerModal extends Modal {
     this.isHolding = true
 
     if (this.isRunning) {
-      this.stopTimerLogic() // Instantly stop clock on tap
+      this.stopTimer() // Instantly stop clock on tap
     } else if (this.isShowingResult) {
       this.resetTimerLogic()
     } else {
@@ -97,11 +92,10 @@ export class TimerModal extends Modal {
 
   private triggerUpAction() {
     this.isHolding = false
-
     if (this.isReadyToStart) {
       this.isReadyToStart = false
       this.displayEl.removeClass('rubik-cube-algorithms-timer-readying')
-      this.startTimerLogic()
+      this.startTimer()
     }
   }
 
@@ -109,6 +103,7 @@ export class TimerModal extends Modal {
   private handleKeyDown(evt: KeyboardEvent) {
     if (evt.key !== ' ') return
     evt.preventDefault()
+    evt.stopPropagation()
     this.triggerDownAction()
   }
 
@@ -120,6 +115,7 @@ export class TimerModal extends Modal {
   private handleTouchStart(evt: TouchEvent) {
     // Prevent zoom/scrolling behaviors while tapping the timer
     evt.preventDefault()
+    evt.stopPropagation()
     this.triggerDownAction()
   }
 
@@ -128,8 +124,16 @@ export class TimerModal extends Modal {
     this.triggerUpAction()
   }
 
+  private handleBlur() {
+    if (this.isReadyToStart) {
+      this.isReadyToStart = false
+      this.displayEl.removeClass('rubik-cube-algorithms-timer-readying')
+    }
+    this.isHolding = false
+  }
+
   // --- Timer Actions ---
-  private startTimerLogic() {
+  private startTimer() {
     this.isRunning = true
     this.startTime = Date.now()
     this.displayEl.addClass('rubik-cube-algorithms-timer-running')
@@ -142,19 +146,17 @@ export class TimerModal extends Modal {
     }
 
     this.timerAnimationFrame = requestAnimationFrame(updateDisplay)
-
-    // this.timerInterval = setInterval(() => {
-    //   const elapsed = (Date.now() - this.startTime) / 1000
-    //   this.displayEl.setText(elapsed.toFixed(fractionDigits))
-    // }, 10)
   }
 
-  private stopTimerLogic() {
+  private stopTimer() {
     if (!this.isRunning) return
     this.isRunning = false
     this.displayEl.removeClass('rubik-cube-algorithms-timer-running')
 
-    this.clearInterval()
+    if (this.timerAnimationFrame) {
+      cancelAnimationFrame(this.timerAnimationFrame)
+      this.timerAnimationFrame = null
+    }
 
     const finalTime = ((Date.now() - this.startTime) / 1000).toFixed(fractionDigits)
     this.displayEl.setText(finalTime)
@@ -164,19 +166,8 @@ export class TimerModal extends Modal {
   private resetTimerLogic() {
     if (!this.isShowingResult) return
     this.isShowingResult = false
-    // this.clearInterval()
     this.displayEl.setText(noTime)
     this.scrambleEl.setText(generateScramble())
   }
 
-  private clearInterval() {
-    // if (this.timerInterval) {
-    //   clearInterval(this.timerInterval)
-    //   this.timerInterval = null
-    // }
-    if (this.timerAnimationFrame) {
-      cancelAnimationFrame(this.timerAnimationFrame)
-      this.timerAnimationFrame = null
-    }
-  }
 }

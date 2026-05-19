@@ -8,15 +8,9 @@ import CubeStateBuilder from "./model/cube-state-builder"
 import {createBackupColors} from "./model/cube-color-builder"
 
 export class MarkdownProcessorOll extends MarkdownRenderChild {
-  source: string
-  plugin: RubikCubeAlgos
-  element: HTMLElement
 
-  constructor(source: string, plugin: RubikCubeAlgos, element: HTMLElement) {
+  constructor(readonly source: string, readonly plugin: RubikCubeAlgos, readonly element: HTMLElement) {
     super(element)
-    this.source = source
-    this.plugin = plugin
-    this.element = element
     this.display()
   }
 
@@ -41,6 +35,7 @@ export class MarkdownProcessorOll extends MarkdownRenderChild {
 
     if (!cubeState.codeBlockInterpretationFailed()) {
       this.addButtonFunctions(cubeRenderer, cubeState)
+      ButtonController.addRotationButtons(cubeRenderer, cubeState, this.plugin)
     }
   }
 
@@ -59,7 +54,5 @@ export class MarkdownProcessorOll extends MarkdownRenderChild {
         })
       }
     }
-
-    ButtonController.addRotationButtons(cubeRenderer, cubeState, this.plugin)
   }
 }

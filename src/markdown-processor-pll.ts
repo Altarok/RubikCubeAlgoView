@@ -5,17 +5,12 @@ import {ButtonController} from "./control/button-controller"
 import {CubeColors} from "./settings/plugin-settings-tab"
 import CubeStateBuilder from "./model/cube-state-builder"
 import {createBackupColors} from "./model/cube-color-builder"
+import {CubeStatePll} from "./model/cube-state";
 
 export class MarkdownProcessorPll extends MarkdownRenderChild {
-  source: string
-  plugin: RubikCubeAlgos
-  element: HTMLElement
 
-  constructor(source: string, plugin: RubikCubeAlgos, element: HTMLElement) {
+  constructor(readonly source: string, readonly plugin: RubikCubeAlgos, readonly element: HTMLElement) {
     super(element)
-    this.source = source
-    this.plugin = plugin
-    this.element = element
     this.display()
   }
 
@@ -32,9 +27,9 @@ export class MarkdownProcessorPll extends MarkdownRenderChild {
   display(): void {
     this.element.empty()
     const backupColors: CubeColors = createBackupColors(this.plugin.settings)
-    const cubeState = new CubeStateBuilder(this.source, backupColors).buildPll()
+    const cubeState: CubeStatePll = new CubeStateBuilder(this.source, backupColors).buildPll()
 
-    const cubeRenderer: CubeRendererPLL = new CubeRendererPLL(cubeState)
+    const cubeRenderer = new CubeRendererPLL(cubeState)
     cubeRenderer.display(this.element)
 
     if (!cubeState.codeBlockInterpretationFailed()) {
