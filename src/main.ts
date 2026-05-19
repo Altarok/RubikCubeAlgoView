@@ -3,6 +3,7 @@ import {MarkdownPostProcessorOLL} from "./MarkdownPostProcessorOLL"
 import {MarkdownPostProcessorPLL} from "./MarkdownPostProcessorPLL"
 import RubikCubeAlgoSettingsTab, {DefaultSettings, Settings} from "./settings/plugin-settings-tab"
 import {addAppCommands} from "./plugin-command-builder"
+import {TimerRenderChild} from "./markdown-processor-timer";
 
 /*
  * # Logic
@@ -87,6 +88,19 @@ export default class RubikCubeAlgos extends Plugin {
         ctx.addChild(new MarkdownPostProcessorPLL(source, this, el))
       }
     )
+
+    this.registerMarkdownCodeBlockProcessor('rubikCubeTimer',
+      (source, el, ctx) => {
+        const container = el.createEl('div');
+        el.empty();
+        el.appendChild(container);
+
+        // Create the structural child view instance
+        const timerChild = new TimerRenderChild(container);
+
+        // Mount the child into Obsidian context structure to ensure automatic cleanup
+        ctx.addChild(timerChild);
+      })
 
     addAppCommands(this)
 
