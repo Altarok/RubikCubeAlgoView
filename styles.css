@@ -85,7 +85,7 @@
 
 .rubik-cube-algs-cube-border {
   display: flex;
-  border: 2px solid #666; /* keep color static; near invisible border around cube */
+  border: 2px solid #666666; /* keep color static; near invisible border around cube */
 }
 
 .rubik-cube-pll-rect {
@@ -103,13 +103,13 @@
 }
 
 .rubik-cube-warning-text-red {
-  background-color: #f00;
-  color: #fff;
+  background-color: #ff0000;
+  color: #ffffff;
 }
 
 .rubik-cube-warning-text-orange {
   background-color: #fac898;
-  color: #000;
+  color: #000000;
 }
 
 /* --- Button Grouping & Layout --- */
@@ -126,7 +126,7 @@
   padding: 10px 20px;
   font-size: 16px;
   cursor: pointer;
-  border: 1px solid #ccc;
+  border: 1px solid #cccccc;
   border-radius: 4px;
   background-color: #f9f9f9;
   transition: background-color 0.2s;
@@ -154,7 +154,7 @@
 .rubik-cube-algorithms-monotone-box {
   font-family: Consolas, 'Courier New', Courier, monospace;
   font-size: 0.8em; /* Slightly smaller than the inherited default size */
-  color: #000; /* Black font foreground */
+  color: #000000; /* Black font foreground */
   background-color: #f0f0f0; /* Light grey box background */
   padding: 2px 6px; /* Spacing inside the grey box */
   border-radius: 4px; /* Optional: rounds the corners of the box slightly */
