@@ -9,6 +9,7 @@ A code block is created by wrapping instructions between three backticks and a s
 The plugin looks for the following keywords (**more are planned**):
 1. `rubikCubePLL`
 2. `rubikCubeOLL`
+3. `rubikCubeTimer` creates a timer for your speedcube training
 
 Once the cube is rendered in your note, you can interact with it:
 1. **Rotate:** Use the **Rotate** buttons to turn the cube and see the back or sides.
