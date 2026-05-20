@@ -91,25 +91,12 @@ export default class RubikCubeAlgos extends Plugin {
 
     this.registerMarkdownCodeBlockProcessor('rubikCubeTimer',
       (source, el, ctx) => {
-        const container = el.createEl('div');
-        el.empty();
-        el.appendChild(container);
-
-        // Create the structural child view instance
-        const timerChild = new TimerRenderChild(container);
-
-        // Mount the child into Obsidian context structure to ensure automatic cleanup
-        ctx.addChild(timerChild);
+        ctx.addChild(new TimerRenderChild(source, this, el));
       })
 
     addAppCommands(this)
 
-    this.addSettingTab(
-      new RubikCubeAlgoSettingsTab(
-        this.app,
-        this
-      )
-    )
+    this.addSettingTab(new RubikCubeAlgoSettingsTab(this.app, this))
   }
 
   onunload() {
@@ -117,7 +104,7 @@ export default class RubikCubeAlgos extends Plugin {
 
   async loadSettings() {
     let loadedData: Partial<Settings> = (await this.loadData()) as Partial<Settings> || {}
-    this.settings = Object.assign({}, DefaultSettings, loadedData || {} )
+    this.settings = Object.assign({}, DefaultSettings, loadedData || {})
   }
 
   async saveSettings() {
@@ -125,7 +112,7 @@ export default class RubikCubeAlgos extends Plugin {
     this.rerenderCodeblocks()
   }
 
-  rerenderCodeblocks(): void{
+  rerenderCodeblocks(): void {
     this.app.workspace.trigger("rubik:rerender-markdown-code-block-processors")
   }
 

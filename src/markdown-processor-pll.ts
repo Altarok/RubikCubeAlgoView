@@ -9,8 +9,8 @@ import {CubeStatePll} from "./model/cube-state";
 
 export class MarkdownProcessorPll extends MarkdownRenderChild {
 
-  constructor(readonly source: string, readonly plugin: RubikCubeAlgos, readonly element: HTMLElement) {
-    super(element)
+  constructor(readonly source: string, readonly plugin: RubikCubeAlgos, readonly container: HTMLElement) {
+    super(container)
     this.display()
   }
 
@@ -25,12 +25,12 @@ export class MarkdownProcessorPll extends MarkdownRenderChild {
   }
 
   display(): void {
-    this.element.empty()
+    this.container.empty()
     const backupColors: CubeColors = createBackupColors(this.plugin.settings)
     const cubeState: CubeStatePll = new CubeStateBuilder(this.source, backupColors).buildPll()
 
     const cubeRenderer = new CubeRendererPLL(cubeState)
-    cubeRenderer.display(this.element)
+    cubeRenderer.display(this.container)
 
     if (!cubeState.codeBlockInterpretationFailed()) {
       ButtonController.addRotationButtons(cubeRenderer, cubeState, this.plugin)
