@@ -1,4 +1,4 @@
-.rubik-cube-div-main-container {
+.rubik-cube-algs-main-container {
   display: flex;
   flex-wrap: wrap; /* This is the magic: it allows stacking */
   gap: 1.5rem;
@@ -8,19 +8,19 @@
   padding: 0 10px; /* Small 10px gutter so it doesn't touch the screen edge */
 }
 
-.rubik-cube-div-left-column,
-.rubik-cube-div-right-column {
+.rubik-cube-algs-left-column,
+.rubik-cube-algs-right-column {
   display: flex;
   flex-direction: column;
 }
 
-.rubik-cube-div-left-column {
+.rubik-cube-algs-left-column {
   flex: 0 0 auto; /* No grow, no shrink, no cry */
   min-width: 0; /* Prevents overflow in narrow sidebars */
   align-items: center; /* Centers children */
 }
 
-.rubik-cube-div-right-column {
+.rubik-cube-algs-right-column {
   flex: 1 1 300px; /* Grow to fill space, shrink if needed, prefer 300px */
   align-items: stretch;
 }
@@ -33,7 +33,7 @@
 
 /* Desktop/Tablet style: Add breathing room only if there is space */
 @media (width >= 768px) {
-  .rubik-cube-div-main-container {
+  .rubik-cube-algs-main-container {
     padding-left: 5%; /* Percentage-based padding scales with the screen */
     padding-right: 5%;
   }
@@ -41,7 +41,7 @@
 
 /* Target narrow Obsidian panes */
 @media (width <= 600px) {
-  .rubik-cube-div-main-container {
+  .rubik-cube-algs-main-container {
     flex-direction: column; /* Forces vertical stacking */
     align-items: flex-start;
     gap: 0.5rem; /* small gap btw buttons and */
@@ -50,14 +50,14 @@
     width: 100%;
   }
 
-  .rubik-cube-div-left-column {
+  .rubik-cube-algs-left-column {
     flex: 0 0 auto;
     width: 100%;
     margin: 0;
     padding: 0;
   }
 
-  .rubik-cube-div-right-column {
+  .rubik-cube-algs-right-column {
     flex: 0 0 auto; /* no growing */
     width: 100%;
     margin: 0;
@@ -66,14 +66,14 @@
   }
 
   .rubik-cube-div-algorithms-list ul {
-    /*    margin: 0;
-        padding: 0;
-        list-style-position: inside; !* Helps prevent left-side overflow *! */
+    margin: 0;
+    padding: 0;
+    list-style-position: inside; /* Helps prevent left-side overflow */
     width: 100%;
   }
 }
 
-.rubik-cube-div-content {
+.rubik-cube-algs-cube {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -83,7 +83,7 @@
   transition: transform 0.5s ease-in-out;
 }
 
-.rubik-cube-pll {
+.rubik-cube-algs-cube-border {
   display: flex;
   border: 2px solid #666; /* keep color static; near invisible border around cube */
 }
@@ -316,12 +316,12 @@ h1.rubik-cube-algorithms-timer-running,
   opacity: 1; /* Makes the element fully visible when active */
 }
 
-.rubik-cube-algorithms-scramble-display {
+.rubik-cube-algorithms-timer-scrambled-alg {
   letter-spacing: 0.1em;
 }
 
 /* Debug Tool * /
 .div {
   outline: 1px solid red !important;
-} */
+} /* */
 

@@ -5,13 +5,13 @@ export const CssClasses = {
   /** Top-level layout grids, columns, and responsive pane structures */
   layout: {
     /** The main outer flex wrapper containing the column blocks */
-    mainContainer: 'rubik-cube-div-main-container',
+    mainContainer: 'rubik-cube-algs-main-container',
     /** Left column container (typically used for actions or status metrics) */
-    leftColumn: 'rubik-cube-div-left-column',
+    leftColumn: 'rubik-cube-algs-left-column',
     /** Right column container (typically handles data, lists, or settings panels) */
-    rightColumn: 'rubik-cube-div-right-column',
+    rightColumn: 'rubik-cube-algs-right-column',
     /** Part of left column: Holds rendered visual cube items or canvas graphic frames */
-    content: 'rubik-cube-div-content',
+    content: 'rubik-cube-algs-cube',
     /** Part of right column: Compact monospace notation token wrapper (inline-block container style) */
     setupBox: 'rubik-cube-algorithms-monotone-box',
     /** Part of right column: Container wrapper managing listed configuration views */
@@ -23,16 +23,15 @@ export const CssClasses = {
     /** Main interactive wrapper block that captures focus and spacebar events */
     container: 'rubik-cube-algorithms-timer-container',
     /** Massive monospace clock face showing live tracking down to milliseconds */
-    display: 'rubik-cube-algorithms-timer-display',
+    clock: 'rubik-cube-algorithms-timer-display',
     /** Instructional small hint text sitting directly below the numeric clock face */
     hint: 'rubik-cube-algorithms-timer-hint',
     /** Absolute-positioned focus badge tracking active workspace keyboard bounds */
     focusHint: 'rubik-cube-algorithms-timer-focus-hint',
     /** Top panel tracking and displaying generated scramble notations */
-    scrambleDisplay: 'rubik-cube-algorithms-scramble-display',
+    scrambleDisplay: 'rubik-cube-algorithms-timer-scrambled-alg',
     /** Central modal overlay wrapping the configuration profile settings */
     modal: 'rubik-cube-algorithms-timer-modal',
-
 
     /** State Modifiers (Appended dynamically via controller execution) */
     states: {
@@ -45,8 +44,6 @@ export const CssClasses = {
     }
   },
 
-
-
   /** Interactive control triggers, command actions, and icon frameworks */
   buttons: {
     /** Dedicated wrapper container controlling flex gap balancing for sets */
@@ -58,7 +55,7 @@ export const CssClasses = {
   /** Vector rendering layouts (SVGs) mapping PLL cases and layer transformations */
   vectorGraphics: {
     /** Top-level frame rendering the complete 2D flat layer layout view */
-    pllFrame: 'rubik-cube-pll',
+    pllFrame: 'rubik-cube-algs-cube-border',
     /** Color element background tiles filling block structures */
     rect: 'rubik-cube-pll-rect',
     /** Outlined separator lines tracing element rows and columns */

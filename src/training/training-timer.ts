@@ -62,7 +62,7 @@ export class TrainingTimer {
   /** Change hint text based on the platform */
   private addTexts(contentEl: HTMLElement) {
     this.scrambleEl = this.contentEl.createEl('div', {text: generateScramble(), cls: CssClasses.timer.scrambleDisplay})
-    this.displayEl = this.contentEl.createEl('h1', {text: noTime, cls: CssClasses.timer.display})
+    this.displayEl = this.contentEl.createEl('h1', {text: noTime, cls: CssClasses.timer.clock})
 
     const hintText1: string = this.isOnMobile ? 'Tap and hold anywhere to ready, release to start.' : 'Hold space bar. Release to start.'
     const hintText2: string = this.isOnMobile ? 'Tap anywhere to stop / reset.' : 'Press space bar to stop / reset.'

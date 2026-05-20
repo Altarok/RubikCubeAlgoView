@@ -35,7 +35,7 @@ function showInvalidInput(container: HTMLElement, rows: string[], errors: Invali
     return
   }
 
-  const listContainer = container.createEl('div', {cls: 'rubik-cube-error-list'})
+  const listContainer = container.createEl('div')
 
   rows.forEach(row => {
 

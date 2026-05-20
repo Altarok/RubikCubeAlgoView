@@ -81,7 +81,7 @@ function createArrowHead(svg: SVGSVGElement, color: string) {
  */
 function drawBackgroundRect(svg: SVGSVGElement, fill: string) {
   svg.createSvg('rect', {
-    attr: {width: '100%', height: '100%', fill}, // Shorthand property {fill: fill}
+    attr: {width: '100%', height: '100%', fill},
     cls: CssClasses.vectorGraphics.rect
   })
 }
@@ -100,7 +100,7 @@ function drawSticker(svg: SVGSVGElement,
   svg.createSvg('rect', {
     attr: {x, y, width, height, fill},
     cls: isGrid ?
-      CssClasses.vectorGraphics.lineGrid :  CssClasses.vectorGraphics.rect
+      CssClasses.vectorGraphics.lineGrid : CssClasses.vectorGraphics.rect
   })
 }
 
