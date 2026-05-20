@@ -49,7 +49,7 @@ Set your defaults in the Plugin Settings menu:
 - Default Arrow Color
 
 # *Change log*
-- 0.4.0 (work in progress) Added timer with scrambled algorithms
+- 0.4.0 Added cubing timer with scrambled algorithms
 - 0.3.0 UX: Added property 'setup' to make training easier
 - 0.2.0 UX: README, built-in commands and tutorials, description in settings view
 - 0.1.0 Prepared for Obsidian's official community release.
