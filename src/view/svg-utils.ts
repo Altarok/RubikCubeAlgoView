@@ -94,14 +94,9 @@ function drawSticker(svg: SVGSVGElement,
                      y: number,
                      width: number,
                      height: number,
-                     fill: number | string,
-                     isGrid = false
+                     fill: number | string
 ) {
-  svg.createSvg('rect', {
-    attr: {x, y, width, height, fill},
-    cls: isGrid ?
-      CssClasses.vectorGraphics.lineGrid : CssClasses.vectorGraphics.rect
-  })
+  svg.createSvg('rect', {attr: {x, y, width, height, fill}})
 }
 
 /**

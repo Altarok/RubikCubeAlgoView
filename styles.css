@@ -95,7 +95,7 @@
 
 .rubik-cube-pll-line-grid {
   stroke-width: 3px;
-  stroke: #000; /* keep color static; black lines between stickers */
+  stroke: #000000; /* keep color static; black lines between stickers */
 }
 
 .rubik-cube-arrow {

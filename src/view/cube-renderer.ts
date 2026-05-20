@@ -196,6 +196,8 @@ export class CubeRendererOLL extends CubeRenderer {
 
   displayCubeForeground(svgElement: SVGSVGElement, viewBoxWidth: number, viewBoxHeight: number): void {
 
+    // debugger
+
     let cells: OllFieldColoring = this.cubeStateOll.ollFieldInput
     const [cubeWidth, cubeHeight] = [this.cubeStateOll.dimensions.width, this.cubeStateOll.dimensions.height] // e.g. 3,3
 
@@ -220,7 +222,7 @@ export class CubeRendererOLL extends CubeRenderer {
     /* Center rows/columns */
     for (let y = 0; y < cubeHeight; y++) {
       for (let x = 0; x < cubeWidth; x++) {
-        SvgUtils.drawSticker(svgElement, half + x * stickerSize, half + y * stickerSize, stickerSize, stickerSize, cells.getColor(y + 1, x + 1), true)
+        SvgUtils.drawSticker(svgElement, half + x * stickerSize, half + y * stickerSize, stickerSize, stickerSize, cells.getColor(y + 1, x + 1))
       }
     }
 

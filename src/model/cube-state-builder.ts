@@ -52,9 +52,7 @@ export default class CubeStateBuilder {
   setup?: Algorithm = undefined
   invalidInput: InvalidInput[] = []
 
-  /*
-   * Set after constructor
-   */
+  /* Set after constructor */
   algorithmType!: AlgorithmType
   viewBoxDimensions!: Dimensions
   stickerCoordinates!: StickerCoords
@@ -98,6 +96,10 @@ export default class CubeStateBuilder {
         let hash: string = StringUtils.cubeHash(this.id, 'oll')
         presetRotation = settings.cubeRotations[hash]
         presetOutline = ollCaseData.ollPattern
+        // for (const algorithm of ollCaseData.algorithms) {
+        //   if (!this.algorithmInput.has(algorithm))
+        //     this.algorithmInput.set(algorithm, this.id)
+        // }
       }
     }
 
