@@ -3,7 +3,7 @@ Bring your Rubik's Cube study to life.
 
 - Create your own fully customizable algorithm library.
 - Look at algorithms from different angles.
-- Train yourself with integrated timer.
+- Train yourself with integrated speedcubing timer.
 
 For a detailed guide, run the 'Insert quick start guide' command directly inside Obsidian, or view the full documentation [here](https://github.com/Altarok/RubikCubeAlgoView/blob/main/docs/usage.md).
 
