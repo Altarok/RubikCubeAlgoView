@@ -1,7 +1,6 @@
 import {App, Modal} from 'obsidian'
 import {TrainingTimer} from "./training-timer";
 
-
 /**
  * Stack mat in popup
  */
@@ -25,7 +24,7 @@ export class TimerModal extends Modal {
 
   onClose() {
     this.timer?.onClose()
-    this.contentEl.empty() // Modal clears its internal layout wrapper safely
+    this.contentEl.empty()
   }
 
 }

@@ -16,7 +16,7 @@ export class TimerRenderChild extends MarkdownRenderChild {
 
   onload() {
     this.container.empty();
-    this.container.addClass('rubik-cube-timer-container'); // Handles layout, margins, padding
+    this.container.addClass('rubik-cube-timer-container');
 
     const userColor = getComputedStyle(document.body).getPropertyValue('--interactive-accent').trim() ||  '#00ff55'
     this.container.style.borderColor = userColor;
@@ -37,7 +37,7 @@ export class TimerRenderChild extends MarkdownRenderChild {
 
   onunload() {
     this.timer?.onClose()
-    this.container.empty() // Markdown render child cleans up its block node safely
+    this.container.empty()
   }
 
 }

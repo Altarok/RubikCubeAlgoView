@@ -3,7 +3,6 @@ import {generateScramble} from "./algorithm-scrambler"
 /** Number of digits to measure */
 const fractionDigits: number = 3
 const noTime: string = `0.${'0'.repeat(fractionDigits)}`
-// const userColor = getComputedStyle(document.body).getPropertyValue('--interactive-accent').trim()
 
 /**
  * Stack mat
@@ -18,7 +17,6 @@ export class TrainingTimer {
   private scrambleEl!: HTMLElement
   private displayEl!: HTMLElement
   private timerAnimationFrame: number | null = null
-  // private wakeLock: WakeLockSentinel | null = null;
 
   private handleKeyDownBound = this.handleKeyDown.bind(this)
   private handleKeyUpBound = this.handleKeyUp.bind(this)
@@ -33,9 +31,7 @@ export class TrainingTimer {
   onOpen() {
 
     /*Add a class to the outermost modal container for full-screen CSS overrides*/
-    if (this.isOnMobile) {
-      // this.modalEl.addClass('rubik-cube-algorithms-fullscreen-modal')
-    } else {
+    if (!this.isOnMobile) {
       this.contentEl.addClass('rubik-cube-algorithms-timer-modal')
     }
 
@@ -52,6 +48,9 @@ export class TrainingTimer {
       this.eventHandler.addEventListener('blur', this.onBlur)
     }
 
+    /*
+     * TODO use this to request keep screen awake
+     */
     // Request the lock as soon as the modal/block becomes active on mobile
     // if (this.isOnMobile) {
     //   this.requestWakeLock();
