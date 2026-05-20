@@ -4,7 +4,7 @@
   gap: 1.5rem;
   width: 100%;
   align-items: flex-start;
-  justify-content: center; /* TODO may be remove? check on mobile */
+  justify-content: center; /* Centers layout columns on tablet/mobile views */
   padding: 0 10px; /* Small 10px gutter so it doesn't touch the screen edge */
 }
 
@@ -12,12 +12,6 @@
 .rubik-cube-div-right-column {
   display: flex;
   flex-direction: column;
-}
-
-.rubik-cube-div-algorithms-list ul {
-  margin: 0;
-  padding: 0;  /* Only keep what you need for legibility */
-  list-style-position: inside; /* Helps prevent left-side overflow */
 }
 
 .rubik-cube-div-left-column {
@@ -31,10 +25,16 @@
   align-items: stretch;
 }
 
+.rubik-cube-div-algorithms-list ul {
+  margin: 0;
+  padding: 0; /* Only keep what you need for legibility */
+  list-style-position: inside; /* Helps prevent left-side overflow */
+}
+
 /* Desktop/Tablet style: Add breathing room only if there is space */
 @media (width >= 768px) {
   .rubik-cube-div-main-container {
-    padding-left: 5%;  /* Percentage-based padding scales with the screen */
+    padding-left: 5%; /* Percentage-based padding scales with the screen */
     padding-right: 5%;
   }
 }
@@ -66,21 +66,11 @@
   }
 
   .rubik-cube-div-algorithms-list ul {
-    margin: 0;
-    padding: 0;
-    list-style-position: inside; /* Helps prevent left-side overflow */
+    /*    margin: 0;
+        padding: 0;
+        list-style-position: inside; !* Helps prevent left-side overflow *! */
     width: 100%;
   }
-
-  /* .rubik-cube-div-content { */
-
-  /*  margin-left: 0; */
-
-  /*  margin-right: 0; */
-
-  /*  width: 100%; */
-
-  /* } */
 }
 
 .rubik-cube-div-content {
@@ -89,15 +79,13 @@
   align-items: center;
   margin-left: auto;
   margin-right: auto;
-
-  /* Ensure it rotates around its own center */
-  transform-origin: center;
+  transform-origin: center; /* Ensure it rotates around its own center */
   transition: transform 0.5s ease-in-out;
 }
 
 .rubik-cube-pll {
   display: flex;
-  border: 2px solid #666;
+  border: 2px solid #666; /* keep color static; near invisible border around cube */
 }
 
 .rubik-cube-pll-rect {
@@ -107,7 +95,7 @@
 
 .rubik-cube-pll-line-grid {
   stroke-width: 3px;
-  stroke: #000;
+  stroke: #000; /* keep color static; black lines between stickers */
 }
 
 .rubik-cube-arrow {
@@ -125,16 +113,16 @@
 }
 
 /* --- Button Grouping & Layout --- */
-.button-container {
+.rubik-cube-algorithms-button-container {
   display: flex;
   flex-wrap: wrap;
   margin-top: 10px;
   place-content: center center;
   gap: 15px; /* gap btw buttons */
-  width: 100%
+  width: 100%;
 }
 
-.button {
+.rubik-cube-algorithms-button {
   padding: 10px 20px;
   font-size: 16px;
   cursor: pointer;
@@ -144,7 +132,7 @@
   transition: background-color 0.2s;
 }
 
-.button:hover {
+.rubik-cube-algorithms-button:hover {
   background-color: #e0e0e0;
 }
 
@@ -201,8 +189,6 @@
   font-size: 0.9rem;
   color: var(--text-muted);
   margin: 0;
-
-  /* text-transform: uppercase; */
   letter-spacing: 0.05em;
 }
 
@@ -226,7 +212,7 @@ h1.rubik-cube-algorithms-timer-running,
 
 /* By combining .modal and your custom class without a space,
    we target an element that has BOTH classes, making it
-   stronger than Obsidian's default rules. */
+   stronger than Obsidian's default rules. * /
 .modal.rubik-cube-algorithms-fullscreen-modal {
   position: fixed;
   top: 0;
@@ -247,7 +233,7 @@ h1.rubik-cube-algorithms-timer-running,
   user-select: none;
 }
 
-/* These remain the same as they already have high specificity */
+/* These remain the same as they already have high specificity * /
 .rubik-cube-algorithms-fullscreen-modal .modal-close-button {
   display: none;
 }
@@ -259,49 +245,62 @@ h1.rubik-cube-algorithms-timer-running,
   justify-content: center;
   width: 100%;
   height: 100%;
-}
+} */
 
-/* Debug Tool * /
-.div {
-  outline: 1px solid red !important;
-}
-/* - */
-.rubik-cube-timer-algorithms-container {
-  background: var(--background-secondary);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  padding: 3rem 2rem;
-  margin: 1.5rem 0;
+/* === Main StackMat / timer layout === */
+.rubik-cube-algorithms-timer-container {
+  /* Establishes a boundary for absolute positioning. Anything inside this
+     container with 'position: absolute' will align relative to this box. */
+  position: relative;
+
+  /* Column direction stacks: Scramble over Timer over Hints. */
   display: flex;
   flex-direction: column;
+
+  /* Flexbox alignment: 'align-items' centers children horizontally (left-to-right).
+     'justify-content' centers children vertically (top-to-bottom). */
   align-items: center;
   justify-content: center;
-  position: relative;
+
+  /* Box Model Spacing: Margin controls the empty space *outside* the border.
+       Padding controls the inner breathing room *inside* the border. */
+  margin: 1.5rem 0;
+  padding: 3rem 2rem;
+
+  /* Cosmetics: Gives the block its shape and initial look. Transparent border
+     prevents the box from layout-shifting or resizing when the active border triggers. */
+  border: 1px solid transparent;
+  border-radius: 8px;
+
+  /* CSS Variables: 'var()' fetches values dynamically from the active Obsidian theme.
+     This ensures it changes smoothly when switching between light and dark modes. */
+  background: var(--background-secondary);
+
+  /* UX Cleanup: Removes the default, ugly blue/black browser ring when clicked
+     and turns the mouse cursor into a pointer hand to signal interaction. */
   outline: none; /* Hide default browser box outlines */
   cursor: pointer;
 
-  /* Performance tweaks */
+  /* Animations: Tells the browser to smoothly morph the border color, shadows,
+       and background over 0.2 seconds instead of snapping instantly. */
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+
+  /* Mobile Performance Tweaks: Disables default browser zoom gestures on tap
+       and prevents text highlighting while the user is rapidly tapping the screen. */
   touch-action: none;
-  -webkit-tap-highlight-color: transparent;
   user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.rubik-cube-timer-algorithms-container:focus-within {
+.rubik-cube-algorithms-timer-container:focus-within {
+  /* Overwrites the transparent border with Obsidian's native accent color */
   border-color: var(--interactive-accent);
+
+  /* Slightly changes the background color to give a subtle depth change */
   background: var(--background-secondary-alt);
 }
 
-.rubik-cube-timer-algorithms-container:focus-within .timer-focus-hint {
-  color: var(--interactive-accent);
-  opacity: 1;
-  content: "Keyboard Active";
-}
-
-.rubik-cube-timer-algorithms-container:focus-within {
-  background: var(--background-secondary-alt);
-}
-
-.timer-focus-hint {
+.rubik-cube-algorithms-timer-focus-hint {
   position: absolute;
   top: 8px;
   right: 12px;
@@ -310,33 +309,19 @@ h1.rubik-cube-algorithms-timer-running,
   opacity: 0.7;
 }
 
-/* All layout structure lives safely here */
-.rubik-cube-timer-algorithms-container {
-  background: var(--background-secondary);
-  border: 1px solid transparent; /* Fallback frame spacing */
-  border-radius: 8px;
-  padding: 3rem 2rem;
-  margin: 1.5rem 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  outline: none;
-  cursor: pointer;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+/* Combinator Selector: This targets the 'timer-in-focus hint' element, but
+   ONLY when it sits inside a container that currently has focus-within. */
+.rubik-cube-algorithms-timer-container:focus-within .rubik-cube-algorithms-timer-focus-hint {
+  color: var(--interactive-accent);
+  opacity: 1; /* Makes the element fully visible when active */
 }
 
 .rubik-cube-algorithms-scramble-display {
-  /* font-size: 1.25rem; */
-
-  /* font-weight: 600; */
-
-  /* text-align: center; */
   letter-spacing: 0.1em;
-
-  /* color: var(--text-normal); */
-
-  /* margin-bottom: 1.5rem; */
-
-  /* font-family: var(--font-monospace); !* Great for keeping move letters aligned *! */
 }
+
+/* Debug Tool * /
+.div {
+  outline: 1px solid red !important;
+} */
+

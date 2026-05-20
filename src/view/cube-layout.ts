@@ -1,4 +1,5 @@
 import {CubeState} from "../model/cube-state"
+import {CssClasses} from "./css-util";
 
 export interface CubeLayout {
   readonly mainContainer: HTMLDivElement
@@ -8,32 +9,28 @@ export interface CubeLayout {
   readonly algorithmsDiv: HTMLDivElement
 }
 
-export function createCubeLayout(container: HTMLElement, cubeState: CubeState): CubeLayout {
+function createCubeLayout(container: HTMLElement, cubeState: CubeState): CubeLayout {
 
-  const mainContainer = container.createEl('div')
-  /*
-   * TODO this following line is redundant, added to tell CI to shut up about unused css classes. which did not work. find a new way to do this
-   */
-  mainContainer.className = 'rubik-cube-div-main-container'
-
-  const leftSide = mainContainer.createEl('div', {cls: 'rubik-cube-div-left-column'})
-  const rightSide = mainContainer.createEl('div', {cls: 'rubik-cube-div-right-column'})
-
-  const cubeDiv = leftSide.createEl('div', {cls: 'rubik-cube-div-content'})
+  const mainContainer = container.createEl('div', {cls: CssClasses.layout.mainContainer})
+  const leftSide = mainContainer.createEl('div', {cls: CssClasses.layout.leftColumn})
+  const rightSide = mainContainer.createEl('div', {cls: CssClasses.layout.rightColumn})
+  const cubeDiv = leftSide.createEl('div', {cls: CssClasses.layout.content})
 
   let setupDiv: HTMLDivElement | undefined = undefined
   let buttonDiv: HTMLDivElement | undefined = undefined
 
   if (shouldCreateSetupAlgorithmDiv(cubeState))
-    setupDiv = rightSide.createEl('div', {attr: {id: 'setupDiv'}, cls: 'rubik-cube-algorithms-monotone-box'})
+    setupDiv = rightSide.createEl('div', {attr: {id: 'setupDiv'}, cls: CssClasses.layout.setupBox})
 
   if (shouldCreateButtonDiv(cubeState))
-    buttonDiv = leftSide.createEl('div', {attr: {id: 'buttonDiv'}, cls: 'button-container'})
+    buttonDiv = leftSide.createEl('div', {attr: {id: 'buttonDiv'}, cls: CssClasses.buttons.container})
 
-  const algorithmsDiv = rightSide.createEl('div', {attr: {id: 'algorithmsDiv'}, cls: 'rubik-cube-div-algorithms-list'})
+  const algorithmsDiv = rightSide.createEl('div', {attr: {id: 'algorithmsDiv'}, cls: CssClasses.layout.algorithmsList})
 
   return {mainContainer, cubeDiv, setupDiv, buttonDiv, algorithmsDiv}
 }
+
+export default createCubeLayout
 
 function shouldCreateSetupAlgorithmDiv(cubeState: CubeState): boolean {
   return !cubeState.flags.contains('no-setup') && cubeState.setup !== undefined

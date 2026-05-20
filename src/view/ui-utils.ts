@@ -1,5 +1,6 @@
 import {Algorithm} from "../model/algorithms"
 import {InvalidInput} from "../model/invalid-input-container"
+import {CssClasses} from "./css-util";
 
 export const UiUtils = {
   renderAlgorithmList,
@@ -24,12 +25,12 @@ function findMatchingError(errors: InvalidInput[], row: string): InvalidInput | 
 function showInvalidInput(container: HTMLElement, rows: string[], errors: InvalidInput[]): void {
   container.createEl('div', {
     text: 'Code block interpretation failed:',
-    cls: 'rubik-cube-warning-text-orange'
+    cls: CssClasses.warnings.orange
   })
 
   if (rows.length === 0) {
     const p = container.createEl('p')
-    p.createEl('b', {text: '[empty]', cls: 'rubik-cube-warning-text-red'})
+    p.createEl('b', {text: '[empty]', cls: CssClasses.warnings.red})
     p.createEl('span', {text: ` => ${errors[0]!.reason}`})
     return
   }
@@ -42,7 +43,7 @@ function showInvalidInput(container: HTMLElement, rows: string[], errors: Invali
 
     if (matchingError) {
       const errorRow = listContainer.createEl('div')
-      errorRow.createEl('b', {text: row, cls: 'rubik-cube-warning-text-red'})
+      errorRow.createEl('b', {text: row, cls: CssClasses.warnings.red})
       errorRow.createEl('span', {text: ` => ${matchingError.reason}`})
     } else {
       listContainer.createEl('div', {text: row})

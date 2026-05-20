@@ -1,4 +1,5 @@
 import {generateScramble} from "./algorithm-scrambler"
+import {CssClasses} from "../view/css-util";
 
 /** Number of digits to measure */
 const fractionDigits: number = 3
@@ -32,7 +33,7 @@ export class TrainingTimer {
 
     /*Add a class to the outermost modal container for full-screen CSS overrides*/
     if (!this.isOnMobile) {
-      this.contentEl.addClass('rubik-cube-algorithms-timer-modal')
+      this.contentEl.addClass(CssClasses.timer.modal)
     }
 
     this.addTexts(this.contentEl)
@@ -60,13 +61,13 @@ export class TrainingTimer {
 
   /** Change hint text based on the platform */
   private addTexts(contentEl: HTMLElement) {
-    this.scrambleEl = this.contentEl.createEl('div', {text: generateScramble(), cls: 'rubik-cube-algorithms-scramble-display'})
-    this.displayEl = this.contentEl.createEl('h1', {text: noTime, cls: 'rubik-cube-algorithms-timer-display'})
+    this.scrambleEl = this.contentEl.createEl('div', {text: generateScramble(), cls: CssClasses.timer.scrambleDisplay})
+    this.displayEl = this.contentEl.createEl('h1', {text: noTime, cls: CssClasses.timer.display})
 
     const hintText1: string = this.isOnMobile ? 'Tap and hold anywhere to ready, release to start.' : 'Hold space bar. Release to start.'
     const hintText2: string = this.isOnMobile ? 'Tap anywhere to stop / reset.' : 'Press space bar to stop / reset.'
-    contentEl.createEl('div', {text: hintText1, cls: 'rubik-cube-algorithms-timer-hint'})
-    contentEl.createEl('div', {text: hintText2, cls: 'rubik-cube-algorithms-timer-hint'})
+    contentEl.createEl('div', {text: hintText1, cls: CssClasses.timer.hint})
+    contentEl.createEl('div', {text: hintText2, cls: CssClasses.timer.hint})
   }
 
   onClose() {
@@ -99,8 +100,8 @@ export class TrainingTimer {
       this.resetTimerLogic()
     } else {
       this.isReadyToStart = true
-      // this.displayEl.removeClass('rubik-cube-algorithms-timer-display')
-      this.displayEl.addClass('rubik-cube-algorithms-timer-readying')
+      // this.displayEl.removeClass(CssClasses.timer.display)
+      this.displayEl.addClass(CssClasses.timer.states.readying)
     }
   }
 
@@ -108,7 +109,7 @@ export class TrainingTimer {
     this.isHolding = false
     if (this.isReadyToStart) {
       this.isReadyToStart = false
-      this.displayEl.removeClass('rubik-cube-algorithms-timer-readying')
+      this.displayEl.removeClass(CssClasses.timer.states.readying)
       this.startTimer()
     }
   }
@@ -116,7 +117,7 @@ export class TrainingTimer {
   private startTimer() {
     this.isRunning = true
     this.startTime = Date.now()
-    this.displayEl.addClass('rubik-cube-algorithms-timer-running')
+    this.displayEl.addClass(CssClasses.timer.states.running)
 
     const updateDisplay = () => {
       if (!this.isRunning) return
@@ -131,7 +132,7 @@ export class TrainingTimer {
   private stopTimer() {
     if (!this.isRunning) return
     this.isRunning = false
-    this.displayEl.removeClass('rubik-cube-algorithms-timer-running')
+    this.displayEl.removeClass(CssClasses.timer.states.running)
 
     if (this.timerAnimationFrame) {
       cancelAnimationFrame(this.timerAnimationFrame)
@@ -184,7 +185,7 @@ export class TrainingTimer {
   private handleBlur() {
     if (this.isReadyToStart) {
       this.isReadyToStart = false
-      this.displayEl.removeClass('rubik-cube-algorithms-timer-readying')
+      this.displayEl.removeClass(CssClasses.timer.states.readying)
     }
     this.isHolding = false
   }

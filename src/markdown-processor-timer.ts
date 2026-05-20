@@ -1,6 +1,7 @@
 import {MarkdownRenderChild, Platform} from 'obsidian'
 import {TrainingTimer} from "./training/training-timer";
 import RubikCubeAlgos from "./main";
+import {CssClasses} from "./view/css-util";
 
 /**
  * Stack mat directly in note
@@ -16,18 +17,18 @@ export class TimerRenderChild extends MarkdownRenderChild {
 
   onload() {
     this.container.empty();
-    this.container.addClass('rubik-cube-algorithms-timer-container');
+    this.container.addClass(CssClasses.timer.container);
 
     const userColor = getComputedStyle(document.body).getPropertyValue('--interactive-accent').trim() ||  '#00ff55'
     this.container.style.borderColor = userColor;
     this.container.style.boxShadow = `0 0 8px ${userColor}`
 
-    const innerContent = this.container.createEl('div', { cls: 'timer-block-content' })
+    const innerContent = this.container.createEl('div')
     if (!this.isOnMobile) {
       this.container.setAttribute('tabindex', '0')
       this.container.createEl('small', {
         text: 'Click block to focus keyboard controls',
-        cls: 'timer-focus-hint'
+        cls: CssClasses.timer.focusHint
       })
     }
 

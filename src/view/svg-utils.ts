@@ -1,4 +1,5 @@
 import {Arrows} from "../model/geometry"
+import {CssClasses} from "./css-util";
 
 const stickerDrawSize = 100
 
@@ -28,14 +29,14 @@ function drawGrid(svg: SVGSVGElement, width: number, height: number, offset = 0)
   for (let x = offset; x < width; x += stickerDrawSize) {
     svg.createSvg('line', {
       attr: {x1: x, x2: x, y1: 0, y2: height},
-      cls: 'rubik-cube-pll-line-grid'
+      cls: CssClasses.vectorGraphics.lineGrid
     })
   }
   /* Horizontal lines */
   for (let y = offset; y < height; y += stickerDrawSize) {
     svg.createSvg('line', {
       attr: {x1: 0, x2: width, y1: y, y2: y},
-      cls: 'rubik-cube-pll-line-grid'
+      cls: CssClasses.vectorGraphics.lineGrid
     })
   }
 }
@@ -49,7 +50,7 @@ function drawArrows(svg: SVGSVGElement, arrows: Arrows, stroke: string) {
         'marker-end': `url(#arrowhead${stroke})`,
         stroke // shorthand
       },
-      cls: 'rubik-cube-arrow'
+      cls: CssClasses.vectorGraphics.arrow
     })
   })
 }
@@ -81,7 +82,7 @@ function createArrowHead(svg: SVGSVGElement, color: string) {
 function drawBackgroundRect(svg: SVGSVGElement, fill: string) {
   svg.createSvg('rect', {
     attr: {width: '100%', height: '100%', fill}, // Shorthand property {fill: fill}
-    cls: "rubik-cube-pll-rect"
+    cls: CssClasses.vectorGraphics.rect
   })
 }
 
@@ -93,12 +94,13 @@ function drawSticker(svg: SVGSVGElement,
                      y: number,
                      width: number,
                      height: number,
-                     fill: number | string, // Accept either
+                     fill: number | string,
                      isGrid = false
 ) {
   svg.createSvg('rect', {
     attr: {x, y, width, height, fill},
-    cls: isGrid ? "rubik-cube-pll-line-grid" : "rubik-cube-rect"
+    cls: isGrid ?
+      CssClasses.vectorGraphics.lineGrid :  CssClasses.vectorGraphics.rect
   })
 }
 

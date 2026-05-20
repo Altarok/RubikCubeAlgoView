@@ -4,9 +4,10 @@ import {OllFieldColoring} from "../model/oll-field-coloring"
 import {SvgUtils} from "./svg-utils"
 import {UiUtils} from "./ui-utils"
 import {applyRotation} from "./dom-rotation"
-import {createCubeLayout, CubeLayout} from "./cube-layout"
+import createCubeLayout, {CubeLayout} from "./cube-layout"
 import {setIcon} from "obsidian"
 import {InvalidInput} from "../model/invalid-input-container"
+import {CssClasses} from "./css-util"
 
 
 export abstract class CubeRenderer {
@@ -79,14 +80,14 @@ export abstract class CubeRenderer {
     // }
 
     this.buttonLeft = buttonDiv.createEl('button', {'title': 'Rotate left 90 degrees'})
-    let turnLeftSvg: SVGSVGElement = this.buttonLeft.createSvg('svg', {cls: 'rubik-cube-button'})
+    let turnLeftSvg: SVGSVGElement = this.buttonLeft.createSvg('svg', {cls: CssClasses.vectorGraphics.icon})
     SvgUtils.drawRotateLeftIcon(turnLeftSvg)
 
     this.buttonResetRotation = buttonDiv.createEl('button', {'title': 'Reset rotation'})
     setIcon(this.buttonResetRotation, 'reset')
 
     this.buttonRight = buttonDiv.createEl('button', {'title': 'Rotate right 90 degrees'})
-    let turnRightSvg: SVGSVGElement = this.buttonRight.createSvg('svg', {cls: 'rubik-cube-button'})
+    let turnRightSvg: SVGSVGElement = this.buttonRight.createSvg('svg', {cls: CssClasses.vectorGraphics.icon})
     SvgUtils.drawRotateRightIcon(turnRightSvg)
 
 
@@ -141,7 +142,7 @@ export abstract class CubeRenderer {
         width: imageWidth,
         height: imageHeight,
         viewBox: `0 0 ${viewBoxWidth} ${viewBoxHeight}`
-      }, cls: 'rubik-cube-pll'
+      }, cls: CssClasses.vectorGraphics.pllFrame
     })
 
     SvgUtils.createArrowHead(this.mainCubeSvg, this.cubeState.arrowColor)
@@ -182,7 +183,7 @@ export class CubeRendererPLL extends CubeRenderer {
   displayAlgorithms(container: HTMLDivElement): void {
     const algorithms: Algorithms = this.cubeStatePll.algorithms
     if (algorithms && algorithms.items.length > 0)   /* Fail-safe, algorithms are optional */
-    UiUtils.renderAlgorithmList(container, algorithms.items)
+      UiUtils.renderAlgorithmList(container, algorithms.items)
   }
 }
 
