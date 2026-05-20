@@ -4,37 +4,43 @@
   gap: 1.5rem;
   width: 100%;
   align-items: flex-start;
-  justify-content: center; /* TODO may be remove? check on mobile*/
+  justify-content: center; /* TODO may be remove? check on mobile */
   padding: 0 10px; /* Small 10px gutter so it doesn't touch the screen edge */
 }
+
 .rubik-cube-div-left-column,
 .rubik-cube-div-right-column {
   display: flex;
   flex-direction: column;
 }
+
 .rubik-cube-div-algorithms-list ul {
   margin: 0;
   padding: 0;  /* Only keep what you need for legibility */
   list-style-position: inside; /* Helps prevent left-side overflow */
 }
+
 .rubik-cube-div-left-column {
   flex: 0 0 auto; /* No grow, no shrink, no cry */
   min-width: 0; /* Prevents overflow in narrow sidebars */
   align-items: center; /* Centers children */
 }
+
 .rubik-cube-div-right-column {
   flex: 1 1 300px; /* Grow to fill space, shrink if needed, prefer 300px */
   align-items: stretch;
 }
+
 /* Desktop/Tablet style: Add breathing room only if there is space */
-@media (min-width: 768px) {
+@media (width >= 768px) {
   .rubik-cube-div-main-container {
     padding-left: 5%;  /* Percentage-based padding scales with the screen */
     padding-right: 5%;
   }
 }
+
 /* Target narrow Obsidian panes */
-@media (max-width: 600px) {
+@media (width <= 600px) {
   .rubik-cube-div-main-container {
     flex-direction: column; /* Forces vertical stacking */
     align-items: flex-start;
@@ -43,12 +49,14 @@
     padding-right: 0;
     width: 100%;
   }
+
   .rubik-cube-div-left-column {
     flex: 0 0 auto;
     width: 100%;
     margin: 0;
     padding: 0;
   }
+
   .rubik-cube-div-right-column {
     flex: 0 0 auto; /* no growing */
     width: 100%;
@@ -56,73 +64,90 @@
     padding: 0;
     min-height: 0; /* Prevents browser from enforcing a default height */
   }
+
   .rubik-cube-div-algorithms-list ul {
     margin: 0;
     padding: 0;
     list-style-position: inside; /* Helps prevent left-side overflow */
     width: 100%;
   }
-  /*.rubik-cube-div-content {*/
-  /*  margin-left: 0;*/
-  /*  margin-right: 0;*/
-  /*  width: 100%;*/
-  /*}*/
+
+  /* .rubik-cube-div-content { */
+
+  /*  margin-left: 0; */
+
+  /*  margin-right: 0; */
+
+  /*  width: 100%; */
+
+  /* } */
 }
+
 .rubik-cube-div-content {
   display: flex;
   justify-content: center;
   align-items: center;
   margin-left: auto;
   margin-right: auto;
+
   /* Ensure it rotates around its own center */
   transform-origin: center;
   transition: transform 0.5s ease-in-out;
 }
+
 .rubik-cube-pll {
   display: flex;
-  border: 2px solid #666666;
+  border: 2px solid #666;
 }
+
 .rubik-cube-pll-rect {
   width: 100%;
   height: 100%;
 }
+
 .rubik-cube-pll-line-grid {
   stroke-width: 3px;
-  stroke: #000000;
+  stroke: #000;
 }
+
 .rubik-cube-arrow {
   stroke-width: 2px;
 }
+
 .rubik-cube-warning-text-red {
-  background-color: #ff0000;
-  color: #ffffff;
+  background-color: #f00;
+  color: #fff;
 }
+
 .rubik-cube-warning-text-orange {
   background-color: #fac898;
-  color: #000000;
+  color: #000;
 }
+
 /* --- Button Grouping & Layout --- */
 .button-container {
   display: flex;
   flex-wrap: wrap;
   margin-top: 10px;
-  justify-content: center;
-  align-content: center;
+  place-content: center center;
   gap: 15px; /* gap btw buttons */
   width: 100%
 }
+
 .button {
   padding: 10px 20px;
   font-size: 16px;
   cursor: pointer;
-  border: 1px solid #cccccc;
+  border: 1px solid #ccc;
   border-radius: 4px;
   background-color: #f9f9f9;
   transition: background-color 0.2s;
 }
+
 .button:hover {
   background-color: #e0e0e0;
 }
+
 .rubik-cube-button {
   stroke: white;
   stroke-width: 1;
@@ -132,14 +157,16 @@
   stroke-linecap: round;
   stroke-linejoin: round;
 }
+
 .rubik-cube-button:disabled svg {
   stroke: #6c6c6c; /* Changes the icon color to match the disabled text */
   fill: none;
 }
+
 .rubik-cube-algorithms-monotone-box {
-  font-family: 'Consolas', 'Courier New', Courier, monospace;
+  font-family: Consolas, 'Courier New', Courier, monospace;
   font-size: 0.8em; /* Slightly smaller than the inherited default size */
-  color: #000000; /* Black font foreground */
+  color: #000; /* Black font foreground */
   background-color: #f0f0f0; /* Light grey box background */
   padding: 2px 6px; /* Spacing inside the grey box */
   border-radius: 4px; /* Optional: rounds the corners of the box slightly */
@@ -148,6 +175,7 @@
   line-height: 1; /* Snaps the line height tight to the text */
   width: max-content; /* Forces the box to shrink to the exact width of the text */
 }
+
 /* Center the content inside the modal wrapper */
 .rubik-cube-algorithms-timer-modal {
   display: flex;
@@ -157,6 +185,7 @@
   padding: 2rem;
   text-align: center;
 }
+
 /* Make the timer numbers massive and monospace so they don't jitter while counting */
 .rubik-cube-algorithms-timer-display {
   font-size: 5rem;
@@ -166,29 +195,35 @@
   color: var(--text-normal);
   transition: color 0.15s ease-in-out;
 }
+
 /* Subtle, muted styling for the help/hint text below the timer */
 .rubik-cube-algorithms-timer-hint {
   font-size: 0.9rem;
   color: var(--text-muted);
   margin: 0;
-  /*text-transform: uppercase;*/
+
+  /* text-transform: uppercase; */
   letter-spacing: 0.05em;
 }
+
 /* Color when holding space bar down to prime the timer */
 h1.rubik-cube-algorithms-timer-readying,
 .rubik-cube-algorithms-timer-display.rubik-cube-algorithms-timer-readying {
   color: var(--text-error); /* Dark/Light theme safe red */
 }
+
 /* Visual indicator change while the clock is actively running */
 h1.rubik-cube-algorithms-timer-running,
 .rubik-cube-algorithms-timer-display.rubik-cube-algorithms-timer-running {
   color: var(--interactive-accent);
 }
+
 /* Optional: If you want a stack mat "inspection ready" green phase
    after holding it for a specific duration, you could swap this class in */
 .rubik-cube-algorithms-timer-primed {
   color: var(--text-success); /* Dark/Light theme safe green */
 }
+
 /* By combining .modal and your custom class without a space,
    we target an element that has BOTH classes, making it
    stronger than Obsidian's default rules. */
@@ -203,16 +238,13 @@ h1.rubik-cube-algorithms-timer-running,
   border-radius: 0;
   margin: 0;
   padding: 0;
-
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-
   touch-action: none;
   -webkit-tap-highlight-color: transparent;
   user-select: none;
-  -webkit-user-select: none;
 }
 
 /* These remain the same as they already have high specificity */
@@ -228,12 +260,13 @@ h1.rubik-cube-algorithms-timer-running,
   width: 100%;
   height: 100%;
 }
+
 /* Debug Tool * /
 .div {
   outline: 1px solid red !important;
 }
 /* - */
-.rubik-cube-timer-container {
+.rubik-cube-timer-algorithms-container {
   background: var(--background-secondary);
   border: 1px solid var(--border-color);
   border-radius: 8px;
@@ -251,13 +284,23 @@ h1.rubik-cube-algorithms-timer-running,
   touch-action: none;
   -webkit-tap-highlight-color: transparent;
   user-select: none;
-  -webkit-user-select: none;
 }
-/* Give clear feedback when the widget is actively capturing key strokes */
-.rubik-cube-timer-container:focus-within {
+
+.rubik-cube-timer-algorithms-container:focus-within {
   border-color: var(--interactive-accent);
   background: var(--background-secondary-alt);
 }
+
+.rubik-cube-timer-algorithms-container:focus-within .timer-focus-hint {
+  color: var(--interactive-accent);
+  opacity: 1;
+  content: "Keyboard Active";
+}
+
+.rubik-cube-timer-algorithms-container:focus-within {
+  background: var(--background-secondary-alt);
+}
+
 .timer-focus-hint {
   position: absolute;
   top: 8px;
@@ -266,13 +309,9 @@ h1.rubik-cube-algorithms-timer-running,
   font-size: 0.75rem;
   opacity: 0.7;
 }
-.rubik-cube-timer-container:focus-within .timer-focus-hint {
-  color: var(--interactive-accent);
-  opacity: 1;
-  content: "Keyboard Active";
-}
+
 /* All layout structure lives safely here */
-.rubik-cube-timer-container {
+.rubik-cube-timer-algorithms-container {
   background: var(--background-secondary);
   border: 1px solid transparent; /* Fallback frame spacing */
   border-radius: 8px;
@@ -286,17 +325,18 @@ h1.rubik-cube-algorithms-timer-running,
   cursor: pointer;
   transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
 }
-/* Let the focus glow state inherit that same color dynamically via currentColor */
-.rubik-cube-timer-container:focus-within {
-  background: var(--background-secondary-alt);
-  /*box-shadow: 0 0 8px currentColor; !* Pulls the border color injected by TS automatically *!*/
-}
+
 .rubik-cube-algorithms-scramble-display {
-  /*font-size: 1.25rem;*/
-  /*font-weight: 600;*/
-  /*text-align: center;*/
+  /* font-size: 1.25rem; */
+
+  /* font-weight: 600; */
+
+  /* text-align: center; */
   letter-spacing: 0.1em;
-  /*color: var(--text-normal);*/
-  /*margin-bottom: 1.5rem;*/
-  /*font-family: var(--font-monospace); !* Great for keeping move letters aligned *!*/
+
+  /* color: var(--text-normal); */
+
+  /* margin-bottom: 1.5rem; */
+
+  /* font-family: var(--font-monospace); !* Great for keeping move letters aligned *! */
 }
