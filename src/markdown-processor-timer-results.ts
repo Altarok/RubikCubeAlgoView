@@ -6,7 +6,7 @@ import {DNF, Result, Solve, SpeedcubeTimesCalculator, SpeedcubeTimesStatistics} 
 /**
  * Speedcubing results
  */
-export class SpeedcubeResultsRenderChild extends MarkdownRenderChild {
+export class SpeedCubingResultTableRenderChild extends MarkdownRenderChild {
   content: string[]
   times: Solve[]
 

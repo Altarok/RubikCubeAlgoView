@@ -6,7 +6,7 @@ import {CssClasses} from "./view/css-util"
 /**
  * Stack mat directly in note
  */
-export class TimerRenderChild extends MarkdownRenderChild {
+export class SpeedCubingTimerRenderChild extends MarkdownRenderChild {
   isOnMobile: boolean
   timer?: TrainingTimer
   focusHint?: HTMLElement

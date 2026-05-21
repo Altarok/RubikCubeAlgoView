@@ -3,8 +3,8 @@ import {MarkdownProcessorOll} from "./markdown-processor-oll"
 import {MarkdownProcessorPll} from "./markdown-processor-pll"
 import RubikCubeAlgoSettingsTab, {DefaultSettings, Settings} from "./settings/plugin-settings-tab"
 import {addAppCommands} from "./plugin-command-builder"
-import {TimerRenderChild} from "./markdown-processor-timer"
-import {SpeedcubeResultsRenderChild} from "./markdown-processor-timer-results"
+import {SpeedCubingTimerRenderChild} from "./markdown-processor-timer"
+import {SpeedCubingResultTableRenderChild} from "./markdown-processor-timer-results"
 
 /*
  * # Logic
@@ -124,12 +124,12 @@ export default class RubikCubeAlgos extends Plugin {
 
     this.registerMarkdownCodeBlockProcessor('rubikCubeTimer',
       (source, el, ctx) => {
-        ctx.addChild(new TimerRenderChild(source, this, el, ctx))
+        ctx.addChild(new SpeedCubingTimerRenderChild(source, this, el, ctx))
       })
 
     this.registerMarkdownCodeBlockProcessor('rubikCubeTimerResults',
       (source, el, ctx) => {
-        ctx.addChild(new SpeedcubeResultsRenderChild(source, this, el, ctx))
+        ctx.addChild(new SpeedCubingResultTableRenderChild(source, this, el, ctx))
       })
   }
 }
