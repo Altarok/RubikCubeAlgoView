@@ -4,6 +4,7 @@ import {MarkdownProcessorPll} from "./markdown-processor-pll"
 import RubikCubeAlgoSettingsTab, {DefaultSettings, Settings} from "./settings/plugin-settings-tab"
 import {addAppCommands} from "./plugin-command-builder"
 import {TimerRenderChild} from "./markdown-processor-timer";
+import {SpeedcubeResultsRenderChild} from "./markdown-processor-timer-results";
 
 /*
  * # Logic
@@ -77,27 +78,13 @@ export default class RubikCubeAlgos extends Plugin {
 
     await this.loadSettings()
 
-    this.registerMarkdownCodeBlockProcessor("rubikCubeOLL",
-      (source, el, ctx) => {
-        ctx.addChild(new MarkdownProcessorOll(source, this, el))
-      }
-    )
-
-    this.registerMarkdownCodeBlockProcessor("rubikCubePLL",
-      (source, el, ctx) => {
-        ctx.addChild(new MarkdownProcessorPll(source, this, el))
-      }
-    )
-
-    this.registerMarkdownCodeBlockProcessor('rubikCubeTimer',
-      (source, el, ctx) => {
-        ctx.addChild(new TimerRenderChild(source, this, el));
-      })
+    this.registerMarkdownCodeBlockProcessors();
 
     addAppCommands(this)
 
     this.addSettingTab(new RubikCubeAlgoSettingsTab(this.app, this))
   }
+
 
   onunload() {
   }
@@ -121,5 +108,28 @@ export default class RubikCubeAlgos extends Plugin {
     void this.saveSettings()
     // .then(() => console.debug("Save successful"))
     // .catch(err => console.error("Save failed", err))
+  }
+
+  private registerMarkdownCodeBlockProcessors() {
+
+    this.registerMarkdownCodeBlockProcessor("rubikCubeOLL",
+      (source, el, ctx) => {
+        ctx.addChild(new MarkdownProcessorOll(source, this, el))
+      })
+
+    this.registerMarkdownCodeBlockProcessor("rubikCubePLL",
+      (source, el, ctx) => {
+        ctx.addChild(new MarkdownProcessorPll(source, this, el))
+      })
+
+    this.registerMarkdownCodeBlockProcessor('rubikCubeTimer',
+      (source, el, ctx) => {
+        ctx.addChild(new TimerRenderChild(source, this, el, ctx));
+      })
+
+    this.registerMarkdownCodeBlockProcessor('rubikCubeTimerResults',
+      (source, el, ctx) => {
+        ctx.addChild(new SpeedcubeResultsRenderChild(source, this, el, ctx));
+      })
   }
 }

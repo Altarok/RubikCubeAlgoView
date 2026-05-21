@@ -15,7 +15,7 @@ export class TimerModal extends Modal {
     const {contentEl/*, modalEl*/} = this
     contentEl.empty()
 
-    this.timer = new TrainingTimer(contentEl, window, this.isOnMobile)
+    this.timer = new TrainingTimer(contentEl, window, this.isOnMobile, undefined)
     this.timer.onOpen()
 
     contentEl.setAttribute('tabindex', '-1')

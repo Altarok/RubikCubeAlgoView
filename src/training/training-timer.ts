@@ -5,6 +5,9 @@ import {CssClasses} from "../view/css-util";
 const fractionDigits: number = 3
 const noTime: string = `0.${'0'.repeat(fractionDigits)}`
 
+/** Callback for optional recording of speedcubing times taken */
+export type StringPairCallback = (scramble: string, timeTaken: string) => void
+
 /**
  * Stack mat
  */
@@ -25,8 +28,10 @@ export class TrainingTimer {
   private handleTouchEndBound = this.handleTouchEnd.bind(this)
   private onBlur = this.handleBlur.bind(this)
 
-
-  constructor(readonly contentEl: HTMLElement, readonly eventHandler: HTMLElement | Window, readonly isOnMobile: boolean) {
+  constructor(readonly contentEl: HTMLElement,
+              readonly eventHandler: HTMLElement | Window,
+              readonly isOnMobile: boolean,
+              readonly callback: StringPairCallback | undefined) {
   }
 
   onOpen() {
@@ -64,7 +69,7 @@ export class TrainingTimer {
     this.scrambleEl = this.contentEl.createEl('div', {text: generateScramble(), cls: CssClasses.timer.scrambleDisplay})
     this.displayEl = this.contentEl.createEl('h1', {text: noTime, cls: CssClasses.timer.clock})
 
-    const hintText1: string = this.isOnMobile ? 'Tap and hold anywhere to ready, release to start.' : 'Hold space bar. Release to start.'
+    const hintText1: string = this.isOnMobile ? 'Tap and hold anywhere to ready, release to start.' : 'Hold space bar, release to start.'
     const hintText2: string = this.isOnMobile ? 'Tap anywhere to stop / reset.' : 'Press space bar to stop / reset.'
     contentEl.createEl('div', {text: hintText1, cls: CssClasses.timer.hint})
     contentEl.createEl('div', {text: hintText2, cls: CssClasses.timer.hint})
@@ -139,9 +144,13 @@ export class TrainingTimer {
       this.timerAnimationFrame = null
     }
 
-    const finalTime = ((Date.now() - this.startTime) / 1000).toFixed(fractionDigits)
+    const finalTime: string = ((Date.now() - this.startTime) / 1000).toFixed(fractionDigits)
     this.displayEl.setText(finalTime)
     this.isShowingResult = true
+
+    if (this.callback) {
+      this.callback(this.scrambleEl.getText(), finalTime)
+    }
   }
 
   private resetTimerLogic() {

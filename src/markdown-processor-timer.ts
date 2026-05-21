@@ -1,5 +1,5 @@
-import {MarkdownRenderChild, Platform} from 'obsidian'
-import {TrainingTimer} from "./training/training-timer";
+import {MarkdownPostProcessorContext, MarkdownRenderChild, Platform, TFile} from 'obsidian'
+import {StringPairCallback, TrainingTimer} from "./training/training-timer";
 import RubikCubeAlgos from "./main";
 import {CssClasses} from "./view/css-util";
 
@@ -11,7 +11,7 @@ export class TimerRenderChild extends MarkdownRenderChild {
   timer?: TrainingTimer
   focusHint?: HTMLElement;
 
-  constructor(readonly source: string, readonly plugin: RubikCubeAlgos, readonly container: HTMLElement) {
+  constructor(readonly source: string, readonly plugin: RubikCubeAlgos, readonly container: HTMLElement, readonly ctx: MarkdownPostProcessorContext) {
     super(container)
     this.isOnMobile = Platform.isMobile
   }
@@ -33,17 +33,42 @@ export class TimerRenderChild extends MarkdownRenderChild {
     }
 
     this.container.addEventListener('focusin', () => {
-      this.container.style.boxShadow = `0 0 8px ${userColor}`;
+      this.container.style.boxShadow = `0 0 8px ${userColor}`
       this.focusHint?.setText('')
-    });
+    })
 
     this.container.addEventListener('focusout', () => {
       this.container.setCssProps({boxShadow: 'none'})
       this.focusHint?.setText('Click block to focus keyboard controls')
-    });
+    })
 
-    this.timer = new TrainingTimer(innerContent, this.container, this.isOnMobile)
+    this.timer = new TrainingTimer(innerContent, this.container, this.isOnMobile, this.logCubeData)
     this.timer.onOpen()
+  }
+
+  // Apply it to an implementation
+  logCubeData: StringPairCallback = (scramble: string, timeTaken: string) => {
+    // console.log(`Finished scramble[${scramble}] in ${timeTaken}s`)
+
+    const file = this.plugin.app.vault.getAbstractFileByPath(this.ctx.sourcePath)
+    if (!(file instanceof TFile)) return
+
+    // 3. Process the file safely to update the content
+    void this.plugin.app.vault.process(file, (oldContent: string) => {
+      return this.updatedContent(oldContent, scramble, timeTaken)
+    });
+  }
+
+  updatedContent(oldContent: string,  scramble: string, timeTaken: string) {
+    let lines: string[] =  oldContent.split('\n')
+    let indexOfRubikCubeTimerResultsCodeBlock: number = lines.indexOf('```rubikCubeTimerResults')
+    if (indexOfRubikCubeTimerResultsCodeBlock === -1) {
+      return oldContent
+    }
+    let speedcubingRunData: string = `${timeTaken}s (${scramble})`
+    lines.splice(indexOfRubikCubeTimerResultsCodeBlock + 1, 0, speedcubingRunData)
+    let newContent = lines.join('\n')
+    return newContent
   }
 
   onunload() {
@@ -52,3 +77,4 @@ export class TimerRenderChild extends MarkdownRenderChild {
   }
 
 }
+
