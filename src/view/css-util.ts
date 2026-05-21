@@ -44,6 +44,15 @@ export const CssClasses = {
     }
   },
 
+  speedcubingResults: {
+    /** Main table class */
+    table: 'rubik-cube-algs-speedcube-results-table',
+
+    header: 'rubik-cube-algs-speedcube-results-table-group-header',
+
+    highlight: 'rubik-cube-algs-speedcube-results-table-highlight'
+  },
+
   /** Interactive control triggers, command actions, and icon frameworks */
   buttons: {
     /** Dedicated wrapper container controlling flex gap balancing for sets */

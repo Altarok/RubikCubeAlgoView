@@ -326,7 +326,7 @@ h1.rubik-cube-algorithms-timer-running,
 } /* */
 
 /* Core table layout */
-.rubik-cube-stats-table {
+.rubik-cube-algs-speedcube-results-table {
   width: 100%;
   border-collapse: collapse;
   font-family: var(--font-interface);
@@ -334,7 +334,7 @@ h1.rubik-cube-algorithms-timer-running,
 }
 
 /* Header row styling */
-.rubik-cube-stats-table th {
+.rubik-cube-algs-speedcube-results-table th {
   text-align: left;
   padding: 8px;
   background-color: var(--background-secondary-alt);
@@ -346,14 +346,14 @@ h1.rubik-cube-algorithms-timer-running,
 }
 
 /* Data row cells */
-.rubik-cube-stats-table td {
+.rubik-cube-algs-speedcube-results-table td {
   padding: 6px 8px;
   border-bottom: 1px solid var(--background-modifier-border);
   font-size: 0.95em;
 }
 
 /* Dynamic row divider markers */
-.rubik-cube-stats-table .stats-group-header td {
+.rubik-cube-algs-speedcube-results-table .rubik-cube-algs-speedcube-results-table-group-header td {
   background-color: var(--background-secondary);
   color: var(--text-accent);
   font-size: 0.8em;
@@ -365,14 +365,14 @@ h1.rubik-cube-algorithms-timer-running,
 }
 
 /* Target numeric cells to use monospace typography */
-.rubik-cube-stats-table td:last-child {
+.rubik-cube-algs-speedcube-results-table td:last-child {
   text-align: right;
   font-family: var(--font-monospace);
   font-weight: 500;
 }
 
 /* Highlight cell for tracking Personal Bests */
-.rubik-cube-stats-table .stats-value-highlight {
+.rubik-cube-algs-speedcube-results-table .rubik-cube-algs-speedcube-results-table-highlight {
   color: var(--text-success);
   font-weight: bold !important;
 }
