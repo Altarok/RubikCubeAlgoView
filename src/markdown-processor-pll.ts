@@ -5,7 +5,7 @@ import {ButtonController} from "./control/button-controller"
 import {CubeColors} from "./settings/plugin-settings-tab"
 import CubeStateBuilder from "./model/cube-state-builder"
 import {createBackupColors} from "./model/cube-color-builder"
-import {CubeStatePll} from "./model/cube-state";
+import {CubeStatePll} from "./model/cube-state"
 
 export class MarkdownProcessorPll extends MarkdownRenderChild {
 

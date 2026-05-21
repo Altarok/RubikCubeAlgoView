@@ -1,5 +1,5 @@
 import {generateScramble} from "./algorithm-scrambler"
-import {CssClasses} from "../view/css-util";
+import {CssClasses} from "../view/css-util"
 
 /** Number of digits to measure */
 const fractionDigits: number = 3
@@ -59,8 +59,8 @@ export class TrainingTimer {
      */
     // Request the lock as soon as the modal/block becomes active on mobile
     // if (this.isOnMobile) {
-    //   this.requestWakeLock();
-    //   document.addEventListener('visibilitychange', this.handleVisibilityChange);
+    //   this.requestWakeLock()
+    //   document.addEventListener('visibilitychange', this.handleVisibilityChange)
     // }
   }
 
@@ -89,8 +89,8 @@ export class TrainingTimer {
     }
 
     // if (this.isOnMobile) {
-    //   document.removeEventListener('visibilitychange', this.handleVisibilityChange);
-    //   this.releaseWakeLock();
+    //   document.removeEventListener('visibilitychange', this.handleVisibilityChange)
+    //   this.releaseWakeLock()
     // }
   }
 
@@ -162,7 +162,7 @@ export class TrainingTimer {
 
   // --- Event Handlers ---
   private handleKeyDown(e: Event) {
-    const evt = e as KeyboardEvent;
+    const evt = e as KeyboardEvent
     if (evt.key !== ' ') return
     evt.preventDefault()
     evt.stopPropagation()
@@ -170,7 +170,7 @@ export class TrainingTimer {
   }
 
   private handleKeyUp(e: Event) {
-    const evt = e as KeyboardEvent;
+    const evt = e as KeyboardEvent
     if (evt.key !== ' ') return
     evt.preventDefault()
     evt.stopPropagation()
@@ -178,7 +178,7 @@ export class TrainingTimer {
   }
 
   private handleTouchStart(e: Event) {
-    const evt = e as TouchEvent;
+    const evt = e as TouchEvent
     // Prevent zoom/scrolling behaviors while tapping the timer
     evt.preventDefault()
     evt.stopPropagation()
@@ -186,7 +186,7 @@ export class TrainingTimer {
   }
 
   private handleTouchEnd(e: Event) {
-    const evt = e as TouchEvent;
+    const evt = e as TouchEvent
     evt.preventDefault()
     this.triggerUpAction()
   }
@@ -207,7 +207,7 @@ export class TrainingTimer {
   // private async requestWakeLock() {
   //   if (!('wakeLock' in navigator)) {
   //     console.warn('Screen Wake Lock API is not supported on this platform.')
-  //     return;
+  //     return
   //   }
   //
   //   try {
@@ -231,8 +231,8 @@ export class TrainingTimer {
   // private async releaseWakeLock() {
   //   if (this.wakeLock) {
   //     try {
-  //       await this.wakeLock.release();
-  //       this.wakeLock = null;
+  //       await this.wakeLock.release()
+  //       this.wakeLock = null
   //     } catch (err) {
   //       console.error('Failed to release Wake Lock smoothly:', err)
   //     }

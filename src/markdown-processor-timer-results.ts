@@ -21,15 +21,15 @@ export class SpeedcubeResultsRenderChild extends MarkdownRenderChild {
 
   display(stats: SpeedcubeTimesStatistics): void {
     // 1. Initialize the root table component
-    const table = this.container.createEl('table', { cls: 'rubik-cube-stats-table' });
+    const table = this.container.createEl('table', { cls: 'rubik-cube-stats-table' })
 
     // 2. Build the scannable header
-    const thead = table.createEl('thead');
-    const headerRow = thead.createEl('tr');
-    headerRow.createEl('th', { text: 'Metric', attr: { scope: 'col' } });
-    headerRow.createEl('th', { text: 'Value', attr: { scope: 'col' } });
+    const thead = table.createEl('thead')
+    const headerRow = thead.createEl('tr')
+    headerRow.createEl('th', { text: 'Metric', attr: { scope: 'col' } })
+    headerRow.createEl('th', { text: 'Value', attr: { scope: 'col' } })
 
-    const tbody = table.createEl('tbody');
+    const tbody = table.createEl('tbody')
 
     // Helper function to format a Result object to a plain-text string
     const formatResult = (res: Result): string => {
@@ -83,68 +83,6 @@ export class SpeedcubeResultsRenderChild extends MarkdownRenderChild {
     addDataRow('Global Session Mean', formatResult(stats.globalMean))
     // Standard Deviation displays as a straight duration differential
     addDataRow('Standard Deviation (\u03C3)', `${(stats.standardDeviation as number).toFixed(2)}`)
-
-
-    // <table class="rubik-cube-stats-table">
-    // <thead>
-    //   <tr>
-    //     <th scope="col">Metric</th>
-    //   <th scope="col">Value</th>
-    //   </tr>
-    //   </thead>
-    //   <tbody>
-    //   <!-- Group 1: Session Bounds -->
-    // <tr class="stats-group-header">
-    // <td colspan="2">Session Bounds</td>
-    // </tr>
-    // <tr>
-    // <td><strong>Personal Best (PB)</strong></td>
-    // <td class="stats-value-highlight">8.92</td>
-    //   </tr>
-    //   <tr>
-    //   <td>Session Best</td>
-    // <td>9.52</td>
-    // </tr>
-    // <tr>
-    // <td>Session Worst</td>
-    // <td>14.15</td>
-    // </tr>
-    // <tr>
-    // <td>Total Solves</td>
-    // <td><code>42</code></td>
-    // </tr>
-    //
-    // <!-- Group 2: Competitive Averages -->
-    // <tr class="stats-group-header">
-    // <td colspan="2">Competitive Averages</td>
-    // </tr>
-    // <tr>
-    // <td><strong>Average of 5 (Ao5)</strong></td>
-    // <td>10.45</td>
-    // </tr>
-    // <tr>
-    // <td><strong>Average of 12 (Ao12)</strong></td>
-    // <td>11.20</td>
-    // </tr>
-    // <tr>
-    // <td>Mean of 3 (Mo3)</td>
-    // <td>11.85</td>
-    // </tr>
-    //
-    // <!-- Group 3: Session Distribution -->
-    // <tr class="stats-group-header">
-    // <td colspan="2">Session Consistency</td>
-    // </tr>
-    // <tr>
-    // <td>Global Session Mean</td>
-    // <td>12.04</td>
-    // </tr>
-    // <tr>
-    // <td>Standard Deviation (&sigma;)</td>
-    // <td class="stats-deviation-value">0.72s</td>
-    // </tr>
-    // </tbody>
-    // </table>
 
   }
 

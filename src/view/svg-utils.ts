@@ -1,5 +1,5 @@
 import {Arrows} from "../model/geometry"
-import {CssClasses} from "./css-util";
+import {CssClasses} from "./css-util"
 
 const stickerDrawSize = 100
 

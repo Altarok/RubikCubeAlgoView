@@ -192,11 +192,11 @@ describe('MappedAlgorithms (string-MappedAlgorithm map)', () => {
   }
 
   it("should provide proper consts with algorithm's hash", () => {
-    checkHashValues();
+    checkHashValues()
   })
 
   it("should provide proper consts with algorithm's hash - after rotation", () => {
-    let mappedAlgorithm = checkHashValues();
+    let mappedAlgorithm = checkHashValues()
 
     mappedAlgorithms.rotate(1)
 

@@ -7,7 +7,7 @@ const faces = ['U', 'D', 'R', 'L', 'F', 'B']
 const consecutiveStepsPattern = new RegExp(".*([UDRLFB])(|'|2) \\1.*")
 const consecutiveRedundantAxisPattern = new RegExp(".*(R)(|'|2) L(|'|2) \\1.*")
 
-const scrambleCountToTest = 100;
+const scrambleCountToTest = 100
 
 beforeAll(() => {
   for (let i = 0; i < scrambleCountToTest; i++) {

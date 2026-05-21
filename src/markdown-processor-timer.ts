@@ -1,7 +1,7 @@
 import {MarkdownPostProcessorContext, MarkdownRenderChild, Platform, TFile} from 'obsidian'
-import {StringPairCallback, TrainingTimer} from "./training/training-timer";
-import RubikCubeAlgos from "./main";
-import {CssClasses} from "./view/css-util";
+import {StringPairCallback, TrainingTimer} from "./training/training-timer"
+import RubikCubeAlgos from "./main"
+import {CssClasses} from "./view/css-util"
 
 /**
  * Stack mat directly in note
@@ -9,7 +9,7 @@ import {CssClasses} from "./view/css-util";
 export class TimerRenderChild extends MarkdownRenderChild {
   isOnMobile: boolean
   timer?: TrainingTimer
-  focusHint?: HTMLElement;
+  focusHint?: HTMLElement
 
   constructor(readonly source: string, readonly plugin: RubikCubeAlgos, readonly container: HTMLElement, readonly ctx: MarkdownPostProcessorContext) {
     super(container)
@@ -17,11 +17,11 @@ export class TimerRenderChild extends MarkdownRenderChild {
   }
 
   onload() {
-    this.container.empty();
-    this.container.addClass(CssClasses.timer.container);
+    this.container.empty()
+    this.container.addClass(CssClasses.timer.container)
 
     const userColor = getComputedStyle(document.body).getPropertyValue('--interactive-accent').trim() || '#00ff55'
-    this.container.style.borderColor = userColor;
+    this.container.style.borderColor = userColor
 
     const innerContent = this.container.createEl('div')
     if (!this.isOnMobile) {
@@ -56,7 +56,7 @@ export class TimerRenderChild extends MarkdownRenderChild {
     // 3. Process the file safely to update the content
     void this.plugin.app.vault.process(file, (oldContent: string) => {
       return this.updatedContent(oldContent, scramble, timeTaken)
-    });
+    })
   }
 
   updatedContent(oldContent: string,  scramble: string, timeTaken: string) {

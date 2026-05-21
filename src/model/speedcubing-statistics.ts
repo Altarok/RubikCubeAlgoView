@@ -117,8 +117,8 @@ export class SpeedcubeTimesCalculator {
     let sum: number = 0
     for (let solve of solves) {
       if (solve !== DNF) {
-        nonDnfs++;
-        sum = sum + (solve as number);
+        nonDnfs++
+        sum = sum + (solve as number)
       }
     }
 
@@ -148,8 +148,7 @@ export class SpeedcubeTimesCalculator {
         return -1
       }
       return (a as number) - (b as number)
-    });
-
+    })
   }
 
 }

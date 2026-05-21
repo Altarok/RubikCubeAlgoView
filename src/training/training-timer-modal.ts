@@ -1,5 +1,5 @@
 import {App, Modal} from 'obsidian'
-import {TrainingTimer} from "./training-timer";
+import {TrainingTimer} from "./training-timer"
 
 /**
  * Stack mat in popup
