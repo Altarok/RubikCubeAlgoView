@@ -1,57 +1,30 @@
-import {MarkdownPostProcessorContext, MarkdownRenderChild, Platform, TFile} from 'obsidian'
-import {StringPairCallback, TrainingTimer} from "./training/training-timer"
+import {MarkdownPostProcessorContext, MarkdownRenderChild,  TFile} from 'obsidian'
+import {StringPairCallback} from "./training/training-timer"
 import RubikCubeAlgos from "./main"
-import {CssClasses} from "./view/css-util"
+import {SpeedcubingTimerView} from "./view/speedcubing-timer";
 
 /**
  * Stack mat directly in note
  */
-export class SpeedCubingTimerRenderChild extends MarkdownRenderChild {
-  isOnMobile: boolean
-  timer?: TrainingTimer
-  focusHint?: HTMLElement
+export class MarkdownProcessorSpeedcubingTimer extends MarkdownRenderChild {
+  view?: SpeedcubingTimerView;
 
   constructor(readonly source: string, readonly plugin: RubikCubeAlgos, readonly container: HTMLElement, readonly ctx: MarkdownPostProcessorContext) {
     super(container)
-    this.isOnMobile = Platform.isMobile
   }
 
   onload() {
     this.container.empty()
-    this.container.addClass(CssClasses.timer.container)
-
-    const userColor = getComputedStyle(document.body).getPropertyValue('--interactive-accent').trim() || '#00ff55'
-    this.container.style.borderColor = userColor
-
-    const innerContent = this.container.createEl('div')
-    if (!this.isOnMobile) {
-      this.container.setAttribute('tabindex', '0')
-      this.focusHint = this.container.createEl('small', {
-        text: 'Click block to focus keyboard controls',
-        cls: CssClasses.timer.focusHint
-      })
-    }
-
-    this.container.addEventListener('focusin', () => {
-      this.focusHint?.setText('')
-    })
-
-    this.container.addEventListener('focusout', () => {
-      this.focusHint?.setText('Click block to focus keyboard controls')
-    })
-
-    this.timer = new TrainingTimer(innerContent, this.container, this.isOnMobile, this.logCubeData)
-    this.timer.onOpen()
+    this.view = new SpeedcubingTimerView(this.container, this.logCubeData);
+    this.view.display()
   }
 
-  // Apply it to an implementation
   logCubeData: StringPairCallback = (scramble: string, timeTaken: string) => {
-    // console.log(`Finished scramble[${scramble}] in ${timeTaken}s`)
 
     const file = this.plugin.app.vault.getAbstractFileByPath(this.ctx.sourcePath)
     if (!(file instanceof TFile)) return
 
-    // 3. Process the file safely to update the content
+    /* safely process file */
     void this.plugin.app.vault.process(file, (oldContent: string) => {
       return this.updatedContent(oldContent, scramble, timeTaken)
     })
@@ -70,7 +43,7 @@ export class SpeedCubingTimerRenderChild extends MarkdownRenderChild {
   }
 
   onunload() {
-    this.timer?.onClose()
+    this.view?.unload();
     this.container.empty()
   }
 

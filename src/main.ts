@@ -3,7 +3,7 @@ import {MarkdownProcessorOll} from "./markdown-processor-oll"
 import {MarkdownProcessorPll} from "./markdown-processor-pll"
 import RubikCubeAlgoSettingsTab, {DefaultSettings, Settings} from "./settings/plugin-settings-tab"
 import {addAppCommands} from "./plugin-command-builder"
-import {SpeedCubingTimerRenderChild} from "./markdown-processor-timer"
+import {MarkdownProcessorSpeedcubingTimer} from "./markdown-processor-timer"
 import {SpeedCubingResultTableRenderChild} from "./markdown-processor-timer-results"
 
 /*
@@ -21,7 +21,7 @@ import {SpeedCubingResultTableRenderChild} from "./markdown-processor-timer-resu
  * - [x] remove 'y0'
  * - [ ] validate actual OLL input
  *
- * Default consts
+ * ## Default consts
  * - [ ] remove consts.json from release
  * - [ ] replace it with hardcoded values
  *
@@ -60,6 +60,8 @@ import {SpeedCubingResultTableRenderChild} from "./markdown-processor-timer-resu
  * - [ ] Button: mirror algorithm vertically (when allowed by flag)
  * - [x] Button: lock rotation
  * - [ ] Shorten cross arrows by ~10% (see OLL-37, alg 2) -> could/should reduce confusion
+ * - [x] SpeedCubing timer
+ *   - [x] SpeedCubing result table
  *
  * # Unit tests
  * - [x] setup env
@@ -84,7 +86,6 @@ export default class RubikCubeAlgos extends Plugin {
 
     this.addSettingTab(new RubikCubeAlgoSettingsTab(this.app, this))
   }
-
 
   onunload() {
   }
@@ -124,7 +125,7 @@ export default class RubikCubeAlgos extends Plugin {
 
     this.registerMarkdownCodeBlockProcessor('speedcubingTimer',
       (source, el, ctx) => {
-        ctx.addChild(new SpeedCubingTimerRenderChild(source, this, el, ctx))
+        ctx.addChild(new MarkdownProcessorSpeedcubingTimer(source, this, el, ctx))
       })
 
     this.registerMarkdownCodeBlockProcessor('speedcubingResults',

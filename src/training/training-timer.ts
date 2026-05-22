@@ -34,7 +34,7 @@ export class TrainingTimer {
               readonly callback: StringPairCallback | undefined) {
   }
 
-  onOpen() {
+  create() {
 
     /*Add a class to the outermost modal container for full-screen CSS overrides*/
     if (!this.isOnMobile) {
@@ -75,7 +75,7 @@ export class TrainingTimer {
     contentEl.createEl('div', {text: hintText2, cls: CssClasses.timer.hint})
   }
 
-  onClose() {
+  destroy() {
     this.stopTimer()
 
     // Unbind everything depending on platform to prevent leaks
