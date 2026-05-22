@@ -8,13 +8,13 @@ const noTime: string = `0.${'0'.repeat(fractionDigits)}`
 /** Callback for optional recording of speedcubing times taken */
 export type StringPairCallback = (scramble: string, timeTaken: string) => void
 
-const idle: string = 'idle'
-const ready: string = 'ready'
-const running: string = 'running'
-const done: string = 'done'
+const idle: number = 0
+const ready: number = 1
+const running: number = 2
+const done: number = 3
 
 
-const states: string[] = [idle, ready, running, done] as const
+const states: number[] = [idle, ready, running, done] as const
 type StateType = (typeof states)[number]
 
 /**
@@ -22,12 +22,7 @@ type StateType = (typeof states)[number]
  */
 export class TrainingTimer {
   private state: StateType = idle
-
-  private isRunning: boolean = false
-  private isReadyToStart: boolean = false
   private isHolding: boolean = false
-  private isShowingResult: boolean = false
-
   private startTime: number = 0
   private scrambleEl!: HTMLElement
   private displayEl!: HTMLElement
@@ -78,6 +73,8 @@ export class TrainingTimer {
     //   this.requestWakeLock()
     //   document.addEventListener('visibilitychange', this.handleVisibilityChange)
     // }
+
+    this.setFocus()
   }
 
   /** Add textual hints. Changes based on the platform */
@@ -101,11 +98,11 @@ export class TrainingTimer {
   }
 
   setFocus() {
-    this.hint1.addClass(CssClasses.timer.states.running)
+    this.setVisualsAccordingToState()
   }
 
   removeFocus() {
-    this.hint1.addClass(CssClasses.timer.states.running)
+    this.setVisualsAccordingToState()
   }
 
   /* core timer engine */
@@ -115,83 +112,84 @@ export class TrainingTimer {
 
     switch (this.state) {
       case idle:
-        break
-      case  ready:
-        break
-      case  running:
-        break
-      case  done:
-        break
-    }
-
-    if (this.isRunning) {
-      this.stopTimer() // Instantly stop clock on tap / press
-    } else if (this.isShowingResult) {
-      this.resetTimerLogic()
-    } else {
-      this.isReadyToStart = true
-
-      this.hint1.removeClass(CssClasses.timer.states.running)
-      this.displayEl.addClass(CssClasses.timer.states.readying)
-      this.hint2.addClass(CssClasses.timer.states.readying)
+        this.state = ready
+        return this.setVisualsAccordingToState() // break
+      case running:
+        this.stopTimer() // Instantly stop clock
+        this.state = done
+        return this.setVisualsAccordingToState() // break
+      case done:
+        this.state = idle
+        this.displayEl.setText(noTime)
+        this.scrambleEl.setText(generateScramble())
+        return this.setVisualsAccordingToState() // break
     }
   }
 
   private triggerUpAction() {
     this.isHolding = false
 
-    if (this.isReadyToStart) {
-      this.isReadyToStart = false
-      this.displayEl.removeClass(CssClasses.timer.states.readying)
-      this.hint2.removeClass(CssClasses.timer.states.readying)
-      this.startTimer()
+    if (this.state === ready) {
+      this.state = running
+      this.startTimer() // Instantly start clock
+      return this.setVisualsAccordingToState() //
+    }
+  }
+
+  private setVisualsAccordingToState() {
+    switch (this.state) {
+      case idle:
+        this.hint4.removeClass(CssClasses.timer.states.running)
+        this.hint1.addClass(CssClasses.timer.states.running)
+        break
+      case ready:
+        this.hint1.removeClass(CssClasses.timer.states.running)
+        this.displayEl.addClass(CssClasses.timer.states.readying)
+        this.hint2.addClass(CssClasses.timer.states.readying)
+        break
+      case running:
+        // this.displayEl.removeClass(CssClasses.timer.states.readying)
+        this.displayEl.addClass(CssClasses.timer.states.running)
+        this.hint2.removeClass(CssClasses.timer.states.readying)
+        this.hint3.addClass(CssClasses.timer.states.running)
+        break
+      case done:
+        this.hint3.removeClass(CssClasses.timer.states.running)
+        this.displayEl.removeClass(CssClasses.timer.states.running)
+        this.hint4.addClass(CssClasses.timer.states.running)
+        break
     }
   }
 
   private startTimer() {
-    this.isRunning = true
     this.startTime = Date.now()
-    this.displayEl.addClass(CssClasses.timer.states.running)
-    this.hint3.addClass(CssClasses.timer.states.running)
+    this.setVisualsAccordingToState()
 
     const updateDisplay = () => {
-      if (!this.isRunning) return
+      if (this.state !== running) return
       const elapsed = (Date.now() - this.startTime) / 1000
       this.displayEl.setText(elapsed.toFixed(fractionDigits))
       this.timerAnimationFrame = requestAnimationFrame(updateDisplay)
     }
-
     this.timerAnimationFrame = requestAnimationFrame(updateDisplay)
   }
 
   private stopTimer() {
-    if (!this.isRunning) return
-    this.isRunning = false
-    this.displayEl.removeClass(CssClasses.timer.states.running)
-    this.hint3.removeClass(CssClasses.timer.states.running)
-    this.hint4.addClass(CssClasses.timer.states.running)
+    if (this.state !== running) return
+    const finalTime: string = ((Date.now() - this.startTime) / 1000).toFixed(fractionDigits)
+
+    // this.isRunning = false
 
     if (this.timerAnimationFrame) {
       cancelAnimationFrame(this.timerAnimationFrame)
       this.timerAnimationFrame = null
     }
-
-    const finalTime: string = ((Date.now() - this.startTime) / 1000).toFixed(fractionDigits)
     this.displayEl.setText(finalTime)
-    this.isShowingResult = true
+    // this.isShowingResult = true
 
     if (this.callback) {
       this.callback(this.scrambleEl.getText(), finalTime)
     }
-  }
-
-  private resetTimerLogic() {
-    if (!this.isShowingResult) return
-    this.isShowingResult = false
-    this.displayEl.setText(noTime)
-    this.scrambleEl.setText(generateScramble())
-    this.hint4.removeClass(CssClasses.timer.states.running)
-    this.hint1.addClass(CssClasses.timer.states.running)
   }
 
   // --- Event Handlers ---
@@ -226,10 +224,10 @@ export class TrainingTimer {
   }
 
   private handleBlur() {
-    if (this.isReadyToStart) {
-      this.isReadyToStart = false
-      this.displayEl.removeClass(CssClasses.timer.states.readying)
-    }
+    // if (this.isReadyToStart) {
+    //   this.isReadyToStart = false
+    //   this.displayEl.removeClass(CssClasses.timer.states.readying)
+    // }
     this.isHolding = false
   }
 
