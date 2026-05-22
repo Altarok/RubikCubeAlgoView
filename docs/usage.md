@@ -9,14 +9,35 @@ A code block is created by wrapping instructions between three backticks and a s
 The plugin looks for the following keywords (**more are planned**):
 1. `rubikCubePLL`
 2. `rubikCubeOLL`
-3. `rubikCubeTimer` creates a timer for your speedcube training
+3. `speedcubingTimer` creates a timer for your speedcube training.
+4. `speedcubingResults` creates a table for speedcubing results. Must be in the same note.
+
+# 2. Speedcubing
+Just add this to any file:
+````
+```speedcubingTimer
+```
+
+```speedcubingResults
+```
+````
+You're done.
+<div>
+<details>
+<summary>Expand for screenshot</summary>
+<img width="740" height="950" alt="Speedcubing Timer + Results" src="https://raw.githubusercontent.com/Altarok/RubikCubeAlgoView/master/screenshots/Stopwatch_with_AutomatedResultTable_740x950.png"/>
+</details>
+</div>
+
+
+
 
 Once the cube is rendered in your note, you can interact with it:
 1. **Rotate:** Use the **Rotate** buttons to turn the cube and see the back or sides.
 2. **Dynamic Notation:** Notice that as you rotate the cube, the algorithm text displayed next to the cube **changes** to match your new perspective. This helps you learn how to perform the same algorithm from different angles.
 3. **Reset:** Click **Reset** to return to the default orientation defined in your code block.
 
-# 2. Generic code block properties
+# 3. Generic code block properties
 Copy and paste this snippet into any Obsidian note. It will create a blank 3x3 cube with buttons.
 ````
 ```rubikCubePLL
@@ -43,13 +64,13 @@ To add some life to it you may add some of the following properties:
 | alg          | A classic Rubik's cube algorithm               | ***Differs!*** See below | `alg:F R U`        | n/a                  |
 | id           | ***OLL only!*** Saves the user a lot of input. | See below                | `id:oll-46`        | n/a                  |
 
-## 2.1. Property: *Arrows*
+## 3.1. Property: *Arrows*
 - ***key***: "arrows"
 - ***value***: 1-n comma-separated arrow definitions (normal/double-sided/chained), see below
 
 Arrows point from one sticker to another. For a standard 3x3 cube, the squares would be numbered 1-3 (top row), 4-6 (middle), and 7-9 (bottom).
 
-### 2.1.1.  *Normal arrows*
+### 3.1.1.  *Normal arrows*
 Define unidirectional arrows like this: `[number]-[number]`.
 This creates a simple arrow going from the face with the first number to the face with the second number.
 
@@ -68,7 +89,7 @@ arrows:1-3,4-6 // this is an in-line commment
 </details>
 </div>
 
-### 2.1.2. *Double-sided arrows*
+### 3.1.2. *Double-sided arrows*
 Define double-sided arrows like this: `[number]+[number]`.
 This creates two simple arrows going to and fro two faces with the respective numbers.
 
@@ -86,7 +107,7 @@ arrows:3+9,4+6
 </details>
 </div>
 
-### 2.1.3. *Chained arrows*
+### 3.1.3. *Chained arrows*
 Define chained arrows like this: `[number]-[number]-[number](-[number])`.
 This creates 3 (or 4) arrows with the last one ending where the first one started.
 
@@ -104,7 +125,7 @@ arrows:1-3-7
 </details>
 </div>
 
-## 2.2. Properties: *Cube color* and *Arrow color*
+## 3.2. Properties: *Cube color* and *Arrow color*
 - ***key***: "cubeColor" & "arrowColor"
 - ***value***: 3- or 6-digit hex value, without '#'-prefix
 
@@ -132,7 +153,7 @@ arrows:3+9,4+6
 </details>
 </div>
 
-## 2.3. Property: *Dimension*
+## 3.3. Property: *Dimension*
 - ***key***: "dimension"
 - **value**: 2 numbers for "width,height"
 
@@ -147,7 +168,7 @@ arrows:1-2-3
 ```
 ````
 
-## 2.4. Property: *Flags*
+## 3.4. Property: *Flags*
 - ***key***: "flags"
 - ***value***: comma-separated flags
 
@@ -162,22 +183,22 @@ flags:no-buttons
 ```
 ````
 
-# 3. *Specific code block properties*
+# 4. *Specific code block properties*
 The following contains properties only valid for specific code blocks.
-## 3.1. Code block: *rubikCubePLL*
-### 3.1.1. Property: *Algorithms*
+## 4.1. Code block: *rubikCubePLL*
+### 4.1.1. Property: *Algorithms*
 - ***key***: "alg"
 - ***value***: Any Rubik's cube algorithm. e.g.: "R' U' R' F R F' U R U2"
-## 3.2. Code block: *rubikCubeOLL*
-### 3.2.1. Property: *Algorithms*
+## 4.2. Code block: *rubikCubeOLL*
+### 4.2.1. Property: *Algorithms*
 - ***key***: "alg"
 - ***value***: Any Rubik's cube algorithm followed by optional arrows separated by `' == '`
   - Example: "R' U' R' F R F' U R U2 == 1+9,3+7"
-### 3.2.2. Property: *Id*
+### 4.2.2. Property: *Id*
 - ***key***: "id"
 - ***value***: "oll-1" .. "oll-57", related to the 57 OLL algorithms.
   This was added to save the user the very complicated input of a oll cube by hand. See the following menu point for an example of manual input.
-### 3.2.3. *Manual OLL-cube input*
+### 4.2.3. *Manual OLL-cube input*
 Don't, just don't! ;) See menu 3.2.2. for shortcut.
 But if you really want to, look at these examples and what they do.
 Letters (r, g, b, y, o, w) represent face colors; numbers 0 and 1 toggle stickers off or on.
@@ -208,9 +229,9 @@ owwbw
 </details>
 </div>
 
-# 4. *Tips for Obsidian Users*
+# 5. *Tips for Obsidian Users*
 - **Templates:** Don't type these blocks from scratch. Press `Cmd/Ctrl + P`, type **"Rubik"**, and select `Insert Template` to get a pre-filled block with all options listed as comments.
-# 5. *Troubleshooting*
+# 6. *Troubleshooting*
 If a cube is not rendering, the plugin should be able to tell you what went wrong.
 A bright orange bar saying "Code block interpretation failed:" will try to get your attention while your line containing invalid input will be marked red.
 
