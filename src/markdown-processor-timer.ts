@@ -33,12 +33,10 @@ export class SpeedCubingTimerRenderChild extends MarkdownRenderChild {
     }
 
     this.container.addEventListener('focusin', () => {
-      this.container.style.boxShadow = `0 0 8px ${userColor}`
       this.focusHint?.setText('')
     })
 
     this.container.addEventListener('focusout', () => {
-      this.container.setCssProps({boxShadow: 'none'})
       this.focusHint?.setText('Click block to focus keyboard controls')
     })
 

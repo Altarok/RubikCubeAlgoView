@@ -298,6 +298,8 @@ h1.rubik-cube-algorithms-timer-running,
 
   /* Slightly changes the background color to give a subtle depth change */
   background: var(--background-secondary-alt);
+
+  box-shadow: 0 0 12px var(--text-accent);
 }
 
 .rubik-cube-algorithms-timer-focus-hint {
@@ -374,5 +376,5 @@ h1.rubik-cube-algorithms-timer-running,
 /* Highlight cell for tracking Personal Bests */
 .rubik-cube-algs-speedcube-results-table .rubik-cube-algs-speedcube-results-table-highlight {
   color: var(--text-success);
-  font-weight: bold !important;
+  font-weight: bold;
 }

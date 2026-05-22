@@ -122,12 +122,12 @@ export default class RubikCubeAlgos extends Plugin {
         ctx.addChild(new MarkdownProcessorPll(source, this, el))
       })
 
-    this.registerMarkdownCodeBlockProcessor('rubikCubeTimer',
+    this.registerMarkdownCodeBlockProcessor('speedcubingTimer',
       (source, el, ctx) => {
         ctx.addChild(new SpeedCubingTimerRenderChild(source, this, el, ctx))
       })
 
-    this.registerMarkdownCodeBlockProcessor('rubikCubeTimerResults',
+    this.registerMarkdownCodeBlockProcessor('speedcubingResults',
       (source, el, ctx) => {
         ctx.addChild(new SpeedCubingResultTableRenderChild(source, this, el, ctx))
       })
