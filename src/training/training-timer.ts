@@ -8,12 +8,11 @@ const noTime: string = `0.${'0'.repeat(fractionDigits)}`
 /** Callback for optional recording of speedcubing times taken */
 export type StringPairCallback = (scramble: string, timeTaken: string) => void
 
-const idle: number = 0
-const ready: number = 1
-const running: number = 2
-const done: number = 3
-const states: number[] = [idle, ready, running, done] as const
-type StateType = (typeof states)[number]
+const idle = 0
+const ready = 1
+const running = 2
+const done = 3
+type StateType = typeof idle | typeof ready | typeof running | typeof done
 
 /**
  * Stack mat
@@ -133,12 +132,14 @@ export class TrainingTimer {
       return this.setVisualsAccordingToState() //
     }
   }
+
   private removeAllVisuals() {
     this.hint1.removeClass(CssClasses.timer.states.running)
     this.hint2.removeClass(CssClasses.timer.states.readying)
     this.hint3.removeClass(CssClasses.timer.states.running)
     this.hint4.removeClass(CssClasses.timer.states.running)
   }
+
   private setVisualsAccordingToState() {
     switch (this.state) {
       case idle:
