@@ -8,10 +8,21 @@ const noTime: string = `0.${'0'.repeat(fractionDigits)}`
 /** Callback for optional recording of speedcubing times taken */
 export type StringPairCallback = (scramble: string, timeTaken: string) => void
 
+const idle: string = 'idle'
+const ready: string = 'ready'
+const running: string = 'running'
+const done: string = 'done'
+
+
+const states: string[] = [idle, ready, running, done] as const
+type StateType = (typeof states)[number]
+
 /**
  * Stack mat
  */
 export class TrainingTimer {
+  private state: StateType = idle
+
   private isRunning: boolean = false
   private isReadyToStart: boolean = false
   private isHolding: boolean = false
@@ -74,51 +85,27 @@ export class TrainingTimer {
     this.scrambleEl = this.contentEl.createEl('div', {text: generateScramble(), cls: CssClasses.timer.scrambleDisplay})
     this.displayEl = this.contentEl.createEl('h1', {text: noTime, cls: CssClasses.timer.clock})
 
-
-    // const hint1txt: string = this.isOnMobile ? 'Tap and hold anywhere to ready, release to start.' : 'Hold space bar to ready, release to start.'
     const hint3txt: string = (this.isOnMobile ? 'Tap' : 'Press') + ' to stop.'
     const hint4txt: string = (this.isOnMobile ? 'Tap' : 'Press') + ' to reset and scramble.'
 
     const upperHintLine = contentEl.createEl('div')
     this.hint1 = upperHintLine.createEl('span', {
-      text: (this.isOnMobile ? 'Tap and hold anywhere to ready, release to start.' : 'Hold space bar to ready'),
+      text: (this.isOnMobile ? 'Tap and hold anywhere' : 'Hold space bar') + ' to ready',
       cls: CssClasses.timer.hint
     })
     upperHintLine.createEl('span', {text: ', '})
-    this.hint2 = upperHintLine.createEl('span', {text: 'release to start.', cls: CssClasses.timer.hint})
-
+    const releaseToStart = 'release to start.';
+    this.hint2 = upperHintLine.createEl('span', {text: releaseToStart, cls: CssClasses.timer.hint})
     this.hint3 = contentEl.createEl('div', {text: hint3txt, cls: CssClasses.timer.hint})
-
     this.hint4 = contentEl.createEl('div', {text: hint4txt, cls: CssClasses.timer.hint})
-
-    // this.hint1.addClass(CssClasses.timer.states.running)
   }
 
-  setFocus(){
+  setFocus() {
     this.hint1.addClass(CssClasses.timer.states.running)
   }
 
-  removeFocus(){
+  removeFocus() {
     this.hint1.addClass(CssClasses.timer.states.running)
-  }
-
-  destroy() {
-    this.stopTimer()
-
-    // Unbind everything depending on platform to prevent leaks
-    if (this.isOnMobile) {
-      this.eventHandler.removeEventListener('touchstart', this.handleTouchStartBound)
-      this.eventHandler.removeEventListener('touchend', this.handleTouchEndBound)
-    } else {
-      this.eventHandler.removeEventListener('keydown', this.handleKeyDownBound)
-      this.eventHandler.removeEventListener('keyup', this.handleKeyUpBound)
-      this.eventHandler.removeEventListener('blur', this.onBlur)
-    }
-
-    // if (this.isOnMobile) {
-    //   document.removeEventListener('visibilitychange', this.handleVisibilityChange)
-    //   this.releaseWakeLock()
-    // }
   }
 
   /* core timer engine */
@@ -126,13 +113,24 @@ export class TrainingTimer {
     if (this.isHolding) return
     this.isHolding = true
 
+    switch (this.state) {
+      case idle:
+        break
+      case  ready:
+        break
+      case  running:
+        break
+      case  done:
+        break
+    }
+
     if (this.isRunning) {
       this.stopTimer() // Instantly stop clock on tap / press
     } else if (this.isShowingResult) {
       this.resetTimerLogic()
     } else {
       this.isReadyToStart = true
-      // this.displayEl.removeClass(CssClasses.timer.display)
+
       this.hint1.removeClass(CssClasses.timer.states.running)
       this.displayEl.addClass(CssClasses.timer.states.readying)
       this.hint2.addClass(CssClasses.timer.states.readying)
@@ -141,6 +139,7 @@ export class TrainingTimer {
 
   private triggerUpAction() {
     this.isHolding = false
+
     if (this.isReadyToStart) {
       this.isReadyToStart = false
       this.displayEl.removeClass(CssClasses.timer.states.readying)
@@ -283,5 +282,24 @@ export class TrainingTimer {
   //     await this.requestWakeLock()
   //   }
   // }
+
+  destroy() {
+    this.stopTimer()
+
+    // Unbind everything depending on platform to prevent leaks
+    if (this.isOnMobile) {
+      this.eventHandler.removeEventListener('touchstart', this.handleTouchStartBound)
+      this.eventHandler.removeEventListener('touchend', this.handleTouchEndBound)
+    } else {
+      this.eventHandler.removeEventListener('keydown', this.handleKeyDownBound)
+      this.eventHandler.removeEventListener('keyup', this.handleKeyUpBound)
+      this.eventHandler.removeEventListener('blur', this.onBlur)
+    }
+
+    // if (this.isOnMobile) {
+    //   document.removeEventListener('visibilitychange', this.handleVisibilityChange)
+    //   this.releaseWakeLock()
+    // }
+  }
 
 }

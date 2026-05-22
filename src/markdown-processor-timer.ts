@@ -40,8 +40,7 @@ export class MarkdownProcessorSpeedcubingTimer extends MarkdownRenderChild {
     }
     let speedcubingRunData: string = `${timeTaken}s (${scramble})`
     lines.splice(indexOfRubikCubeTimerResultsCodeBlock + 1, 0, speedcubingRunData)
-    let newContent = lines.join('\n')
-    return newContent
+    return lines.join('\n')
   }
 
   onunload() {
