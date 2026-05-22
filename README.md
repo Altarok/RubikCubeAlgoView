@@ -7,8 +7,8 @@ Bring your Rubik's Cube study to life.
 
 For a detailed guide, run the 'Insert quick start guide' command directly inside Obsidian, or view the full documentation [here](https://github.com/Altarok/RubikCubeAlgoView/blob/main/docs/usage.md).
 
-# *Key Features*
-- **Integrated timer**: Includes standard scrambled algorithm.
+***Key Features***
+- **Integrated timer**: Includes scrambled algorithms.
 - **Interactive Controls**: Rotate the cube or reset to the default view with integrated buttons.
 - **Smart Rotation**: Algorithm notation automatically updates based on your current cube orientation.
 - **Fully Customizable**: Tailor your experience with custom cube sizes, hex-code colors, and directional arrows.
@@ -17,11 +17,13 @@ For a detailed guide, run the 'Insert quick start guide' command directly inside
 # *Where to start?*
 ## 1. Installation
 Find 'Rubik Cube algorithms' in the Obsidian Community Plugins gallery and click Install.
-## 2. Fast-Track with built-in commands
+## 2. Fast-Track with *built-in commands
 1. Open the Command Palette (Cmd/Ctrl + P).
 2. Type 'Rubik' to see available commands:
   - Select "**Template**" for a blank, commented code block.
   - Select "**Example**" to see a pre-configured block in action.
+  - Select "**Timer**" to add stopwatch for cube training.
+  - Select "**Timer Results**" to add result table for training. Must be in same file as timer.
 ## 3. Learn by Example
 If you prefer a hands-on approach, download the example Markdown files and drop them directly into your vault: https://github.com/Altarok/RubikCubeAlgoView/tree/main/examples
 
