@@ -298,7 +298,6 @@ h1.rubik-cube-algorithms-timer-running,
 
   /* Slightly changes the background color to give a subtle depth change */
   background: var(--background-secondary-alt);
-
   box-shadow: 0 0 12px var(--text-accent);
 }
 

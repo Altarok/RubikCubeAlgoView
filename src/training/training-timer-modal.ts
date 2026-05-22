@@ -1,9 +1,7 @@
 import {App, Modal} from 'obsidian'
 import {TrainingTimer} from "./training-timer"
 
-/**
- * Stack mat in popup
- */
+/** Stack mat in popup - does not asve results */
 export class TimerModal extends Modal {
   timer?: TrainingTimer
 
@@ -12,18 +10,18 @@ export class TimerModal extends Modal {
   }
 
   onOpen() {
-    const {contentEl/*, modalEl*/} = this
+    const {contentEl} = this
     contentEl.empty()
 
     this.timer = new TrainingTimer(contentEl, window, this.isOnMobile, undefined)
-    this.timer.onOpen()
+    this.timer.create()
 
     contentEl.setAttribute('tabindex', '-1')
     contentEl.focus()
   }
 
   onClose() {
-    this.timer?.onClose()
+    this.timer?.destroy()
     this.contentEl.empty()
   }
 
