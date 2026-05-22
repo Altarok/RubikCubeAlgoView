@@ -12,8 +12,6 @@ const idle: number = 0
 const ready: number = 1
 const running: number = 2
 const done: number = 3
-
-
 const states: number[] = [idle, ready, running, done] as const
 type StateType = (typeof states)[number]
 
@@ -74,7 +72,7 @@ export class TrainingTimer {
     //   document.addEventListener('visibilitychange', this.handleVisibilityChange)
     // }
 
-    this.setFocus()
+    // this.setVisualsAccordingToState()
   }
 
   /** Add textual hints. Changes based on the platform */
@@ -102,7 +100,7 @@ export class TrainingTimer {
   }
 
   removeFocus() {
-    this.setVisualsAccordingToState()
+    this.removeAllVisuals()
   }
 
   /* core timer engine */
@@ -135,7 +133,12 @@ export class TrainingTimer {
       return this.setVisualsAccordingToState() //
     }
   }
-
+  private removeAllVisuals() {
+    this.hint1.removeClass(CssClasses.timer.states.running)
+    this.hint2.removeClass(CssClasses.timer.states.readying)
+    this.hint3.removeClass(CssClasses.timer.states.running)
+    this.hint4.removeClass(CssClasses.timer.states.running)
+  }
   private setVisualsAccordingToState() {
     switch (this.state) {
       case idle:
@@ -148,7 +151,7 @@ export class TrainingTimer {
         this.hint2.addClass(CssClasses.timer.states.readying)
         break
       case running:
-        // this.displayEl.removeClass(CssClasses.timer.states.readying)
+        this.displayEl.removeClass(CssClasses.timer.states.readying)
         this.displayEl.addClass(CssClasses.timer.states.running)
         this.hint2.removeClass(CssClasses.timer.states.readying)
         this.hint3.addClass(CssClasses.timer.states.running)
