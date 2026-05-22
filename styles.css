@@ -179,12 +179,14 @@
 
 /* Color when holding space bar down to prime the timer */
 h1.rubik-cube-algs-timer-readying,
+.rubik-cube-algs-timer-hint.rubik-cube-algs-timer-readying,
 .rubik-cube-algs-timer-display.rubik-cube-algs-timer-readying {
   color: var(--text-error); /* Dark/Light theme safe red */
 }
 
 /* Visual indicator change while the clock is actively running */
 h1.rubik-cube-algs-timer-running,
+.rubik-cube-algs-timer-hint.rubik-cube-algs-timer-running,
 .rubik-cube-algs-timer-display.rubik-cube-algs-timer-running {
   color: var(--interactive-accent);
 }

@@ -20,6 +20,11 @@ export class TrainingTimer {
   private startTime: number = 0
   private scrambleEl!: HTMLElement
   private displayEl!: HTMLElement
+  private hint1!: HTMLElement
+  private hint2!: HTMLElement
+  private hint3!: HTMLElement
+  private hint4!: HTMLElement
+
   private timerAnimationFrame: number | null = null
 
   private handleKeyDownBound = this.handleKeyDown.bind(this)
@@ -69,32 +74,32 @@ export class TrainingTimer {
     this.scrambleEl = this.contentEl.createEl('div', {text: generateScramble(), cls: CssClasses.timer.scrambleDisplay})
     this.displayEl = this.contentEl.createEl('h1', {text: noTime, cls: CssClasses.timer.clock})
 
-    // const hintText1: string = this.isOnMobile ? 'Tap and hold anywhere to ready, release to start.' : 'Hold space bar, release to start.'
-    // const hintText2: string = this.isOnMobile ? 'Tap anywhere to stop / reset.' : 'Press space bar to stop / reset.'
-    // contentEl.createEl('div', {text: hintText1, cls: CssClasses.timer.hint})
-    // contentEl.createEl('div', {text: hintText2, cls: CssClasses.timer.hint})
 
-    // Create Hint 1 Container
-    const hint1 = contentEl.createEl('div', {cls: CssClasses.timer.hint});
-    if (this.isOnMobile) {
-      hint1.createEl('span', {text: 'Tap and hold', cls: 'hint-accent'});
-      hint1.createEl('span', {text: ' anywhere to ready, release to start.'});
-    } else {
-      hint1.createEl('span', {text: 'Hold '});
-      hint1.createEl('span', {text: 'space bar', cls: 'hint-key'});
-      hint1.createEl('span', {text: ', release to start.'});
-    }
+    // const hint1txt: string = this.isOnMobile ? 'Tap and hold anywhere to ready, release to start.' : 'Hold space bar to ready, release to start.'
+    const hint3txt: string = (this.isOnMobile ? 'Tap' : 'Press') + ' to stop.'
+    const hint4txt: string = (this.isOnMobile ? 'Tap' : 'Press') + ' to reset and scramble.'
 
-    // Create Hint 2 Container
-    const hint2 = contentEl.createEl('div', {cls: CssClasses.timer.hint});
-    if (this.isOnMobile) {
-      hint2.createEl('span', {text: 'Tap', cls: 'hint-accent'});
-      hint2.createEl('span', {text: ' anywhere to stop / reset.'});
-    } else {
-      hint2.createEl('span', {text: 'Press '});
-      hint2.createEl('span', {text: 'space bar', cls: 'hint-key'});
-      hint2.createEl('span', {text: ' to stop / reset.'});
-    }
+    const upperHintLine = contentEl.createEl('div')
+    this.hint1 = upperHintLine.createEl('span', {
+      text: (this.isOnMobile ? 'Tap and hold anywhere to ready, release to start.' : 'Hold space bar to ready'),
+      cls: CssClasses.timer.hint
+    })
+    upperHintLine.createEl('span', {text: ', '})
+    this.hint2 = upperHintLine.createEl('span', {text: 'release to start.', cls: CssClasses.timer.hint})
+
+    this.hint3 = contentEl.createEl('div', {text: hint3txt, cls: CssClasses.timer.hint})
+
+    this.hint4 = contentEl.createEl('div', {text: hint4txt, cls: CssClasses.timer.hint})
+
+    // this.hint1.addClass(CssClasses.timer.states.running)
+  }
+
+  setFocus(){
+    this.hint1.addClass(CssClasses.timer.states.running)
+  }
+
+  removeFocus(){
+    this.hint1.addClass(CssClasses.timer.states.running)
   }
 
   destroy() {
@@ -128,7 +133,9 @@ export class TrainingTimer {
     } else {
       this.isReadyToStart = true
       // this.displayEl.removeClass(CssClasses.timer.display)
+      this.hint1.removeClass(CssClasses.timer.states.running)
       this.displayEl.addClass(CssClasses.timer.states.readying)
+      this.hint2.addClass(CssClasses.timer.states.readying)
     }
   }
 
@@ -137,6 +144,7 @@ export class TrainingTimer {
     if (this.isReadyToStart) {
       this.isReadyToStart = false
       this.displayEl.removeClass(CssClasses.timer.states.readying)
+      this.hint2.removeClass(CssClasses.timer.states.readying)
       this.startTimer()
     }
   }
@@ -145,6 +153,7 @@ export class TrainingTimer {
     this.isRunning = true
     this.startTime = Date.now()
     this.displayEl.addClass(CssClasses.timer.states.running)
+    this.hint3.addClass(CssClasses.timer.states.running)
 
     const updateDisplay = () => {
       if (!this.isRunning) return
@@ -160,6 +169,8 @@ export class TrainingTimer {
     if (!this.isRunning) return
     this.isRunning = false
     this.displayEl.removeClass(CssClasses.timer.states.running)
+    this.hint3.removeClass(CssClasses.timer.states.running)
+    this.hint4.addClass(CssClasses.timer.states.running)
 
     if (this.timerAnimationFrame) {
       cancelAnimationFrame(this.timerAnimationFrame)
@@ -180,6 +191,8 @@ export class TrainingTimer {
     this.isShowingResult = false
     this.displayEl.setText(noTime)
     this.scrambleEl.setText(generateScramble())
+    this.hint4.removeClass(CssClasses.timer.states.running)
+    this.hint1.addClass(CssClasses.timer.states.running)
   }
 
   // --- Event Handlers ---
