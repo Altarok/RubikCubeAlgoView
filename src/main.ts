@@ -5,6 +5,7 @@ import RubikCubeAlgoSettingsTab, {DefaultSettings, Settings} from "./settings/pl
 import {addAppCommands} from "./plugin-command-builder"
 import {MarkdownProcessorSpeedcubingTimer} from "./markdown-processor-timer"
 import {SpeedCubingResultTableRenderChild} from "./markdown-processor-timer-results"
+import {CodeBlocks} from "./consts/strings"
 
 /*
  * # Logic
@@ -113,22 +114,22 @@ export default class RubikCubeAlgos extends Plugin {
 
   private registerMarkdownCodeBlockProcessors() {
 
-    this.registerMarkdownCodeBlockProcessor("rubikCubeOLL",
+    this.registerMarkdownCodeBlockProcessor(CodeBlocks.cubes.oll,
       (source, el, ctx) => {
         ctx.addChild(new MarkdownProcessorOll(source, this, el))
       })
 
-    this.registerMarkdownCodeBlockProcessor("rubikCubePLL",
+    this.registerMarkdownCodeBlockProcessor(CodeBlocks.cubes.pll,
       (source, el, ctx) => {
         ctx.addChild(new MarkdownProcessorPll(source, this, el))
       })
 
-    this.registerMarkdownCodeBlockProcessor('speedcubingTimer',
+    this.registerMarkdownCodeBlockProcessor(CodeBlocks.speedubing.timer,
       (source, el, ctx) => {
         ctx.addChild(new MarkdownProcessorSpeedcubingTimer(source, this, el, ctx))
       })
 
-    this.registerMarkdownCodeBlockProcessor('speedcubingResults',
+    this.registerMarkdownCodeBlockProcessor(CodeBlocks.speedubing.results,
       (source, el, ctx) => {
         ctx.addChild(new SpeedCubingResultTableRenderChild(source, this, el, ctx))
       })

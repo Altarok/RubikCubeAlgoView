@@ -25,7 +25,7 @@
   align-items: stretch;
 }
 
-.rubik-cube-div-algorithms-list ul {
+.rubik-cube-algs-algorithms-list ul {
   margin: 0;
   padding: 0; /* Only keep what you need for legibility */
   list-style-position: inside; /* Helps prevent left-side overflow */
@@ -65,7 +65,7 @@
     min-height: 0; /* Prevents browser from enforcing a default height */
   }
 
-  .rubik-cube-div-algorithms-list ul {
+  .rubik-cube-algs-algorithms-list ul {
     margin: 0;
     padding: 0;
     list-style-position: inside; /* Helps prevent left-side overflow */
@@ -73,7 +73,7 @@
   }
 }
 
-.rubik-cube-algs-cube {
+.rubik-cube-algs-cube-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -88,32 +88,32 @@
   border: 2px solid #666666; /* keep color static; near invisible border around cube */
 }
 
-.rubik-cube-pll-rect {
+.rubik-cube-algs-cube-background {
   width: 100%;
   height: 100%;
 }
 
-.rubik-cube-pll-line-grid {
+.rubik-cube-algs-cube-line-grid {
   stroke-width: 3px;
   stroke: #000000; /* keep color static; black lines between stickers */
 }
 
-.rubik-cube-arrow {
+.rubik-cube-algs-arrow {
   stroke-width: 2px;
 }
 
-.rubik-cube-warning-text-red {
+.rubik-cube-algs-warning-text-red {
   background-color: #ff0000;
   color: #ffffff;
 }
 
-.rubik-cube-warning-text-orange {
+.rubik-cube-algs-warning-text-orange {
   background-color: #fac898;
   color: #000000;
 }
 
 /* --- Button Grouping & Layout --- */
-.rubik-cube-algorithms-button-container {
+.rubik-cube-algs-button-container {
   display: flex;
   flex-wrap: wrap;
   margin-top: 10px;
@@ -122,21 +122,7 @@
   width: 100%;
 }
 
-.rubik-cube-algorithms-button {
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-  border: 1px solid #cccccc;
-  border-radius: 4px;
-  background-color: #f9f9f9;
-  transition: background-color 0.2s;
-}
-
-.rubik-cube-algorithms-button:hover {
-  background-color: #e0e0e0;
-}
-
-.rubik-cube-button {
+.rubik-cube-algs-button-svg {
   stroke: white;
   stroke-width: 1;
   width: 24px;
@@ -146,12 +132,11 @@
   stroke-linejoin: round;
 }
 
-.rubik-cube-button:disabled svg {
+.rubik-cube-algs-button-svg:disabled svg {
   stroke: #6c6c6c; /* Changes the icon color to match the disabled text */
-  fill: none;
 }
 
-.rubik-cube-algorithms-monotone-box {
+.rubik-cube-algs-monotone-box {
   font-family: Consolas, 'Courier New', Courier, monospace;
   font-size: 0.8em; /* Slightly smaller than the inherited default size */
   color: #000000; /* Black font foreground */
@@ -164,8 +149,8 @@
   width: max-content; /* Forces the box to shrink to the exact width of the text */
 }
 
-/* Center the content inside the modal wrapper */
-.rubik-cube-algorithms-timer-modal {
+/* Desktop only! Center the content inside the modal wrapper */
+.rubik-cube-algs-timer-modal {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -175,7 +160,7 @@
 }
 
 /* Make the timer numbers massive and monospace so they don't jitter while counting */
-.rubik-cube-algorithms-timer-display {
+.rubik-cube-algs-timer-display {
   font-size: 5rem;
   font-family: var(--font-monospace);
   font-weight: 700;
@@ -185,7 +170,7 @@
 }
 
 /* Subtle, muted styling for the help/hint text below the timer */
-.rubik-cube-algorithms-timer-hint {
+.rubik-cube-algs-timer-hint {
   font-size: 0.9rem;
   color: var(--text-muted);
   margin: 0;
@@ -193,20 +178,20 @@
 }
 
 /* Color when holding space bar down to prime the timer */
-h1.rubik-cube-algorithms-timer-readying,
-.rubik-cube-algorithms-timer-display.rubik-cube-algorithms-timer-readying {
+h1.rubik-cube-algs-timer-readying,
+.rubik-cube-algs-timer-display.rubik-cube-algs-timer-readying {
   color: var(--text-error); /* Dark/Light theme safe red */
 }
 
 /* Visual indicator change while the clock is actively running */
-h1.rubik-cube-algorithms-timer-running,
-.rubik-cube-algorithms-timer-display.rubik-cube-algorithms-timer-running {
+h1.rubik-cube-algs-timer-running,
+.rubik-cube-algs-timer-display.rubik-cube-algs-timer-running {
   color: var(--interactive-accent);
 }
 
 /* Optional: If you want a stack mat "inspection ready" green phase
    after holding it for a specific duration, you could swap this class in */
-.rubik-cube-algorithms-timer-primed {
+.rubik-cube-algs-timer-primed {
   color: var(--text-success); /* Dark/Light theme safe green */
 }
 
@@ -248,7 +233,7 @@ h1.rubik-cube-algorithms-timer-running,
 } */
 
 /* === Main StackMat / timer layout === */
-.rubik-cube-algorithms-timer-container {
+.rubik-cube-algs-timer-container {
   /* Establishes a boundary for absolute positioning. Anything inside this
      container with 'position: absolute' will align relative to this box. */
   position: relative;
@@ -292,7 +277,7 @@ h1.rubik-cube-algorithms-timer-running,
   -webkit-tap-highlight-color: transparent;
 }
 
-.rubik-cube-algorithms-timer-container:focus-within {
+.rubik-cube-algs-timer-container:focus-within {
   /* Overwrites the transparent border with Obsidian's native accent color */
   border-color: var(--interactive-accent);
 
@@ -301,7 +286,7 @@ h1.rubik-cube-algorithms-timer-running,
   box-shadow: 0 0 12px var(--text-accent);
 }
 
-.rubik-cube-algorithms-timer-focus-hint {
+.rubik-cube-algs-timer-focus-hint {
   position: absolute;
   top: 8px;
   right: 12px;
@@ -312,12 +297,12 @@ h1.rubik-cube-algorithms-timer-running,
 
 /* Combinator Selector: This targets the 'timer-in-focus hint' element, but
    ONLY when it sits inside a container that currently has focus-within. */
-.rubik-cube-algorithms-timer-container:focus-within .rubik-cube-algorithms-timer-focus-hint {
+.rubik-cube-algs-timer-container:focus-within .rubik-cube-algs-timer-focus-hint {
   color: var(--interactive-accent);
   opacity: 1; /* Makes the element fully visible when active */
 }
 
-.rubik-cube-algorithms-timer-scrambled-alg {
+.rubik-cube-algs-timer-scrambled-alg {
   letter-spacing: 0.1em;
 }
 

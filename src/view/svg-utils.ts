@@ -1,5 +1,5 @@
 import {Arrows} from "../model/geometry"
-import {CssClasses} from "./css-util"
+import {CssClasses} from "../consts/strings"
 
 const stickerDrawSize = 100
 
@@ -29,14 +29,14 @@ function drawGrid(svg: SVGSVGElement, width: number, height: number, offset = 0)
   for (let x = offset; x < width; x += stickerDrawSize) {
     svg.createSvg('line', {
       attr: {x1: x, x2: x, y1: 0, y2: height},
-      cls: CssClasses.vectorGraphics.lineGrid
+      cls: CssClasses.vectorGraphics.grid
     })
   }
   /* Horizontal lines */
   for (let y = offset; y < height; y += stickerDrawSize) {
     svg.createSvg('line', {
       attr: {x1: 0, x2: width, y1: y, y2: y},
-      cls: CssClasses.vectorGraphics.lineGrid
+      cls: CssClasses.vectorGraphics.grid
     })
   }
 }
@@ -82,7 +82,7 @@ function createArrowHead(svg: SVGSVGElement, color: string) {
 function drawBackgroundRect(svg: SVGSVGElement, fill: string) {
   svg.createSvg('rect', {
     attr: {width: '100%', height: '100%', fill},
-    cls: CssClasses.vectorGraphics.rect
+    cls: CssClasses.vectorGraphics.background
   })
 }
 

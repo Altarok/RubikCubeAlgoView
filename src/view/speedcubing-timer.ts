@@ -1,11 +1,10 @@
-import {StringPairCallback, TrainingTimer} from "../training/training-timer";
-import {Platform} from "obsidian";
-import {CssClasses} from "./css-util";
+import {StringPairCallback, TrainingTimer} from "../training/training-timer"
+import {Platform} from "obsidian"
+import {CssClasses} from "../consts/strings"
 
 export class SpeedcubingTimerView {
   isOnMobile: boolean
   timer?: TrainingTimer
-  focusHint?: HTMLElement
 
   constructor(readonly container: HTMLElement, readonly callbackForSolves: StringPairCallback | undefined) {
     this.isOnMobile = Platform.isMobile
@@ -20,26 +19,24 @@ export class SpeedcubingTimerView {
     const innerContent = this.container.createEl('div')
     if (!this.isOnMobile) {
       this.container.setAttribute('tabindex', '0')
-      this.focusHint = this.container.createEl('small', {
+      let focusHint: HTMLElement = this.container.createEl('small', {
         text: 'Click block to focus keyboard controls',
         cls: CssClasses.timer.focusHint
       })
+      this.container.addEventListener('focusin', () => {
+        focusHint.setText('')
+      })
+      this.container.addEventListener('focusout', () => {
+        focusHint.setText('Click block to focus keyboard controls')
+      })
     }
-
-    this.container.addEventListener('focusin', () => {
-      this.focusHint?.setText('')
-    })
-
-    this.container.addEventListener('focusout', () => {
-      this.focusHint?.setText('Click block to focus keyboard controls')
-    })
 
     this.timer = new TrainingTimer(innerContent, this.container, this.isOnMobile, this.callbackForSolves)
     this.timer.create()
   }
 
   unload() {
-    this.timer?.destroy();
+    this.timer?.destroy()
   }
 }
 

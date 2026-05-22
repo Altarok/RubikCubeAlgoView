@@ -1,5 +1,5 @@
-import {DNF, N_A, Result, SpeedcubeTimesStatistics} from "../model/speedcubing-statistics";
-import {CssClasses} from "./css-util";
+import {CssClasses} from "consts/strings"
+import {DNF, N_A, Result, SpeedcubeTimesStatistics} from "../model/speedcubing-statistics"
 
 /**
  * Format a Result to a plain string

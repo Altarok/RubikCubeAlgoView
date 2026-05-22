@@ -7,7 +7,7 @@ import {applyRotation} from "./dom-rotation"
 import createCubeLayout, {CubeLayout} from "./cube-layout"
 import {setIcon} from "obsidian"
 import {InvalidInput} from "../model/invalid-input-container"
-import {CssClasses} from "./css-util"
+import {CssClasses} from "../consts/strings"
 
 
 export abstract class CubeRenderer {
@@ -80,14 +80,14 @@ export abstract class CubeRenderer {
     // }
 
     this.buttonLeft = buttonDiv.createEl('button', {'title': 'Rotate left 90 degrees'})
-    let turnLeftSvg: SVGSVGElement = this.buttonLeft.createSvg('svg', {cls: CssClasses.vectorGraphics.icon})
+    let turnLeftSvg: SVGSVGElement = this.buttonLeft.createSvg('svg', {cls: CssClasses.buttons.icon})
     SvgUtils.drawRotateLeftIcon(turnLeftSvg)
 
     this.buttonResetRotation = buttonDiv.createEl('button', {'title': 'Reset rotation'})
     setIcon(this.buttonResetRotation, 'reset')
 
     this.buttonRight = buttonDiv.createEl('button', {'title': 'Rotate right 90 degrees'})
-    let turnRightSvg: SVGSVGElement = this.buttonRight.createSvg('svg', {cls: CssClasses.vectorGraphics.icon})
+    let turnRightSvg: SVGSVGElement = this.buttonRight.createSvg('svg', {cls: CssClasses.buttons.icon})
     SvgUtils.drawRotateRightIcon(turnRightSvg)
 
 
@@ -134,15 +134,13 @@ export abstract class CubeRenderer {
    */
   private displayCubeBackground(element: HTMLElement, viewBoxWidth: number, viewBoxHeight: number): SVGSVGElement {
     const isDefault = this.cubeState.isDefaultSize()
-    const imageWidth = isDefault ? 200 : viewBoxWidth
-    const imageHeight = isDefault ? 200 : viewBoxHeight
+
+    const width = isDefault ? 200 : viewBoxWidth /* image width */
+    const height = isDefault ? 200 : viewBoxHeight /* image height */
 
     this.mainCubeSvg = element.createSvg('svg', {
-      attr: {
-        width: imageWidth,
-        height: imageHeight,
-        viewBox: `0 0 ${viewBoxWidth} ${viewBoxHeight}`
-      }, cls: CssClasses.vectorGraphics.pllFrame
+      attr: {width, height, viewBox: `0 0 ${viewBoxWidth} ${viewBoxHeight}`},
+      cls: CssClasses.vectorGraphics.border
     })
 
     SvgUtils.createArrowHead(this.mainCubeSvg, this.cubeState.arrowColor)
@@ -195,8 +193,6 @@ export class CubeRendererOLL extends CubeRenderer {
   }
 
   displayCubeForeground(svgElement: SVGSVGElement, viewBoxWidth: number, viewBoxHeight: number): void {
-
-    // debugger
 
     let cells: OllFieldColoring = this.cubeStateOll.ollFieldInput
     const [cubeWidth, cubeHeight] = [this.cubeStateOll.dimensions.width, this.cubeStateOll.dimensions.height] // e.g. 3,3

@@ -1,21 +1,23 @@
 import {MarkdownPostProcessorContext, MarkdownRenderChild,  TFile} from 'obsidian'
 import {StringPairCallback} from "./training/training-timer"
 import RubikCubeAlgos from "./main"
-import {SpeedcubingTimerView} from "./view/speedcubing-timer";
+import {SpeedcubingTimerView} from "./view/speedcubing-timer"
+import {CodeBlocks} from "./consts/strings"
 
 /**
  * Stack mat directly in note
  */
 export class MarkdownProcessorSpeedcubingTimer extends MarkdownRenderChild {
-  view?: SpeedcubingTimerView;
+  view: SpeedcubingTimerView
 
   constructor(readonly source: string, readonly plugin: RubikCubeAlgos, readonly container: HTMLElement, readonly ctx: MarkdownPostProcessorContext) {
     super(container)
+    this.view = new SpeedcubingTimerView(this.container, this.logCubeData)
   }
+
 
   onload() {
     this.container.empty()
-    this.view = new SpeedcubingTimerView(this.container, this.logCubeData);
     this.view.display()
   }
 
@@ -32,7 +34,7 @@ export class MarkdownProcessorSpeedcubingTimer extends MarkdownRenderChild {
 
   updatedContent(oldContent: string,  scramble: string, timeTaken: string) {
     let lines: string[] =  oldContent.split('\n')
-    let indexOfRubikCubeTimerResultsCodeBlock: number = lines.indexOf('```rubikCubeTimerResults')
+    let indexOfRubikCubeTimerResultsCodeBlock: number = lines.indexOf(`\`\`\`${CodeBlocks.speedubing.results}`)
     if (indexOfRubikCubeTimerResultsCodeBlock === -1) {
       return oldContent
     }
@@ -43,7 +45,7 @@ export class MarkdownProcessorSpeedcubingTimer extends MarkdownRenderChild {
   }
 
   onunload() {
-    this.view?.unload();
+    this.view.unload()
     this.container.empty()
   }
 

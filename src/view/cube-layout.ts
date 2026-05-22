@@ -1,5 +1,5 @@
 import {CubeState} from "../model/cube-state"
-import {CssClasses} from "./css-util"
+import {CssClasses} from "../consts/strings"
 
 export interface CubeLayout {
   readonly mainContainer: HTMLDivElement

@@ -1,5 +1,5 @@
+import {CssClasses} from "consts/strings"
 import {generateScramble} from "./algorithm-scrambler"
-import {CssClasses} from "../view/css-util"
 
 /** Number of digits to measure */
 const fractionDigits: number = 3
@@ -36,7 +36,7 @@ export class TrainingTimer {
 
   create() {
 
-    /*Add a class to the outermost modal container for full-screen CSS overrides*/
+    /* Add a class to the outermost modal container for full-screen CSS overrides */
     if (!this.isOnMobile) {
       this.contentEl.addClass(CssClasses.timer.modal)
     }
@@ -64,15 +64,37 @@ export class TrainingTimer {
     // }
   }
 
-  /** Change hint text based on the platform */
+  /** Add textual hints. Changes based on the platform */
   private addTexts(contentEl: HTMLElement) {
     this.scrambleEl = this.contentEl.createEl('div', {text: generateScramble(), cls: CssClasses.timer.scrambleDisplay})
     this.displayEl = this.contentEl.createEl('h1', {text: noTime, cls: CssClasses.timer.clock})
 
-    const hintText1: string = this.isOnMobile ? 'Tap and hold anywhere to ready, release to start.' : 'Hold space bar, release to start.'
-    const hintText2: string = this.isOnMobile ? 'Tap anywhere to stop / reset.' : 'Press space bar to stop / reset.'
-    contentEl.createEl('div', {text: hintText1, cls: CssClasses.timer.hint})
-    contentEl.createEl('div', {text: hintText2, cls: CssClasses.timer.hint})
+    // const hintText1: string = this.isOnMobile ? 'Tap and hold anywhere to ready, release to start.' : 'Hold space bar, release to start.'
+    // const hintText2: string = this.isOnMobile ? 'Tap anywhere to stop / reset.' : 'Press space bar to stop / reset.'
+    // contentEl.createEl('div', {text: hintText1, cls: CssClasses.timer.hint})
+    // contentEl.createEl('div', {text: hintText2, cls: CssClasses.timer.hint})
+
+    // Create Hint 1 Container
+    const hint1 = contentEl.createEl('div', {cls: CssClasses.timer.hint});
+    if (this.isOnMobile) {
+      hint1.createEl('span', {text: 'Tap and hold', cls: 'hint-accent'});
+      hint1.createEl('span', {text: ' anywhere to ready, release to start.'});
+    } else {
+      hint1.createEl('span', {text: 'Hold '});
+      hint1.createEl('span', {text: 'space bar', cls: 'hint-key'});
+      hint1.createEl('span', {text: ', release to start.'});
+    }
+
+    // Create Hint 2 Container
+    const hint2 = contentEl.createEl('div', {cls: CssClasses.timer.hint});
+    if (this.isOnMobile) {
+      hint2.createEl('span', {text: 'Tap', cls: 'hint-accent'});
+      hint2.createEl('span', {text: ' anywhere to stop / reset.'});
+    } else {
+      hint2.createEl('span', {text: 'Press '});
+      hint2.createEl('span', {text: 'space bar', cls: 'hint-key'});
+      hint2.createEl('span', {text: ' to stop / reset.'});
+    }
   }
 
   destroy() {

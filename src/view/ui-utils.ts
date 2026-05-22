@@ -1,6 +1,6 @@
+import { CssClasses } from "consts/strings"
 import {Algorithm} from "../model/algorithms"
 import {InvalidInput} from "../model/invalid-input-container"
-import {CssClasses} from "./css-util"
 
 export const UiUtils = {
   renderAlgorithmList,
