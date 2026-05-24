@@ -1,4 +1,4 @@
-import {MarkdownPostProcessorContext, MarkdownRenderChild, TFile} from 'obsidian'
+import {MarkdownPostProcessorContext, MarkdownRenderChild, Notice, TFile} from 'obsidian'
 import {StringPairCallback} from "./training/training-timer"
 import RubikCubeAlgos from "./main"
 import {SpeedcubingTimerView} from "./view/speedcubing-timer"
@@ -54,6 +54,7 @@ export class MarkdownProcessorSpeedcubingTimer extends MarkdownRenderChild {
         isFirstLineShowsPersonalBest ? 1 : 0,
         'pb:' + speedcubingRunData)
       isFirstLineShowsPersonalBest = true
+      new Notice(`New personal best! ${timeTaken} seconds`, 2000)
     }
 
     lines.splice(indexOfRubikCubeTimerResultsCodeBlock + 1 + (isFirstLineShowsPersonalBest ? 1 : 0),
