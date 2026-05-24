@@ -4,10 +4,10 @@ import {DNF, N_A, Result, SpeedcubeTimesStatistics} from "../model/speedcubing-s
 /**
  * Format a Result to a plain string
  */
-function formatResult(res: Result): string {
+function formatResult(res: Result, fractionDigits: number = 2): string {
   if (res === N_A) return N_A
   if (res === DNF) return DNF
-  let displayTime = (res as number).toFixed(2)
+  let displayTime = (res as number).toFixed(fractionDigits)
   // if (res.isPlusTwo) displayTime += ' (+2)'
   return `${displayTime}s`
 }
@@ -53,7 +53,7 @@ export function drawSpeedCubingResultsTable(container: HTMLElement, stats: Speed
 
   // --- Group 1: Session Bounds ---
   addGroupHeader(tbody, 'Session Bounds')
-  addDataRow(tbody, 'Personal Best (PB)', formatResult(stats.personalBest), true, true)
+  addDataRow(tbody, 'Personal Best (PB)', formatResult(stats.personalBest, 3), true, true)
   addDataRow(tbody, 'Session Best', formatResult(stats.best))
   addDataRow(tbody, 'Session Worst', formatResult(stats.worst))
   addDataRow(tbody, 'Total Solves', stats.count.toString())

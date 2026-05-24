@@ -180,7 +180,8 @@ export class TrainingTimer {
 
   private stopTimer() {
     if (this.state !== running) return
-    const finalTime: string = ((Date.now() - this.startTime) / 1000).toFixed(fractionDigits)
+    const finalTime: number = (Date.now() - this.startTime) / 1000
+    const finalTimeStr: string = finalTime.toFixed(fractionDigits)
 
     // this.isRunning = false
 
@@ -188,11 +189,11 @@ export class TrainingTimer {
       cancelAnimationFrame(this.timerAnimationFrame)
       this.timerAnimationFrame = null
     }
-    this.displayEl.setText(finalTime)
+    this.displayEl.setText(finalTimeStr)
     // this.isShowingResult = true
 
     if (this.callback) {
-      this.callback(this.scrambleEl.getText(), finalTime)
+      this.callback(this.scrambleEl.getText(), finalTimeStr)
     }
   }
 

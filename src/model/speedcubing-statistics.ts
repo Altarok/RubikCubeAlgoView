@@ -1,7 +1,13 @@
-export const DNF: string = 'DNF' as const
+export interface Solve {
+  isDNF: boolean
+  time: number | undefined
+  isPB: boolean
+}
+
 export const N_A: string = 'N/A' as const
-export type Solve = number | typeof DNF
-export type Result = Solve | typeof N_A
+export const DNF: string = 'DNF' as const
+const resultTypes: string[] = [N_A, DNF] as const
+export type  Result = number | (typeof resultTypes)[number]
 
 export interface SpeedcubeTimesStatistics {
   /* Personal best */
@@ -34,25 +40,26 @@ class CalculationResult implements SpeedcubeTimesStatistics {
   globalMean: Result = N_A
   standardDeviation: Result = N_A
 
-  constructor(public readonly count: number) {
+  constructor(public count: number) {
   }
 }
 
 export class SpeedcubeTimesCalculator {
-  result: CalculationResult
+  result: SpeedcubeTimesStatistics
 
-  constructor(private readonly data: Solve[]) {
+  constructor(private readonly data: Solve[], private readonly pbSolve?: Solve) {
     this.result = new CalculationResult(data.length)
   }
 
   run(): SpeedcubeTimesStatistics {
+    if (this.pbSolve) this.result.personalBest = this.pbSolve.time!
     if (this.result.count === 0) return this.result
 
     this.result.best = 1e6
     this.result.worst = 0
 
     let currentValues: Solve[] = []
-    let dnfs: number = 0
+    let dnfCount: number = 0
 
     let runs = Math.min(this.data.length, 100)
 
@@ -60,54 +67,54 @@ export class SpeedcubeTimesCalculator {
       const solve: Solve = this.data[i]!
       currentValues.push(solve)
 
-      if (solve === DNF) {
-        dnfs++
+      if (solve.isDNF) {
+        dnfCount++
       } else {
-        if ((solve as number) < this.result.best) this.result.best = solve as number
-        if ((solve as number) > this.result.worst) this.result.worst = solve as number
+        if (solve.time && solve.time < this.result.best) this.result.best = solve.time
+        if (solve.time && solve.time > this.result.worst) this.result.worst = solve.time
       }
 
-      if (i === 3) this.calculateMeanOf3(dnfs, currentValues)
-      if (i === 5) this.calculateAverageOf5(dnfs, currentValues)
-      if (i === 12) this.calculateAverageOf12(dnfs, currentValues)
+      if (i === 2) this.calculateMeanOf3(dnfCount, currentValues)
+      if (i === 4) this.calculateAverageOf5(dnfCount, currentValues)
+      if (i === 11) this.calculateAverageOf12(dnfCount, currentValues)
 
     }
 
     this.calculateGlobalValues(currentValues)
 
-    this.result.personalBest = this.result.best
+    if (this.result.personalBest === N_A) this.result.personalBest = this.result.best
     return this.result
   }
 
 
-  calculateMeanOf3(dnfs: number, solves: Solve[]) {
-    if (dnfs > 0) this.result.Mo3 = DNF
+  calculateMeanOf3(dnfCount: number, solves: Solve[]) {
+    if (dnfCount > 0) this.result.Mo3 = DNF
     else {
       this.result.Mo3 = 0
       for (const solve of solves) {
-        this.result.Mo3 += (solve as number / 3)
+        this.result.Mo3 += solve.time! / 3
       }
     }
   }
 
-  calculateAverageOf5(dnfs: number, solves: Solve[]) {
-    if (dnfs > 1) this.result.Ao5 = DNF
+  calculateAverageOf5(dnfCount: number, solves: Solve[]) {
+    if (dnfCount > 1) this.result.Ao5 = DNF
     else {
       let sortedSolves: Solve[] = this.sort(solves)
       this.result.Ao5 = 0
       for (let i = 1; i < solves.length - 1; i++) {
-        this.result.Ao5 += (sortedSolves[i] as number / 3)
+        this.result.Ao5 += sortedSolves[i]!.time! / 3
       }
     }
   }
 
-  calculateAverageOf12(dnfs: number, solves: Solve[]) {
-    if (dnfs > 1) this.result.Ao12 = DNF
+  calculateAverageOf12(dnfCount: number, solves: Solve[]) {
+    if (dnfCount > 1) this.result.Ao12 = DNF
     else {
       let sortedSolves: Solve[] = this.sort(solves)
       this.result.Ao12 = 0
       for (let i = 1; i < solves.length - 1; i++) {
-        this.result.Ao12 += (sortedSolves[i] as number / 10)
+        this.result.Ao12 += sortedSolves[i]!.time! / 10
       }
     }
   }
@@ -116,9 +123,9 @@ export class SpeedcubeTimesCalculator {
     let nonDnfs: number = 0
     let sum: number = 0
     for (let solve of solves) {
-      if (solve !== DNF) {
+      if (!solve.isDNF) {
         nonDnfs++
-        sum = sum + (solve as number)
+        sum = sum + solve.time!
       }
     }
 
@@ -127,28 +134,26 @@ export class SpeedcubeTimesCalculator {
     let sumOfDeviations: number = 0
 
     for (let solve of solves) {
-      if (solve !== DNF) {
-        sumOfDeviations = sumOfDeviations  + Math.abs((solve as number) - this.result.globalMean)
+      if (!solve.isDNF) {
+        sumOfDeviations = sumOfDeviations + Math.abs(solve.time! - this.result.globalMean)
       }
     }
 
     this.result.standardDeviation = sumOfDeviations / nonDnfs
   }
 
-
   sort(solves: Solve[]) {
     return [...solves].sort((a, b) => {
-      if (a === DNF) {
-        if (b === DNF) {
+      if (a.isDNF) {
+        if (b.isDNF) {
           return 0
         } else {
           return 1
         }
-      } else if (b === DNF) {
+      } else if (b.isDNF) {
         return -1
       }
-      return (a as number) - (b as number)
+      return a.time! - b.time!
     })
   }
-
 }

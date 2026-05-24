@@ -4,7 +4,7 @@ import {MarkdownProcessorPll} from "./markdown-processor-pll"
 import RubikCubeAlgoSettingsTab, {DefaultSettings, Settings} from "./settings/plugin-settings-tab"
 import {addAppCommands} from "./plugin-command-builder"
 import {MarkdownProcessorSpeedcubingTimer} from "./markdown-processor-timer"
-import {SpeedCubingResultTableRenderChild} from "./markdown-processor-timer-results"
+import SpeedCubingResultTableRenderChild from "./markdown-processor-timer-results"
 import {CodeBlocks} from "./consts/strings"
 
 /*

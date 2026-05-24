@@ -1,4 +1,4 @@
-import {MarkdownPostProcessorContext, MarkdownRenderChild,  TFile} from 'obsidian'
+import {MarkdownPostProcessorContext, MarkdownRenderChild, TFile} from 'obsidian'
 import {StringPairCallback} from "./training/training-timer"
 import RubikCubeAlgos from "./main"
 import {SpeedcubingTimerView} from "./view/speedcubing-timer"
@@ -9,12 +9,12 @@ import {CodeBlocks} from "./consts/strings"
  */
 export class MarkdownProcessorSpeedcubingTimer extends MarkdownRenderChild {
   view: SpeedcubingTimerView
+  personalBest: number | null = null
 
   constructor(readonly source: string, readonly plugin: RubikCubeAlgos, readonly container: HTMLElement, readonly ctx: MarkdownPostProcessorContext) {
     super(container)
     this.view = new SpeedcubingTimerView(this.container, this.logCubeData)
   }
-
 
   onload() {
     this.container.empty()
@@ -26,20 +26,40 @@ export class MarkdownProcessorSpeedcubingTimer extends MarkdownRenderChild {
     const file = this.plugin.app.vault.getAbstractFileByPath(this.ctx.sourcePath)
     if (!(file instanceof TFile)) return
 
-    /* safely process file */
+    /* Add result to code block: result table */
     void this.plugin.app.vault.process(file, (oldContent: string) => {
       return this.updatedContent(oldContent, scramble, timeTaken)
     })
   }
 
-  updatedContent(oldContent: string,  scramble: string, timeTaken: string) {
-    let lines: string[] =  oldContent.split('\n')
+  updatedContent(oldContent: string, scramble: string, timeTaken: string) {
+    let lines: string[] = oldContent.split('\n')
     let indexOfRubikCubeTimerResultsCodeBlock: number = lines.indexOf(`\`\`\`${CodeBlocks.speedubing.results}`)
     if (indexOfRubikCubeTimerResultsCodeBlock === -1) {
       return oldContent
     }
-    let speedcubingRunData: string = `${timeTaken}s (${scramble})`
-    lines.splice(indexOfRubikCubeTimerResultsCodeBlock + 1, 0, speedcubingRunData)
+
+    const speedcubingRunData: string = `${timeTaken}s (${scramble})`
+
+    const firstLineOfCodeBlock = lines[indexOfRubikCubeTimerResultsCodeBlock + 1] || ''
+    let isFirstLineShowsPersonalBest = firstLineOfCodeBlock.startsWith('pb:') || false
+    if (this.personalBest === null && isFirstLineShowsPersonalBest) {
+      let timeTakenStr = firstLineOfCodeBlock.replace(/pb:(\d\.\d+)s? \(.*\)$/g, '$1')
+      if (timeTakenStr && /\d+\.\d{3}/.test(timeTakenStr)) this.personalBest = +timeTakenStr
+    }
+
+    if (this.personalBest === null || this.personalBest > +timeTaken) {
+      this.personalBest = +timeTaken
+      lines.splice(indexOfRubikCubeTimerResultsCodeBlock + 1,
+        isFirstLineShowsPersonalBest ? 1 : 0,
+        'pb:' + speedcubingRunData)
+      isFirstLineShowsPersonalBest = true
+    }
+
+    lines.splice(indexOfRubikCubeTimerResultsCodeBlock + 1 + (isFirstLineShowsPersonalBest ? 1 : 0),
+      0, speedcubingRunData)
+
+
     return lines.join('\n')
   }
 
@@ -48,5 +68,12 @@ export class MarkdownProcessorSpeedcubingTimer extends MarkdownRenderChild {
     this.container.empty()
   }
 
+// private handlePersonalBest(lines: string[], indexOfRubikCubeTimerResultsCodeBlock: number, speedcubingRunData: string) {
+//
+// }
+//
+// private addNewPersonalBest() {
+//   lines.splice(indexOfRubikCubeTimerResultsCodeBlock + 1, 0, 'pb:' + speedcubingRunData)
+// }
 }
 

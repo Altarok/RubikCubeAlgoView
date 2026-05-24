@@ -5,7 +5,7 @@ import {CssClasses} from "../consts/strings"
 export class SpeedcubingTimerView {
   private readonly isOnMobile: boolean
   private timer?: TrainingTimer
-  private focusHint?: HTMLElement
+  private focusHint?: HTMLElement 
 
   constructor(readonly container: HTMLElement, readonly callbackForSolves: StringPairCallback | undefined) {
     this.isOnMobile = Platform.isMobile
@@ -14,8 +14,7 @@ export class SpeedcubingTimerView {
   display() {
     this.container.addClass(CssClasses.timer.container)
 
-    const userColor = getComputedStyle(document.body).getPropertyValue('--interactive-accent').trim() || '#00ff55'
-    this.container.style.borderColor = userColor
+    this.container.style.borderColor = getComputedStyle(document.body).getPropertyValue('--interactive-accent').trim() || '#00ff55'
 
     const innerContent = this.container.createEl('div')
     if (!this.isOnMobile) {
@@ -24,7 +23,6 @@ export class SpeedcubingTimerView {
         text: 'Click block to focus keyboard controls',
         cls: CssClasses.timer.focusHint
       })
-
     }
 
     this.timer = new TrainingTimer(innerContent, this.container, this.isOnMobile, this.callbackForSolves)
