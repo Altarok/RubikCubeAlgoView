@@ -4,10 +4,9 @@ export interface Solve {
   isPB: boolean
 }
 
-export const N_A: string = 'N/A' as const
-export const DNF: string = 'DNF' as const
-const resultTypes: string[] = [N_A, DNF] as const
-export type  Result = number | (typeof resultTypes)[number]
+export const N_A = 'N/A'
+export const DNF = 'DNF'
+export type  Result = number | typeof N_A | typeof DNF
 
 export interface SpeedcubeTimesStatistics {
   /* Personal best */
