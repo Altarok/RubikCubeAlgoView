@@ -60,7 +60,6 @@ export class MarkdownProcessorSpeedcubingTimer extends MarkdownRenderChild {
     lines.splice(indexOfRubikCubeTimerResultsCodeBlock + 1 + (isFirstLineShowsPersonalBest ? 1 : 0),
       0, speedcubingRunData)
 
-
     return lines.join('\n')
   }
 
@@ -69,12 +68,5 @@ export class MarkdownProcessorSpeedcubingTimer extends MarkdownRenderChild {
     this.container.empty()
   }
 
-// private handlePersonalBest(lines: string[], indexOfRubikCubeTimerResultsCodeBlock: number, speedcubingRunData: string) {
-//
-// }
-//
-// private addNewPersonalBest() {
-//   lines.splice(indexOfRubikCubeTimerResultsCodeBlock + 1, 0, 'pb:' + speedcubingRunData)
-// }
 }
 
