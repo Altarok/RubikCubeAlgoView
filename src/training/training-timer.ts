@@ -52,11 +52,11 @@ export class TrainingTimer {
     this.addTexts(this.contentEl)
 
     if (this.isOnMobile) {
-      // Mobile: Listen for touch interactions on the entire screen
+      /* Mobile: Listen for touch interactions on the entire screen */
       this.eventHandler.addEventListener('touchstart', this.handleTouchStartBound)
       this.eventHandler.addEventListener('touchend', this.handleTouchEndBound)
     } else {
-      // Desktop: Keep the classic keyboard listener behavior
+      /* Desktop: Keep the classic keyboard listener behavior */
       this.eventHandler.addEventListener('keydown', this.handleKeyDownBound)
       this.eventHandler.addEventListener('keyup', this.handleKeyUpBound)
       this.eventHandler.addEventListener('blur', this.onBlur)
@@ -183,14 +183,11 @@ export class TrainingTimer {
     const finalTime: number = (Date.now() - this.startTime) / 1000
     const finalTimeStr: string = finalTime.toFixed(fractionDigits)
 
-    // this.isRunning = false
-
     if (this.timerAnimationFrame) {
       window.cancelAnimationFrame(this.timerAnimationFrame)
       this.timerAnimationFrame = null
     }
     this.displayEl.setText(finalTimeStr)
-    // this.isShowingResult = true
 
     if (this.callback) {
       this.callback(this.scrambleEl.getText(), finalTimeStr)
@@ -289,7 +286,7 @@ export class TrainingTimer {
   destroy() {
     this.stopTimer()
 
-    // Unbind everything depending on platform to prevent leaks
+    /* Unbind everything depending on platform to prevent leaks */
     if (this.isOnMobile) {
       this.eventHandler.removeEventListener('touchstart', this.handleTouchStartBound)
       this.eventHandler.removeEventListener('touchend', this.handleTouchEndBound)

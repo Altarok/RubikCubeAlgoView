@@ -27,7 +27,7 @@ import {CodeBlocks, Events} from './consts/strings'
  * - [ ] replace it with hardcoded values
  *
  * ## Rotation
- * - [x] Change cube rotation to integer type [0-3] // to be multiplied by 90 degrees
+ * - [x] Change cube rotation to integer type [0-3] - to be multiplied by 90 degrees
  *   - turn left -> rotation = (rotation + delta + 4) % 4, then apply rotation
  *   - turn right -> rotation = (rotation - delta + 4) % 4, then apply rotation
  *

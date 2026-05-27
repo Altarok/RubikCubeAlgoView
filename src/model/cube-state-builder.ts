@@ -60,7 +60,7 @@ export default class CubeStateBuilder {
   initialCubeRotation: number = 0
 
   constructor(rawInput: string, backupColors: CubeColors) {
-    // split lines, skip empty lines, empty string is falsy
+    /* split lines, skip empty lines, empty string is falsy */
     this.splitUserInput = rawInput.split('\n').filter(Boolean)
     this.arrowColor = backupColors.arrowColor
     this.cubeColor = backupColors.cubeColor
@@ -193,7 +193,7 @@ export default class CubeStateBuilder {
       const isDoubleSided = segment.includes('+')
       const parts = segment.split(/[+-]/) // Split on + OR -
 
-      // Map the string IDs to their coordinate objects immediately
+      /* Map the string IDs to their coordinate objects immediately */
       const coords = parts.map(id => this.stickerCoordinates.getStickerCenter(id))
 
       if (isDoubleSided && coords.length === 2) {
@@ -205,7 +205,7 @@ export default class CubeStateBuilder {
       for (let i = 0; i < coords.length - 1; i++) {
         arrows.push(new ArrowCoords(coords[i] as Coordinates, coords[i + 1] as Coordinates))
       }
-      // chained arrows: connect end and start of chain
+      /* chained arrows: connect [end] and [start] of chain */
       if (coords.length > 2) {
         arrows.push(new ArrowCoords(coords[coords.length - 1] as Coordinates, coords[0] as Coordinates))
       }
@@ -280,7 +280,7 @@ export default class CubeStateBuilder {
       const parsedRow = row.split('').map((char: string, x: number): string => {
         if (char === '.') return '-1'
         const isEdge = (x === 0 || x === row.length - 1 || i === 0 || i === rawOllInput.length - 1)
-        // Side stickers are lowercase, Top stickers are uppercase
+        /* Side stickers are lowercase, Top stickers are uppercase */
         return isEdge ? char.toLowerCase() : char.toUpperCase()
       })
 

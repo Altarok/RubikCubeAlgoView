@@ -41,7 +41,7 @@ function toAlgorithm(line: string, completeLine: string): Result<Algorithm> {
     if (isAlgorithmStep(step)) {
       steps.push(step)
     } else {
-      // This should technically be unreachable if the Regex is perfect
+      /* This should technically be unreachable if the Regex is perfect */
       return {success: false, error: new InvalidInput(completeLine, 'Unknown rotation step: ' + step)}
     }
   }
@@ -107,7 +107,7 @@ function toFlags(input: string, completeLine: string): Result<FlagType[]> {
     if (Flags.isFlag(flag)) {
       flags.add(flag)
     } else {
-      // This should technically be unreachable if the Regex is perfect
+      /* This should technically be unreachable if the Regex is perfect */
       return {success: false, error: new InvalidInput(completeLine, 'Unknown flag: ' + flag)}
     }
   }

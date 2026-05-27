@@ -39,10 +39,10 @@ function addDataRow(tbody: HTMLTableSectionElement, label: string, valueStr: str
 }
 
 export function drawSpeedCubingResultsTable(container: HTMLElement, stats: SpeedcubeTimesStatistics) {
-  // 1. Initialize the root table component
+  /* initialize root table component */
   const table = container.createEl('table', {cls: CssClasses.speedcubingResults.table})
 
-  // 2. Build the scannable header
+  /* build scannable header */
   const thead = table.createEl('thead')
   const headerRow = thead.createEl('tr')
   headerRow.createEl('th', {text: 'Metric', attr: {scope: 'col'}})
@@ -51,23 +51,22 @@ export function drawSpeedCubingResultsTable(container: HTMLElement, stats: Speed
   const tbody = table.createEl('tbody')
 
 
-  // --- Group 1: Session Bounds ---
+  /* group 1: 'Session Bounds' */
   addGroupHeader(tbody, 'Session Bounds')
   addDataRow(tbody, 'Personal Best (PB)', formatResult(stats.personalBest, 3), true, true)
   addDataRow(tbody, 'Session Best', formatResult(stats.best))
   addDataRow(tbody, 'Session Worst', formatResult(stats.worst))
   addDataRow(tbody, 'Total Solves', stats.count.toString())
 
-  // --- Group 2: Competitive Averages ---
+  /* group 2: 'Competitive Averages' */
   addGroupHeader(tbody, 'Competitive Averages')
   addDataRow(tbody, 'Average of 5 (Ao5)', formatResult(stats.Ao5), true)
   addDataRow(tbody, 'Average of 12 (Ao12)', formatResult(stats.Ao12), true)
   addDataRow(tbody, 'Mean of 3 (Mo3)', formatResult(stats.Mo3))
 
-  // --- Group 3: Session Consistency ---
+  /* group 3: 'Session Consistency' */
   addGroupHeader(tbody, 'Session Consistency')
   addDataRow(tbody, 'Global Session Mean', formatResult(stats.globalMean))
-  // Standard Deviation displays as a straight duration differential
-  addDataRow(tbody, 'Standard Deviation (\u03C3)', `${(stats.standardDeviation as number).toFixed(2)}`)
+  addDataRow(tbody, 'Standard Deviation (\u03C3)', formatResult(stats.standardDeviation))
 
 }

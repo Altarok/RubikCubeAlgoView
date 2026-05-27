@@ -12,6 +12,13 @@ export const CodeBlocks = {
   }
 } as const
 
+
+/*
+ * FIXME add regexes, GUI strings and hints, and others to this class
+ *
+ * to later be localized?? just do it
+ */
+
 /**
  * Event names
  */
@@ -102,7 +109,3 @@ export const CssClasses = {
     orange: 'rubik-cube-algs-warning-text-orange',
   }
 } as const
-
-// Utility Type Extraction
-export type CssClassType = typeof CssClasses
-
