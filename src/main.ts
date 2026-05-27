@@ -5,7 +5,7 @@ import RubikCubeAlgoSettingsTab, {DefaultSettings, Settings} from "./settings/pl
 import {addAppCommands} from "./plugin-command-builder"
 import {MarkdownProcessorSpeedcubingTimer} from "./markdown-processor-timer"
 import SpeedCubingResultTableRenderChild from "./markdown-processor-timer-results"
-import {CodeBlocks} from "./consts/strings"
+import {CodeBlocks, Events} from "./consts/strings"
 
 /*
  * # Logic
@@ -22,8 +22,8 @@ import {CodeBlocks} from "./consts/strings"
  * - [x] remove 'y0'
  * - [ ] validate actual OLL input
  *
- * ## Default consts
- * - [ ] remove consts.json from release
+ * ## Default data
+ * - [ ] remove data.json from release
  * - [ ] replace it with hardcoded values
  *
  * ## Rotation
@@ -102,7 +102,7 @@ export default class RubikCubeAlgos extends Plugin {
   }
 
   rerenderCodeblocks(): void {
-    this.app.workspace.trigger("rubik:rerender-markdown-code-block-processors")
+    this.app.workspace.trigger(Events.rerenderCodeBlocks)
   }
 
   saveSettingsSync() {

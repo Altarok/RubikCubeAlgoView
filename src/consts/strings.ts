@@ -12,7 +12,13 @@ export const CodeBlocks = {
   }
 } as const
 
-
+/**
+ * Event names
+ */
+export const Events = {
+  /** Triggers re-rendering of markdown code blocks. Used when settings change. */
+  rerenderCodeBlocks: 'rca-event:rerender-markdown-code-blocks'
+}
 
 /**
  * Added list of css classes used in project to search for references.

@@ -6,6 +6,7 @@ import {CubeColors} from "./settings/plugin-settings-tab"
 import CubeStateBuilder from "./model/cube-state-builder"
 import {createBackupColors} from "./model/cube-color-builder"
 import {CubeStatePll} from "./model/cube-state"
+import {Events} from "./consts/strings";
 
 export class MarkdownProcessorPll extends MarkdownRenderChild {
 
@@ -17,10 +18,11 @@ export class MarkdownProcessorPll extends MarkdownRenderChild {
   onload(): void {
     /* Register listener which instantly redraws Rubik's Cubes while changing plugin settings.*/
     this.registerEvent(
-      // @ts-ignore
-      this.plugin.app.workspace.on('rubik:rerender-markdown-code-block-processors',
-        this.display.bind(this)
-      )
+      /*
+       * Obsidian's ESLint config and the build process contradict each other a bit.
+       * "as unknown as 'quit'" makes them both shut up at this point.
+       */
+      this.plugin.app.workspace.on(Events.rerenderCodeBlocks as unknown as 'quit', this.display.bind(this))
     )
   }
 
@@ -33,7 +35,7 @@ export class MarkdownProcessorPll extends MarkdownRenderChild {
     cubeRenderer.display(this.container)
 
     if (!cubeState.codeBlockInterpretationFailed()) {
-      ButtonController.addRotationButtons(cubeRenderer, cubeState, this.plugin)
+      ButtonController.addRotationButtons(cubeRenderer, cubeState /* , this.plugin */)
     }
   }
 }

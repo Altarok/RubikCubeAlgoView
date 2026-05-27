@@ -1,7 +1,7 @@
 import {CubeRenderer} from "../view/cube-renderer"
 import {CubeState} from "../model/cube-state"
 // import {setIcon} from "obsidian"
-import RubikCubeAlgos from "../main"
+// import RubikCubeAlgos from "../main"
 // import {IO} from "./io-util"
 // import {StringUtils} from "../parser/string-utils"
 
@@ -42,7 +42,7 @@ function changeStateOfRotationDependantButtons(cubeRenderer: CubeRenderer, cubeS
 // }
 //
 // /**
-//  * Save cube's current rotation to consts.json.
+//  * Save cube's current rotation to data.json.
 //  *
 //  * TODO currently unused (see underscore), keep for out-commented options
 //  *
@@ -72,7 +72,7 @@ function changeStateOfRotationDependantButtons(cubeRenderer: CubeRenderer, cubeS
 // }
 
 
-function addRotationButtons(cubeRenderer: CubeRenderer, cubeState: CubeState, plugin: RubikCubeAlgos) {
+function addRotationButtons(cubeRenderer: CubeRenderer, cubeState: CubeState /* , plugin: RubikCubeAlgos */ ) {
 
   changeStateOfRotationDependantButtons(cubeRenderer, cubeState)
 
