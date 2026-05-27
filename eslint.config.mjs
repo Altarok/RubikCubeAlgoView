@@ -4,7 +4,6 @@ import obsidianmdPlugin from "eslint-plugin-obsidianmd";
 import js from "@eslint/js";
 
 export default [
-  // 1. Globale Umgebung definieren (Node/Browser)
   {
     ignores: [
       "coverage/**",
@@ -20,15 +19,14 @@ export default [
       },
     },
   },
-  // 2. Konfiguration für deine Quellcodedateien
   {
     files: ["src/**/*.ts", "src/**/*.tsx"],
     languageOptions: {
       parser: tsParser,
       sourceType: "module",
       parserOptions: {
-        project: "./tsconfig.json", // Zeigt ESLint deine TS-Konfiguration
-        tsconfigRootDir: import.meta.dirname, // Setzt den korrekten Basis-Pfad unter Windows/Node
+        project: "./tsconfig.json", // point ESLint to TS-config
+        tsconfigRootDir: import.meta.dirname, // Set correct path independent of OS
       },
     },
     plugins: {
