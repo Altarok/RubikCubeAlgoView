@@ -36,21 +36,14 @@ export default [
       "obsidianmd": obsidianmdPlugin,
     },
     rules: {
-      // Standard-Empfehlungen aktivieren
+      // default settings
       ...js.configs.recommended.rules,
       ...tsPlugin.configs.recommended.rules,
-
-      // Obsidian-Empfehlungen aktivieren
+      // Obsidian settings
       ...obsidianmdPlugin.configs.recommended.rules,
-
 
       // switch off 'no-undef'
       "no-undef": "off",
-
-      // personal rules
-      // "no-unused-vars": "off",
-      // "@typescript-eslint/no-unused-vars": ["error", { "args": "none" }],
-      // "@typescript-eslint/ban-ts-comment": "off"
     },
   },
 ];
