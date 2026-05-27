@@ -14,7 +14,7 @@ export class SpeedcubingTimerView {
   display() {
     this.container.addClass(CssClasses.timer.container)
 
-    this.container.style.borderColor = getComputedStyle(document.body).getPropertyValue('--interactive-accent').trim() || '#00ff55'
+    this.container.style.borderColor = window.getComputedStyle(document.body).getPropertyValue('--interactive-accent').trim() || '#00ff55'
 
     const innerContent = this.container.createEl('div')
     if (!this.isOnMobile) {

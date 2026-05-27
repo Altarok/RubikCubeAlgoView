@@ -173,9 +173,9 @@ export class TrainingTimer {
       if (this.state !== running) return
       const elapsed = (Date.now() - this.startTime) / 1000
       this.displayEl.setText(elapsed.toFixed(fractionDigits))
-      this.timerAnimationFrame = requestAnimationFrame(updateDisplay)
+      this.timerAnimationFrame = window.requestAnimationFrame(updateDisplay)
     }
-    this.timerAnimationFrame = requestAnimationFrame(updateDisplay)
+    this.timerAnimationFrame = window.requestAnimationFrame(updateDisplay)
   }
 
   private stopTimer() {
@@ -186,7 +186,7 @@ export class TrainingTimer {
     // this.isRunning = false
 
     if (this.timerAnimationFrame) {
-      cancelAnimationFrame(this.timerAnimationFrame)
+      window.cancelAnimationFrame(this.timerAnimationFrame)
       this.timerAnimationFrame = null
     }
     this.displayEl.setText(finalTimeStr)

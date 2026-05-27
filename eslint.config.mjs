@@ -6,8 +6,7 @@ import js from "@eslint/js";
 export default [
   {
     ignores: [
-      "coverage/**",
-      "main.js"
+      "coverage/**"
     ],
   },
   {
@@ -39,9 +38,6 @@ export default [
       ...tsPlugin.configs.recommended.rules,
       // Obsidian settings
       ...obsidianmdPlugin.configs.recommended.rules,
-
-      // switch off 'no-undef'
-      "no-undef": "off",
     },
   },
 ];
