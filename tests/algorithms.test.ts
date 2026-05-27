@@ -1,11 +1,11 @@
 import {beforeEach, describe, expect, it} from 'vitest'
-import {Algorithm, Algorithms, AlgorithmStep, MappedAlgorithm, MappedAlgorithms} from "../src/model/algorithms"
-import {Arrows} from "../src/model/geometry"
+import {Algorithm, Algorithms, AlgorithmStep, MappedAlgorithm, MappedAlgorithms} from '../src/model/algorithms'
+import {Arrows} from '../src/model/geometry'
 
-const validAlgorithm = ["F", "R", "U"] as AlgorithmStep[]
+const validAlgorithm = ['F', 'R', 'U'] as AlgorithmStep[]
 
-let alg1FRU = createAlgorithm(["F", "R", "U"])
-let alg2FLU = createAlgorithm(["F", "L", "U"])
+let alg1FRU = createAlgorithm(['F', 'R', 'U'])
+let alg2FLU = createAlgorithm(['F', 'L', 'U'])
 
 function createAlgorithm(steps: AlgorithmStep[]): Algorithm {
   return new Algorithm(steps)
@@ -14,8 +14,8 @@ function createAlgorithm(steps: AlgorithmStep[]): Algorithm {
 describe('Algorithm', () => {
 
   beforeEach(() => {
-    alg1FRU = createAlgorithm(["F", "R", "U"])
-    alg2FLU = createAlgorithm(["F", "L", "U"])
+    alg1FRU = createAlgorithm(['F', 'R', 'U'])
+    alg2FLU = createAlgorithm(['F', 'L', 'U'])
   })
 
   it('should create distinct hash values on creation', () => {
@@ -191,11 +191,11 @@ describe('MappedAlgorithms (string-MappedAlgorithm map)', () => {
     return mappedAlgorithm
   }
 
-  it("should provide proper consts with algorithm's hash", () => {
+  it('should provide proper consts with algorithm hash', () => {
     checkHashValues()
   })
 
-  it("should provide proper consts with algorithm's hash - after rotation", () => {
+  it('should provide proper consts with algorithm hash - after rotation', () => {
     let mappedAlgorithm = checkHashValues()
 
     mappedAlgorithms.rotate(1)
@@ -207,7 +207,7 @@ describe('MappedAlgorithms (string-MappedAlgorithm map)', () => {
     expect(mappedAlgorithm).toEqual(mappedAlgorithm2)
   })
 
-  it("should provide inner map's size", () => {
+  it('should provide inner map size', () => {
     expect(mappedAlgorithms.map.size).toBe(2)
     expect(mappedAlgorithms.map.size).toBe(mappedAlgorithms.size())
     mappedAlgorithms.add(new MappedAlgorithm(createAlgorithm(validAlgorithm), noArrows))

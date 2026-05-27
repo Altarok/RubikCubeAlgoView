@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'vitest'
-import {Build} from "../src/parser/geometry-builder"
-import {Coordinates, Dimensions, StickerCoords} from "../src/model/geometry"
+import {Build} from '../src/parser/geometry-builder'
+import {Coordinates, Dimensions, StickerCoords} from '../src/model/geometry'
 
 const ollOffset = 100
 const pllOffset = 50

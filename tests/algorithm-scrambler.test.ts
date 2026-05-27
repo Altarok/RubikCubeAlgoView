@@ -1,5 +1,5 @@
-import {beforeAll, beforeEach, describe, expect, it} from "vitest"
-import {generateScramble} from "../src/training/algorithm-scrambler"
+import {beforeAll, describe, expect, it} from 'vitest'
+import {generateScramble} from '../src/training/algorithm-scrambler'
 
 const scrambles : string[] = []
 

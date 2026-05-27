@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest'
-import {Parse} from "../src/parser/parser"
+import {Parse} from '../src/parser/parser'
 
 describe('Parse.toAlgorithm()', () => {
 

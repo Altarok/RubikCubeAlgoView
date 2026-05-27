@@ -1,7 +1,7 @@
 import {beforeEach, describe, expect, it} from 'vitest'
-import {CubeStateOll, CubeStatePll} from "../src/model/cube-state"
-import {CubeColors, Settings} from "../src/settings/plugin-settings-tab"
-import CubeStateBuilder from "../src/model/cube-state-builder"
+import {CubeStateOll, CubeStatePll} from '../src/model/cube-state'
+import {CubeColors, Settings} from '../src/settings/plugin-settings-tab'
+import CubeStateBuilder from '../src/model/cube-state-builder'
 
 const id: string = 'someID'
 /* Default valid OLL field for 3x3 cube. Actual values make no sense. */
@@ -37,13 +37,13 @@ alg:y R2 B2 U' R' U' R U R U B2 R U' R U
 ` /* ends on linebreak */
 
 const colors: CubeColors = {
-  arrowColor: "#08f",
-  cubeColor: "#ff0"
+  arrowColor: '#08f',
+  cubeColor: '#ff0'
 }
 
 const settings: Settings = {
-  arrowColor: "#08f",
-  cubeColor: "#ff0",
+  arrowColor: '#08f',
+  cubeColor: '#ff0',
   cubeRotations: {}
 }
 

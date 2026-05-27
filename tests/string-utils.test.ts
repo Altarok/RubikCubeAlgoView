@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest'
-import {StringUtils} from "../src/parser/string-utils"
+import {StringUtils} from '../src/parser/string-utils'
 
 
 describe('cubeHash(string, AlgorithmType)', () => {

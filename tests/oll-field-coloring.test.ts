@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest'
-import {OllFieldColoring} from "../src/model/oll-field-coloring"
+import {OllFieldColoring} from '../src/model/oll-field-coloring'
 
 const cubeColor = '#123'
 

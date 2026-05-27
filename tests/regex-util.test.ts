@@ -1,8 +1,8 @@
 // noinspection SpellCheckingInspection
 
-import {describe, expect, it} from "vitest"
-import {RegEx} from "../src/parser/regex-util"
-import {Flags} from "../src/model/flags"
+import {describe, expect, it} from 'vitest'
+import {RegEx} from '../src/parser/regex-util'
+import {Flags} from '../src/model/flags'
 
 describe('RegEx.isPositiveInteger()', () => {
 
