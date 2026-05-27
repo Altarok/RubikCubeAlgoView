@@ -17,6 +17,8 @@ export const CodeBlocks = {
  * FIXME add regexes, GUI strings and hints, and others to this class
  *
  * to later be localized?? just do it
+ *
+ * TODO remove console logs!
  */
 
 /**
