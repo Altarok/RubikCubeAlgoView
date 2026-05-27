@@ -191,7 +191,7 @@ h1.rubik-cube-algs-timer-running,
   color: var(--interactive-accent);
 }
 
-/* Optional: If you want a stack mat "inspection ready" green phase
+/* Optional: If you want a stack mat 'inspection ready' green phase
    after holding it for a specific duration, you could swap this class in */
 .rubik-cube-algs-timer-primed {
   color: var(--text-success); /* Dark/Light theme safe green */

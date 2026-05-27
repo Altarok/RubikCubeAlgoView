@@ -1,6 +1,6 @@
-import {StringPairCallback, TrainingTimer} from "../training/training-timer"
-import {Platform} from "obsidian"
-import {CssClasses} from "../consts/strings"
+import {StringPairCallback, TrainingTimer} from '../training/training-timer'
+import {Platform} from 'obsidian'
+import {CssClasses} from '../consts/strings'
 
 export class SpeedcubingTimerView {
   private readonly isOnMobile: boolean

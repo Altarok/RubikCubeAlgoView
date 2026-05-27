@@ -1,4 +1,4 @@
-import {Flags} from "../model/flags"
+import {Flags} from '../model/flags'
 
 export const RegEx = {
   isAlgorithm,

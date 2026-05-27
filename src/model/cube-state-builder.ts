@@ -1,14 +1,14 @@
-import {CubeColors, Settings} from "../settings/plugin-settings-tab"
-import {CubeStateOll, CubeStatePll} from "./cube-state"
-import {FlagType} from "./flags"
-import {ArrowCoords, Arrows, Coordinates, Dimensions, StickerCoords} from "./geometry"
-import {Parse, Result} from "../parser/parser"
-import {Algorithm, Algorithms, AlgorithmType, MappedAlgorithm, MappedAlgorithms} from "./algorithms"
-import {Build} from "../parser/geometry-builder"
-import {OllFieldColoring} from "./oll-field-coloring"
-import {StringUtils} from "../parser/string-utils"
-import {knownOllIds, PredefinedCaseRubikOll} from "../consts/predefined-cases"
-import {InvalidInput} from "./invalid-input-container"
+import {CubeColors, Settings} from '../settings/plugin-settings-tab'
+import {CubeStateOll, CubeStatePll} from './cube-state'
+import {FlagType} from './flags'
+import {ArrowCoords, Arrows, Coordinates, Dimensions, StickerCoords} from './geometry'
+import {Parse, Result} from '../parser/parser'
+import {Algorithm, Algorithms, AlgorithmType, MappedAlgorithm, MappedAlgorithms} from './algorithms'
+import {Build} from '../parser/geometry-builder'
+import {OllFieldColoring} from './oll-field-coloring'
+import {StringUtils} from '../parser/string-utils'
+import {knownOllIds, PredefinedCaseRubikOll} from '../consts/predefined-cases'
+import {InvalidInput} from './invalid-input-container'
 
 const InputKeys: string[] = [
   /* Algorithm input, 0-n lines */
@@ -256,7 +256,7 @@ export default class CubeStateBuilder {
     let rawOllInput: string[] = this.undeclaredUserInputForOllField
 
     if (!rawOllInput || rawOllInput.length < 4) {
-      return this.pushError(new InvalidInput(rawOllInput[0] ?? 'oll field', "Input for OLL should contain at least 4 lines!"))
+      return this.pushError(new InvalidInput(rawOllInput[0] ?? 'oll field', 'Input for OLL should contain at least 4 lines!'))
     }
 
     const firstRow = rawOllInput[0]!
@@ -317,7 +317,7 @@ export default class CubeStateBuilder {
    * @param {InvalidInput} error - contains invalid input and description of problem
    */
   private pushError(error: InvalidInput): void {
-    console.warn(`Failed to parse code block. Invalid line: ${error.line}`)
+    // console.warn(`Failed to parse code block. Invalid line: ${error.line}`)
     this.invalidInput.push(error)
   }
 

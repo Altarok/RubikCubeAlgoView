@@ -1,7 +1,7 @@
 import {MarkdownPostProcessorContext, MarkdownRenderChild} from 'obsidian'
-import RubikCubeAlgos from "./main"
-import {DNF, Solve, SpeedcubeTimesCalculator, SpeedcubeTimesStatistics} from "./model/speedcubing-statistics"
-import {drawSpeedCubingResultsTable} from "./view/speedcubing-results-table"
+import RubikCubeAlgos from './main'
+import {DNF, Solve, SpeedcubeTimesCalculator, SpeedcubeTimesStatistics} from './model/speedcubing-statistics'
+import {drawSpeedCubingResultsTable} from './view/speedcubing-results-table'
 
 const DidNotFinish: Solve = {isDNF: true, time: undefined, isPB: false}
 

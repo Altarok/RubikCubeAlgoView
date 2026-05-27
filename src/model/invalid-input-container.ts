@@ -1,4 +1,4 @@
-import {Flags} from "./flags"
+import {Flags} from './flags'
 
 /** Container for invalid user input. */
 export class InvalidInput {

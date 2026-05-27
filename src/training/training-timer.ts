@@ -1,5 +1,5 @@
-import {CssClasses} from "consts/strings"
-import {generateScramble} from "./algorithm-scrambler"
+import {CssClasses} from 'consts/strings'
+import {generateScramble} from './algorithm-scrambler'
 
 /** Number of digits to measure */
 const fractionDigits: number = 3

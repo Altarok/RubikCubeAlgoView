@@ -1,14 +1,13 @@
-import {CubeState, CubeStateOll, CubeStatePll} from "../model/cube-state"
-import {Algorithms} from "../model/algorithms"
-import {OllFieldColoring} from "../model/oll-field-coloring"
-import {SvgUtils} from "./svg-utils"
-import {UiUtils} from "./ui-utils"
-import {applyRotation} from "./dom-rotation"
-import createCubeLayout, {CubeLayout} from "./cube-layout"
-import {setIcon} from "obsidian"
-import {InvalidInput} from "../model/invalid-input-container"
-import {CssClasses} from "../consts/strings"
-
+import {CubeState, CubeStateOll, CubeStatePll} from '../model/cube-state'
+import {Algorithms} from '../model/algorithms'
+import {OllFieldColoring} from '../model/oll-field-coloring'
+import {SvgUtils} from './svg-utils'
+import {UiUtils} from './ui-utils'
+import {applyRotation} from './dom-rotation'
+import createCubeLayout, {CubeLayout} from './cube-layout'
+import {setIcon} from 'obsidian'
+import {InvalidInput} from '../model/invalid-input-container'
+import {CssClasses} from '../consts/strings'
 
 export abstract class CubeRenderer {
   layout!: CubeLayout

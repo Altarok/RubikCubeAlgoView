@@ -1,4 +1,4 @@
-import {Coordinates, Dimensions, StickerCoords} from "../model/geometry"
+import {Coordinates, Dimensions, StickerCoords} from '../model/geometry'
 
 export const Build = {
   stickerCoordinates

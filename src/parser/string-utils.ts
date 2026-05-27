@@ -1,4 +1,4 @@
-import {AlgorithmType} from "../model/algorithms"
+import {AlgorithmType} from '../model/algorithms'
 
 export const StringUtils = {
   hash,

@@ -1,11 +1,11 @@
-import {Plugin} from "obsidian"
-import {MarkdownProcessorOll} from "./markdown-processor-oll"
-import {MarkdownProcessorPll} from "./markdown-processor-pll"
-import RubikCubeAlgoSettingsTab, {DefaultSettings, Settings} from "./settings/plugin-settings-tab"
-import {addAppCommands} from "./plugin-command-builder"
-import {MarkdownProcessorSpeedcubingTimer} from "./markdown-processor-timer"
-import SpeedCubingResultTableRenderChild from "./markdown-processor-timer-results"
-import {CodeBlocks, Events} from "./consts/strings"
+import {Plugin} from 'obsidian'
+import {MarkdownProcessorOll} from './markdown-processor-oll'
+import {MarkdownProcessorPll} from './markdown-processor-pll'
+import RubikCubeAlgoSettingsTab, {DefaultSettings, Settings} from './settings/plugin-settings-tab'
+import {addAppCommands} from './plugin-command-builder'
+import {MarkdownProcessorSpeedcubingTimer} from './markdown-processor-timer'
+import SpeedCubingResultTableRenderChild from './markdown-processor-timer-results'
+import {CodeBlocks, Events} from './consts/strings'
 
 /*
  * # Logic
@@ -44,7 +44,7 @@ import {CodeBlocks, Events} from "./consts/strings"
  *
  * ## Flags
  * - [x] add flag: 'no-rotation'
- *   - [ ] then add svg in center sticker "no location change"
+ *   - [ ] then add svg in center sticker 'no location change'
  * - [ ] add flag: 'keep-y-prefix' -> change y on parsing, keep rest
  *   - do not change algorithm on rotation, only the amount of y prefix
  *   - add rotation as parameter to method Algorithm.toString when using flag 'keep-y-prefix'. Skip y when #y = currentRotation
@@ -108,8 +108,8 @@ export default class RubikCubeAlgos extends Plugin {
   saveSettingsSync() {
     /* Trigger the save but don't 'await' it. It runs in the background. */
     void this.saveSettings()
-    // .then(() => console.debug("Save successful"))
-    // .catch(err => console.error("Save failed", err))
+    // .then(() => console.debug('Save successful'))
+    // .catch(err => console.error('Save failed', err))
   }
 
   private registerMarkdownCodeBlockProcessors() {

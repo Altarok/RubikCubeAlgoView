@@ -1,12 +1,12 @@
-import RubikCubeAlgos from "./main"
-import {CubeRendererPLL} from "./view/cube-renderer"
-import {MarkdownRenderChild} from "obsidian"
-import {ButtonController} from "./control/button-controller"
-import {CubeColors} from "./settings/plugin-settings-tab"
-import CubeStateBuilder from "./model/cube-state-builder"
-import {createBackupColors} from "./model/cube-color-builder"
-import {CubeStatePll} from "./model/cube-state"
-import {Events} from "./consts/strings";
+import RubikCubeAlgos from './main'
+import {CubeRendererPLL} from './view/cube-renderer'
+import {MarkdownRenderChild} from 'obsidian'
+import {ButtonController} from './control/button-controller'
+import {CubeColors} from './settings/plugin-settings-tab'
+import CubeStateBuilder from './model/cube-state-builder'
+import {createBackupColors} from './model/cube-color-builder'
+import {CubeStatePll} from './model/cube-state'
+import {Events} from './consts/strings'
 
 export class MarkdownProcessorPll extends MarkdownRenderChild {
 
@@ -20,7 +20,7 @@ export class MarkdownProcessorPll extends MarkdownRenderChild {
     this.registerEvent(
       /*
        * Obsidian's ESLint config and the build process contradict each other a bit.
-       * "as unknown as 'quit'" makes them both shut up at this point.
+       * `as unknown as 'quit'` makes them both shut up at this point.
        */
       this.plugin.app.workspace.on(Events.rerenderCodeBlocks as unknown as 'quit', this.display.bind(this))
     )

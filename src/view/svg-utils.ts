@@ -1,5 +1,5 @@
-import {Arrows} from "../model/geometry"
-import {CssClasses} from "../consts/strings"
+import {Arrows} from '../model/geometry'
+import {CssClasses} from '../consts/strings'
 
 const stickerDrawSize = 100
 
@@ -87,7 +87,7 @@ function drawBackgroundRect(svg: SVGSVGElement, fill: string) {
 }
 
 /**
- * Draws a single colored "sticker" (rectangle) on the cube.
+ * Draws a single colored 'sticker' (rectangle) on the cube.
  */
 function drawSticker(svg: SVGSVGElement,
                      x: number,
@@ -109,7 +109,7 @@ function drawResetRotateIcon(svg: SVGSVGElement) {
 }
 
 /**
- * Draws the "Rotate Left" icon onto an SVG
+ * Draws the 'Rotate Left' icon onto an SVG
  */
 function drawRotateLeftIcon(svg: SVGSVGElement) {
   svg.createSvg('rect', {attr: {x: 10, y: 2, width: 12, height: 12, rx: 2, ry: 2}})
@@ -122,7 +122,7 @@ function drawRotateLeftIcon(svg: SVGSVGElement) {
 }
 
 /**
- * Draws the "Rotate Right" icon onto an SVG
+ * Draws the 'Rotate Right' icon onto an SVG
  */
 function drawRotateRightIcon(svg: SVGSVGElement) {
   svg.createSvg('rect', {attr: {x: 2, y: 2, width: 12, height: 12, rx: 2, ry: 2}})

@@ -1,8 +1,8 @@
-import {Algorithm, AlgorithmStep, possibleSteps} from "../model/algorithms"
-import {Dimensions} from "../model/geometry"
-import {RegEx} from "./regex-util"
-import {Flags, FlagType} from "../model/flags"
-import {InvalidInput} from "../model/invalid-input-container"
+import {Algorithm, AlgorithmStep, possibleSteps} from '../model/algorithms'
+import {Dimensions} from '../model/geometry'
+import {RegEx} from './regex-util'
+import {Flags, FlagType} from '../model/flags'
+import {InvalidInput} from '../model/invalid-input-container'
 
 export type Result<T> =
   | { success: true; data: T }

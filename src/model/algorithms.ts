@@ -1,5 +1,5 @@
-import {Arrows} from "./geometry"
-import {StringUtils} from "../parser/string-utils"
+import {Arrows} from './geometry'
+import {StringUtils} from '../parser/string-utils'
 
 export const AlgorithmTypes = ['pll', 'oll'] as const
 export type AlgorithmType = (typeof AlgorithmTypes)[number]

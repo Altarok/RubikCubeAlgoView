@@ -1,8 +1,8 @@
 import {MarkdownPostProcessorContext, MarkdownRenderChild, Notice, TFile} from 'obsidian'
-import {StringPairCallback} from "./training/training-timer"
-import RubikCubeAlgos from "./main"
-import {SpeedcubingTimerView} from "./view/speedcubing-timer"
-import {CodeBlocks} from "./consts/strings"
+import {StringPairCallback} from './training/training-timer'
+import RubikCubeAlgos from './main'
+import {SpeedcubingTimerView} from './view/speedcubing-timer'
+import {CodeBlocks} from './consts/strings'
 
 /**
  * Stack mat directly in note

@@ -1,6 +1,6 @@
-import { CssClasses } from "consts/strings"
-import {Algorithm} from "../model/algorithms"
-import {InvalidInput} from "../model/invalid-input-container"
+import { CssClasses } from 'consts/strings'
+import {Algorithm} from '../model/algorithms'
+import {InvalidInput} from '../model/invalid-input-container'
 
 export const UiUtils = {
   renderAlgorithmList,
@@ -95,7 +95,7 @@ function renderAlgorithmSelect(
         type: 'radio', // radio button
         name: uniqueIdForRadioButtons, // unique identifier for radio button grp
         id: uniqueId,
-        value: i.toString(), // consts sent to the script ("backend") when the form is submitted
+        value: i.toString(), // consts sent to the script ('backend') when the form is submitted
         ...(isChecked && {checked: true}) // only add checked attribute if true
       }
     })
