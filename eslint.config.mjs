@@ -44,11 +44,11 @@ export default [
       ...obsidianmdPlugin.configs.recommended.rules,
 
 
-      // Das 'no-undef' Problem für TS abschalten (wichtig!)
+      // switch off 'no-undef'
       "no-undef": "off",
 
-      // Deine persönlichen Regeln (hier kannst du anpassen)
-      "no-unused-vars": "off",
+      // personal rules
+      // "no-unused-vars": "off",
       // "@typescript-eslint/no-unused-vars": ["error", { "args": "none" }],
       // "@typescript-eslint/ban-ts-comment": "off"
     },

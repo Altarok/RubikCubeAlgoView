@@ -1,0 +1,12 @@
+# Standard behavior for all files: automatic detection and LF in the repository
+* text=auto
+
+# Explicitly declare specific text files as text
+*.json text
+*.ts text
+*.js text
+*.md text
+
+# Leave binary files (images, etc.) untouched
+*.png binary
+*.jpg binary
