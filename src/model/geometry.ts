@@ -1,4 +1,4 @@
-import {RegEx} from "../parser/regex-util"
+import {RegEx} from '../parser/regex-util'
 
 /** Simple x,y coordinates */
 export class Coordinates {
@@ -9,7 +9,9 @@ export class Coordinates {
   constructor(public readonly x: number, public readonly y: number) {
   }
 
-  toString(): string { return `${this.x},${this.y}`}
+  toString(): string {
+    return `${this.x},${this.y}`
+  }
 }
 
 /** Coordinates for -one- arrow. */
@@ -52,9 +54,9 @@ export class StickerCoords {
 
     const output: Coordinates | undefined = this.coordinates[indexOfCubeletCenter - 1]
 
-    if (!output) {   // Safety check
-      // Fallback to a default (0,0) to prevent the whole SVG from failing to render
-      console.warn(`Invalid sticker index: ${input}`)
+    if (!output) { /* Safety check */
+      /* Fallback to a default (0,0) to prevent the whole SVG from failing to render */
+      // console.warn(`Invalid sticker index: ${input}`)
       return new Coordinates(0, 0)
     }
 

@@ -1,8 +1,8 @@
-import {Algorithm, Algorithms, AlgorithmType, MappedAlgorithms, Rotatable} from "./algorithms"
-import {Arrows, Dimensions} from "./geometry"
-import {OllFieldColoring} from "./oll-field-coloring"
-import {FlagType} from "./flags"
-import {InvalidInput} from "./invalid-input-container"
+import {Algorithm, Algorithms, AlgorithmType, MappedAlgorithms, Rotatable} from './algorithms'
+import {Arrows, Dimensions} from './geometry'
+import {OllFieldColoring} from './oll-field-coloring'
+import {FlagType} from './flags'
+import {InvalidInput} from './invalid-input-container'
 
 export interface CubeState {
   readonly algorithmType: AlgorithmType
@@ -97,7 +97,7 @@ abstract class CubeStateCommon implements CubeState {
       defaultRotation = 0
       this.locked = false
     }
-    console.debug(`Pre-set rotation found: ${defaultRotation}`)
+    // console.debug(`Pre-set rotation found: ${defaultRotation}`)
     this.setRotation(defaultRotation)
   }
 

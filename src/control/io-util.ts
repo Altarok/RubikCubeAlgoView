@@ -1,6 +1,6 @@
-import {CubeState} from "../model/cube-state"
-import RubikCubeAlgos from "../main"
-import {StringUtils} from "../parser/string-utils"
+import {CubeState} from '../model/cube-state'
+import RubikCubeAlgos from '../main'
+import {StringUtils} from '../parser/string-utils'
 
 export const IO = {
   saveRotation, unsaveRotation
@@ -24,11 +24,14 @@ function setRotation(valueToSafe: number, cubeState: CubeState, plugin: RubikCub
 
   if (!hash) {
     /* Should not be possible since cubes without id do not get a save button. */
-    console.warn('Cube has no hashable ID, will no persist.')
+    /*
+     * TODO change this to invalid input, show user
+     */
+    // console.warn('Cube has no hashable ID, will not persist.')
     return
   }
 
-  console.debug(`Cube hash: ${hash}, will persist current rotation: ${valueToSafe}`)
+  // console.debug(`Cube hash: ${hash}, will persist current rotation: ${valueToSafe}`)
   if (valueToSafe !== undefined) {
     if (valueToSafe !== 0) {
       /* Save new value */
