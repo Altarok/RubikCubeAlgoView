@@ -96,10 +96,10 @@ export default class CubeStateBuilder {
         let hash: string = StringUtils.cubeHash(this.id, 'oll')
         presetRotation = settings.cubeRotations[hash]
         presetOutline = ollCaseData.ollPattern
-        // for (const algorithm of ollCaseData.algorithms) {
-        //   if (!this.algorithmInput.has(algorithm))
-        //     this.algorithmInput.set(algorithm, this.id)
-        // }
+        for (const algorithm of ollCaseData.algorithms) {
+          if (!this.algorithmInput.has(algorithm))
+            this.algorithmInput.set(algorithm, this.id)
+        }
       }
     }
 
