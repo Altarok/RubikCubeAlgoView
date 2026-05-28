@@ -52,6 +52,8 @@ alg:L2 U' L2 U' L2 U2 L2 F2 U2 F2 U' F2 U' F2 U2
 \`\`\`
 `
 
+
+/* TODO replace this with hard coded IDs */
 /* 21 PLL algorithms for a Rubik's Cube (complete list) */
 const rubikCube_21_PllAlgorithms: string = `
 # PLL algorithms for Rubik's Cubes
