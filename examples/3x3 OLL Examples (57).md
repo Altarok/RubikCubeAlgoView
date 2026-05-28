@@ -7,7 +7,7 @@ Alternative data:
 - https://www.cubeskills.com/uploads/pdf/tutorials/oll-algorithms.pdf
 - https://www.cubeskills.com/uploads/pdf/tutorials/pll-algorithms.pdf
 Min. Plugin version:
-- 0.4.4
+- 0.4.3
 
 1. OLL-1 Dot
 ```rubikCubeOLL
