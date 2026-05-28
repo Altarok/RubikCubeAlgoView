@@ -244,15 +244,91 @@ export const knownOllIds: Record<string, PredefinedCaseRubikOll> = {
     id: 'oll-57', desc: 'Corners Oriented', ollPattern: 'tbt.ttt.tft',
     algorithms: ["R U R' U' M' U R U' r' == 2-8-6"]
   },
-}
+} as const
 
 export const knownPllIds: Record<string, PredefinedCaseRubikPll> = {
-  'pll-Aa': {
-    id: 'pll-Aa',
-    desc: 'TODO',
-    arrows: '1-3-7',
+  'pll-1': {
+    id: 'pll-1', desc: 'Aa Adjacent Corner Swap', arrows: '1-3-7',
     algorithms: ["x L2 D2 L' U' L D2 L' U L'", "z' B' U B' D2 B U' B' D2 B2"]
   },
-
-
-}
+  'pll-2': {
+    id: 'pll-2', desc: 'Ab Adjacent Corner Swap', arrows: '1-7-9',
+    algorithms: ["x' L2 D2 L U L' D2 L U' L", "z B U' B D2 B' U B D2 B2"]
+  },
+  'pll-3': {
+    id: 'pll-3', desc: 'F Adjacent Corner Swap', arrows: '2+8,3+9',
+    algorithms: ["R' U' F' R U R' U' R' F R2 U' R' U' R U R' U R"]
+  },
+  'pll-4': {
+    id: 'pll-4', desc: 'Ga Adjacent Corner Swap', arrows: '1-3-7,2-4-6',
+    algorithms: ["R2 U R' U R' U' R U' R2 U' D R' U R D'", "R2 u R' U R' U' R u' R2 y' R' U R"]
+  },
+  'pll-5': {
+    id: 'pll-5', desc: 'Gb Adjacent Corner Swap', arrows: '1-7-3,2-6-4',
+    algorithms: ["R' U' R U D' R2 U R' U R U' R U' R2 D", "R' U' R B2 u B' U B U' B u' B2"]
+  },
+  'pll-6': {
+    id: 'pll-6', desc: 'Gc Adjacent Corner Swap', arrows: '1-7-9,4-6-8',
+    algorithms: ["L2 B2 L U2 L U2 L' B L U L' U' L' B L2", "R2 U' R U' R U R' U R2 U D' R U' R' D", "R2 u' R U' R U R' u R2 y R U' R'"]
+  },
+  'pll-7': {
+    id: 'pll-7', desc: 'Gd Adjacent Corner Swap', arrows: '1-3-7,2-4-8',
+    algorithms: ["R U R' U' D R2 U' R U' R' U R' U R2 D'", "R U R' y' R2 u' R U' R' U R' u R2"]
+  },
+  'pll-8': {
+    id: 'pll-8', desc: 'Ja Adjacent Corner Swap', arrows: '2+6,3+9',
+    algorithms: ["x R2 F R F' R U2 r' U r U2", "R' U' R B R' U' R U R B' R2 U R", "F' U B' U2 F U' F' U2 F B"]
+  },
+  'pll-9': {
+    id: 'pll-9', desc: 'Jb Adjacent Corner Swap', arrows: '6+8,3+9',
+    algorithms: ["R U R' F' R U R' U' R' F R2 U' R'"]
+  },
+  'pll-10': {
+    id: 'pll-10', desc: 'Ra Adjacent Corner Swap', arrows: '2+4,3+9',
+    algorithms: ["R U' R' U' R U R D R' U' R D' R' U2 R'", "R U R' F' R U2 R' U2 R' F R U R U2 R'", "B U2 B' U2 B L' B' U' B U B L B2"]
+  },
+  'pll-11': {
+    id: 'pll-11', desc: 'Rb Adjacent Corner Swap', arrows: '4+8,3+9',
+    algorithms: ["R2 F R U R U' R' F' R U2 R' U2 R", "F' U2 F U2 F' L F U F' U' F' L' F2", "R' U2 R' D' R U' R' D R U R U' R' U' R"]
+  },
+  'pll-12': {
+    id: 'pll-12', desc: 'T Adjacent Corner Swap', arrows: '4+6,3+9',
+    algorithms: ["R U R' U' R' F R2 U' R' U' R U R' F'"]
+  },
+  'pll-13': {
+    id: 'pll-13', desc: 'E Diagonal Corner Swap', arrows: '1+7,3+9',
+    algorithms: ["x' L' U L D' L' U' L D L' U' L D' L' U L D", "x' R U' R' D R U R' D' R U R' D R U' R' D'"]
+  },
+  'pll-14': {
+    id: 'pll-14', desc: 'Na Diagonal Corner Swap', arrows: '3+7,4+6',
+    algorithms: ["R U R' U R U R' F' R U R' U' R' F R2 U' R' U2 R U' R'", "z U R' D R2 U' R D' U R' D R2 U' R D'"]
+  },
+  'pll-15': {
+    id: 'pll-15', desc: 'Nb Diagonal Corner Swap', arrows: '1+9,4+6',
+    algorithms: ["R' U R U' R' F' U' F R U R' F R' F' R U' R", "z D' R U' R2 D R' U D' R U' R2 D R' U"]
+  },
+  'pll-16': {
+    id: 'pll-16', desc: 'V Diagonal Corner Swap', arrows: '1+9,2+6',
+    algorithms: ["R' U R' U' y R' F' R2 U' R' U R' F R F", "R' U R' U' R D' R' D R' U D' R2 U' R2 D R2", "R U2 R' D R U' R U' R U R2 D R' U' R D2", "z D' R2 D R2 U R' D' R U' R U R' D R U' z'", "x' R' F R F' U R U2 R' U' R U' R' U2 R U R' U'"]
+  },
+  'pll-17': {
+    id: 'pll-17', desc: 'Y Diagonal Corner Swap', arrows: '1+9,2+4',
+    algorithms: ["F R U' R' U' R U R' F' R U R' U' R' F R F'", "F R' F R2 U' R' U' R U R' F' R U R' U' F'"]
+  },
+  'pll-18': {
+    id: 'pll-18', desc: 'H Edges Only', arrows: '2+8,4+6',
+    algorithms: ["M2 U M2 U2 M2 U M2", "M2 U' M2 U2 M2 U' M2"]
+  },
+  'pll-19': {
+    id: 'pll-19', desc: 'Ua Edges Only', arrows: '4-8-6',
+    algorithms: ["M2 U M U2 M' U M2", "R U' R U R U R U' R' U' R2", "L2 U' L' U' L U L U L U' L"]
+  },
+  'pll-20': {
+    id: 'pll-20', desc: 'Ub Edges Only', arrows: '4-6-8',
+    algorithms: ["M2 U' M U2 M' U' M2", "R2 U R U R' U' R' U' R' U R'", "L' U L' U' L' U' L' U L U L2"]
+  },
+  'pll-21': {
+    id: 'pll-21', desc: 'Z Edges Only', arrows: '2+6,4+8',
+    algorithms: ["M' U M2 U M2 U M' U2 M2", "S' U' S2 U' S2 U' S' U2 S2", "S2 U S2 U S' U2 S2 U2 S'", "M2 U' M2 U' M' U2 M2 U2 M'"]
+  },
+} as const

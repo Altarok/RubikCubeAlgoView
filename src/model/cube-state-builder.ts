@@ -7,7 +7,7 @@ import {Algorithm, Algorithms, AlgorithmType, MappedAlgorithm, MappedAlgorithms}
 import {Build} from '../parser/geometry-builder'
 import {OllFieldColoring} from './oll-field-coloring'
 import {StringUtils} from '../parser/string-utils'
-import {knownOllIds, PredefinedCaseRubikOll} from '../consts/predefined-cases'
+import {knownOllIds, knownPllIds, PredefinedCaseRubikOll, PredefinedCaseRubikPll} from '../consts/predefined-cases'
 import {InvalidInput} from './invalid-input-container'
 
 const InputKeys: string[] = [
@@ -74,12 +74,30 @@ export default class CubeStateBuilder {
   buildPll(): CubeStatePll {
     this.setupCubeTypeRelatedData('pll')
     let algorithms: Algorithms = new Algorithms()
+    let arrows: Arrows | undefined = undefined;
+
+    if (this.id) {
+      let pllCaseData: PredefinedCaseRubikPll | undefined = knownPllIds[this.id]
+      if (pllCaseData) {
+        let res = Parse.toArrows(pllCaseData.arrows, this.id)
+        if (res.success) arrows = this.setupArrowCoordinates(res.data)
+        else this.pushError(res.error)
+        // arrows = this.setupArrowCoordinates(pllCaseData.arrows)
+        for (const algorithm of pllCaseData.algorithms) {
+          const result = Parse.toAlgorithm(algorithm, this.id);
+          // const result = Parse.toAlgorithm(row, completeLine)
+          if (result.success) algorithms.add(result.data); else this.pushError(result.error)
+        }
+      }
+    }
 
     for (const [row, completeLine] of this.algorithmInput) {
       const result = Parse.toAlgorithm(row, completeLine)
       if (result.success) algorithms.add(result.data); else this.pushError(result.error)
     }
-    let arrows: Arrows = this.setupArrowCoordinates(this.arrowsPll)
+    if (!arrows || this.arrowsPll?.length > 0) {
+      arrows = this.setupArrowCoordinates(this.arrowsPll)
+    }
 
     return new CubeStatePll(this.arrowColor, this.cubeColor, this.dimensions, this.flags,
       this.id, this.viewBoxDimensions, this.invalidInput, this.splitUserInput, this.setup, algorithms, arrows)
