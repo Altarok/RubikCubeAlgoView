@@ -1,5 +1,8 @@
 import {CubeState} from '../model/cube-state'
-import {CssClasses} from '../consts/strings'
+import {Strings} from '../consts/strings'
+
+const CssClasses = Strings.CssClasses
+
 
 export interface CubeLayout {
   readonly mainContainer: HTMLDivElement

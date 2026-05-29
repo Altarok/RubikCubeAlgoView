@@ -1,5 +1,7 @@
 import {Arrows} from '../model/geometry'
-import {CssClasses} from '../consts/strings'
+import {Strings} from '../consts/strings'
+
+const CssClasses = Strings.CssClasses
 
 const stickerDrawSize = 100
 

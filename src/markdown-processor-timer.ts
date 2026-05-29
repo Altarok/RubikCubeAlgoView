@@ -2,7 +2,7 @@ import {MarkdownPostProcessorContext, MarkdownRenderChild, Notice, TFile} from '
 import {StringPairCallback} from './training/training-timer'
 import RubikCubeAlgos from './main'
 import {SpeedcubingTimerView} from './view/speedcubing-timer'
-import {CodeBlocks} from './consts/strings'
+import {Strings} from './consts/strings'
 
 /**
  * Stack mat directly in note
@@ -34,7 +34,7 @@ export class MarkdownProcessorSpeedcubingTimer extends MarkdownRenderChild {
 
   updatedContent(oldContent: string, scramble: string, timeTaken: string) {
     let lines: string[] = oldContent.split('\n')
-    let indexOfRubikCubeTimerResultsCodeBlock: number = lines.indexOf(`\`\`\`${CodeBlocks.speedubing.results}`)
+    let indexOfRubikCubeTimerResultsCodeBlock: number = lines.indexOf(`\`\`\`${Strings.MarkdownCodeBlockNames.speedubing.results}`)
     if (indexOfRubikCubeTimerResultsCodeBlock === -1) {
       return oldContent
     }

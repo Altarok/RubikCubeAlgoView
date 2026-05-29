@@ -32,7 +32,7 @@
     "vitest": "^4.0.18"
   },
   "dependencies": {
-    "obsidian": "latest"
+    "obsidian": "^1.13.0"
   },
   "engines": {
     "node": ">=24.0.0"

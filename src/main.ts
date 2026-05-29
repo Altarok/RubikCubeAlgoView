@@ -2,10 +2,10 @@ import {Plugin} from 'obsidian'
 import {MarkdownProcessorOll} from './markdown-processor-oll'
 import {MarkdownProcessorPll} from './markdown-processor-pll'
 import RubikCubeAlgoSettingsTab, {DefaultSettings, Settings} from './settings/plugin-settings-tab'
-import {addAppCommands} from './plugin-command-builder'
+import {addAppCommands} from './command-builder'
 import {MarkdownProcessorSpeedcubingTimer} from './markdown-processor-timer'
 import SpeedCubingResultTableRenderChild from './markdown-processor-timer-results'
-import {CodeBlocks, Events} from './consts/strings'
+import {Strings} from './consts/strings'
 
 /*
  * # Logic
@@ -83,9 +83,9 @@ export default class RubikCubeAlgos extends Plugin {
 
     this.registerMarkdownCodeBlockProcessors()
 
-    addAppCommands(this)
-
     this.addSettingTab(new RubikCubeAlgoSettingsTab(this.app, this))
+
+    addAppCommands(this)
   }
 
   onunload() {
@@ -102,7 +102,7 @@ export default class RubikCubeAlgos extends Plugin {
   }
 
   rerenderCodeblocks(): void {
-    this.app.workspace.trigger(Events.rerenderCodeBlocks)
+    this.app.workspace.trigger(Strings.Events.rerenderCodeBlocks)
   }
 
   saveSettingsSync() {
@@ -114,22 +114,22 @@ export default class RubikCubeAlgos extends Plugin {
 
   private registerMarkdownCodeBlockProcessors() {
 
-    this.registerMarkdownCodeBlockProcessor(CodeBlocks.cubes.oll,
+    this.registerMarkdownCodeBlockProcessor(Strings.MarkdownCodeBlockNames.cubes.oll,
       (source, el, ctx) => {
         ctx.addChild(new MarkdownProcessorOll(source, this, el))
       })
 
-    this.registerMarkdownCodeBlockProcessor(CodeBlocks.cubes.pll,
+    this.registerMarkdownCodeBlockProcessor(Strings.MarkdownCodeBlockNames.cubes.pll,
       (source, el, ctx) => {
         ctx.addChild(new MarkdownProcessorPll(source, this, el))
       })
 
-    this.registerMarkdownCodeBlockProcessor(CodeBlocks.speedubing.timer,
+    this.registerMarkdownCodeBlockProcessor(Strings.MarkdownCodeBlockNames.speedubing.timer,
       (source, el, ctx) => {
         ctx.addChild(new MarkdownProcessorSpeedcubingTimer(source, this, el, ctx))
       })
 
-    this.registerMarkdownCodeBlockProcessor(CodeBlocks.speedubing.results,
+    this.registerMarkdownCodeBlockProcessor(Strings.MarkdownCodeBlockNames.speedubing.results,
       (source, el, ctx) => {
         ctx.addChild(new SpeedCubingResultTableRenderChild(source, this, el, ctx))
       })

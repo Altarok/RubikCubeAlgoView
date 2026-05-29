@@ -1,5 +1,8 @@
 {
   "cubeColor": "#ffff00",
   "arrowColor": "#0088ff",
-  "cubeRotations": {}
+  "cubeRotations": {},
+  "acivateCommandQuickStartGuide": true,
+  "acivateCommandCodeblockExamples": true,
+  "acivateCommandCodeblockTemplates": true
 }

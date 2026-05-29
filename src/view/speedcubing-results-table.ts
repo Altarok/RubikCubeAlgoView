@@ -1,4 +1,4 @@
-import {CssClasses} from 'consts/strings'
+import {Strings} from 'consts/strings'
 import {DNF, N_A, Result, SpeedcubeTimesStatistics} from '../model/speedcubing-statistics'
 
 /**
@@ -16,7 +16,7 @@ function formatResult(res: Result, fractionDigits: number = 2): string {
  * Clean build of grouping banner rows
  */
 function addGroupHeader(tbody: HTMLTableSectionElement, title: string) {
-  const row = tbody.createEl('tr', {cls: CssClasses.speedcubingResults.header})
+  const row = tbody.createEl('tr', {cls: Strings.CssClasses.speedcubingResults.header})
   row.createEl('td', {text: title, attr: {colspan: '2'}})
 }
 
@@ -35,12 +35,12 @@ function addDataRow(tbody: HTMLTableSectionElement, label: string, valueStr: str
 
   /* Value Cell */
   const valueCell = row.createEl('td', {text: valueStr})
-  if (isHighlightValue) valueCell.addClass(CssClasses.speedcubingResults.highlight)
+  if (isHighlightValue) valueCell.addClass(Strings.CssClasses.speedcubingResults.highlight)
 }
 
 export function drawSpeedCubingResultsTable(container: HTMLElement, stats: SpeedcubeTimesStatistics) {
   /* initialize root table component */
-  const table = container.createEl('table', {cls: CssClasses.speedcubingResults.table})
+  const table = container.createEl('table', {cls: Strings.CssClasses.speedcubingResults.table})
 
   /* build scannable header */
   const thead = table.createEl('thead')

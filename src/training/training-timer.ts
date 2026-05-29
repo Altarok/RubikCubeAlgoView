@@ -1,4 +1,4 @@
-import {CssClasses} from 'consts/strings'
+import {Strings} from 'consts/strings'
 import {generateScramble} from './algorithm-scrambler'
 
 /** Number of digits to measure */
@@ -13,6 +13,8 @@ const ready = 1
 const running = 2
 const done = 3
 type StateType = typeof idle | typeof ready | typeof running | typeof done
+
+const CssClasses = Strings.CssClasses
 
 /**
  * Stack mat

@@ -7,7 +7,9 @@ import {applyRotation} from './dom-rotation'
 import createCubeLayout, {CubeLayout} from './cube-layout'
 import {setIcon} from 'obsidian'
 import {InvalidInput} from '../model/invalid-input-container'
-import {CssClasses} from '../consts/strings'
+import {Strings} from '../consts/strings'
+
+const CssClasses = Strings.CssClasses
 
 export abstract class CubeRenderer {
   layout!: CubeLayout

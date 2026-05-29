@@ -6,7 +6,7 @@ import {ButtonController} from './control/button-controller'
 import {CubeColors} from './settings/plugin-settings-tab'
 import CubeStateBuilder from './model/cube-state-builder'
 import {createBackupColors} from './model/cube-color-builder'
-import {Events} from './consts/strings'
+import {Strings} from './consts/strings'
 
 export class MarkdownProcessorOll extends MarkdownRenderChild {
 
@@ -22,7 +22,7 @@ export class MarkdownProcessorOll extends MarkdownRenderChild {
        * Obsidian's ESLint config and the build process contradict each other a bit.
        * `as unknown as 'quit'` makes them both shut up at this point.
        */
-      this.plugin.app.workspace.on(Events.rerenderCodeBlocks as unknown as 'quit', this.display.bind(this))
+      this.plugin.app.workspace.on(Strings.Events.rerenderCodeBlocks as unknown as 'quit', this.display.bind(this))
     )
   }
 

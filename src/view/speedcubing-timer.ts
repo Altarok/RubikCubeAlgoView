@@ -1,6 +1,6 @@
 import {StringPairCallback, TrainingTimer} from '../training/training-timer'
 import {Platform} from 'obsidian'
-import {CssClasses} from '../consts/strings'
+import {Strings} from '../consts/strings'
 
 export class SpeedcubingTimerView {
   private readonly isOnMobile: boolean
@@ -12,7 +12,7 @@ export class SpeedcubingTimerView {
   }
 
   display() {
-    this.container.addClass(CssClasses.timer.container)
+    this.container.addClass(Strings.CssClasses.timer.container)
 
     this.container.style.borderColor = window.getComputedStyle(document.body).getPropertyValue('--interactive-accent').trim() || '#00ff55'
 
@@ -21,7 +21,7 @@ export class SpeedcubingTimerView {
       this.container.setAttribute('tabindex', '0')
       this.focusHint = this.container.createEl('small', {
         text: 'Click block to focus keyboard controls',
-        cls: CssClasses.timer.focusHint
+        cls: Strings.CssClasses.timer.focusHint
       })
     }
 
