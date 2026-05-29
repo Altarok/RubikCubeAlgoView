@@ -1,8 +1,8 @@
 # Standard behavior for all files: automatic detection and LF in the repository
-* text=auto
+* text eol=lf
 
 # Explicitly declare specific text files as text
-*.json text
+*.json text eol=lf
 *.ts text
 *.js text
 *.md text
