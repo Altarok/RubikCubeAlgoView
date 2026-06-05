@@ -23,8 +23,8 @@ import {Strings} from './consts/strings'
  * - [ ] validate actual OLL input
  *
  * ## Default data
- * - [ ] remove data.json from release
- * - [ ] replace it with hardcoded values
+ * - [x] remove default data from data.json
+ * - [x] replace it with hardcoded values
  *
  * ## Rotation
  * - [x] Change cube rotation to integer type [0-3] - to be multiplied by 90 degrees
