@@ -1,7 +1,8 @@
-import {App, PluginSettingTab, Setting, SettingDefinitionItem} from 'obsidian'
+import {App, PluginSettingTab, Setting} from 'obsidian'
+// import {App, PluginSettingTab, Setting, SettingDefinitionItem} from 'obsidian'
 import RubikCubeAlgos from '../main'
 import {RegEx} from '../parser/regex-util'
-import {Strings} from "../consts/strings";
+// import {Strings} from "../consts/strings";
 
 export interface CubeColors {
   arrowColor: string
@@ -47,74 +48,74 @@ export default class RubikCubeAlgoSettingsTab extends PluginSettingTab {
     }
   }
 
-  public getSettingDefinitions(): SettingDefinitionItem<string>[] {
-    this.isNewSettingsAPI = true
-
-    return [
-      { // start group: commands
-        type: 'group',
-        heading: 'Commands',
-        items: [
-          {
-            name: Strings.SettingsUI.quickStartGuide.name,
-            desc: Strings.SettingsUI.quickStartGuide.desc,
-            control: {
-              type: 'toggle',
-              key: 'acivateCommandQuickStartGuide'
-            }
-          },
-          {
-            name: Strings.SettingsUI.examples.name,
-            desc: Strings.SettingsUI.examples.desc,
-            control: {
-              type: 'toggle',
-              key: 'acivateCommandCodeblockExamples'
-            },
-          },
-          {
-            name: Strings.SettingsUI.templates.name,
-            desc: Strings.SettingsUI.templates.desc,
-            control: {
-              type: 'toggle',
-              key: 'acivateCommandCodeblockTemplates'
-            }
-          },
-          {
-            name: Strings.SettingsUI.hint.name,
-            desc: Strings.SettingsUI.hint.desc,
-          },
-        ],
-      }, // end group: commands
-      { // start group: colors
-        type: 'group',
-        heading: 'Colors',
-        items: [
-          {
-            name: 'Color picker: Cube color',
-            render: (setting: Setting) => {
-              this.addColorSettingsCube(setting)
-            },
-          },
-          {
-            name: 'Color picker: Arrow color',
-            render: (setting: Setting) => {
-              this.addColorSettingsArrows(setting)
-            },
-          },
-          {
-            name: 'Button: reset default colors',
-            render: (setting: Setting) => {
-              this.addColorSettingsReset(setting)
-            },
-          },
-          {
-            name: Strings.SettingsUI.hint.name,
-            desc: 'Colors update live on change. Click save to persist your choice.',
-          },
-        ],
-      }, // end group: colors
-    ];
-  }
+  // public getSettingDefinitions(): SettingDefinitionItem<string>[] {
+  //   this.isNewSettingsAPI = true
+  //
+  //   return [
+  //     { // start group: commands
+  //       type: 'group',
+  //       heading: 'Commands',
+  //       items: [
+  //         {
+  //           name: Strings.SettingsUI.quickStartGuide.name,
+  //           desc: Strings.SettingsUI.quickStartGuide.desc,
+  //           control: {
+  //             type: 'toggle',
+  //             key: 'acivateCommandQuickStartGuide'
+  //           }
+  //         },
+  //         {
+  //           name: Strings.SettingsUI.examples.name,
+  //           desc: Strings.SettingsUI.examples.desc,
+  //           control: {
+  //             type: 'toggle',
+  //             key: 'acivateCommandCodeblockExamples'
+  //           },
+  //         },
+  //         {
+  //           name: Strings.SettingsUI.templates.name,
+  //           desc: Strings.SettingsUI.templates.desc,
+  //           control: {
+  //             type: 'toggle',
+  //             key: 'acivateCommandCodeblockTemplates'
+  //           }
+  //         },
+  //         {
+  //           name: Strings.SettingsUI.hint.name,
+  //           desc: Strings.SettingsUI.hint.desc,
+  //         },
+  //       ],
+  //     }, // end group: commands
+  //     { // start group: colors
+  //       type: 'group',
+  //       heading: 'Colors',
+  //       items: [
+  //         {
+  //           name: 'Color picker: Cube color',
+  //           render: (setting: Setting) => {
+  //             this.addColorSettingsCube(setting)
+  //           },
+  //         },
+  //         {
+  //           name: 'Color picker: Arrow color',
+  //           render: (setting: Setting) => {
+  //             this.addColorSettingsArrows(setting)
+  //           },
+  //         },
+  //         {
+  //           name: 'Button: reset default colors',
+  //           render: (setting: Setting) => {
+  //             this.addColorSettingsReset(setting)
+  //           },
+  //         },
+  //         {
+  //           name: Strings.SettingsUI.hint.name,
+  //           desc: 'Colors update live on change. Click save to persist your choice.',
+  //         },
+  //       ],
+  //     }, // end group: colors
+  //   ];
+  // }
 
   display(): void {
     this.isNewSettingsAPI = false
