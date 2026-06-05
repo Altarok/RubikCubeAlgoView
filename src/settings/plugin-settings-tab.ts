@@ -38,7 +38,7 @@ function isValidColorInput(color: string): boolean {
 
 export default class RubikCubeAlgoSettingsTab extends PluginSettingTab {
   tempColorInput: CubeColors
-  isNewSettingsAPI: boolean = false
+  // isNewSettingsAPI: boolean = false // TODO #v1.13.0
 
   constructor(app: App, readonly plugin: RubikCubeAlgos) {
     super(app, plugin)
@@ -118,7 +118,7 @@ export default class RubikCubeAlgoSettingsTab extends PluginSettingTab {
   // }
 
   display(): void {
-    this.isNewSettingsAPI = false
+    // this.isNewSettingsAPI = false // TODO #v1.13.0
 
     const {containerEl} = this
 
@@ -136,7 +136,7 @@ export default class RubikCubeAlgoSettingsTab extends PluginSettingTab {
     setting.setName('Reset colors').setDesc('Restore default color values.')
     .addButton((cb) => cb
       .setButtonText('Reset')
-      .setDestructive() // -> red
+      .setWarning() // TODO #v1.13.0 .setDestructive() // -> red
       .onClick(async () => {
         this.tempColorInput.cubeColor = DefaultSettings.cubeColor
         this.tempColorInput.arrowColor = DefaultSettings.arrowColor
@@ -182,8 +182,10 @@ export default class RubikCubeAlgoSettingsTab extends PluginSettingTab {
   }
 
   updateGUI() {
-    if (this.isNewSettingsAPI) this.update()
-    else this.display()
+    // TODO #v1.13.0 .setDestructive() // -> red
+    // if (this.isNewSettingsAPI) this.update()
+    // else
+      this.display()
   }
 
   private changeCurrentCubeColor(hexColor: string) {
@@ -210,10 +212,11 @@ export default class RubikCubeAlgoSettingsTab extends PluginSettingTab {
     }
   }
 
-  private addColorSettingsHeader(containerEl: HTMLElement) {
-    new Setting(containerEl).setName('Appearance defaults').setHeading()
-    .setDesc('Values are validated and displayed on the fly. Save button persists to data.json.')
-  }
+  // TODO #v1.13.0
+  // private addColorSettingsHeader(containerEl: HTMLElement) {
+  //   new Setting(containerEl).setName('Appearance defaults').setHeading()
+  //   .setDesc('Values are validated and displayed on the fly. Save button persists to data.json.')
+  // }
 
   private addHorizontalSeparator(containerEl: HTMLElement) {
     containerEl.createEl('hr')
