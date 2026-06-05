@@ -153,41 +153,32 @@ export default class RubikCubeAlgoSettingsTab extends PluginSettingTab {
 
   private addColorSettingsArrows(setting: Setting) {
     setting.setName('Arrow color').setDesc('Default color for algorithm arrows. Resets to #0088ff (sky blue).')
-      .addText((text) => text
-        .setValue(this.tempColorInput.arrowColor)
-        .setDisabled(true))
-      .addColorPicker(color => color
-        .setValue(this.tempColorInput.arrowColor).onChange((value) => this.changeCurrentArrowColor(value)))
-      .addExtraButton(button =>
-        button.setTooltip('Save').setIcon('save').onClick(async () => {
-            let isValid: boolean = isValidColorInput(this.tempColorInput.arrowColor)
-            let valueToSafe = isValid ? addHashPrefixIfMissing(this.tempColorInput.arrowColor) : DefaultSettings.arrowColor
-            this.tempColorInput.arrowColor = valueToSafe
-            this.plugin.settings.arrowColor = valueToSafe
-            await this.plugin.saveSettings()
-            this.updateGUI()
-          }
-        ))
+      .addText((text) => text.setValue(this.tempColorInput.arrowColor).setDisabled(true))
+      .addColorPicker(color => color.setValue(this.tempColorInput.arrowColor).onChange((value) => this.changeCurrentArrowColor(value)))
+      .addExtraButton(button => button.setTooltip('Save').setIcon('save').onClick(async () => {
+          let isValid: boolean = isValidColorInput(this.tempColorInput.arrowColor)
+          let valueToSafe = isValid ? addHashPrefixIfMissing(this.tempColorInput.arrowColor) : DefaultSettings.arrowColor
+          this.tempColorInput.arrowColor = valueToSafe
+          this.plugin.settings.arrowColor = valueToSafe
+          await this.plugin.saveSettings()
+          this.updateGUI()
+        }
+      ))
   }
 
   private addColorSettingsCube(setting: Setting) {
-    setting
-      .setName('Cube color')
-      .setDesc('Default color for cube faces. Resets to #ffff00 (yellow).')
-      .addText((text) => text
-        .setValue(this.tempColorInput.cubeColor)
-        .setDisabled(true))
+    setting.setName('Cube color').setDesc('Default color for cube faces. Resets to #ffff00 (yellow).')
+      .addText((text) => text.setValue(this.tempColorInput.cubeColor).setDisabled(true))
       .addColorPicker(color => color.setValue(this.tempColorInput.cubeColor).onChange((value) => this.changeCurrentCubeColor(value)))
-      .addExtraButton(button =>
-        button.setTooltip('Save').setIcon('save').onClick(async () => {
-            let isValid: boolean = isValidColorInput(this.tempColorInput.cubeColor)
-            let valueToSafe = isValid ? addHashPrefixIfMissing(this.tempColorInput.cubeColor) : DefaultSettings.cubeColor
-            this.tempColorInput.cubeColor = valueToSafe
-            this.plugin.settings.cubeColor = valueToSafe
-            await this.plugin.saveSettings()
-            this.updateGUI()
-          }
-        ))
+      .addExtraButton(button => button.setTooltip('Save').setIcon('save').onClick(async () => {
+          let isValid: boolean = isValidColorInput(this.tempColorInput.cubeColor)
+          let valueToSafe = isValid ? addHashPrefixIfMissing(this.tempColorInput.cubeColor) : DefaultSettings.cubeColor
+          this.tempColorInput.cubeColor = valueToSafe
+          this.plugin.settings.cubeColor = valueToSafe
+          await this.plugin.saveSettings()
+          this.updateGUI()
+        }
+      ))
   }
 
   updateGUI() {
