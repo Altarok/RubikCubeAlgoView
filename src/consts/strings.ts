@@ -81,7 +81,7 @@ ${tripleBacktick}
     /* 21 PLL algorithms for a Rubik's Cube (complete list) */
     rubikCube_21_PllAlgorithms: `
 # PLL algorithms for Rubik's Cubes
-This is complete list with 21 code blocks.
+This is a complete list with 21 code blocks.
 
 ${Object.entries(knownPllIds).map(([key, val]) => `
 ## PLL-${val.desc}
@@ -93,7 +93,7 @@ ${tripleBacktick}
     /* 57 OLL algorithms for a Rubik's Cube (complete list) */
     rubikCube_57_OllAlgorithms: `
 # OLL algorithms for Rubik's Cubes
-This is complete list with 57 code blocks.
+This is a complete list with 57 code blocks.
 
 ${Object.entries(knownOllIds).map(([key, val]) => `
 ## ${key.toUpperCase()}-${val.desc}
