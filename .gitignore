@@ -1,13 +1,14 @@
-# --- Build Outputs ---
-node_modules
-# Ignore compiled main.js, upload to GitHub release instead.
-main.js
-# Exclude sourcemaps
-*.map
+/node_modules
+
+# IDE data
+.idea
+
+# test result data
 /coverage
 
-# --- IDEs and OS ---
-.vscode
-.idea
-*.iml
-.DS_Store
+# Ignore compiled main.js, upload to GitHub release instead.
+main.js
+
+# Ignore user settings changed by Obsidian
+data.json
+
