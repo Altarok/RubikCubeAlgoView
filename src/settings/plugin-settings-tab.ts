@@ -12,6 +12,9 @@ export interface CubeColors {
 
 export interface Settings extends CubeColors {
   cubeRotations: Record<string, number>
+  /*
+   * TODO fix typos
+   */
   acivateCommandQuickStartGuide: boolean
   acivateCommandCodeblockExamples: boolean
   acivateCommandCodeblockTemplates: boolean
