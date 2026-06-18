@@ -10,7 +10,7 @@ import {StringUtils} from '../parser/string-utils'
 import {knownOllIds, knownPllIds, PredefinedCaseRubikOll, PredefinedCaseRubikPll} from '../consts/predefined-cases'
 import {InvalidInput} from './invalid-input-container'
 
-const InputKeys: string[] = [
+export const InputKeys: string[] = [
   /* Algorithm input, 0-n lines */
   'alg',
   /* Arrow color, 0-1 lines */
@@ -27,7 +27,7 @@ const InputKeys: string[] = [
   'id',
   /* Setup instruction for given algorithm, 0-1 lines */
   'setup'
-]
+] as const
 
 const presetOutlinePattern = new RegExp(/[lbrt]{3}\.[lrt]{3}\.[lfrt]{3}/)
 

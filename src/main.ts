@@ -1,4 +1,4 @@
-import {Plugin} from 'obsidian'
+import {Platform, Plugin} from 'obsidian'
 import {MarkdownProcessorOll} from './markdown-processor-oll'
 import {MarkdownProcessorPll} from './markdown-processor-pll'
 import RubikCubeAlgoSettingsTab, {DefaultSettings, Settings} from './settings/plugin-settings-tab'
@@ -6,6 +6,7 @@ import {addAppCommands} from './command-builder'
 import {MarkdownProcessorSpeedcubingTimer} from './markdown-processor-timer'
 import SpeedCubingResultTableRenderChild from './markdown-processor-timer-results'
 import {Strings} from './consts/strings'
+import {CodeBlockCreatorModal} from "./view/code-block-generator-modal";
 
 /*
  * # Logic
@@ -86,6 +87,13 @@ export default class RubikCubeAlgos extends Plugin {
     this.addSettingTab(new RubikCubeAlgoSettingsTab(this.app, this))
 
     addAppCommands(this)
+
+    if (!Platform.isMobile) {
+
+      this.addRibbonIcon('lucide-blocks', 'Rubik Cube algorithms: Open code block creator', () => {
+        this.showCodeBlockCreator()
+      });
+    }
   }
 
   onunload() {
@@ -133,5 +141,9 @@ export default class RubikCubeAlgos extends Plugin {
       (source, el, ctx) => {
         ctx.addChild(new SpeedCubingResultTableRenderChild(source, this, el, ctx))
       })
+  }
+
+  private showCodeBlockCreator() {
+    new CodeBlockCreatorModal(this.app, this).open()
   }
 }
