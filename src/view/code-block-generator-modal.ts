@@ -3,11 +3,11 @@ import {App, Modal} from 'obsidian'
 import {AnyInput, GenericModal, OutputData} from '@Altarok/obsidian-dev-utils/src'
 import {Settings} from "../settings/plugin-settings-tab";
 
+// npm update @Altarok/obsidian-dev-utils
 export class CodeBlockCreatorModal extends Modal {
   constructor(public readonly app: App, public readonly plugin: RubikCubeAlgos) {
     super(app)
   }
-
 
   onOpen() {
     const {contentEl} = this
