@@ -37,28 +37,15 @@ export class CodeBlockCreatorModal extends Modal {
         output: localSettings,
         createCodeBlock: (): string => {
           let code = ''
+          const codeBlockId = localSettings.codeBlockId
           /* add main smiles notation */
-          if (localSettings.codeBlockId) code += `${localSettings.codeBlockId}\n`
+          // if (localSettings.codeBlockId) code += `${localSettings.codeBlockId}\n`
 
-          /* add other options */
-          const settings: AnyInput[] = optionalInput.filter(
-            (setting): setting is AnyInput => !!setting && 'key' in setting)
-            .map(setting => setting)
-
-          for (const setting of settings) {
-            if (!setting) continue
-
-            const localValue = localSettings[setting.key]
-            if (localValue === undefined || localValue === '') continue
-
-            const key: string = setting.key
-            const globalValue = setting.current
-            if (globalValue === localValue) continue
-
-            code += `${key}: ${localValue}\n`
+          if (localSettings.width || localSettings.height) {
+            code += `dimension:${localSettings.width ?? 3},${localSettings.height ?? 3}\n`
           }
 
-          return `\`\`\`${code}\`\`\``
+          return `\`\`\`${codeBlockId}\n${code}\`\`\``
         },
         onUpdatePreview: (previewEl: HTMLElement): void => {
           previewEl.empty();
@@ -79,7 +66,7 @@ function createMandatoryInput(): Readonly<AnyInput>[] {
       type: 'dropdown',
       name: 'type of cube',
       key: 'codeBlockId',
-      current: '',
+      current: 'rubikCubePLL',
       dropdownOptions: ['rubikCubePLL', 'rubikCubeOLL'] as const
     }
   ]
