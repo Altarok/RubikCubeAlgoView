@@ -65,6 +65,7 @@ function createMandatoryInput(): Readonly<AnyInput>[] {
     {
       type: 'dropdown',
       name: 'type of cube',
+      prompt: 'Choose cube type',
       key: 'codeBlockId',
       current: 'rubikCubePLL',
       dropdownOptions: ['rubikCubePLL', 'rubikCubeOLL'] as const
