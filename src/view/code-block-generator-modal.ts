@@ -1,6 +1,6 @@
 import RubikCubeAlgos from '../main'
 import {App, Modal} from 'obsidian'
-import {AnyInput, GenericModal, MandatoryInput, OptionalInput, OutputData} from '@Altarok/obsidian-dev-utils/src'
+import {GenericModal, MandatoryInput, OptionalInput, OutputData} from '@Altarok/obsidian-dev-utils/src'
 import {Settings} from "../settings/plugin-settings-tab";
 
 // npm update @Altarok/obsidian-dev-utils
