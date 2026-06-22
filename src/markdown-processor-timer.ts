@@ -34,7 +34,7 @@ export class MarkdownProcessorSpeedcubingTimer extends MarkdownRenderChild {
 
   updatedContent(oldContent: string, scramble: string, timeTaken: string) {
     let lines: string[] = oldContent.split('\n')
-    let indexOfRubikCubeTimerResultsCodeBlock: number = lines.indexOf(`\`\`\`${Strings.MarkdownCodeBlockNames.speedubing.results}`)
+    let indexOfRubikCubeTimerResultsCodeBlock: number = lines.indexOf(`\`\`\`${Strings.MarkdownCodeBlockNames.speedCubing.results}`)
     if (indexOfRubikCubeTimerResultsCodeBlock === -1) {
       return oldContent
     }

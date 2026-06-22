@@ -14,10 +14,11 @@ const tripleBacktick = "```"
  */
 const MarkdownCodeBlockNames = {
   cubes: {
+    generic: 'rubikCube',
     oll: 'rubikCubeOLL',
     pll: 'rubikCubePLL'
   },
-  speedubing: {
+  speedCubing: {
     timer: 'speedcubingTimer',
     results: 'speedcubingResults'
   }

@@ -55,6 +55,11 @@ export default class RubikCubeAlgos extends Plugin {
 
   private registerMarkdownCodeBlockProcessors() {
 
+    this.registerMarkdownCodeBlockProcessor(Strings.MarkdownCodeBlockNames.cubes.generic,
+      (source, el, ctx) => {
+        ctx.addChild(new GenericMarkdownProcessor(source, this, el))
+      })
+
     this.registerMarkdownCodeBlockProcessor(Strings.MarkdownCodeBlockNames.cubes.oll,
       (source, el, ctx) => {
         ctx.addChild(new MarkdownProcessorOll(source, this, el))
@@ -65,12 +70,12 @@ export default class RubikCubeAlgos extends Plugin {
         ctx.addChild(new MarkdownProcessorPll(source, this, el))
       })
 
-    this.registerMarkdownCodeBlockProcessor(Strings.MarkdownCodeBlockNames.speedubing.timer,
+    this.registerMarkdownCodeBlockProcessor(Strings.MarkdownCodeBlockNames.speedCubing.timer,
       (source, el, ctx) => {
         ctx.addChild(new MarkdownProcessorSpeedcubingTimer(source, this, el, ctx))
       })
 
-    this.registerMarkdownCodeBlockProcessor(Strings.MarkdownCodeBlockNames.speedubing.results,
+    this.registerMarkdownCodeBlockProcessor(Strings.MarkdownCodeBlockNames.speedCubing.results,
       (source, el, ctx) => {
         ctx.addChild(new SpeedCubingResultTableRenderChild(source, this, el, ctx))
       })
