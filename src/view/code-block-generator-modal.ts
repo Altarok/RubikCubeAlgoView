@@ -1,6 +1,6 @@
 import RubikCubeAlgos from '../main'
 import {App, Modal} from 'obsidian'
-import {AnyInput, GenericModal, OutputData} from '@Altarok/obsidian-dev-utils/src'
+import {AnyInput, GenericModal, MandatoryInput, OptionalInput, OutputData} from '@Altarok/obsidian-dev-utils/src'
 import {Settings} from "../settings/plugin-settings-tab";
 
 // npm update @Altarok/obsidian-dev-utils
@@ -26,27 +26,28 @@ export class CodeBlockCreatorModal extends Modal {
 
     const localSettings: Record<string, OutputData> = {}
 
-    const mandatoryInput: Readonly<AnyInput>[] = createMandatoryInput();
-    const optionalInput: Readonly<AnyInput>[] = createOptionalInput(this.plugin.settings);
+    const mandatoryInput: Readonly<MandatoryInput>[] = createMandatoryInput();
+    const optionalInput: Readonly<OptionalInput>[] = createOptionalInput(this.plugin.settings);
 
     new GenericModal(contentEl,
       {
         pluginName: `Rubik's Cube algorithms`,
+        codeBlockId: 'rubikCube',
         mandatory: mandatoryInput,
         optional: optionalInput,
         output: localSettings,
-        createCodeBlock: (): string => {
-          let code = ''
-          const codeBlockId = localSettings.codeBlockId
-          /* add main smiles notation */
-          // if (localSettings.codeBlockId) code += `${localSettings.codeBlockId}\n`
-
-          if (localSettings.width || localSettings.height) {
-            code += `dimension:${localSettings.width ?? 3},${localSettings.height ?? 3}\n`
-          }
-
-          return `\`\`\`${codeBlockId}\n${code}\`\`\``
-        },
+        // createCodeBlock: (): string => {
+        //   let code = ''
+        //   const codeBlockId = localSettings.codeBlockId
+        //   /* add main smiles notation */
+        //   // if (localSettings.codeBlockId) code += `${localSettings.codeBlockId}\n`
+        //
+        //   if (localSettings.width || localSettings.height) {
+        //     code += `dimension:${localSettings.width ?? 3},${localSettings.height ?? 3}\n`
+        //   }
+        //
+        //   return `\`\`\`${codeBlockId}\n${code}\`\`\``
+        // },
         onUpdatePreview: (previewEl: HTMLElement): void => {
           previewEl.empty();
         }
@@ -60,12 +61,11 @@ export class CodeBlockCreatorModal extends Modal {
   }
 }
 
-function createMandatoryInput(): Readonly<AnyInput>[] {
+function createMandatoryInput(): Readonly<MandatoryInput>[] {
   return [
     {
       type: 'dropdown',
-      name: 'type of cube',
-      prompt: 'Choose cube type',
+      prompt: 'Choose type of cube',
       key: 'codeBlockId',
       current: 'rubikCubePLL',
       dropdownOptions: ['rubikCubePLL', 'rubikCubeOLL'] as const
@@ -73,32 +73,39 @@ function createMandatoryInput(): Readonly<AnyInput>[] {
   ]
 }
 
-function createOptionalInput(pluginSettings: Settings): Readonly<AnyInput>[] {
+function createOptionalInput(pluginSettings: Settings): Readonly<OptionalInput>[] {
   return [
     {
-      type: 'dropdown',
-      name: 'width',
-      key: 'codeBlockId',
-      current: '3',
-      dropdownOptions: ['2', '3'] as const
+      type: 'expandable', prompt: 'Choose colors.',
+      nestedInput: [
+        {
+          type: 'color',
+          prompt: 'Cube color',
+          key: 'cubeColor',
+          current: pluginSettings.cubeColor,
+        }, {
+          type: 'color',
+          prompt: 'Arrow color',
+          key: 'arrowColor',
+          current: pluginSettings.arrowColor,
+        }
+      ]
     },
     {
-      type: 'dropdown',
-      name: 'height',
-      key: 'codeBlockId',
-      current: '3',
-      dropdownOptions: ['2', '3'] as const
-    },
-    {
-      type: 'color',
-      name: 'cube color',
-      key: 'cubeColor',
-      current: pluginSettings.cubeColor,
-    }, {
-      type: 'color',
-      name: 'arrow color',
-      key: 'arrowColor',
-      current: pluginSettings.arrowColor,
+      type: 'expandable', prompt: 'Choose dimensions.',
+      nestedInput: [
+        {
+          type: 'slider', prompt: 'Change width.', key: 'width',
+          from: 2, to: 5, step: 1, current: 3
+        },
+        {
+          type: 'slider', prompt: 'Change height.', key: 'height',
+          from: 2, to: 5, step: 1, current: 3
+        },
+        ]
     }
+
+
+
   ]
 }

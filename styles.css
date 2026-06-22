@@ -197,8 +197,8 @@ h1.rubik-cube-algs-timer-running,
   color: var(--text-success); /* Dark/Light theme safe green */
 }
 
-/* By combining .modal and your custom class without a space,
-   we target an element that has BOTH classes, making it
+/* By combining .modal and custom class without a space,
+   this targets an element that has BOTH classes, making it
    stronger than Obsidian's default rules. * /
 .modal.rubik-cube-algorithms-fullscreen-modal {
   position: fixed;
