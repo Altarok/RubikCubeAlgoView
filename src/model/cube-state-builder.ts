@@ -67,8 +67,6 @@ export default class CubeStateBuilder {
 
     /* sets dimensions for pll */
     this.readRawInput()
-
-    /* sets dimensions for oll */
   }
 
   buildPll(): CubeStatePll {
