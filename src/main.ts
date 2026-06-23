@@ -7,6 +7,7 @@ import {MarkdownProcessorSpeedcubingTimer} from './markdown-processor-timer'
 import SpeedCubingResultTableRenderChild from './markdown-processor-timer-results'
 import {Strings} from './consts/strings'
 import {CodeBlockCreatorModal} from "./view/code-block-generator-modal";
+import {GenericMarkdownProcessor} from "./markdown-processor";
 
 export default class RubikCubeAlgos extends Plugin {
   settings!: Settings
