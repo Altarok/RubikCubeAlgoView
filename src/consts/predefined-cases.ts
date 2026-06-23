@@ -3,7 +3,7 @@ type OllPatternLine2 = `${'t' | 'l'}t${'t' | 'r'}`
 type OllPatternLine3 = `${'t' | 'f' | 'l'}${'t' | 'f'}${'t' | 'f' | 'r'}`
 type OllPattern = `${OllPatternLine1}.${OllPatternLine2}.${OllPatternLine3}`
 
-export type PredefinedCase = { id: number; desc: string; algorithms: string[] }
+type PredefinedCase = { id: number; desc: string; algorithms: string[] }
 
 export type PredefinedCaseRubikOll = PredefinedCase & { ollPattern: OllPattern }
 export type PredefinedCaseRubikPll = PredefinedCase & { arrows: string }

@@ -90,7 +90,7 @@ export class TrainingTimer {
       cls: CssClasses.timer.hint
     })
     upperHintLine.createEl('span', {text: ', '})
-    const releaseToStart = 'release to start.';
+    const releaseToStart = 'release to start.'
     this.hint2 = upperHintLine.createEl('span', {text: releaseToStart, cls: CssClasses.timer.hint})
     this.hint3 = contentEl.createEl('div', {text: hint3txt, cls: CssClasses.timer.hint})
     this.hint4 = contentEl.createEl('div', {text: hint4txt, cls: CssClasses.timer.hint})

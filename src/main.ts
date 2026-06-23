@@ -6,8 +6,8 @@ import {addAppCommands} from './command-builder'
 import {MarkdownProcessorSpeedcubingTimer} from './markdown-processor-timer'
 import SpeedCubingResultTableRenderChild from './markdown-processor-timer-results'
 import {Strings} from './consts/strings'
-import {CodeBlockCreatorModal} from "./view/code-block-generator-modal";
-import {GenericMarkdownProcessor} from "./markdown-processor";
+import {CodeBlockCreatorModal} from './view/code-block-generator-modal'
+import {GenericMarkdownProcessor} from './markdown-processor'
 
 export default class RubikCubeAlgos extends Plugin {
   settings!: Settings
@@ -26,7 +26,7 @@ export default class RubikCubeAlgos extends Plugin {
 
       this.addRibbonIcon('lucide-blocks', 'Rubik Cube algorithms: Open code block creator', () => {
         this.showCodeBlockCreator()
-      });
+      })
     }
   }
 

@@ -15,6 +15,8 @@ const colorMap: Record<string, string> = {
   '0': '#444444', // dark field (for binary input)
 }
 
+const backupColor = '#000000'
+
 export class OllFieldColoring {
   parsedRows: string[][] = []
 
@@ -37,7 +39,7 @@ export class OllFieldColoring {
 
   private getColorHex(colorIndex: string | undefined): string {
     if (colorIndex === '1') return this.defaultCubeColor
-    return (colorIndex && colorMap[colorIndex]) ?? '#000'
+    return (colorIndex && colorMap[colorIndex]) ?? backupColor
   }
 
   toString(): string {

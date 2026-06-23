@@ -1,7 +1,7 @@
 import RubikCubeAlgos from '../main'
 import {App, Modal} from 'obsidian'
 import {GenericModal, MandatoryInput, OptionalInput, OutputData} from '@Altarok/obsidian-dev-utils/src'
-import {Settings} from "../settings/plugin-settings-tab";
+import {Settings} from '../settings/plugin-settings-tab'
 
 // npm update @Altarok/obsidian-dev-utils
 export class CodeBlockCreatorModal extends Modal {
@@ -26,8 +26,8 @@ export class CodeBlockCreatorModal extends Modal {
 
     const localSettings: Record<string, OutputData> = {}
 
-    const mandatoryInput: Readonly<MandatoryInput>[] = createMandatoryInput();
-    const optionalInput: Readonly<OptionalInput>[] = createOptionalInput(this.plugin.settings);
+    const mandatoryInput: Readonly<MandatoryInput>[] = createMandatoryInput()
+    const optionalInput: Readonly<OptionalInput>[] = createOptionalInput(this.plugin.settings)
 
     new GenericModal(contentEl,
       {
@@ -49,7 +49,7 @@ export class CodeBlockCreatorModal extends Modal {
         //   return `\`\`\`${codeBlockId}\n${code}\`\`\``
         // },
         onUpdatePreview: (previewEl: HTMLElement): void => {
-          previewEl.empty();
+          previewEl.empty()
         }
       }).display()
 

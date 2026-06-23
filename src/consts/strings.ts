@@ -1,11 +1,7 @@
-import {quickStartGuide} from "./quick-start-guide";
-import {knownOllIds, knownPllIds} from "./predefined-cases";
+import {quickStartGuide} from './quick-start-guide'
+import {knownOllIds, knownPllIds} from './predefined-cases'
 
-export interface InsertTextCommandData {
-  id: string
-  name: string
-  content: string
-}
+export type InsertTextCommandData = { id: string; name: string; content: string }
 
 const tripleBacktick = "```"
 

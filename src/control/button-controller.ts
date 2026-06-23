@@ -1,5 +1,6 @@
 import {CubeRenderer} from '../view/cube-renderer'
 import {CubeState} from '../model/cube-state'
+
 // import {setIcon} from 'obsidian'
 // import RubikCubeAlgos from '../main'
 // import {IO} from './io-util'

@@ -3,7 +3,7 @@ import {App, PluginSettingTab, Setting} from 'obsidian'
 import RubikCubeAlgos from '../main'
 import {RegEx} from '../parser/regex-util'
 
-// import {Strings} from "../consts/strings";
+// import {Strings} from "../consts/strings"
 
 export interface CubeColors {
   arrowColor: string
@@ -119,7 +119,7 @@ export default class RubikCubeAlgoSettingsTab extends PluginSettingTab {
   //         },
   //       ],
   //     }, // end group: colors
-  //   ];
+  //   ]
   // }
 
   display(): void {

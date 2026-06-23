@@ -72,7 +72,7 @@ export default class CubeStateBuilder {
   buildPll(): CubeStatePll {
     this.setupCubeTypeRelatedData('pll')
     let algorithms: Algorithms = new Algorithms()
-    let arrows: Arrows | undefined = undefined;
+    let arrows: Arrows | undefined = undefined
 
     if (this.id) {
       let pllCaseData: PredefinedCaseRubikPll | undefined = knownPllIds[this.id]
@@ -82,7 +82,7 @@ export default class CubeStateBuilder {
         else this.pushError(res.error)
         // arrows = this.setupArrowCoordinates(pllCaseData.arrows)
         for (const algorithm of pllCaseData.algorithms) {
-          const result = Parse.toAlgorithm(algorithm, this.id);
+          const result = Parse.toAlgorithm(algorithm, this.id)
           // const result = Parse.toAlgorithm(row, completeLine)
           if (result.success) algorithms.add(result.data); else this.pushError(result.error)
         }
