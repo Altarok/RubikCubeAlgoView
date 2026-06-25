@@ -23,6 +23,14 @@ export class InvalidInput {
     return new InvalidInput(line, 'Invalid dimensions. Expected: "dimension:[2-10],[2-10]" (e.g. "dimension:3,3")')
   }
 
+  static ofWidth(line: string): InvalidInput {
+    return new InvalidInput(line, 'Invalid Width. Expected: "width:[2-10]" (e.g.: width:3")')
+  }
+
+  static ofHeight(line: string): InvalidInput {
+    return new InvalidInput(line, 'Invalid height. Expected: "height:[2-10]" (e.g. "height:3")')
+  }
+
   static ofFlags(line: string): InvalidInput {
     return new InvalidInput(line, `Invalid flag. Allowed: ${Flags.types.join(',')}`)
   }
