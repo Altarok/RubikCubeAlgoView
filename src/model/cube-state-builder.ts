@@ -101,7 +101,10 @@ export default class CubeStateBuilder {
       this.id, this.viewBoxDimensions, this.invalidInput, this.splitUserInput, this.setup, algorithms, arrows)
   }
 
-  buildOll(settings: Settings): CubeStateOll {
+  build(settings: Settings): CubeStateOll {
+  }
+
+    buildOll(settings: Settings): CubeStateOll {
 
     let presetRotation: number | undefined = undefined
     let presetOutline: string | undefined = undefined

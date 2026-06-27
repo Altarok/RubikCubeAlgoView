@@ -30,7 +30,7 @@ export class GenericMarkdownProcessor extends MarkdownRenderChild {
     this.element.empty()
 
     const backupColors: CubeColors = createBackupColors(this.plugin.settings)
-    const cubeState: CubeStateOll = new CubeStateBuilder(this.source, backupColors).buildOll(this.plugin.settings)
+    const cubeState: CubeStateOll = new CubeStateBuilder(this.source, backupColors).build(this.plugin.settings)
 
     const cubeRenderer = new CubeRendererOLL(cubeState)
     cubeRenderer.display(this.element)

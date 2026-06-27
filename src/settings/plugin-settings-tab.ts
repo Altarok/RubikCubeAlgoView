@@ -1,32 +1,25 @@
 import {App, PluginSettingTab, Setting} from 'obsidian'
-// import {App, PluginSettingTab, Setting, SettingDefinitionItem} from 'obsidian'
 import RubikCubeAlgos from '../main'
 import {RegEx} from '../parser/regex-util'
 
-// import {Strings} from "../consts/strings"
-
-export interface CubeColors {
+export type CubeColors = {
   arrowColor: string
   cubeColor: string
 }
 
-export interface Settings extends CubeColors {
-  cubeRotations: Record<string, number>
-  /*
-   * TODO fix typos
-   */
-  acivateCommandQuickStartGuide: boolean
-  acivateCommandCodeblockExamples: boolean
-  acivateCommandCodeblockTemplates: boolean
+export type Settings = CubeColors & {
+  // cubeRotations: Record<string, number>
+  activateCommandQuickStartGuide: boolean
+  activateCommandCodeblockExamples: boolean
+  activateCommandCodeblockTemplates: boolean
 }
 
 export const DefaultSettings: Settings = {
   cubeColor: '#ffff00', /* yellow */
   arrowColor: '#0088ff', /* sky blue */
-  cubeRotations: {},
-  acivateCommandQuickStartGuide: true,
-  acivateCommandCodeblockExamples: true,
-  acivateCommandCodeblockTemplates: true
+  activateCommandQuickStartGuide: true,
+  activateCommandCodeblockExamples: true,
+  activateCommandCodeblockTemplates: true
 }
 
 function addHashPrefixIfMissing(color: string) {
@@ -66,7 +59,7 @@ export default class RubikCubeAlgoSettingsTab extends PluginSettingTab {
   //           desc: Strings.SettingsUI.quickStartGuide.desc,
   //           control: {
   //             type: 'toggle',
-  //             key: 'acivateCommandQuickStartGuide'
+  //             key: 'activateCommandQuickStartGuide'
   //           }
   //         },
   //         {
@@ -74,7 +67,7 @@ export default class RubikCubeAlgoSettingsTab extends PluginSettingTab {
   //           desc: Strings.SettingsUI.examples.desc,
   //           control: {
   //             type: 'toggle',
-  //             key: 'acivateCommandCodeblockExamples'
+  //             key: 'activateCommandCodeblockExamples'
   //           },
   //         },
   //         {
@@ -82,7 +75,7 @@ export default class RubikCubeAlgoSettingsTab extends PluginSettingTab {
   //           desc: Strings.SettingsUI.templates.desc,
   //           control: {
   //             type: 'toggle',
-  //             key: 'acivateCommandCodeblockTemplates'
+  //             key: 'activateCommandCodeblockTemplates'
   //           }
   //         },
   //         {

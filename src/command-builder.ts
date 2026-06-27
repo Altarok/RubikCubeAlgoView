@@ -19,18 +19,18 @@ function addInsertTextCommand(plugin: Plugin, data: InsertTextCommandData): void
  */
 export function addAppCommands(plugin: RubikCubeAlgos): void {
 
-  if (plugin.settings.acivateCommandCodeblockTemplates) {
+  if (plugin.settings.activateCommandCodeblockTemplates) {
     addInsertTextCommand(plugin, Strings.Commands.insertText.ollCodeBlockTemplate)
     addInsertTextCommand(plugin, Strings.Commands.insertText.pllCodeBlockTemplate)
   }
 
-  if (plugin.settings.acivateCommandCodeblockExamples) {
+  if (plugin.settings.activateCommandCodeblockExamples) {
     addInsertTextCommand(plugin, Strings.Commands.insertText.ollCompleteLibrary)
     addInsertTextCommand(plugin, Strings.Commands.insertText.pllCompleteLibrary)
     addInsertTextCommand(plugin, Strings.Commands.insertText.dominoPllPartialLibrary)
   }
 
-  if (plugin.settings.acivateCommandQuickStartGuide) {
+  if (plugin.settings.activateCommandQuickStartGuide) {
     addInsertTextCommand(plugin, Strings.Commands.insertText.quickStartGuide)
   }
 
