@@ -4,7 +4,10 @@ import {OllFieldColoring} from './oll-field-coloring'
 import {FlagType} from './flags'
 import {InvalidInput} from './invalid-input-container'
 
+// export type CubeType = 'unknown' | 'rubik-cube-oll' | 'rubik-cube-pll'
+
 export interface CubeState {
+  // readonly cubeType: CubeType
   readonly algorithmType: AlgorithmType
   readonly arrowColor: string
   readonly cubeColor: string
@@ -40,7 +43,9 @@ export interface CubeState {
   codeBlockInterpretationFailed(): boolean
 }
 
-abstract class CubeStateCommon implements CubeState {
+export class CubeStateCommon implements CubeState {
+  // public readonly cubeType: 'unknown'
+  // public readonly algorithmType: 'undefined'
   static index = 1
   readonly uniqueIdForRadioButtons: string = '' + CubeStateCommon.index++
 
@@ -50,7 +55,7 @@ abstract class CubeStateCommon implements CubeState {
   defaultRotation: number = 0
   locked: boolean = false
 
-  protected constructor(
+  constructor(
     public readonly algorithmType: AlgorithmType,
     public readonly arrowColor: string,
     public readonly cubeColor: string,
@@ -62,6 +67,7 @@ abstract class CubeStateCommon implements CubeState {
     public readonly invalidInput: InvalidInput[],
     public readonly splitCodeBlockInput: string[],
     public readonly setup: Algorithm | undefined) {
+    // this.algorithmType = algorithmType
   }
 
   isDefaultSize(): boolean {
@@ -113,6 +119,8 @@ abstract class CubeStateCommon implements CubeState {
  * This means we need 1 set of arrows and n sets of algorithms.
  */
 export class CubeStatePll extends CubeStateCommon {
+  // public readonly cubeType = 'rubik-cube-pll'
+
   constructor(
     arrowColor: string, cubeColor: string, dimensions: Dimensions,
     flags: FlagType[], id: string | undefined, viewBoxDimensions: Dimensions, invalidInput: InvalidInput[], splitCodeBlockInput: string[], setup: Algorithm | undefined,
@@ -129,6 +137,8 @@ export class CubeStatePll extends CubeStateCommon {
  * - value: set of arrows this algorithm implements
  */
 export class CubeStateOll extends CubeStateCommon {
+  // public readonly cubeType = 'rubik-cube-oll'
+
   constructor(
     arrowColor: string, dimensions: Dimensions, flags: FlagType[], id: string | undefined, viewBoxDimensions: Dimensions,
     invalidInput: InvalidInput[], splitCodeBlockInput: string[], setup: Algorithm | undefined,

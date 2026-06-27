@@ -1,8 +1,7 @@
 import RubikCubeAlgos from './main'
-import {CubeStateOll} from './model/cube-state'
-import {CubeRendererOLL} from './view/cube-renderer'
+import {CubeState, CubeStateOll, CubeStatePll} from './model/cube-state'
+import {CubeRenderer, CubeRendererOLL, CubeRendererPLL} from './view/cube-renderer'
 import {MarkdownRenderChild} from 'obsidian'
-import {ButtonController} from './control/button-controller'
 import {CubeColors} from './settings/plugin-settings-tab'
 import CubeStateBuilder from './model/cube-state-builder'
 import {createBackupColors} from './model/cube-color-builder'
@@ -30,31 +29,45 @@ export class GenericMarkdownProcessor extends MarkdownRenderChild {
     this.element.empty()
 
     const backupColors: CubeColors = createBackupColors(this.plugin.settings)
-    const cubeState: CubeStateOll = new CubeStateBuilder(this.source, backupColors).build(this.plugin.settings)
+    const cubeState: CubeState = new CubeStateBuilder(this.source, backupColors).build(this.plugin.settings)
 
-    const cubeRenderer = new CubeRendererOLL(cubeState)
-    cubeRenderer.display(this.element)
 
-    if (!cubeState.codeBlockInterpretationFailed()) {
-      this.addButtonFunctions(cubeRenderer, cubeState)
-      ButtonController.addRotationButtons(cubeRenderer, cubeState /* , this.plugin */)
-    }
-  }
-
-  private addButtonFunctions(cubeRenderer: CubeRendererOLL, cubeState: CubeStateOll) {
-
-    if (cubeState.algorithmToArrows.size() > 1) {
-
-      let radioButtons: HTMLCollectionOf<HTMLInputElement> = cubeRenderer.layout.algorithmsDiv.getElementsByTagName('input')
-
-      for (let i: number = 0; i < radioButtons.length; i++) {
-        let radioButton: HTMLInputElement = radioButtons[i]!
-        radioButton.addEventListener('click', () => {
-          if (cubeState.changeAlgorithm(radioButton.id)) {
-            cubeRenderer.redrawArrows()
-          }
-        })
+    let cubeRenderer: CubeRenderer
+    if (cubeState) {
+      if (cubeState.algorithmType === 'oll') {
+        cubeRenderer = new CubeRendererOLL(cubeState as CubeStateOll)
+      } else if (cubeState.algorithmType === 'pll') {
+        cubeRenderer = new CubeRendererPLL(cubeState as CubeStatePll)
+      } else {
+        cubeRenderer = new CubeRenderer(cubeState)
       }
+      cubeRenderer.display(this.element)
     }
+
+
+    // const cubeRenderer = new CubeRendererOLL(cubeState)
+    // cubeRenderer.display(this.element)
+    //
+    // if (!cubeState.codeBlockInterpretationFailed()) {
+    //   this.addButtonFunctions(cubeRenderer, cubeState)
+    //   ButtonController.addRotationButtons(cubeRenderer, cubeState /* , this.plugin */)
+    // }
   }
+
+  // private addButtonFunctions(cubeRenderer: CubeRendererOLL, cubeState: CubeStateOll) {
+  //
+  //   if (cubeState.algorithmToArrows.size() > 1) {
+  //
+  //     let radioButtons: HTMLCollectionOf<HTMLInputElement> = cubeRenderer.layout.algorithmsDiv.getElementsByTagName('input')
+  //
+  //     for (let i: number = 0; i < radioButtons.length; i++) {
+  //       let radioButton: HTMLInputElement = radioButtons[i]!
+  //       radioButton.addEventListener('click', () => {
+  //         if (cubeState.changeAlgorithm(radioButton.id)) {
+  //           cubeRenderer.redrawArrows()
+  //         }
+  //       })
+  //     }
+  //   }
+  // }
 }

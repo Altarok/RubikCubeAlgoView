@@ -11,7 +11,14 @@ import {Strings} from '../consts/strings'
 
 const CssClasses = Strings.CssClasses
 
-export abstract class CubeRenderer {
+// type SpecificCubeRenderer = {
+//   abstract displayCubeForeground(container: SVGSVGElement, viewBoxWidth: number, viewBoxHeight: number): void,
+//   abstract displayAlgorithms(container: HTMLDivElement): void,
+//   // abstract displaySetupAlgorithm(container: SVGSVGElement): void,
+//   abstract displayArrows(container: SVGSVGElement): void
+// }
+
+export class CubeRenderer {
   layout!: CubeLayout
   buttonLeft?: HTMLButtonElement
   buttonRight?: HTMLButtonElement
@@ -21,7 +28,7 @@ export abstract class CubeRenderer {
   mainCubeSvg?: SVGSVGElement
   isInvalidInput: boolean
 
-  protected constructor(private readonly cubeState: CubeState) {
+  constructor(private readonly cubeState: CubeState) {
     this.isInvalidInput = cubeState.codeBlockInterpretationFailed()
   }
 
@@ -43,14 +50,6 @@ export abstract class CubeRenderer {
     this.displayAlgorithms(this.layout.algorithmsDiv)
     this.rotateCube()
   }
-
-  abstract displayCubeForeground(container: SVGSVGElement, viewBoxWidth: number, viewBoxHeight: number): void
-
-  abstract displayAlgorithms(container: HTMLDivElement): void
-
-  // abstract displaySetupAlgorithm(container: SVGSVGElement): void
-
-  abstract displayArrows(container: SVGSVGElement): void
 
   redrawCube(): void {
     if (this.isInvalidInput) return
@@ -119,6 +118,11 @@ export abstract class CubeRenderer {
     this.displayCubeForeground(mainSvgElement, viewBoxWidth, viewBoxHeight)
     this.displayArrows(mainSvgElement)
   }
+
+  displayCubeForeground(_container: SVGSVGElement, _viewBoxWidth: number, _viewBoxHeight: number): void{}
+  displayAlgorithms(_container: HTMLDivElement): void{}
+  // abstract displaySetupAlgorithm(_container: SVGSVGElement): void{}
+  displayArrows(_container: SVGSVGElement): void{}
 
   private displaySetupAlgorithm(container?: HTMLDivElement) {
     if (!container || this.cubeState.flags.contains('no-setup')) return

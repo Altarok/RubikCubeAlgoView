@@ -8,7 +8,7 @@ export type CubeColors = {
 }
 
 export type Settings = CubeColors & {
-  // cubeRotations: Record<string, number>
+  cubeRotations: Record<string, number>
   activateCommandQuickStartGuide: boolean
   activateCommandCodeblockExamples: boolean
   activateCommandCodeblockTemplates: boolean
@@ -17,6 +17,7 @@ export type Settings = CubeColors & {
 export const DefaultSettings: Settings = {
   cubeColor: '#ffff00', /* yellow */
   arrowColor: '#0088ff', /* sky blue */
+  cubeRotations: {},
   activateCommandQuickStartGuide: true,
   activateCommandCodeblockExamples: true,
   activateCommandCodeblockTemplates: true

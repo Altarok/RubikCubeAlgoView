@@ -1,5 +1,5 @@
 import {CubeColors, Settings} from '../settings/plugin-settings-tab'
-import {CubeStateOll, CubeStatePll} from './cube-state'
+import {CubeState, CubeStateCommon, CubeStateOll, CubeStatePll} from './cube-state'
 import {FlagType} from './flags'
 import {ArrowCoords, Arrows, Coordinates, Dimensions, StickerCoords} from './geometry'
 import {Parse, Result} from '../parser/parser'
@@ -101,10 +101,26 @@ export default class CubeStateBuilder {
       this.id, this.viewBoxDimensions, this.invalidInput, this.splitUserInput, this.setup, algorithms, arrows)
   }
 
-  build(settings: Settings): CubeStateOll {
+  build(settings: Settings): CubeState  {
+    const {id} = this
+    if (!id) {
+      this.pushError(new InvalidInput('', 'Missing ID'))
+      return new CubeStateCommon('undefined', this.arrowColor, this.cubeColor, this.dimensions, this.flags,
+        this.id, { rotate: () =>  {}},
+        this.viewBoxDimensions, this.invalidInput, this.splitUserInput, this.setup)
+    } else if (id.startsWith('oll')) {
+      return this.buildOll(settings)
+    } else if (id.startsWith('pll')) {
+      return this.buildPll()
+    } else {
+      this.pushError(new InvalidInput('', 'Unknown ID'))
+      return new CubeStateCommon('undefined', this.arrowColor, this.cubeColor, this.dimensions, this.flags,
+        this.id, { rotate: () =>  {}},
+        this.viewBoxDimensions, this.invalidInput, this.splitUserInput, this.setup)
+    }
   }
 
-    buildOll(settings: Settings): CubeStateOll {
+  buildOll(settings: Settings): CubeStateOll {
 
     let presetRotation: number | undefined = undefined
     let presetOutline: string | undefined = undefined

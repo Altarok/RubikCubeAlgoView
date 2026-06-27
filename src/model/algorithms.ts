@@ -1,10 +1,10 @@
 import {Arrows} from './geometry'
 import {StringUtils} from '../parser/string-utils'
 
-export const AlgorithmTypes = ['pll', 'oll'] as const
+export const AlgorithmTypes = ['undefined', 'pll', 'oll'] as const
 export type AlgorithmType = (typeof AlgorithmTypes)[number]
 
-export interface Rotatable {
+export type Rotatable = {
   rotate: (quarterTurns: number) => void
 }
 

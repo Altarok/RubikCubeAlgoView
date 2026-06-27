@@ -18,6 +18,7 @@ function cubeHash(id: string | undefined, algorithmType: AlgorithmType): string 
     case'oll':
       return `oll-${id}-${StringUtils.hash('a grain of salt' + id)}`
   }
+  return ''
 }
 
 /**
