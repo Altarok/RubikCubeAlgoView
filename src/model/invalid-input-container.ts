@@ -32,7 +32,7 @@ export class InvalidInput {
   }
 
   static ofFlags(line: string): InvalidInput {
-    return new InvalidInput(line, `Invalid flag. Allowed: ${Flags.types.join(',')}`)
+    return new InvalidInput(line, `Invalid flag. Allowed: ${Flags.FlagTypes.join(',')}`)
   }
 
   public isInvalidRow(row: string): boolean {

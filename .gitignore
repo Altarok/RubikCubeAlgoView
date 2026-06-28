@@ -6,9 +6,6 @@
 # test result data
 /coverage
 
-# Ignore compiled main.js, upload to GitHub release instead.
 main.js
-
-# Ignore user settings changed by Obsidian
 data.json
 

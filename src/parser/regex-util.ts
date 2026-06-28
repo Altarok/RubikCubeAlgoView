@@ -20,7 +20,7 @@ function isPositiveInteger(input: string): boolean {
   return positiveIntegerRegex.test(input)
 }
 
-const specialFlagsJoined = Flags.types.join('|')
+const specialFlagsJoined = Flags.FlagTypes.join('|')
 const specialFlagsRegex = new RegExp(`${specialFlagsJoined}(,${specialFlagsJoined})*`)
 
 function isSpecialFlags(input: string): boolean {

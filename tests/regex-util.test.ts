@@ -24,7 +24,7 @@ describe('RegEx.isPositiveInteger()', () => {
 
 describe('RegEx.isSpecialFlags()', () => {
 
-  let flagsStrings = Flags.types as readonly string[]
+  let flagsStrings = Flags.FlagTypes as readonly string[]
 
   it('should identify crap correctly', () => {
     expect(RegEx.isSpecialFlags('')).toBe(false)

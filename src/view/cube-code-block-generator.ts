@@ -1,7 +1,10 @@
 import RubikCubeAlgos from '../main'
 import {App, Modal} from 'obsidian'
-import {GenericModal, MandatoryInput, OptionalInput, OutputData} from '@Altarok/obsidian-dev-utils/src'
+// import {GenericModal, MandatoryInput, OptionalInput, OutputData} from '@Altarok/obsidian-dev-utils/src'
 import {Settings} from '../settings/plugin-settings-tab'
+import {MandatoryInput, OptionalInput, OutputData} from "../EXTERNAL/code-block-creator-types";
+import {GenericModal} from "../EXTERNAL/code-block-creator-modal";
+import {Flags} from "../model/flags";
 
 // npm update @Altarok/obsidian-dev-utils
 export class CodeBlockCreatorModal extends Modal {
@@ -63,13 +66,13 @@ export class CodeBlockCreatorModal extends Modal {
 
 function createMandatoryInput(): Readonly<MandatoryInput>[] {
   return [
-    {
-      type: 'dropdown',
-      prompt: 'Choose type of cube',
-      key: 'codeBlockId',
-      current: 'rubikCubePLL',
-      dropdownOptions: ['rubikCubePLL', 'rubikCubeOLL'] as const
-    }
+    // {
+    //   type: 'dropdown',
+    //   prompt: 'Choose type of cube',
+    //   key: 'codeBlockId',
+    //   current: 'rubikCubePLL',
+    //   dropdownOptions: ['rubikCubePLL', 'rubikCubeOLL'] as const
+    // }
   ]
 }
 
@@ -92,20 +95,22 @@ function createOptionalInput(pluginSettings: Settings): Readonly<OptionalInput>[
       ]
     },
     {
-      type: 'expandable', prompt: 'Choose dimensions.',
-      nestedInput: [
-        {
-          type: 'slider', prompt: 'Change width.', key: 'width',
-          from: 2, to: 5, step: 1, current: 3
-        },
-        {
-          type: 'slider', prompt: 'Change height.', key: 'height',
-          from: 2, to: 5, step: 1, current: 3
-        },
-        ]
-    }
-
-
+      type: 'dropdown-multi', prompt: 'Advanced flags.', key: 'flags',
+      current: 'default', resetOnCurrent: true,
+      dropdownOptions: Flags.FlagTypes as readonly string[]
+    },
+    // {
+    //   type: 'expandable', prompt: 'Choose dimensions.',
+    //   nestedInput: [
+    //     {
+    //       type: 'slider', prompt: 'Change width.', key: 'width',
+    //       from: 2, to: 5, step: 1, current: 3
+    //     }, {
+    //       type: 'slider', prompt: 'Change height.', key: 'height',
+    //       from: 2, to: 5, step: 1, current: 3
+    //     }
+    //   ]
+    // },
 
   ]
 }
