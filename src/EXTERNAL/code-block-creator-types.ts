@@ -12,6 +12,7 @@ export type BaseInput = Input & {
 }
 export type BooleanInput = BaseInput & { type: 'boolean'; current: boolean }
 export type ColorInput = BaseInput & { type: 'color'; current: string }
+export type ConditionalInput = BaseInput & { type: 'conditional'; current: undefined; nestedInput: Record<string, MandatoryInput> }
 export type DropdownInput = BaseInput & { type: 'dropdown'; current: string; dropdownOptions: readonly string[] }
 export type DropdownMultiInput = BaseInput & {
   type: 'dropdown-multi'; current: string; resetOnCurrent: boolean; dropdownOptions: readonly string[]
@@ -20,10 +21,12 @@ export type SliderInput = BaseInput & { type: 'slider'; current: number; from: n
 export type StringInput = BaseInput & { type: 'string'; current: string; validationPattern?: RegExp }
 
 
-export type ConditionalInput = Input & { type: 'conditional'; nestedInput: Record<string,MandatoryInput> }
 
 export type ExpandableInput = Input & { type: 'expandable'; nestedInput: readonly MandatoryInput[] }
 
+/*
+ * Static input fields without expansion or hiding.
+ */
 export type NonExpandableInput =
   BooleanInput
   | ColorInput
@@ -31,6 +34,10 @@ export type NonExpandableInput =
   | DropdownMultiInput
   | SliderInput
   | StringInput
+  /*
+  TODO remove ConditionalInput!?
+   */
+  | ConditionalInput
 
 export type MandatoryInput = Readonly<NonExpandableInput>
 export type OptionalInput = Readonly<NonExpandableInput | ExpandableInput>
