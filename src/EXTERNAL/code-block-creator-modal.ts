@@ -125,7 +125,7 @@ class ConditionalSelector extends Selector<ConditionalInput> {
     /*
      * big fat todo
      */
-    const {setting, data} = this
+    const {setting/*, data*/} = this
     setting.clear()
     super.addName()
     //   setting.addDropdown(dd => this.resettableComponent =
