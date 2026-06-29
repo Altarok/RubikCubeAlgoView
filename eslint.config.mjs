@@ -37,6 +37,13 @@ export default [
       ...tsPlugin.configs.recommended.rules,
       // Obsidian settings
       ...obsidianmdPlugin.configs.recommended.rules,
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        { 
+          "argsIgnorePattern": "^_",
+          "varsIgnorePattern": "^_",
+          "caughtErrorsIgnorePattern": "^_"
+        }]
     },
   },
 ];
