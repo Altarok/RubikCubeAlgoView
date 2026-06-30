@@ -76,8 +76,8 @@ abstract class Selector<T extends MandatoryInput = MandatoryInput> {
     let tooltip: string = `Reset to: ${backupValue}`
     this.setting.addExtraButton(eb =>
       eb.setIcon('lucide-rotate-ccw')
-      .setTooltip(tooltip, {delay: -1})
-      .onClick(() => this.revert()))
+        .setTooltip(tooltip, {delay: -1})
+        .onClick(() => this.revert()))
   }
 
   resetValueToCurrent(): void {
@@ -123,6 +123,8 @@ class ColorSelector extends Selector<ColorInput> {
 class ConditionalSelector extends Selector<ConditionalInput> {
   private hasBuilt: boolean = false
   private dropdownOptions: string[] = []
+  private outer!: DropdownComponent
+  private inner!: DropdownComponent
 
   constructor(setting: Setting,
               data: ConditionalInput,
@@ -133,20 +135,9 @@ class ConditionalSelector extends Selector<ConditionalInput> {
     data.nestedInput.forEach(n => this.dropdownOptions.push(n.option))
   }
 
-  private show(key: string) {
-    // this.toggleActive = true
-    // this.bc?.setIcon('lucide-chevron-up')
-    // this.cb.collapseOtherExpandableSelectors(this)
-
-    // this.wrapperEl.style.height = `${this.wrapperEl.scrollHeight}px`
-    // this.wrapperEl.style.backgroundColor = 'var(--background-modifier-box-shadow)'
-    // this.wrapperEl.style.borderRadius = '8px'
-  }
-
   draw() {
-    const {setting, data} = this
+    const {setting} = this
     if (this.hasBuilt) {
-      // this.hideOrShow()
       return
     }
 
@@ -154,24 +145,24 @@ class ConditionalSelector extends Selector<ConditionalInput> {
     { // draw main dropdown
       setting.clear()
       super.addName()
-      setting.addDropdown(dd => this.resettableComponent =
+      setting.addDropdown(dd => this.outer =
         dd.addOptions(toRecord(this.dropdownOptions))
-        .onChange((value: string) => this.show(value))
+          .onChange((value: string) => dd.setValue(value))
       )
     }
 
+    const parent: HTMLElement = setting.controlEl.parentElement as HTMLElement
+
     { // draw hidden sub settings
-      data.nestedInput.forEach(value => {
+      // data.nestedInput.forEach(value => {
 
-        // setting.clear()
-        // super.addName()
-        // setting.addDropdown(dd => this.resettableComponent =
-        //   dd.addOptions(toRecord(data.dropdownOptions)).setValue(data.current)
-        //   .onChange((value: string) => this.write(value))
-        // )
-        // }
-      })
+      // const {/*option,*/ dropdown} = value
 
+      new Setting(parent)
+        .addDropdown(dd => this.inner =
+          dd.setValue('none').setDisabled(true)
+        )
+      // })
     }
     this.addResetButton()
   }
@@ -184,7 +175,7 @@ class DropdownSelector extends Selector<DropdownInput> {
     super.addName()
     setting.addDropdown(dd => this.resettableComponent =
       dd.addOptions(toRecord(data.dropdownOptions)).setValue(data.current)
-      .onChange((value: string) => this.write(value))
+        .onChange((value: string) => this.write(value))
     )
     this.addResetButton()
   }
@@ -203,18 +194,18 @@ class DropdownMultiSelector extends Selector<DropdownMultiInput> {
 
     setting.addText(tc => this.resettableComponent =
       tc.setValue(data.current).setDisabled(true))
-    .addDropdown(button => this.dropdownComponent =
-      button
-      .addOptions(toRecord(data.dropdownOptions))
-      .onChange((value: string) => {
-        if (value === data.current) this.selections = []
-        else this.selections.remove(data.current)
-        if (!this.selections.includes(value)) this.selections.push(value)
-        const concatenatedSelections: string = this.selections.join(this.separator)
-        this.resettableComponent!.setValue(concatenatedSelections)
-        this.write(concatenatedSelections)
-      })
-    )
+      .addDropdown(button => this.dropdownComponent =
+        button
+          .addOptions(toRecord(data.dropdownOptions))
+          .onChange((value: string) => {
+            if (value === data.current) this.selections = []
+            else this.selections.remove(data.current)
+            if (!this.selections.includes(value)) this.selections.push(value)
+            const concatenatedSelections: string = this.selections.join(this.separator)
+            this.resettableComponent!.setValue(concatenatedSelections)
+            this.write(concatenatedSelections)
+          })
+      )
 
     this.addResetButton()
   }
@@ -334,7 +325,7 @@ class SliderSelector extends Selector<SliderInput> {
 
     setting.addSlider(sc => this.resettableComponent =
       sc.setValue(data.current).setLimits(lowerBound, upperBound, data.step)
-      .onChange((value: number) => this.write(value))
+        .onChange((value: number) => this.write(value))
     )
 
     super.addResetButton()
@@ -414,17 +405,17 @@ export class GenericModal {
     const codeBlockContent: string = this.createCodeBlock()
 
     const setting = new Setting(this.contentEl).setName('Output')
-    .addTextArea(cb => {
-      cb.setValue(codeBlockContent).setDisabled(true)
-      this.textElement = cb.inputEl
-      cb.inputEl.style.width = '100%'
-      cb.inputEl.style.height = '80px' // Set a generous default height for the code block
-      cb.inputEl.style.resize = 'vertical' // Allow the user to manually scale it vertically if they want
-    }).addExtraButton(bc => bc
-      .setIcon('copy')
-      .onClick(async () => this.copyToClipboard())
-      .setTooltip('Copy entire code block to clipboard', {'delay': -1})
-    )
+      .addTextArea(cb => {
+        cb.setValue(codeBlockContent).setDisabled(true)
+        this.textElement = cb.inputEl
+        cb.inputEl.style.width = '100%'
+        cb.inputEl.style.height = '80px' // Set a generous default height for the code block
+        cb.inputEl.style.resize = 'vertical' // Allow the user to manually scale it vertically if they want
+      }).addExtraButton(bc => bc
+        .setIcon('copy')
+        .onClick(async () => this.copyToClipboard())
+        .setTooltip('Copy entire code block to clipboard', {'delay': -1})
+      )
 
     this.adjustHeight = () => {
       this.textElement.style.height = 'auto'
@@ -485,15 +476,15 @@ export class GenericModal {
     // if (allFlatSettings.length === 0) return `\`\`\`${codeBlockId}\n\`\`\``
 
     let codeBlockContent: string = allFlatSettings
-    .filter(setting => { // keep only valid non-default values
-      const localValue = output[setting.key]
-      return localValue !== undefined && localValue !== '' && localValue !== setting.current
-    })
-    .map(setting => { // add key prefix if wanted
-      const localValue = output[setting.key]
-      return setting.ignoreKeyInCodeBlock ? `${localValue}` : `${setting.key}: ${localValue}`
-    })
-    .join('\n')
+      .filter(setting => { // keep only valid non-default values
+        const localValue = output[setting.key]
+        return localValue !== undefined && localValue !== '' && localValue !== setting.current
+      })
+      .map(setting => { // add key prefix if wanted
+        const localValue = output[setting.key]
+        return setting.ignoreKeyInCodeBlock ? `${localValue}` : `${setting.key}: ${localValue}`
+      })
+      .join('\n')
 
     if (codeBlockContent.length > 0) codeBlockContent += '\n'
 

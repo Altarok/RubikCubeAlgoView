@@ -85,19 +85,11 @@ function createOptionalInput(pluginSettings: Settings): Readonly<OptionalInput>[
       nestedInput: [
         {
           option: "Rubik's Cube (OLL algorithm)",
-          dropdown: {
-            type: 'dropdown', prompt: 'OLL algorithm.', key: '-',
-            current: 'oll-1',
-            dropdownOptions: knownOllIds
-          }
+          dropdownOptions: knownOllIds
         },
         {
           option: "Rubik's Cube (PLL algorithm)",
-          dropdown: {
-            type: 'dropdown', prompt: 'PLL algorithm.', key: '-',
-            current: 'pll-1',
-            dropdownOptions: knownPllIds
-          }
+          dropdownOptions: knownPllIds
         }
       ]
     },

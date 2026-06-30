@@ -13,7 +13,7 @@ export type BaseInput = Input & {
 export type BooleanInput = BaseInput & { type: 'boolean'; current: boolean }
 export type ColorInput = BaseInput & { type: 'color'; current: string }
 export type ConditionalInput = BaseInput & {
-  type: 'conditional'; current: undefined; nestedInput: {option: string; dropdown: DropdownInput}[]
+  type: 'conditional'; current: undefined; nestedInput: {option: string; dropdownOptions: string[]}[]
 }
 // TODO add resetOnCurrent?: boolean
 export type DropdownInput = BaseInput & { type: 'dropdown'; current: string; dropdownOptions: readonly string[] }

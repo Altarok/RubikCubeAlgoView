@@ -10,7 +10,7 @@ export type PredefinedCaseRubikPll = PredefinedCase & { arrows: string }
 
 const toRecord = <T extends PredefinedCase>(prefix: string, cases: T[]): Record<string, T> => Object.fromEntries(cases.map(s => [`${prefix}-${s.id}`, s]))
 
-const toArray = (rec: Record<string, any>): string[] => {
+const toArray = (rec: Record<string, PredefinedCase>): string[] => {
   const arr: string[] = []
   Object.keys(rec).forEach(key => arr.push(key))
   return arr
