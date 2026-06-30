@@ -1,4 +1,4 @@
-import {Setting, SliderComponent, ToggleComponent, ValueComponent} from 'obsidian'
+import {SliderComponent, ToggleComponent, ValueComponent} from 'obsidian'
 import {GenericModal} from './code-block-creator-modal'
 
 export type OutputData = string | boolean | number | undefined
@@ -59,7 +59,7 @@ export type GenericModalInput = {
 }
 
 export type SelectorContext = {
-  setting: Setting
+  contentEl: HTMLElement
   input: NonExpandableInput
   output: Record<string, OutputData>
   callback: GenericModal

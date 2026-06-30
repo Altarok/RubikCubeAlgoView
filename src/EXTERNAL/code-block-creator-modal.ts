@@ -20,31 +20,40 @@ import {
 
 const toRecord = (strings: readonly string[]): Record<string, string> => Object.fromEntries(strings.map(s => [s, s]))
 
-const SelectorRegistry: Record<string, (ctx: SelectorContext) => void> = {
-  boolean: ({setting, input, output, callback, isOptional}) =>
-    new BooleanSelector(setting, input as BooleanInput, output, callback, isOptional).draw(),
-  color: ({setting, input, output, callback, isOptional}) =>
-    new ColorSelector(setting, input as ColorInput, output, callback, isOptional).draw(),
-  conditional: ({setting, input, output, callback, isOptional}) =>
-    new ConditionalSelector(setting, input as ConditionalInput, output, callback, isOptional).draw(),
-  dropdown: ({setting, input, output, callback, isOptional}) =>
-    new DropdownSelector(setting, input as DropdownInput, output, callback, isOptional).draw(),
-  'dropdown-multi': ({setting, input, output, callback, isOptional}) =>
-    new DropdownMultiSelector(setting, input as DropdownMultiInput, output, callback, isOptional).draw(),
-  slider: ({setting, input, output, callback, isOptional}) =>
-    new SliderSelector(setting, input as SliderInput, output, callback, isOptional).draw(),
-  string: ({setting, input, output, callback, isOptional}) =>
-    new StringSelector(setting, input as StringInput, output, callback, isOptional).draw(),
+const SelectorRegistry: Record<string, (ctx: SelectorContext) => Selector> = {
+  boolean: ({contentEl, input, output, callback, isOptional}) => {
+    return new BooleanSelector(contentEl, input as BooleanInput, output, callback, isOptional)
+  },
+  color: ({contentEl, input, output, callback, isOptional}) => {
+    return new ColorSelector(contentEl, input as ColorInput, output, callback, isOptional)
+  },
+  conditional: ({contentEl, input, output, callback, isOptional}) => {
+    return new ConditionalSelector(contentEl, input as ConditionalInput, output, callback, isOptional)
+  },
+  dropdown: ({contentEl, input, output, callback, isOptional}) => {
+    return new DropdownSelector(contentEl, input as DropdownInput, output, callback, isOptional)
+  },
+  'dropdown-multi': ({contentEl, input, output, callback, isOptional}) => {
+    return new DropdownMultiSelector(contentEl, input as DropdownMultiInput, output, callback, isOptional)
+  },
+  slider: ({contentEl, input, output, callback, isOptional}) => {
+    return new SliderSelector(contentEl, input as SliderInput, output, callback, isOptional)
+  },
+  string: ({contentEl, input, output, callback, isOptional}) => {
+    return new StringSelector(contentEl, input as StringInput, output, callback, isOptional)
+  },
 }
 
 abstract class Selector<T extends MandatoryInput = MandatoryInput> {
   resettableComponent?: ComponentTypeForReset<T>
+  setting: Setting
 
-  constructor(public readonly setting: Setting,
+  constructor(public readonly contentEl: HTMLElement,
               public readonly data: T,
               public output: Record<string, OutputData>, // not readonly
               public readonly callback: GenericModal,
               public readonly isOptional: boolean) {
+    this.setting = new Setting(contentEl)
   }
 
   private validate(value: string): boolean {
@@ -71,10 +80,14 @@ abstract class Selector<T extends MandatoryInput = MandatoryInput> {
   abstract draw(): void
 
   addResetButton() {
+    this.  addResetButton2(this.setting)
+  }
+
+  addResetButton2(setting:Setting) {
     if (!this.isOptional) return
     const backupValue: string = typeof this.data.current === 'boolean' || this.data.current ? `${this.data.current}` : 'none'
     let tooltip: string = `Reset to: ${backupValue}`
-    this.setting.addExtraButton(eb =>
+    setting.addExtraButton(eb =>
       eb.setIcon('lucide-rotate-ccw')
         .setTooltip(tooltip, {delay: -1})
         .onClick(() => this.revert()))
@@ -121,50 +134,34 @@ class ColorSelector extends Selector<ColorInput> {
 }
 
 class ConditionalSelector extends Selector<ConditionalInput> {
-  private hasBuilt: boolean = false
   private dropdownOptions: string[] = []
   private outer!: DropdownComponent
   private inner!: DropdownComponent
 
-  constructor(setting: Setting,
+  constructor(readonly contentEl: HTMLElement,
               data: ConditionalInput,
               output: Record<string, OutputData>, // not readonly
               callback: GenericModal,
               isOptional: boolean) {
-    super(setting, data, output, callback, isOptional)
+    super(contentEl, data, output, callback, isOptional)
     data.nestedInput.forEach(n => this.dropdownOptions.push(n.option))
   }
 
   draw() {
-    const {setting} = this
-    if (this.hasBuilt) {
-      return
-    }
+    const {setting, contentEl} = this
 
-
-    { // draw main dropdown
-      setting.clear()
-      super.addName()
-      setting.addDropdown(dd => this.outer =
+    setting.clear()
+    super.addName()
+    setting.addDropdown(dd => this.outer =
         dd.addOptions(toRecord(this.dropdownOptions))
-          .onChange((value: string) => dd.setValue(value))
-      )
-    }
+    )
 
-    const parent: HTMLElement = setting.controlEl.parentElement as HTMLElement
+    const subSetting = new Setting(contentEl)
+      .addDropdown(dd => this.inner =
+        dd.setValue('none').setDisabled(true));
 
-    { // draw hidden sub settings
-      // data.nestedInput.forEach(value => {
-
-      // const {/*option,*/ dropdown} = value
-
-      new Setting(parent)
-        .addDropdown(dd => this.inner =
-          dd.setValue('none').setDisabled(true)
-        )
-      // })
-    }
     this.addResetButton()
+    this.addResetButton2(subSetting)
   }
 }
 
@@ -271,10 +268,8 @@ class ExpandableSelector {
     this.wrapperEl.style.transition = 'height 0.25s ease-out'
     this.wrapperEl.style.marginBottom = '12px'
 
-    const createSubSettingWithInlineCss = () => {
-      const subSetting = new Setting(this.wrapperEl)
-
-      Object.assign(subSetting.settingEl.style, {
+    const createSubSettingWithInlineCss = (setting: Setting): void => {
+      Object.assign(setting.settingEl.style, {
         display: 'flex',
         flexShrink: '0',
         alignItems: 'center',
@@ -283,13 +278,11 @@ class ExpandableSelector {
         padding: '6px 12px'
       })
 
-      Object.assign(subSetting.controlEl.style, {
+      Object.assign(setting.controlEl.style, {
         display: 'flex',
         alignItems: 'center',
         flexShrink: '0'
       })
-
-      return subSetting
     }
 
     for (const input of data.nestedInput) {
@@ -298,9 +291,12 @@ class ExpandableSelector {
       //   continue
       // }
 
+
       const render = SelectorRegistry[input.type]
       if (render) {
-        render({setting: createSubSettingWithInlineCss(), input, output, callback, isOptional: true})
+        const selector: Selector = render({contentEl: this.wrapperEl, input, output, callback, isOptional: true})
+        selector.draw()
+        createSubSettingWithInlineCss(selector.setting)
       }
 
     }
@@ -374,7 +370,7 @@ export class GenericModal {
 
       const render = SelectorRegistry[input.type]
       if (render) {
-        render({setting: new Setting(contentEl), input, output, callback: this, isOptional})
+        render({contentEl, input, output, callback: this, isOptional}).draw()
       }
     }
   }
