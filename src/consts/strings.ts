@@ -1,5 +1,5 @@
 import {quickStartGuide} from './quick-start-guide'
-import {knownOllIds, knownPllIds} from './predefined-cases'
+import {knownOllCases, knownPllCases} from './predefined-cases'
 
 export type InsertTextCommandData = { id: string; name: string; content: string }
 
@@ -80,7 +80,7 @@ ${tripleBacktick}
 # PLL algorithms for Rubik's Cubes
 This is a complete list with 21 code blocks.
 
-${Object.entries(knownPllIds).map(([key, val]) => `
+${Object.entries(knownPllCases).map(([key, val]) => `
 ## PLL-${val.desc}
 ${tripleBacktick}${MarkdownCodeBlockNames.cubes.pll}
 id:${key}
@@ -92,7 +92,7 @@ ${tripleBacktick}
 # OLL algorithms for Rubik's Cubes
 This is a complete list with 57 code blocks.
 
-${Object.entries(knownOllIds).map(([key, val]) => `
+${Object.entries(knownOllCases).map(([key, val]) => `
 ## ${key.toUpperCase()}-${val.desc}
 ${tripleBacktick}${MarkdownCodeBlockNames.cubes.oll}
 id:${key}

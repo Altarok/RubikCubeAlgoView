@@ -121,21 +121,61 @@ class ColorSelector extends Selector<ColorInput> {
 }
 
 class ConditionalSelector extends Selector<ConditionalInput> {
+  private hasBuilt: boolean = false
+  private dropdownOptions: string[] = []
+
+  constructor(setting: Setting,
+              data: ConditionalInput,
+              output: Record<string, OutputData>, // not readonly
+              callback: GenericModal,
+              isOptional: boolean) {
+    super(setting, data, output, callback, isOptional)
+    data.nestedInput.forEach(n => this.dropdownOptions.push(n.option))
+  }
+
+  private show(key: string) {
+    // this.toggleActive = true
+    // this.bc?.setIcon('lucide-chevron-up')
+    // this.cb.collapseOtherExpandableSelectors(this)
+
+    // this.wrapperEl.style.height = `${this.wrapperEl.scrollHeight}px`
+    // this.wrapperEl.style.backgroundColor = 'var(--background-modifier-box-shadow)'
+    // this.wrapperEl.style.borderRadius = '8px'
+  }
+
   draw() {
-    /*
-     * big fat todo
-     */
-    const {setting/*, data*/} = this
-    setting.clear()
-    super.addName()
-    //   setting.addDropdown(dd => this.resettableComponent =
-    //     dd.addOptions(toRecord(data.dropdownOptions)).setValue(data.current)
-    //     .onChange((value: string) => this.write(value))
-    //   )
+    const {setting, data} = this
+    if (this.hasBuilt) {
+      // this.hideOrShow()
+      return
+    }
+
+
+    { // draw main dropdown
+      setting.clear()
+      super.addName()
+      setting.addDropdown(dd => this.resettableComponent =
+        dd.addOptions(toRecord(this.dropdownOptions))
+        .onChange((value: string) => this.show(value))
+      )
+    }
+
+    { // draw hidden sub settings
+      data.nestedInput.forEach(value => {
+
+        // setting.clear()
+        // super.addName()
+        // setting.addDropdown(dd => this.resettableComponent =
+        //   dd.addOptions(toRecord(data.dropdownOptions)).setValue(data.current)
+        //   .onChange((value: string) => this.write(value))
+        // )
+        // }
+      })
+
+    }
     this.addResetButton()
   }
 }
-
 
 class DropdownSelector extends Selector<DropdownInput> {
   draw() {
@@ -149,7 +189,6 @@ class DropdownSelector extends Selector<DropdownInput> {
     this.addResetButton()
   }
 }
-
 
 class DropdownMultiSelector extends Selector<DropdownMultiInput> {
   private selections: string[] = []

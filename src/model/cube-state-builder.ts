@@ -7,7 +7,7 @@ import {Algorithm, Algorithms, AlgorithmType, MappedAlgorithm, MappedAlgorithms}
 import {Build} from '../parser/geometry-builder'
 import {OllFieldColoring} from './oll-field-coloring'
 import {StringUtils} from '../parser/string-utils'
-import {knownOllIds, knownPllIds, PredefinedCaseRubikOll, PredefinedCaseRubikPll} from '../consts/predefined-cases'
+import {knownOllCases, knownPllCases, PredefinedCaseRubikOll, PredefinedCaseRubikPll} from '../consts/predefined-cases'
 import {InvalidInput} from './invalid-input-container'
 
 export const InputKeys: string[] = [
@@ -75,7 +75,7 @@ export default class CubeStateBuilder {
     let arrows: Arrows | undefined = undefined
 
     if (this.id) {
-      let pllCaseData: PredefinedCaseRubikPll | undefined = knownPllIds[this.id]
+      let pllCaseData: PredefinedCaseRubikPll | undefined = knownPllCases[this.id]
       if (pllCaseData) {
         let res = Parse.toArrows(pllCaseData.arrows, this.id)
         if (res.success) arrows = this.setupArrowCoordinates(res.data)
@@ -126,7 +126,7 @@ export default class CubeStateBuilder {
     let presetOutline: string | undefined = undefined
 
     if (this.id) {
-      let ollCaseData: PredefinedCaseRubikOll | undefined = knownOllIds[this.id]
+      let ollCaseData: PredefinedCaseRubikOll | undefined = knownOllCases[this.id]
       if (ollCaseData) {
         let hash: string = StringUtils.cubeHash(this.id, 'oll')
         presetRotation = settings.cubeRotations[hash]

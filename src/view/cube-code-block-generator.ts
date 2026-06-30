@@ -5,6 +5,7 @@ import {Settings} from '../settings/plugin-settings-tab'
 import {MandatoryInput, OptionalInput, OutputData} from "../EXTERNAL/code-block-creator-types";
 import {GenericModal} from "../EXTERNAL/code-block-creator-modal";
 import {Flags} from "../model/flags";
+import {knownOllIds, knownPllIds} from "../consts/predefined-cases";
 
 // npm update @Altarok/obsidian-dev-utils
 export class CodeBlockCreatorModal extends Modal {
@@ -78,6 +79,28 @@ function createMandatoryInput(): Readonly<MandatoryInput>[] {
 
 function createOptionalInput(pluginSettings: Settings): Readonly<OptionalInput>[] {
   return [
+    {
+      type: 'conditional', prompt: 'Choose cube and algorithm.',
+      key: 'id', current: undefined,
+      nestedInput: [
+        {
+          option: "Rubik's Cube (OLL algorithm)",
+          dropdown: {
+            type: 'dropdown', prompt: 'OLL algorithm.', key: '-',
+            current: 'oll-1',
+            dropdownOptions: knownOllIds
+          }
+        },
+        {
+          option: "Rubik's Cube (PLL algorithm)",
+          dropdown: {
+            type: 'dropdown', prompt: 'PLL algorithm.', key: '-',
+            current: 'pll-1',
+            dropdownOptions: knownPllIds
+          }
+        }
+      ]
+    },
     {
       type: 'expandable', prompt: 'Choose colors.',
       nestedInput: [

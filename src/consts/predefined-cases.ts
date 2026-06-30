@@ -10,6 +10,13 @@ export type PredefinedCaseRubikPll = PredefinedCase & { arrows: string }
 
 const toRecord = <T extends PredefinedCase>(prefix: string, cases: T[]): Record<string, T> => Object.fromEntries(cases.map(s => [`${prefix}-${s.id}`, s]))
 
+const toArray = (rec: Record<string, any>): string[] => {
+  const arr: string[] = []
+  Object.keys(rec).forEach(key => arr.push(key))
+  return arr
+}
+
+
 const ollCases: PredefinedCaseRubikOll[] = [ // @fof
   { id: 1, desc: 'Dot', ollPattern: 'lbr.ltr.lfr', algorithms: ["R U2 R2 F R F' U2 R' F R F' == 2+4,6+8,3-7,7-9,9-3"] },
   { id: 2, desc: 'Dot', ollPattern: 'bbb.ltr.lfr', algorithms: ["r U r' U2 r U2 R' U2 R U' r' == 2+4,6+8,1+9,3+7", "L F U F' U' L' l F U F' U' l' == 2+6,4+8", "L F U F' U' M F U F' U' l' == 2+6,4+8"] },
@@ -94,5 +101,10 @@ const pllCases: PredefinedCaseRubikPll[] = [ // @fof
   { id: 21, desc: 'Z Edges Only', arrows: '2+6,4+8', algorithms: ["M' U M2 U M2 U M' U2 M2", "S' U' S2 U' S2 U' S' U2 S2", "S2 U S2 U S' U2 S2 U2 S'", "M2 U' M2 U' M' U2 M2 U2 M'"] },
 ] as const // @fon
 
-export const knownOllIds: Record<string, PredefinedCaseRubikOll> = toRecord('oll', ollCases)
-export const knownPllIds: Record<string, PredefinedCaseRubikPll> = toRecord('pll', pllCases)
+
+export const knownOllCases: Record<string, PredefinedCaseRubikOll> = toRecord('oll', ollCases)
+export const knownPllCases: Record<string, PredefinedCaseRubikPll> = toRecord('pll', pllCases)
+
+
+export const knownOllIds: string[] = toArray(knownOllCases)
+export const knownPllIds: string[] = toArray(knownPllCases)
