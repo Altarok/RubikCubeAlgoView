@@ -4,7 +4,7 @@ import {DNF, N_A, Result, SpeedcubeTimesStatistics} from '../model/speedcubing-s
 /**
  * Format a Result to a plain string
  */
-function formatResult(res: Result, fractionDigits: number = 2): string {
+function formatResult(res: Result, fractionDigits = 2): string {
   if (res === N_A) return N_A
   if (res === DNF) return DNF
   let displayTime = res.toFixed(fractionDigits)

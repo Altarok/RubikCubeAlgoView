@@ -6,7 +6,8 @@ import js from "@eslint/js";
 export default [
   {
     ignores: [
-      "coverage/**"
+      "coverage/**",
+      "main.js"
     ],
   },
   {
@@ -34,16 +35,32 @@ export default [
     rules: {
       // default settings
       ...js.configs.recommended.rules,
-      ...tsPlugin.configs.recommended.rules,
+
+      // LEVEL 11: Switch from basic recommended to strict type-aware rules
+      ...tsPlugin.configs["recommended-type-checked"].rules,
+      ...tsPlugin.configs["stylistic-type-checked"].rules,
+
       // Obsidian settings
       ...obsidianmdPlugin.configs.recommended.rules,
+
       "@typescript-eslint/no-unused-vars": [
         "error",
         { 
           "argsIgnorePattern": "^_",
           "varsIgnorePattern": "^_",
           "caughtErrorsIgnorePattern": "^_"
-        }]
+        }],
+
+      // Prevent shipping floating asynchronous operations inside your timer loops
+      "@typescript-eslint/no-floating-promises": "error",
+      "@typescript-eslint/await-thenable": "error",
+
+      // Enforce clean, modernized type structures
+      "@typescript-eslint/consistent-type-definitions": ["error", "type"],
+      "@typescript-eslint/no-explicit-any": "warn",
+
+      // Nullish-coalescing guard rails (perfect for your UI state evaluations)
+      "@typescript-eslint/prefer-nullish-coalescing": "warn"
     },
   },
 ];
