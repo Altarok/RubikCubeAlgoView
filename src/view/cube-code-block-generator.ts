@@ -23,7 +23,7 @@ class CodeBlockCreatorModal extends Modal {
     const onUpdatePreview = (previewEl: HTMLElement): void => {
       previewEl.empty()
       if (!output.id) {
-        previewEl.createDiv({text: 'Please select algorithm.'})
+        previewEl.createDiv({ text: 'Please select algorithm.' })
         return
       }
 
@@ -34,19 +34,37 @@ class CodeBlockCreatorModal extends Modal {
         ...optionalInput.flatMap(i => i.type === 'expandable' ? i.nestedInput : [i])
       ]
 
-      Object.entries(output).forEach(([key, value]) => {
-        if (key && value) {
+      // Object.entries(output).forEach(([key, value]) => {
+      //   if (key && value) {
+      //
+      //     const matchingInputDefinition = allFlatInputs.find(input => input.key === key)
+      //     const ignoreKey: boolean = matchingInputDefinition?.ignoreKeyInCodeBlock === true
+      //
+      //     if (ignoreKey) {
+      //       pseudoCodeBlockContent += `${value}\n`
+      //     } else {
+      //       pseudoCodeBlockContent += `${key}: ${value}\n`
+      //     }
+      //   }
+      // })
 
-          const matchingInputDefinition = allFlatInputs.find(input => input.key === key)
-          const ignoreKey: boolean = matchingInputDefinition?.ignoreKeyInCodeBlock === true
+      for (const key in output) {
+        if (Object.prototype.hasOwnProperty.call(output, key)) {
+          const value = output[key]
 
-          if (ignoreKey) {
-            pseudoCodeBlockContent += `${value}\n`
-          } else {
-            pseudoCodeBlockContent += `${key}: ${value}\n`
+          // Guard against undefined values to satisfy noUncheckedIndexedAccess
+          if (value !== undefined && value !== null) {
+            const matchingInputDefinition = allFlatInputs.find(input => input.key === key)
+            const ignoreKey = matchingInputDefinition?.ignoreKeyInCodeBlock === true
+
+            if (ignoreKey) {
+              pseudoCodeBlockContent += `${String(value)}\n`
+            } else {
+              pseudoCodeBlockContent += `${key}: ${String(value)}\n`
+            }
           }
         }
-      })
+      }
 
       new GenericMarkdownProcessor(pseudoCodeBlockContent, this.plugin, previewEl).display() // IgnoringErrors(true)
     }

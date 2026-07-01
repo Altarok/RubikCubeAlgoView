@@ -6,29 +6,27 @@
 		"module": "ESNext",
 		"target": "ES6",
 		"allowJs": true,
-		"noImplicitAny": true,
-		"noImplicitThis": true,
-		"noImplicitReturns": true,
-		"moduleResolution": "node",
+    "moduleResolution": "bundler",
 		"importHelpers": true,
-		"noUncheckedIndexedAccess": true,
 		"isolatedModules": true,
-		"strictNullChecks": true,
-		"strictBindCallApply": true,
 		"allowSyntheticDefaultImports": true,
-		"useUnknownInCatchVariables": true,
+
+    /* Strict Type-Checking Guard Rails */
 		"strict": true,
+    "noImplicitReturns": true,
+    "noUncheckedIndexedAccess": true,
+    "useUnknownInCatchVariables": true,
+
 		"lib": [
-			"DOM",
-			"ES5",
-			"ES6",
-			"ES7"
+      "DOM",
+      "DOM.Iterable",
+      "ES2022"
 		],
 	},
 	"include": [
 		"src/**/*.ts"
 	],
   "exclude": [
-    "tests/*.ts"
+    "tests/**/*.ts"
   ]
 }
