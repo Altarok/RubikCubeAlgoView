@@ -47,12 +47,9 @@ export class MarkdownProcessorOll extends MarkdownRenderChild {
 
       let radioButtons: HTMLCollectionOf<HTMLInputElement> = cubeRenderer.layout.algorithmsDiv.getElementsByTagName('input')
 
-      for (let i: number = 0; i < radioButtons.length; i++) {
-        let radioButton: HTMLInputElement = radioButtons[i]!
+      for (const radioButton of radioButtons) {
         radioButton.addEventListener('click', () => {
-          if (cubeState.changeAlgorithm(radioButton.id)) {
-            cubeRenderer.redrawArrows()
-          }
+          if (cubeState.changeAlgorithm(radioButton.id)) cubeRenderer.redrawArrows()
         })
       }
     }

@@ -4,7 +4,7 @@ import {Strings} from '../consts/strings'
 const CssClasses = Strings.CssClasses
 
 
-export interface CubeLayout {
+export type CubeLayout = {
   readonly mainContainer: HTMLDivElement
   readonly cubeDiv: HTMLDivElement
   readonly setupDiv: HTMLDivElement | undefined

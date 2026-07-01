@@ -2,8 +2,8 @@ import {Strings} from 'consts/strings'
 import {generateScramble} from './algorithm-scrambler'
 
 /** Number of digits to measure */
-const fractionDigits: number = 3
-const noTime: string = `0.${'0'.repeat(fractionDigits)}`
+const fractionDigits = 3
+const noTime = `0.${'0'.repeat(fractionDigits)}`
 
 /** Callback for optional recording of speedcubing times taken */
 export type StringPairCallback = (scramble: string, timeTaken: string) => void
@@ -21,8 +21,8 @@ const CssClasses = Strings.CssClasses
  */
 export class TrainingTimer {
   private state: StateType = idle
-  private isHolding: boolean = false
-  private startTime: number = 0
+  private isHolding = false
+  private startTime = 0
   private scrambleEl!: HTMLElement
   private displayEl!: HTMLElement
   private hint1!: HTMLElement

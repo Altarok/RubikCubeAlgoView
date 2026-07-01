@@ -6,7 +6,7 @@ import {InvalidInput} from './invalid-input-container'
 
 // export type CubeType = 'unknown' | 'rubik-cube-oll' | 'rubik-cube-pll'
 
-export interface CubeState {
+export type CubeState = {
   // readonly cubeType: CubeType
   readonly algorithmType: AlgorithmType
   readonly arrowColor: string // cube color with prefix #
@@ -50,10 +50,10 @@ export class CubeStateCommon implements CubeState {
   readonly uniqueIdForRadioButtons: string = '' + CubeStateCommon.index++
 
   /** Rotation of cube, multiply by 90 to get svg rotation, use directly for algorithm rotation */
-  currentRotation: number = 0
-  currentRotationNormalized: number = 0
-  defaultRotation: number = 0
-  locked: boolean = false
+  currentRotation = 0
+  currentRotationNormalized = 0
+  defaultRotation = 0
+  locked = false
 
   constructor(
     public readonly algorithmType: AlgorithmType,

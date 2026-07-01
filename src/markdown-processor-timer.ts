@@ -39,9 +39,9 @@ export class MarkdownProcessorSpeedcubingTimer extends MarkdownRenderChild {
       return oldContent
     }
 
-    const speedcubingRunData: string = `${timeTaken}s (${scramble})`
+    const speedcubingRunData = `${timeTaken}s (${scramble})`
 
-    const firstLineOfCodeBlock = lines[indexOfRubikCubeTimerResultsCodeBlock + 1] || ''
+    const firstLineOfCodeBlock = lines[indexOfRubikCubeTimerResultsCodeBlock + 1] ?? ''
     let isFirstLineShowsPersonalBest = firstLineOfCodeBlock.startsWith('pb:') || false
     if (this.personalBest === null && isFirstLineShowsPersonalBest) {
       let timeTakenStr = firstLineOfCodeBlock.replace(/pb:(\d\.\d+)s? \(.*\)$/g, '$1')

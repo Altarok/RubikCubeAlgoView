@@ -57,7 +57,7 @@ export default class CubeStateBuilder {
   viewBoxDimensions!: Dimensions
   stickerCoordinates!: StickerCoords
 
-  initialCubeRotation: number = 0
+  initialCubeRotation = 0
 
   constructor(rawInput: string, backupColors: CubeColors) {
     /* split lines, skip empty lines, empty string is falsy */
@@ -111,6 +111,7 @@ export default class CubeStateBuilder {
       return new CubeStateCommon('undefined', this.arrowColor, this.cubeColor, this.dimensions, this.flags,
         this.id, {
           rotate: () => {
+            // no rotation
           }
         },
         this.viewBoxDimensions, this.invalidInput, this.splitUserInput, this.setup)
@@ -123,6 +124,7 @@ export default class CubeStateBuilder {
       return new CubeStateCommon('undefined', this.arrowColor, this.cubeColor, this.dimensions, this.flags,
         this.id, {
           rotate: () => {
+            // no rotation
           }
         },
         this.viewBoxDimensions, this.invalidInput, this.splitUserInput, this.setup)
@@ -174,8 +176,8 @@ export default class CubeStateBuilder {
   }
 
   private removeComments(input: string | undefined): string | undefined {
-    if (input && input.includes('//'))
-      return (input.split('//')[0] as string).trim()
+    if (input?.includes('//'))
+      return input.split('//')[0]!.trim()
     else
       return input
   }
@@ -250,11 +252,11 @@ export default class CubeStateBuilder {
 
       const arrows: ArrowCoords[] = []
       for (let i = 0; i < coords.length - 1; i++) {
-        arrows.push(new ArrowCoords(coords[i] as Coordinates, coords[i + 1] as Coordinates))
+        arrows.push(new ArrowCoords(coords[i]!, coords[i + 1]!))
       }
       /* chained arrows: connect [end] and [start] of chain */
       if (coords.length > 2) {
-        arrows.push(new ArrowCoords(coords[coords.length - 1] as Coordinates, coords[0] as Coordinates))
+        arrows.push(new ArrowCoords(coords[coords.length - 1]!, coords[0]!))
       }
       return arrows
     }, [])
@@ -262,7 +264,7 @@ export default class CubeStateBuilder {
 
   private setupAlgorithmArrowMap(map: MappedAlgorithms): string {
 
-    let initialAlgorithmSelectionHash: string = ''
+    let initialAlgorithmSelectionHash = ''
 
     if (this.algorithmInput.size > 0) {
       for (const [row, completeLine] of this.algorithmInput) {
@@ -317,7 +319,7 @@ export default class CubeStateBuilder {
 
     this.dimensions = new Dimensions(expectedWidth - 2, rawOllInput.length - 2)
 
-    for (let i: number = 0; i < rawOllInput.length; i++) {
+    for (let i = 0; i < rawOllInput.length; i++) {
       const row: string = rawOllInput[i]!.trim()
 
       if (row.length !== expectedWidth) {

@@ -1,5 +1,5 @@
 /** Ready-to-use quick start guide as complete Markdown file */
-export const quickStartGuide: string = `
+export const quickStartGuide = `
 # Quick Start Guide: Rubik's Cube algorithms plugin
 Welcome! This guide will walk you through creating your first algorithm visualization in Obsidian.
 

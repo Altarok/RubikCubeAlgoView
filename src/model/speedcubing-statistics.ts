@@ -1,4 +1,4 @@
-export interface Solve {
+export type Solve = {
   isDNF: boolean
   time: number | undefined
   isPB: boolean
@@ -8,7 +8,7 @@ export const N_A = 'N/A'
 export const DNF = 'DNF'
 export type  Result = number | typeof N_A | typeof DNF
 
-export interface SpeedcubeTimesStatistics {
+export type SpeedcubeTimesStatistics = {
   /* Personal best */
   personalBest: Result
   /* Single best, of session */
@@ -58,7 +58,7 @@ export class SpeedcubeTimesCalculator {
     this.result.worst = 0
 
     let currentValues: Solve[] = []
-    let dnfCount: number = 0
+    let dnfCount = 0
 
     let runs = Math.min(this.data.length, 100)
 
@@ -119,8 +119,8 @@ export class SpeedcubeTimesCalculator {
   }
 
   calculateGlobalValues(solves: Solve[]) {
-    let nonDnfs: number = 0
-    let sum: number = 0
+    let nonDnfs = 0
+    let sum = 0
     for (let solve of solves) {
       if (!solve.isDNF) {
         nonDnfs++
@@ -130,7 +130,7 @@ export class SpeedcubeTimesCalculator {
 
     this.result.globalMean = sum / nonDnfs
 
-    let sumOfDeviations: number = 0
+    let sumOfDeviations = 0
 
     for (let solve of solves) {
       if (!solve.isDNF) {

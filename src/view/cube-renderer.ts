@@ -119,10 +119,18 @@ export class CubeRenderer {
     this.displayArrows(mainSvgElement)
   }
 
-  displayCubeForeground(_container: SVGSVGElement, _viewBoxWidth: number, _viewBoxHeight: number): void{}
-  displayAlgorithms(_container: HTMLDivElement): void{}
+  displayCubeForeground(_container: SVGSVGElement, _viewBoxWidth: number, _viewBoxHeight: number): void {
+    // default empty impl
+  }
+
+  displayAlgorithms(_container: HTMLDivElement): void {
+    // default empty impl
+  }
+
   // abstract displaySetupAlgorithm(_container: SVGSVGElement): void{}
-  displayArrows(_container: SVGSVGElement): void{}
+  displayArrows(_container: SVGSVGElement): void {
+    // default empty impl
+  }
 
   private displaySetupAlgorithm() {
     if (!this.layout.setupDiv || this.cubeState.flags.contains('no-setup')) return
