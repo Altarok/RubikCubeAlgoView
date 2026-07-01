@@ -4,7 +4,7 @@ import {CubeRenderer, CubeRendererOLL, CubeRendererPLL} from './view/cube-render
 import {MarkdownRenderChild} from 'obsidian'
 import {CubeColors} from './settings/plugin-settings-tab'
 import CubeStateBuilder from './model/cube-state-builder'
-import {createBackupColors} from './model/cube-color-builder'
+import {createBackupColors} from './model/cube-color'
 import {Strings} from './consts/strings'
 
 export class GenericMarkdownProcessor extends MarkdownRenderChild {
@@ -26,11 +26,18 @@ export class GenericMarkdownProcessor extends MarkdownRenderChild {
   }
 
   display(): void {
+    this.displayIgnoringErrors(false)
+  }
+
+  displayIgnoringErrors(ignore: boolean): void {
     this.element.empty()
 
     const backupColors: CubeColors = createBackupColors(this.plugin.settings)
     const cubeState: CubeState = new CubeStateBuilder(this.source, backupColors).build(this.plugin.settings)
 
+    if (ignore && cubeState.invalidInput.length > 0) {
+      return
+    }
 
     let cubeRenderer: CubeRenderer
     if (cubeState) {
@@ -43,31 +50,7 @@ export class GenericMarkdownProcessor extends MarkdownRenderChild {
       }
       cubeRenderer.display(this.element)
     }
-
-
-    // const cubeRenderer = new CubeRendererOLL(cubeState)
-    // cubeRenderer.display(this.element)
-    //
-    // if (!cubeState.codeBlockInterpretationFailed()) {
-    //   this.addButtonFunctions(cubeRenderer, cubeState)
-    //   ButtonController.addRotationButtons(cubeRenderer, cubeState /* , this.plugin */)
-    // }
   }
 
-  // private addButtonFunctions(cubeRenderer: CubeRendererOLL, cubeState: CubeStateOll) {
-  //
-  //   if (cubeState.algorithmToArrows.size() > 1) {
-  //
-  //     let radioButtons: HTMLCollectionOf<HTMLInputElement> = cubeRenderer.layout.algorithmsDiv.getElementsByTagName('input')
-  //
-  //     for (let i: number = 0; i < radioButtons.length; i++) {
-  //       let radioButton: HTMLInputElement = radioButtons[i]!
-  //       radioButton.addEventListener('click', () => {
-  //         if (cubeState.changeAlgorithm(radioButton.id)) {
-  //           cubeRenderer.redrawArrows()
-  //         }
-  //       })
-  //     }
-  //   }
-  // }
+
 }

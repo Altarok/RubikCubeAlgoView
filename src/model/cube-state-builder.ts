@@ -77,6 +77,9 @@ export default class CubeStateBuilder {
     if (this.id) {
       let pllCaseData: PredefinedCaseRubikPll | undefined = knownPllCases[this.id]
       if (pllCaseData) {
+        if (pllCaseData.setup){
+          this.setSetup(Parse.toAlgorithm(pllCaseData.setup, pllCaseData.setup))
+        }
         let res = Parse.toArrows(pllCaseData.arrows, this.id)
         if (res.success) arrows = this.setupArrowCoordinates(res.data)
         else this.pushError(res.error)
@@ -128,6 +131,9 @@ export default class CubeStateBuilder {
     if (this.id) {
       let ollCaseData: PredefinedCaseRubikOll | undefined = knownOllCases[this.id]
       if (ollCaseData) {
+        if (ollCaseData.setup){
+          this.setSetup(Parse.toAlgorithm(ollCaseData.setup, ollCaseData.setup))
+        }
         let hash: string = StringUtils.cubeHash(this.id, 'oll')
         presetRotation = settings.cubeRotations[hash]
         presetOutline = ollCaseData.ollPattern

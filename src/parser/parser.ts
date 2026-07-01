@@ -67,8 +67,8 @@ function toDimensions(line: string, completeLine: string): Result<Dimensions> {
  * @param errorFactory - use when input is not a color hex value
  */
 function parseHexColor(line: string, errorFactory: () => InvalidInput): Result<string> {
-  if (RegEx.isColorHexValueWithoutPrefix(line)) {
-    return {success: true, data: '#' + line}
+  if (RegEx.isColorHexValueWithOptionalPrefix(line)) {
+    return {success: true, data: line.startsWith('#') ? line : `#${line}`}
   } else {
     return {success: false, error: errorFactory()}
   }

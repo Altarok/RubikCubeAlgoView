@@ -144,9 +144,11 @@
   padding: 2px 6px; /* Spacing inside the grey box */
   border-radius: 4px; /* Optional: rounds the corners of the box slightly */
   display: inline-block; /* Keeps the box tightly around the text */
-  margin-top: 5px; /* Adds 5px of space above the box */
+  margin-top: 5px;
+  margin-bottom: 10px;
   line-height: 1; /* Snaps the line height tight to the text */
   width: max-content; /* Forces the box to shrink to the exact width of the text */
+
 }
 
 /* Desktop only! Center the content inside the modal wrapper */

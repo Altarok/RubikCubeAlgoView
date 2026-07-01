@@ -46,7 +46,7 @@ export class CubeRenderer {
 
     this.displayCube(this.layout.cubeDiv)
     this.displayButtons(this.layout.buttonDiv)
-    this.displaySetupAlgorithm(this.layout.setupDiv)
+    this.displaySetupAlgorithm()
     this.displayAlgorithms(this.layout.algorithmsDiv)
     this.rotateCube()
   }
@@ -124,12 +124,12 @@ export class CubeRenderer {
   // abstract displaySetupAlgorithm(_container: SVGSVGElement): void{}
   displayArrows(_container: SVGSVGElement): void{}
 
-  private displaySetupAlgorithm(container?: HTMLDivElement) {
-    if (!container || this.cubeState.flags.contains('no-setup')) return
+  private displaySetupAlgorithm() {
+    if (!this.layout.setupDiv || this.cubeState.flags.contains('no-setup')) return
 
     const {setup} = this.cubeState
     if (setup === undefined) return /* Fail-safe, nothing selected */
-    UiUtils.renderAlgorithmSetup(container, setup)
+    UiUtils.renderAlgorithmSetup(this.layout.setupDiv, setup)
   }
 
   /**

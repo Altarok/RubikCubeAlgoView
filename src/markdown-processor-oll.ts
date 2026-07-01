@@ -5,7 +5,7 @@ import {MarkdownRenderChild} from 'obsidian'
 import {ButtonController} from './control/button-controller'
 import {CubeColors} from './settings/plugin-settings-tab'
 import CubeStateBuilder from './model/cube-state-builder'
-import {createBackupColors} from './model/cube-color-builder'
+import {createBackupColors} from './model/cube-color'
 import {Strings} from './consts/strings'
 
 export class MarkdownProcessorOll extends MarkdownRenderChild {

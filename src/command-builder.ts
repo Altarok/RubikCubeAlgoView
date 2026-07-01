@@ -2,7 +2,7 @@ import {Platform, Plugin} from 'obsidian'
 import {TimerModal} from './training/training-timer-modal'
 import {InsertTextCommandData, Strings} from "consts/strings"
 import RubikCubeAlgos from './main'
-import {CodeBlockCreatorModal} from './view/cube-code-block-generator'
+import CodeBlockCreatorModal from './view/cube-code-block-generator'
 
 function addInsertTextCommand(plugin: Plugin, data: InsertTextCommandData): void {
   plugin.addCommand({

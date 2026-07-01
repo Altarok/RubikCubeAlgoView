@@ -9,8 +9,8 @@ import {InvalidInput} from './invalid-input-container'
 export interface CubeState {
   // readonly cubeType: CubeType
   readonly algorithmType: AlgorithmType
-  readonly arrowColor: string
-  readonly cubeColor: string
+  readonly arrowColor: string // cube color with prefix #
+  readonly cubeColor: string // cube color with prefix #
   /** cube dimensions in stickers (rectangles, not pixels) */
   readonly dimensions: Dimensions
   readonly flags: FlagType[]
