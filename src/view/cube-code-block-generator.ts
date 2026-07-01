@@ -2,8 +2,6 @@ import RubikCubeAlgos from '../main'
 import {App, Modal} from 'obsidian'
 import {GenericModal, MandatoryInput, OptionalInput, OutputData} from '@Altarok/obsidian-dev-utils/src'
 import {Settings} from '../settings/plugin-settings-tab'
-// import {MandatoryInput, OptionalInput, OutputData} from '../EXTERNAL/code-block-creator-types'
-// import {GenericModal} from '../EXTERNAL/code-block-creator-modal'
 import {knownOllIdsWithDescription, knownPllIdsWithDescription} from '../consts/predefined-cases'
 import {GenericMarkdownProcessor} from '../markdown-processor'
 
