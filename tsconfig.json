@@ -1,33 +1,32 @@
 {
-	"compilerOptions": {
-		"baseUrl": "src",
-		"inlineSourceMap": true,
-		"inlineSources": true,
-		"module": "ESNext",
-		"target": "ES6",
-		"allowJs": true,
+  "compilerOptions": {
+    "baseUrl": "src",
+    "inlineSourceMap": true,
+    "inlineSources": true,
+    "module": "ESNext",
+    "target": "ES6",
+    "allowJs": true,
     "moduleResolution": "bundler",
-		"importHelpers": true,
-		"isolatedModules": true,
-		"allowSyntheticDefaultImports": true,
+    "importHelpers": true,
+    "isolatedModules": true,
+    "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-
     /* Strict Type-Checking Guard Rails */
-		"strict": true,
+    "strict": true,
     "noImplicitReturns": true,
     "noUncheckedIndexedAccess": true,
     "useUnknownInCatchVariables": true,
 
-		"lib": [
+    "lib": [
       "DOM",
       "DOM.Iterable",
       "ES2022"
-		],
-	},
-	"include": [
-		"src/**/*.ts"
-	],
+    ],
+  },
+  "include": [
+    "src/**/*.ts"
+  ],
   "exclude": [
     "tests/**/*.ts"
   ]
