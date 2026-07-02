@@ -43,14 +43,6 @@ export default [
       // Obsidian settings
       ...obsidianmdPlugin.configs.recommended.rules,
 
-      "@typescript-eslint/no-unused-vars": [
-        "error",
-        { 
-          "argsIgnorePattern": "^_",
-          "varsIgnorePattern": "^_",
-          "caughtErrorsIgnorePattern": "^_"
-        }],
-
       // Prevent shipping floating asynchronous operations inside your timer loops
       "@typescript-eslint/no-floating-promises": "error",
       "@typescript-eslint/await-thenable": "error",
@@ -60,7 +52,17 @@ export default [
       "@typescript-eslint/no-explicit-any": "warn",
 
       // Nullish-coalescing guard rails (perfect for your UI state evaluations)
-      "@typescript-eslint/prefer-nullish-coalescing": "warn"
-    },
-  },
+      "@typescript-eslint/prefer-nullish-coalescing": "warn",
+
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          "argsIgnorePattern": "^_",
+          "varsIgnorePattern": "^_",
+          "caughtErrorsIgnorePattern": "^_"
+        }
+      ]
+
+    }
+  }
 ];
