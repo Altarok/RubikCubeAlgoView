@@ -1,4 +1,4 @@
-import {Strings} from 'consts/strings'
+import {Strings} from './consts/strings'
 import {generateScramble} from './algorithm-scrambler'
 
 /** Number of digits to measure */

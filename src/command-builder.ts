@@ -1,6 +1,6 @@
 import {Platform, Plugin} from 'obsidian'
 import {TimerModal} from './training/training-timer-modal'
-import {InsertTextCommandData, Strings} from "consts/strings"
+import {InsertTextCommandData, Strings} from "./consts/strings"
 import RubikCubeAlgos from './main'
 import CodeBlockCreatorModal from './view/cube-code-block-generator'
 

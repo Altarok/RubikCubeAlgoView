@@ -1,4 +1,4 @@
-import {Strings} from 'consts/strings'
+import {Strings} from './consts/strings'
 import {DNF, N_A, Result, SpeedcubeTimesStatistics} from '../model/speedcubing-statistics'
 
 /**
