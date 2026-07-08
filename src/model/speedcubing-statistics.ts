@@ -119,16 +119,16 @@ export class SpeedcubeTimesCalculator {
   }
 
   calculateGlobalValues(solves: Solve[]) {
-    let nonDnfs = 0
+    let nonDNFs = 0
     let sum = 0
     for (let solve of solves) {
       if (!solve.isDNF) {
-        nonDnfs++
+        nonDNFs++
         sum = sum + solve.time!
       }
     }
 
-    this.result.globalMean = sum / nonDnfs
+    this.result.globalMean = sum / nonDNFs
 
     let sumOfDeviations = 0
 
@@ -138,7 +138,7 @@ export class SpeedcubeTimesCalculator {
       }
     }
 
-    this.result.standardDeviation = sumOfDeviations / nonDnfs
+    this.result.standardDeviation = sumOfDeviations / nonDNFs
   }
 
   sort(solves: Solve[]) {

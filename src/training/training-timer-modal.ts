@@ -1,7 +1,7 @@
 import {App, Modal} from 'obsidian'
 import {TrainingTimer} from './training-timer'
 
-/** Stack mat in popup - does not asve results */
+/** Stack mat in popup - does not save results */
 export class TimerModal extends Modal {
   timer?: TrainingTimer
 
