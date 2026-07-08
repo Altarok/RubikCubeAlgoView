@@ -34,20 +34,6 @@ class CodeBlockCreatorModal extends Modal {
         ...optionalInput.flatMap(i => i.type === 'expandable' ? i.nestedInput : [i])
       ]
 
-      // Object.entries(output).forEach(([key, value]) => {
-      //   if (key && value) {
-      //
-      //     const matchingInputDefinition = allFlatInputs.find(input => input.key === key)
-      //     const ignoreKey: boolean = matchingInputDefinition?.ignoreKeyInCodeBlock === true
-      //
-      //     if (ignoreKey) {
-      //       pseudoCodeBlockContent += `${value}\n`
-      //     } else {
-      //       pseudoCodeBlockContent += `${key}: ${value}\n`
-      //     }
-      //   }
-      // })
-
       for (const key in output) {
         if (Object.prototype.hasOwnProperty.call(output, key)) {
           const value = output[key]
