@@ -1,9 +1,9 @@
-import RubikCubeAlgos from '../main'
 import {App, Modal} from 'obsidian'
-import {GenericModal, MandatoryInput, OptionalInput, OutputData} from '@Altarok/obsidian-dev-utils/src'
+import RubikCubeAlgos from '../main'
 import {Settings} from '../settings/plugin-settings-tab'
 import {knownOllIdsWithDescription, knownPllIdsWithDescription} from '../consts/predefined-cases'
 import {GenericMarkdownProcessor} from '../markdown-processor'
+import {GenericModal, MandatoryInput, OptionalInput, OutputData} from '@Altarok/obsidian-dev-utils/src'
 
 // npm update @Altarok/obsidian-dev-utils
 class CodeBlockCreatorModal extends Modal {
@@ -23,7 +23,7 @@ class CodeBlockCreatorModal extends Modal {
     const onUpdatePreview = (previewEl: HTMLElement): void => {
       previewEl.empty()
       if (!output.id) {
-        previewEl.createDiv({ text: 'Please select algorithm.' })
+        previewEl.createDiv({text: 'Please select algorithm.'})
         return
       }
 
