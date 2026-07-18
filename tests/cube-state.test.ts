@@ -16,16 +16,16 @@ arrowColor:0f0
 alg:R' U' R' F R F' U R U2 == 3+9
 alg:F' U R U2 R' U' R' F R == 1-7
 ` /* ends on linebreak */
-const validBaseOllInputWithoutId: string = `.110.
-00010
-01110
-00110
-.100.
-cubeColor:f0f
-arrowColor:0f0
-alg:R' U' R' F R F' U R U2 == 3+9
-alg:F' U R U2 R' U' R' F R == 1-7
-` /* ends on linebreak */
+// const validBaseOllInputWithoutId: string = `.110.
+// 00010
+// 01110
+// 00110
+// .100.
+// cubeColor:f0f
+// arrowColor:0f0
+// alg:R' U' R' F R F' U R U2 == 3+9
+// alg:F' U R U2 R' U' R' F R == 1-7
+// ` /* ends on linebreak */
 const validBasePllInput: string = `
 id:${id}
 cubeColor:123456
@@ -44,7 +44,10 @@ const colors: CubeColors = {
 const settings: Settings = {
   arrowColor: '#08f',
   cubeColor: '#ff0',
-  cubeRotations: {}
+  cubeRotations: {},
+  activateCommandCodeblockExamples: false,
+  activateCommandCodeblockTemplates: false,
+  activateCommandQuickStartGuide: false
 }
 
 function createOll(): CubeStateOll {
@@ -294,7 +297,8 @@ describe('CubeState arrow coordinates', () => {
     expect(co.algorithmToArrows.size()).toBe(2)
     expect(co.selectedAlgorithmHash).not.toBe('')
 
-    const algorithms = co.algorithmToArrows.getAllItems()
+    // const algorithms =
+      co.algorithmToArrows.getAllItems()
 
   })
 

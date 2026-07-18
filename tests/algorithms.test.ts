@@ -196,11 +196,11 @@ describe('MappedAlgorithms (string-MappedAlgorithm map)', () => {
   })
 
   it('should provide proper consts with algorithm hash - after rotation', () => {
-    let mappedAlgorithm = checkHashValues()
+    // let mappedAlgorithm = checkHashValues()
 
     mappedAlgorithms.rotate(1)
 
-    mappedAlgorithm = mappedAlgorithms.get(alg1FRU.initialHash)!
+    let mappedAlgorithm = mappedAlgorithms.get(alg1FRU.initialHash)!
     expect(mappedAlgorithm).toEqual(mappedAlgorithm1)
 
     mappedAlgorithm = mappedAlgorithms.get(alg2FLU.initialHash)!

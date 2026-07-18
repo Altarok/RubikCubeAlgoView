@@ -3,7 +3,7 @@ import {CubeColors} from '../src/settings/plugin-settings-tab'
 import CubeStateBuilder from '../src/model/cube-state-builder'
 import {InvalidInput} from '../src/model/invalid-input-container'
 
-const id: string = 'someID'
+// const id: string = 'someID'
 /* Default valid OLL field for 3x3 cube. Actual values make no sense. */
 // const validBaseOllInput: string = `.110.
 // 00010

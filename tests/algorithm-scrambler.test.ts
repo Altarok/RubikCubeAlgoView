@@ -3,9 +3,9 @@ import {generateScramble} from '../src/training/algorithm-scrambler'
 
 const scrambles : string[] = []
 
-const faces = ['U', 'D', 'R', 'L', 'F', 'B']
+// const faces = ['U', 'D', 'R', 'L', 'F', 'B']
 const consecutiveStepsPattern = new RegExp(".*([UDRLFB])(|'|2) \\1.*")
-const consecutiveRedundantAxisPattern = new RegExp(".*(R)(|'|2) L(|'|2) \\1.*")
+// const consecutiveRedundantAxisPattern = new RegExp(".*(R)(|'|2) L(|'|2) \\1.*")
 
 const scrambleCountToTest = 100
 
