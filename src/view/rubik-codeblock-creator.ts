@@ -3,7 +3,7 @@ import RubikCubeAlgos from '../main'
 import {Settings} from '../settings/plugin-settings-tab'
 import {knownOllIdsWithDescription, knownPllIdsWithDescription} from '../consts/predefined-cases'
 import {GenericMarkdownProcessor} from '../markdown-processor'
-import {GenericModal, GenericModalInput, UserInput, OutputData, NonExpandableInput} from '../../../obsidian-dev-utils/src/index'
+import {GenericModal, GenericModalInput, UserInput, OutputData, NonExpandableInput} from '@Altarok/obsidian-dev-utils'
 
 class CodeBlockCreatorModal extends Modal {
   constructor(public readonly app: App, public readonly plugin: RubikCubeAlgos) {
