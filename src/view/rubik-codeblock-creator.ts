@@ -3,7 +3,7 @@ import RubikCubeAlgos from '../main'
 import {Settings} from '../settings/plugin-settings-tab'
 import {knownOllIdsWithDescription, knownPllIdsWithDescription} from '../consts/predefined-cases'
 import {GenericMarkdownProcessor} from '../markdown-processor'
-import {GenericModal, GenericModalInput, UserInput, OutputData} from '@Altarok/utils'
+import {GenericModal, GenericModalInput, UserInput, OutputData, NonExpandableInput} from '@Altarok/utils'
 
 class CodeBlockCreatorModal extends Modal {
   constructor(public readonly app: App, public readonly plugin: RubikCubeAlgos) {
@@ -19,8 +19,8 @@ class CodeBlockCreatorModal extends Modal {
     const mandatoryInput: Readonly<UserInput>[] = createMandatoryInput()
     const optionalInput: Readonly<UserInput>[] = createOptionalInput(this.plugin.settings)
 
-    const allFlatInputs: Readonly<UserInput>[] = [
-      ...mandatoryInput,
+    const allFlatInputs: Readonly<NonExpandableInput>[] = [
+      ...mandatoryInput.flatMap(i => i.type === 'expandable' ? i.nestedInput : [i]),
       ...optionalInput.flatMap(i => i.type === 'expandable' ? i.nestedInput : [i])
     ]
 
@@ -41,7 +41,7 @@ class CodeBlockCreatorModal extends Modal {
           // Guard against undefined values to satisfy noUncheckedIndexedAccess
           if (value !== undefined && value !== null) {
             const matchingInputDefinition = allFlatInputs.find(input => input.key === key)
-            const ignoreKey = matchingInputDefinition?.ignoreKeyInCodeBlock === true
+            const ignoreKey: boolean = matchingInputDefinition?.ignoreKeyInCodeBlock ?? false
 
             if (ignoreKey) {
               pseudoCodeBlockContent += `${String(value)}\n`
@@ -80,6 +80,7 @@ function createMandatoryInput(): Readonly<UserInput>[] {
     type: 'conditional', key: 'id',
     prompt: 'Choose cube ..', subPrompt: '.. and algorithm',
     mandatory: true,
+    current: 'oll-1',
     nestedInput: [{
       key: "Rubik's Cube (OLL)", dropdownOptions: knownOllIdsWithDescription
     }, {
@@ -99,6 +100,7 @@ function createOptionalInput(pluginSettings: Settings): Readonly<UserInput>[] {
   return [
     {
       type: 'expandable', prompt: 'Colors',
+      mandatory: false,
       nestedInput: [{
         type: 'color',
         prompt: 'Cube color',
@@ -113,6 +115,7 @@ function createOptionalInput(pluginSettings: Settings): Readonly<UserInput>[] {
     },
     {
       type: 'expandable', prompt: 'Advanced',
+      mandatory: false,
       nestedInput: [{
         type: 'dropdownMulti', prompt: 'Special flags', key: 'flags',
         tooltip: 'Select each you want to apply.',
