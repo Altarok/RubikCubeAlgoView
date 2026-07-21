@@ -3,9 +3,8 @@ import RubikCubeAlgos from '../main'
 import {Settings} from '../settings/plugin-settings-tab'
 import {knownOllIdsWithDescription, knownPllIdsWithDescription} from '../consts/predefined-cases'
 import {GenericMarkdownProcessor} from '../markdown-processor'
-import {GenericModal, MandatoryInput, OptionalInput, OutputData} from '@Altarok/obsidian-dev-utils/src'
+import {GenericModal, GenericModalInput, UserInput, OutputData} from '@Altarok/utils'
 
-// npm update @Altarok/obsidian-dev-utils
 class CodeBlockCreatorModal extends Modal {
   constructor(public readonly app: App, public readonly plugin: RubikCubeAlgos) {
     super(app)
@@ -17,8 +16,13 @@ class CodeBlockCreatorModal extends Modal {
 
     const output: Record<string, OutputData> = {}
 
-    const mandatoryInput: Readonly<MandatoryInput>[] = createMandatoryInput()
-    const optionalInput: Readonly<OptionalInput>[] = createOptionalInput(this.plugin.settings)
+    const mandatoryInput: Readonly<UserInput>[] = createMandatoryInput()
+    const optionalInput: Readonly<UserInput>[] = createOptionalInput(this.plugin.settings)
+
+    const allFlatInputs: Readonly<UserInput>[] = [
+      ...mandatoryInput,
+      ...optionalInput.flatMap(i => i.type === 'expandable' ? i.nestedInput : [i])
+    ]
 
     const onUpdatePreview = (previewEl: HTMLElement): void => {
       previewEl.empty()
@@ -29,10 +33,6 @@ class CodeBlockCreatorModal extends Modal {
 
       let pseudoCodeBlockContent = ''
 
-      const allFlatInputs = [
-        ...mandatoryInput,
-        ...optionalInput.flatMap(i => i.type === 'expandable' ? i.nestedInput : [i])
-      ]
 
       for (const key in output) {
         if (Object.prototype.hasOwnProperty.call(output, key)) {
@@ -55,15 +55,15 @@ class CodeBlockCreatorModal extends Modal {
       new GenericMarkdownProcessor(pseudoCodeBlockContent, this.plugin, previewEl).display() // IgnoringErrors(true)
     }
 
-    new GenericModal(contentEl,
-      {
-        pluginName: `Rubik's Cube algorithms`,
-        codeBlockId: 'rubikCube',
-        mandatory: mandatoryInput,
-        optional: optionalInput,
-        output,
-        onUpdatePreview
-      }).display()
+    const modalInput: GenericModalInput = {
+      pluginName: `Rubik's Cube algorithms`,
+      codeBlockId: 'rubikCube',
+      input: allFlatInputs,
+      onUpdatePreview,
+      output
+    }
+
+    new GenericModal(contentEl, modalInput).display()
 
     contentEl.focus()
   }
@@ -75,22 +75,20 @@ class CodeBlockCreatorModal extends Modal {
 
 export default CodeBlockCreatorModal
 
-function createMandatoryInput(): Readonly<MandatoryInput>[] {
-  return [
-    {
-      type: 'conditional', prompt: 'Choose cube ..',
-      key: 'id',
-      subPrompt: '.. and algorithm',
-      nestedInput: [{
-        key: "Rubik's Cube (OLL)", dropdownOptions: knownOllIdsWithDescription
-      }, {
-        key: "Rubik's Cube (PLL)", dropdownOptions: knownPllIdsWithDescription
-      }]
-    }
-  ]
+function createMandatoryInput(): Readonly<UserInput>[] {
+  return [{
+    type: 'conditional', key: 'id',
+    prompt: 'Choose cube ..', subPrompt: '.. and algorithm',
+    mandatory: true,
+    nestedInput: [{
+      key: "Rubik's Cube (OLL)", dropdownOptions: knownOllIdsWithDescription
+    }, {
+      key: "Rubik's Cube (PLL)", dropdownOptions: knownPllIdsWithDescription
+    }]
+  }]
 }
 
-function createOptionalInput(pluginSettings: Settings): Readonly<OptionalInput>[] {
+function createOptionalInput(pluginSettings: Settings): Readonly<UserInput>[] {
 
   const flagDropdownOptions: Record<string, string> = {
     'default': 'none',
