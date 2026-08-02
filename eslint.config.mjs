@@ -42,6 +42,7 @@ export default [
 
       // Obsidian settings
       ...obsidianmdPlugin.configs.recommended.rules,
+      // "obsidianmd/prefer-create-el": "warn", // or "error"
 
       // Prevent shipping floating asynchronous operations inside your timer loops
       "@typescript-eslint/no-floating-promises": "error",
@@ -53,6 +54,7 @@ export default [
 
       // Nullish-coalescing guard rails (perfect for your UI state evaluations)
       "@typescript-eslint/prefer-nullish-coalescing": "warn",
+
 
       "@typescript-eslint/no-unused-vars": [
         "error",
