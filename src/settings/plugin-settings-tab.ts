@@ -1,6 +1,7 @@
-import {App, PluginSettingTab, Setting} from 'obsidian'
+import {App, PluginSettingTab, Setting, SettingDefinitionItem} from 'obsidian'
 import RubikCubeAlgos from '../main'
 import {RegEx} from '../parser/regex-util'
+import {Strings} from 'consts/strings'
 
 export type CubeColors = {
   arrowColor: string
@@ -12,6 +13,7 @@ export type Settings = CubeColors & {
   activateCommandQuickStartGuide: boolean
   activateCommandCodeblockExamples: boolean
   activateCommandCodeblockTemplates: boolean
+  activateRibbonIconForCodeblockCreator: boolean
 }
 
 export const DefaultSettings: Settings = {
@@ -20,13 +22,12 @@ export const DefaultSettings: Settings = {
   cubeRotations: {},
   activateCommandQuickStartGuide: true,
   activateCommandCodeblockExamples: true,
-  activateCommandCodeblockTemplates: true
+  activateCommandCodeblockTemplates: true,
+  activateRibbonIconForCodeblockCreator: true
 }
 
 function addHashPrefixIfMissing(color: string) {
-  if (!color.startsWith('#')) {
-    color = `#${color}`
-  }
+  if (!color.startsWith('#')) color = `#${color}`
   return color
 }
 
@@ -34,90 +35,80 @@ function isValidColorInput(color: string): boolean {
   return RegEx.isColorHexValueWithOptionalPrefix(color)
 }
 
-export default class RubikCubeAlgoSettingsTab extends PluginSettingTab {
+export class RubikCubeAlgoSettingsTab extends PluginSettingTab {
   tempColorInput: CubeColors
-
-  // isNewSettingsAPI: boolean = false // TODO #v1.13.0
 
   constructor(app: App, readonly plugin: RubikCubeAlgos) {
     super(app, plugin)
-    this.tempColorInput = {
-      arrowColor: plugin.settings.arrowColor,
-      cubeColor: plugin.settings.cubeColor
-    }
+    this.tempColorInput = {arrowColor: plugin.settings.arrowColor, cubeColor: plugin.settings.cubeColor}
   }
 
-  // public getSettingDefinitions(): SettingDefinitionItem<string>[] {
-  //   this.isNewSettingsAPI = true
-  //
-  //   return [
-  //     { // start group: commands
-  //       type: 'group',
-  //       heading: 'Commands',
-  //       items: [
-  //         {
-  //           name: Strings.SettingsUI.quickStartGuide.name,
-  //           desc: Strings.SettingsUI.quickStartGuide.desc,
-  //           control: {
-  //             type: 'toggle',
-  //             key: 'activateCommandQuickStartGuide'
-  //           }
-  //         },
-  //         {
-  //           name: Strings.SettingsUI.examples.name,
-  //           desc: Strings.SettingsUI.examples.desc,
-  //           control: {
-  //             type: 'toggle',
-  //             key: 'activateCommandCodeblockExamples'
-  //           },
-  //         },
-  //         {
-  //           name: Strings.SettingsUI.templates.name,
-  //           desc: Strings.SettingsUI.templates.desc,
-  //           control: {
-  //             type: 'toggle',
-  //             key: 'activateCommandCodeblockTemplates'
-  //           }
-  //         },
-  //         {
-  //           name: Strings.SettingsUI.hint.name,
-  //           desc: Strings.SettingsUI.hint.desc,
-  //         },
-  //       ],
-  //     }, // end group: commands
-  //     { // start group: colors
-  //       type: 'group',
-  //       heading: 'Colors',
-  //       items: [
-  //         {
-  //           name: 'Color picker: Cube color',
-  //           render: (setting: Setting) => {
-  //             this.addColorSettingsCube(setting)
-  //           },
-  //         },
-  //         {
-  //           name: 'Color picker: Arrow color',
-  //           render: (setting: Setting) => {
-  //             this.addColorSettingsArrows(setting)
-  //           },
-  //         },
-  //         {
-  //           name: 'Button: reset default colors',
-  //           render: (setting: Setting) => {
-  //             this.addColorSettingsReset(setting)
-  //           },
-  //         },
-  //         {
-  //           name: Strings.SettingsUI.hint.name,
-  //           desc: 'Colors update live on change. Click save to persist your choice.',
-  //         },
-  //       ],
-  //     }, // end group: colors
-  //   ]
-  // }
+  public getSettingDefinitions(): SettingDefinitionItem[] {
+    return [
+      { // start group: commands
+        type: 'group',
+        heading: 'Commands',
+        items: [
+          {
+            name: Strings.SettingsUI.quickStartGuide.name,
+            desc: Strings.SettingsUI.quickStartGuide.desc,
+            control: {type: 'toggle', key: 'activateCommandQuickStartGuide'}
+          },
+          {
+            name: Strings.SettingsUI.examples.name,
+            desc: Strings.SettingsUI.examples.desc,
+            control: {type: 'toggle', key: 'activateCommandCodeblockExamples'},
+          },
+          {
+            name: Strings.SettingsUI.templates.name,
+            desc: Strings.SettingsUI.templates.desc,
+            control: {type: 'toggle', key: 'activateCommandCodeblockTemplates'}
+          },
+          {
+            name: 'Add ribbon icon',
+            desc: 'Button opens code block creator utility',
+            control: {type: 'toggle', key: 'activateRibbonIconForCodeblockCreator'}
+          },
+          {
+            name: Strings.SettingsUI.hint.name,
+            desc: Strings.SettingsUI.hint.desc,
+          },
+        ],
+      }, // end group: commands
+      { // start group: colors
+        type: 'group',
+        heading: 'Colors',
+        items: [
+          {
+            name: 'Cube color',
+            desc: 'Default color for cube faces. Resets to yellow.',
+            control: {type: 'color', key: 'cubeColor'}
+          },
+          {
+            name: 'Arrow color',
+            desc: 'Default color for arrows. Resets to sky blue.',
+            control: {type: 'color', key: 'arrowColor'}
+          },
+          {
+            name: 'Reset default colors',
+            render: (setting) => {
+              setting.addButton(bb => bb
+                .setDestructive()
+                .setButtonText('Reset')
+                .onClick(async () => {
+                  this.plugin.settings.cubeColor = DefaultSettings.cubeColor
+                  this.plugin.settings.arrowColor = DefaultSettings.arrowColor
+                  await this.plugin.saveData(this.plugin.settings)
+                  this.update()
+                }))
+            }
+          }
+        ]
+      }
+    ] // end group: colors
+  }
 
   display(): void {
-    // this.isNewSettingsAPI = false // TODO #v1.13.0
 
     const {containerEl} = this
 
@@ -135,7 +126,7 @@ export default class RubikCubeAlgoSettingsTab extends PluginSettingTab {
     setting.setName('Reset colors').setDesc('Restore default color values.')
       .addButton((cb) => cb
         .setButtonText('Reset')
-        .setWarning() // TODO #v1.13.0 .setDestructive() // -> red
+        .setDestructive()
         .onClick(async () => {
           this.tempColorInput.cubeColor = DefaultSettings.cubeColor
           this.tempColorInput.arrowColor = DefaultSettings.arrowColor
@@ -143,7 +134,7 @@ export default class RubikCubeAlgoSettingsTab extends PluginSettingTab {
           this.plugin.settings.cubeColor = DefaultSettings.cubeColor
           this.plugin.settings.arrowColor = DefaultSettings.arrowColor
           await this.plugin.saveSettings()
-          this.updateGUI()
+          this.display()
         })
       )
   }
@@ -158,7 +149,7 @@ export default class RubikCubeAlgoSettingsTab extends PluginSettingTab {
           this.tempColorInput.arrowColor = valueToSafe
           this.plugin.settings.arrowColor = valueToSafe
           await this.plugin.saveSettings()
-          this.updateGUI()
+          this.display()
         }
       ))
   }
@@ -173,16 +164,9 @@ export default class RubikCubeAlgoSettingsTab extends PluginSettingTab {
           this.tempColorInput.cubeColor = valueToSafe
           this.plugin.settings.cubeColor = valueToSafe
           await this.plugin.saveSettings()
-          this.updateGUI()
+          this.display()
         }
       ))
-  }
-
-  updateGUI() {
-    // TODO #v1.13.0 .setDestructive() // -> red
-    // if (this.isNewSettingsAPI) this.update()
-    // else
-    this.display()
   }
 
   private changeCurrentCubeColor(hexColor: string) {
@@ -192,7 +176,7 @@ export default class RubikCubeAlgoSettingsTab extends PluginSettingTab {
       if (this.plugin.settings.cubeColor !== hexColor) {
         this.plugin.settings.cubeColor = hexColor
         this.plugin.rerenderCodeblocks()
-        this.updateGUI()
+        this.display()
       }
     }
   }
@@ -208,12 +192,6 @@ export default class RubikCubeAlgoSettingsTab extends PluginSettingTab {
       }
     }
   }
-
-  // TODO #v1.13.0
-  // private addColorSettingsHeader(containerEl: HTMLElement) {
-  //   new Setting(containerEl).setName('Appearance defaults').setHeading()
-  //   .setDesc('Values are validated and displayed on the fly. Save button persists to data.json.')
-  // }
 
   private addHorizontalSeparator(containerEl: HTMLElement) {
     containerEl.createEl('hr')

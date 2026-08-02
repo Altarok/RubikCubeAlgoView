@@ -2,6 +2,10 @@
   "cubeColor": "#ffff00",
   "arrowColor": "#0088ff",
   "cubeRotations": {},
+  "activateCommandQuickStartGuide": true,
+  "activateCommandCodeblockExamples": true,
+  "activateCommandCodeblockTemplates": true,
+  "activateRibbonIconForCodeblockCreator": true,
   "acivateCommandQuickStartGuide": true,
   "acivateCommandCodeblockExamples": true,
   "acivateCommandCodeblockTemplates": true

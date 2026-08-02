@@ -1,7 +1,7 @@
-import {Platform, Plugin} from 'obsidian'
+import {Plugin} from 'obsidian'
 import {MarkdownProcessorOll} from './markdown-processor-oll'
 import {MarkdownProcessorPll} from './markdown-processor-pll'
-import RubikCubeAlgoSettingsTab, {DefaultSettings, Settings} from './settings/plugin-settings-tab'
+import {DefaultSettings, RubikCubeAlgoSettingsTab, Settings} from './settings/plugin-settings-tab'
 import {addAppCommands} from './command-builder'
 import {MarkdownProcessorSpeedcubingTimer} from './markdown-processor-timer'
 import SpeedCubingResultTableRenderChild from './markdown-processor-timer-results'
@@ -22,11 +22,9 @@ export default class RubikCubeAlgos extends Plugin {
 
     addAppCommands(this)
 
-    if (!Platform.isMobile) {
-
-      this.addRibbonIcon('lucide-blocks', 'Rubik Cube algorithms: Open code block creator', () => {
-        this.showCodeBlockCreator()
-      })
+    if (this.settings.activateRibbonIconForCodeblockCreator) {
+      this.addRibbonIcon('lucide-blocks', 'Rubik Cube algorithms: Open code block creator',
+        () => this.showCodeBlockCreator())
     }
   }
 
