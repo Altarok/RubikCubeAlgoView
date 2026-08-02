@@ -16,7 +16,7 @@ export class SpeedcubingTimerView {
 
     this.container.style.borderColor = window.getComputedStyle(window.activeDocument.body).getPropertyValue('--interactive-accent').trim() || '#00ff55'
 
-    const innerContent = this.container.createEl('div')
+    const innerContent = this.container.createDiv()
     if (!this.isOnMobile) {
       this.container.setAttribute('tabindex', '0')
       this.focusHint = this.container.createEl('small', {

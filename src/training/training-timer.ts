@@ -78,46 +78,23 @@ export class TrainingTimer {
 
   /** Add textual hints. Changes based on the platform */
   private addTexts() {
-    this.scrambleEl = window.document.createElement('div')
-    this.scrambleEl.textContent = generateScramble()
-    this.scrambleEl.addClass(CssClasses.timer.scrambleDisplay)
-    this.contentEl.appendChild(this.scrambleEl)
-
-    this.displayEl = window.document.createElement('h1')
-    this.displayEl.textContent = noTime
-    this.displayEl.addClass(CssClasses.timer.clock)
-    this.contentEl.appendChild(this.displayEl)
+    this.scrambleEl = this.contentEl.createDiv({text: generateScramble(), cls: CssClasses.timer.scrambleDisplay})
+    this.displayEl = this.contentEl.createEl('h1', {text: noTime, cls: CssClasses.timer.clock})
 
     const hint3txt: string = (this.isOnMobile ? 'Tap' : 'Press') + ' to stop.'
     const hint4txt: string = (this.isOnMobile ? 'Tap' : 'Press') + ' to reset and scramble.'
 
-    const upperHintLine = window.document.createElement('div')
-    this.contentEl.appendChild(upperHintLine)
+    const upperHintLine = this.contentEl.createDiv()
 
-    this.hint1 = window.document.createElement('span')
-    this.hint1.textContent = (this.isOnMobile ? 'Tap and hold anywhere' : 'Hold space bar') + ' to ready'
-    this.hint1.addClass(CssClasses.timer.hint)
-    upperHintLine.appendChild(this.hint1)
+    this.hint1 = upperHintLine.createSpan({
+      text: (this.isOnMobile ? 'Tap and hold anywhere' : 'Hold space bar') + ' to ready',
+      cls: CssClasses.timer.hint
+    })
+    upperHintLine.createSpan({text: ', '})
 
-    const hint11 = window.document.createElement('span')
-    hint11.textContent = ', '
-    upperHintLine.appendChild(hint11)
-
-    this.hint2 = window.document.createElement('span')
-    this.hint2.textContent = 'release to start.'
-    this.hint2.addClass(CssClasses.timer.hint)
-    upperHintLine.appendChild(this.hint2)
-
-    this.hint3 = window.document.createElement('div')
-    this.hint3.textContent = hint3txt
-    this.hint3.addClass(CssClasses.timer.hint)
-    this.contentEl.appendChild(this.hint3)
-
-
-    this.hint4 = window.document.createElement('div')
-    this.hint4.textContent = hint4txt
-    this.hint4.addClass(CssClasses.timer.hint)
-    this.contentEl.appendChild(this.hint4)
+    this.hint2 = upperHintLine.createSpan({text: 'release to start.', cls: CssClasses.timer.hint})
+    this.hint3 = this.contentEl.createDiv({text: hint3txt, cls: CssClasses.timer.hint})
+    this.hint4 = this.contentEl.createDiv({text: hint4txt, cls: CssClasses.timer.hint})
   }
 
   setFocus() {

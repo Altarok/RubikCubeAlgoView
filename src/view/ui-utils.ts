@@ -25,30 +25,27 @@ function findMatchingError(errors: InvalidInput[], row: string): InvalidInput | 
  * Renders a formatted error message when code block interpretation fails.
  */
 function showInvalidInput(container: HTMLElement, rows: string[], errors: InvalidInput[]): void {
-  container.createEl('div', {
-    text: 'Code block interpretation failed:',
-    cls: CssClasses.warnings.orange
-  })
+  container.createDiv({text: 'Code block interpretation failed:', cls: CssClasses.warnings.orange})
 
   if (rows.length === 0) {
     const p = container.createEl('p')
     p.createEl('b', {text: '[empty]', cls: CssClasses.warnings.red})
-    p.createEl('span', {text: ` => ${errors[0]!.reason}`})
+    p.createSpan({text: ` => ${errors[0]!.reason}`})
     return
   }
 
-  const listContainer = container.createEl('div')
+  const listContainer = container.createDiv()
 
   rows.forEach(row => {
 
     let matchingError: InvalidInput | undefined = findMatchingError(errors, row)
 
     if (matchingError) {
-      const errorRow = listContainer.createEl('div')
+      const errorRow = listContainer.createDiv()
       errorRow.createEl('b', {text: row, cls: CssClasses.warnings.red})
-      errorRow.createEl('span', {text: ` => ${matchingError.reason}`})
+      errorRow.createSpan({text: ` => ${matchingError.reason}`})
     } else {
-      listContainer.createEl('div', {text: row})
+      listContainer.createDiv({text: row})
     }
   })
 }
@@ -70,7 +67,7 @@ function renderAlgorithmSetup(container: HTMLElement, setupAlgorithm?: Algorithm
   if (!setupAlgorithm) return
 
   // const ul =
-  container.createEl('div', {text: `Setup: ${setupAlgorithm.toString()}`})
+  container.createDiv({text: `Setup: ${setupAlgorithm.toString()}`})
 
   // let li = ul.createEl('li')
   // item.algorithmLabel = li.createEl('label', {text: item.toString()})
@@ -82,7 +79,7 @@ function renderAlgorithmSetup(container: HTMLElement, setupAlgorithm?: Algorithm
 function renderAlgorithmSelect(
   container: HTMLElement, algorithms: Algorithm[], selectedIndex: string, uniqueIdForRadioButtons: string): void {
   const ul = container.createEl('ul')
-  const radioDiv = ul.createEl('div', {attr: {id: 'oll-radio-buttons-div'}})
+  const radioDiv = ul.createDiv({attr: {id: 'oll-radio-buttons-div'}})
 
   algorithms.forEach((item, i) => {
     const isChecked = selectedIndex === item.initialHash

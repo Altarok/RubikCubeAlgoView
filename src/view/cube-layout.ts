@@ -14,21 +14,23 @@ export type CubeLayout = {
 
 function createCubeLayout(container: HTMLElement, cubeState: CubeState): CubeLayout {
 
-  const mainContainer = container.createEl('div', {cls: CssClasses.layout.mainContainer})
-  const leftSide = mainContainer.createEl('div', {cls: CssClasses.layout.leftColumn})
-  const rightSide = mainContainer.createEl('div', {cls: CssClasses.layout.rightColumn})
-  const cubeDiv = leftSide.createEl('div', {cls: CssClasses.layout.content})
+  const mainContainer = container.createDiv({cls: CssClasses.layout.mainContainer})
+  const leftSide = mainContainer.createDiv({cls: CssClasses.layout.leftColumn})
+  const rightSide = mainContainer.createDiv({cls: CssClasses.layout.rightColumn})
+  const cubeDiv = leftSide.createDiv({cls: CssClasses.layout.content})
 
   let setupDiv: HTMLDivElement | undefined = undefined
   let buttonDiv: HTMLDivElement | undefined = undefined
 
-  if (shouldCreateSetupAlgorithmDiv(cubeState))
-    setupDiv = rightSide.createEl('div', {attr: {id: 'setupDiv'}, cls: CssClasses.layout.setupBox})
+  if (shouldCreateSetupAlgorithmDiv(cubeState)) {
+    setupDiv = rightSide.createDiv({attr: {id: 'setupDiv'}, cls: CssClasses.layout.setupBox})
+  }
 
-  if (shouldCreateButtonDiv(cubeState))
-    buttonDiv = leftSide.createEl('div', {attr: {id: 'buttonDiv'}, cls: CssClasses.buttons.container})
+  if (shouldCreateButtonDiv(cubeState)) {
+    buttonDiv = leftSide.createDiv({attr: {id: 'buttonDiv'}, cls: CssClasses.buttons.container})
+  }
 
-  const algorithmsDiv = rightSide.createEl('div', {attr: {id: 'algorithmsDiv'}, cls: CssClasses.layout.algorithmsList})
+  const algorithmsDiv = rightSide.createDiv({attr: {id: 'algorithmsDiv'}, cls: CssClasses.layout.algorithmsList})
 
   return {mainContainer, cubeDiv, setupDiv, buttonDiv, algorithmsDiv}
 }
