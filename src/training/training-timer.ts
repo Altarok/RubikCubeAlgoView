@@ -51,7 +51,7 @@ export class TrainingTimer {
       this.contentEl.addClass(CssClasses.timer.modal)
     }
 
-    this.addTexts(this.contentEl)
+    this.addTexts()
 
     if (this.isOnMobile) {
       /* Mobile: Listen for touch interactions on the entire screen */
@@ -77,14 +77,22 @@ export class TrainingTimer {
   }
 
   /** Add textual hints. Changes based on the platform */
-  private addTexts(contentEl: HTMLElement) {
-    this.scrambleEl = this.contentEl.createEl('div', {text: generateScramble(), cls: CssClasses.timer.scrambleDisplay})
-    this.displayEl = this.contentEl.createEl('h1', {text: noTime, cls: CssClasses.timer.clock})
+  private addTexts() {
+    this.scrambleEl = window.document.createElement('div')
+    this.scrambleEl.textContent = generateScramble()
+    this.scrambleEl.addClass(CssClasses.timer.scrambleDisplay)
+    this.contentEl.appendChild(this.scrambleEl)
+
+    this.displayEl = window.document.createElement('h1')
+    this.displayEl.textContent = noTime
+    this.displayEl.addClass(CssClasses.timer.clock)
+    this.contentEl.appendChild(this.displayEl)
 
     const hint3txt: string = (this.isOnMobile ? 'Tap' : 'Press') + ' to stop.'
     const hint4txt: string = (this.isOnMobile ? 'Tap' : 'Press') + ' to reset and scramble.'
 
-    const upperHintLine = contentEl.createEl('div')
+    const upperHintLine = window.document.createElement('div')
+    this.contentEl.appendChild(upperHintLine)
 
     this.hint1 = window.document.createElement('span')
     this.hint1.textContent = (this.isOnMobile ? 'Tap and hold anywhere' : 'Hold space bar') + ' to ready'
@@ -103,13 +111,13 @@ export class TrainingTimer {
     this.hint3 = window.document.createElement('div')
     this.hint3.textContent = hint3txt
     this.hint3.addClass(CssClasses.timer.hint)
-    contentEl.appendChild(this.hint3)
+    this.contentEl.appendChild(this.hint3)
 
 
     this.hint4 = window.document.createElement('div')
     this.hint4.textContent = hint4txt
     this.hint4.addClass(CssClasses.timer.hint)
-    contentEl.appendChild(this.hint4)
+    this.contentEl.appendChild(this.hint4)
   }
 
   setFocus() {
