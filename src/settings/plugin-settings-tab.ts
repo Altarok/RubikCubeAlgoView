@@ -9,16 +9,19 @@ export type CubeColors = {
 
 export type Settings = CubeColors & {
   cubeRotations: Record<string, number>
+  cubeScaling: number
   activateCommandQuickStartGuide: boolean
   activateCommandCodeblockExamples: boolean
   activateCommandCodeblockTemplates: boolean
   activateRibbonIconForCodeblockCreator: boolean
+
 }
 
 export const DefaultSettings: Settings = {
   cubeColor: '#ffff00', /* yellow */
   arrowColor: '#0088ff', /* sky blue */
   cubeRotations: {},
+  cubeScaling: 100,
   activateCommandQuickStartGuide: true,
   activateCommandCodeblockExamples: true,
   activateCommandCodeblockTemplates: true,
@@ -83,14 +86,28 @@ export class RubikCubeAlgoSettingsTab extends PluginSettingTab {
             name: 'Reset default colors',
             render: (setting) => {
               setting.addButton(bb => bb
-                .setDestructive()
-                .setButtonText('Reset')
-                .onClick(async () => {
-                  this.plugin.settings.cubeColor = DefaultSettings.cubeColor
-                  this.plugin.settings.arrowColor = DefaultSettings.arrowColor
-                  await this.plugin.saveData(this.plugin.settings)
-                  this.update()
-                }))
+              .setDestructive()
+              .setButtonText('Reset')
+              .onClick(async () => {
+                this.plugin.settings.cubeColor = DefaultSettings.cubeColor
+                this.plugin.settings.arrowColor = DefaultSettings.arrowColor
+                await this.plugin.saveData(this.plugin.settings)
+                this.update()
+              }))
+            }
+          }
+        ]
+      },
+      {
+        type: 'group',
+        heading: 'Display options',
+        items: [
+          {
+            name: 'Scaling',
+            desc: 'Scales cube. Default: 100%',
+            control: {
+              type: 'slider', key: 'cubeScaling',
+              min: 50, max: 150, step: 5, defaultValue: DefaultSettings.cubeScaling
             }
           }
         ]

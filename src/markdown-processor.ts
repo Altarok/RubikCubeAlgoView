@@ -9,7 +9,9 @@ import {Strings} from './consts/strings'
 
 export class GenericMarkdownProcessor extends MarkdownRenderChild {
 
-  constructor(readonly source: string, readonly plugin: RubikCubeAlgos, readonly element: HTMLElement) {
+  constructor(readonly source: string,
+              readonly plugin: RubikCubeAlgos,
+              readonly element: HTMLElement) {
     super(element)
     this.display()
   }
@@ -42,11 +44,11 @@ export class GenericMarkdownProcessor extends MarkdownRenderChild {
     let cubeRenderer: CubeRenderer
     if (cubeState) {
       if (cubeState.algorithmType === 'oll') {
-        cubeRenderer = new CubeRendererOLL(cubeState as CubeStateOll)
+        cubeRenderer = new CubeRendererOLL(this.plugin, cubeState as CubeStateOll)
       } else if (cubeState.algorithmType === 'pll') {
-        cubeRenderer = new CubeRendererPLL(cubeState as CubeStatePll)
+        cubeRenderer = new CubeRendererPLL(this.plugin, cubeState as CubeStatePll)
       } else {
-        cubeRenderer = new CubeRenderer(cubeState)
+        cubeRenderer = new CubeRenderer(this.plugin, cubeState)
       }
       cubeRenderer.display(this.element)
     }

@@ -8,6 +8,7 @@ import createCubeLayout, {CubeLayout} from './cube-layout'
 import {setIcon} from 'obsidian'
 import {InvalidInput} from '../model/invalid-input-container'
 import {Strings} from '../consts/strings'
+import RubikCubeAlgos from '../main'
 
 const CssClasses = Strings.CssClasses
 
@@ -28,7 +29,8 @@ export class CubeRenderer {
   mainCubeSvg?: SVGSVGElement
   isInvalidInput: boolean
 
-  constructor(private readonly cubeState: CubeState) {
+  constructor(readonly plugin: RubikCubeAlgos,
+              private readonly cubeState: CubeState) {
     this.isInvalidInput = cubeState.codeBlockInterpretationFailed()
   }
 
@@ -148,8 +150,11 @@ export class CubeRenderer {
   private displayCubeBackground(element: HTMLElement, viewBoxWidth: number, viewBoxHeight: number): SVGSVGElement {
     const isDefault = this.cubeState.isDefaultSize()
 
-    const width = isDefault ? 200 : viewBoxWidth /* image width */
-    const height = isDefault ? 200 : viewBoxHeight /* image height */
+    /* image width */
+    const width = (isDefault ? 200 : viewBoxWidth) * (this.plugin.settings.cubeScaling / 100)
+    /* image height */
+    const height = (isDefault ? 200 : viewBoxHeight) * (this.plugin.settings.cubeScaling / 100)
+
 
     this.mainCubeSvg = element.createSvg('svg', {
       attr: {width, height, viewBox: `0 0 ${viewBoxWidth} ${viewBoxHeight}`},
@@ -160,7 +165,6 @@ export class CubeRenderer {
 
     /* Background rectangle */
     SvgUtils.drawBackgroundRect(this.mainCubeSvg, this.cubeState.cubeColor)
-
     return this.mainCubeSvg
   }
 
@@ -179,8 +183,9 @@ export class CubeRenderer {
 
 export class CubeRendererPLL extends CubeRenderer {
 
-  constructor(private readonly cubeStatePll: CubeStatePll) {
-    super(cubeStatePll)
+  constructor(plugin: RubikCubeAlgos,
+              private readonly cubeStatePll: CubeStatePll) {
+    super(plugin, cubeStatePll)
   }
 
   displayCubeForeground(svgElement: SVGSVGElement, viewBoxWidth: number, viewBoxHeight: number): void {
@@ -201,8 +206,9 @@ export class CubeRendererPLL extends CubeRenderer {
 
 export class CubeRendererOLL extends CubeRenderer {
 
-  constructor(private readonly cubeStateOll: CubeStateOll) {
-    super(cubeStateOll)
+  constructor(plugin: RubikCubeAlgos,
+              private readonly cubeStateOll: CubeStateOll) {
+    super(plugin, cubeStateOll)
   }
 
   displayCubeForeground(svgElement: SVGSVGElement, viewBoxWidth: number, viewBoxHeight: number): void {

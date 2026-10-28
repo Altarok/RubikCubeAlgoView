@@ -32,7 +32,7 @@ export class MarkdownProcessorOll extends MarkdownRenderChild {
     const backupColors: CubeColors = createBackupColors(this.plugin.settings)
     const cubeState: CubeStateOll = new CubeStateBuilder(this.source, backupColors).buildOll(this.plugin.settings)
 
-    const cubeRenderer = new CubeRendererOLL(cubeState)
+    const cubeRenderer = new CubeRendererOLL(this.plugin, cubeState)
     cubeRenderer.display(this.element)
 
     if (!cubeState.codeBlockInterpretationFailed()) {
