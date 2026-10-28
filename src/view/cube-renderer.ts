@@ -256,7 +256,7 @@ export class CubeRendererOLL extends CubeRenderer {
   displayAlgorithms(container: HTMLDivElement) {
     const {selectedAlgorithmHash, algorithmToArrows, uniqueIdForRadioButtons} = this.cubeStateOll
     if (selectedAlgorithmHash === undefined) return /* Fail-safe, nothing selected */
-    UiUtils.renderAlgorithmSelect(container, algorithmToArrows.getAllItems(), selectedAlgorithmHash, uniqueIdForRadioButtons)
+    UiUtils.renderAlgorithmSelect(this.plugin.app, container, algorithmToArrows.getAllItems(), selectedAlgorithmHash, uniqueIdForRadioButtons)
   }
 }
 

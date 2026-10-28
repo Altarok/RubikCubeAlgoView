@@ -366,3 +366,8 @@ h1.rubik-cube-algs-timer-running,
   color: var(--text-success);
   font-weight: bold;
 }
+
+.rubik-cube-algs-algorithms-list p {
+  margin: 0;
+  display: inline;
+}

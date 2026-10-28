@@ -1,3 +1,4 @@
+import {App, Component, MarkdownRenderer} from 'obsidian'
 import {Strings} from '../consts/strings'
 import {Algorithm} from '../model/algorithms'
 import {InvalidInput} from '../model/invalid-input-container'
@@ -76,8 +77,11 @@ function renderAlgorithmSetup(container: HTMLElement, setupAlgorithm?: Algorithm
 /**
  * Renders a list of algorithms with radio buttons for selection (used by OLL).
  */
-function renderAlgorithmSelect(
-  container: HTMLElement, algorithms: Algorithm[], selectedIndex: string, uniqueIdForRadioButtons: string): void {
+function renderAlgorithmSelect(app: App,
+                               container: HTMLElement,
+                               algorithms: Algorithm[],
+                               selectedIndex: string,
+                               uniqueIdForRadioButtons: string): void {
   const ul = container.createEl('ul')
   const radioDiv = ul.createDiv({attr: {id: 'oll-radio-buttons-div'}})
 
@@ -98,14 +102,22 @@ function renderAlgorithmSelect(
         ...(isChecked && {checked: true}) // only add checked attribute if true
       }
     })
-
-    let radioBtnLabel: HTMLLabelElement = radioDiv.createEl('label', {
+    
+    const radioBtnLabel: HTMLLabelElement = radioDiv.createEl('label', {
+      cls: 'rubik-cube-algs-algorithms-list',
       attr: {
         for: uniqueId, // allows users to click the text to select the button
         id: 'forBtn' + uniqueId
       },
-      text: item.toString()
     })
+
+    void MarkdownRenderer.render(
+      app,
+      item.toString(),
+      radioBtnLabel,
+      '',
+      new Component()
+    )
     radioDiv.createEl('br')
 
     item.algorithmLabel = radioBtnLabel
