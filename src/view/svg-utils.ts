@@ -43,14 +43,15 @@ function drawGrid(svg: SVGSVGElement, width: number, height: number, offset = 0)
   }
 }
 
-function drawArrows(svg: SVGSVGElement, arrows: Arrows, stroke: string) {
+function drawArrows(svg: SVGSVGElement, arrows: Arrows, stroke: string, uniqueCubeId: string) {
+  const colorKey = stroke.replace('#', '')
   arrows.forEach(({start, end}) => {
     svg.createSvg('line', {
       attr: {
         x1: start.x, y1: start.y,
         x2: end.x, y2: end.y,
-        'marker-end': `url(#arrowhead${stroke})`,
-        stroke // shorthand
+        'marker-end': `url(#arrowhead${colorKey}-${uniqueCubeId})`,
+        stroke
       },
       cls: CssClasses.vectorGraphics.arrow
     })
@@ -60,11 +61,12 @@ function drawArrows(svg: SVGSVGElement, arrows: Arrows, stroke: string) {
 /**
  * Creates the <defs> and <marker> required for the arrow tips.
  */
-function createArrowHead(svg: SVGSVGElement, color: string) {
+function createArrowHead(svg: SVGSVGElement, color: string, uniqueCubeId: string) {
+  const colorKey = color.replace('#', '')
   const defs = svg.createSvg('defs')
   const marker = defs.createSvg('marker', {
     attr: {
-      id: 'arrowhead' + color,
+      id: `arrowhead${colorKey}-${uniqueCubeId}`,
       markerWidth: '10',
       markerHeight: '7',
       refX: '9',

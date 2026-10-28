@@ -183,12 +183,12 @@ const Commands = {
  * Event names
  */
 const Events = {
-  /** Triggers re-rendering of markdown code blocks. Used when settings change. */
+  /** Triggers re-rendering of Markdown code blocks. Used when settings change. */
   rerenderCodeBlocks: 'rca-event:rerender-markdown-code-blocks'
 }
 
 /**
- * Added list of css classes used in project to search for references.
+ * Added list of CSS classes used in project to search for references.
  */
 const CssClasses = {
   /** Top-level layout grids, columns, and responsive pane structures */

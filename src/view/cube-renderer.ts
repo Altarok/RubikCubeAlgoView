@@ -156,7 +156,7 @@ export class CubeRenderer {
       cls: CssClasses.vectorGraphics.border
     })
 
-    SvgUtils.createArrowHead(this.mainCubeSvg, this.cubeState.arrowColor)
+    SvgUtils.createArrowHead(this.mainCubeSvg, this.cubeState.arrowColor, this.cubeState.uniqueIdForRadioButtons)
 
     /* Background rectangle */
     SvgUtils.drawBackgroundRect(this.mainCubeSvg, this.cubeState.cubeColor)
@@ -188,7 +188,7 @@ export class CubeRendererPLL extends CubeRenderer {
   }
 
   displayArrows(mainSvg: SVGSVGElement): void {
-    SvgUtils.drawArrows(mainSvg, this.cubeStatePll.arrowCoordinates, this.cubeStatePll.arrowColor)
+    SvgUtils.drawArrows(mainSvg, this.cubeStatePll.arrowCoordinates, this.cubeStatePll.arrowColor, this.cubeStatePll.uniqueIdForRadioButtons)
   }
 
   displayAlgorithms(container: HTMLDivElement): void {
@@ -244,7 +244,7 @@ export class CubeRendererOLL extends CubeRenderer {
 
   displayArrows(mainSvg: SVGSVGElement): void {
     const {arrowColor} = this.cubeStateOll
-    SvgUtils.drawArrows(mainSvg, this.cubeStateOll.currentArrowCoordinates(), arrowColor)
+    SvgUtils.drawArrows(mainSvg, this.cubeStateOll.currentArrowCoordinates(), arrowColor, this.cubeStateOll.uniqueIdForRadioButtons)
   }
 
   displayAlgorithms(container: HTMLDivElement) {

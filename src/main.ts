@@ -29,7 +29,7 @@ export default class RubikCubeAlgos extends Plugin {
   }
 
   onunload() {
-    // todo
+    // what now
   }
 
   async loadSettings() {

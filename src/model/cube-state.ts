@@ -21,6 +21,7 @@ export type CubeState = {
   /** Container for invalid code block content */
   readonly invalidInput: InvalidInput[]
   readonly splitCodeBlockInput: string[]
+  readonly uniqueIdForRadioButtons: string
 
   /* Rotation variables */
   currentRotation: number /* any integer */
