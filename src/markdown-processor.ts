@@ -44,11 +44,11 @@ export class GenericMarkdownProcessor extends MarkdownRenderChild {
     let cubeRenderer: CubeRenderer
     if (cubeState) {
       if (cubeState.algorithmType === 'oll') {
-        cubeRenderer = new CubeRendererOLL(this.plugin, cubeState as CubeStateOll)
+        cubeRenderer = new CubeRendererOLL(this.plugin, this, cubeState as CubeStateOll)
       } else if (cubeState.algorithmType === 'pll') {
-        cubeRenderer = new CubeRendererPLL(this.plugin, cubeState as CubeStatePll)
+        cubeRenderer = new CubeRendererPLL(this.plugin, this, cubeState as CubeStatePll)
       } else {
-        cubeRenderer = new CubeRenderer(this.plugin, cubeState)
+        cubeRenderer = new CubeRenderer(this.plugin, this, cubeState)
       }
       cubeRenderer.display(this.element)
     }
