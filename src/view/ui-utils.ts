@@ -81,7 +81,8 @@ function renderAlgorithmSelect(app: App,
                                container: HTMLElement,
                                algorithms: Algorithm[],
                                selectedIndex: string,
-                               uniqueIdForRadioButtons: string): void {
+                               uniqueIdForRadioButtons: string,
+                               component: Component): void {
   const ul = container.createEl('ul')
   const radioDiv = ul.createDiv({attr: {id: 'oll-radio-buttons-div'}})
 
@@ -102,7 +103,7 @@ function renderAlgorithmSelect(app: App,
         ...(isChecked && {checked: true}) // only add checked attribute if true
       }
     })
-    
+
     const radioBtnLabel: HTMLLabelElement = radioDiv.createEl('label', {
       cls: 'rubik-cube-algs-algorithms-list',
       attr: {
@@ -116,7 +117,7 @@ function renderAlgorithmSelect(app: App,
       item.toString(),
       radioBtnLabel,
       '',
-      new Component()
+      component
     )
     radioDiv.createEl('br')
 

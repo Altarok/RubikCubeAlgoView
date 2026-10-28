@@ -5,7 +5,7 @@ import {SvgUtils} from './svg-utils'
 import {UiUtils} from './ui-utils'
 import {applyRotation} from './dom-rotation'
 import createCubeLayout, {CubeLayout} from './cube-layout'
-import {setIcon} from 'obsidian'
+import {MarkdownRenderChild, setIcon} from 'obsidian'
 import {InvalidInput} from '../model/invalid-input-container'
 import {Strings} from '../consts/strings'
 import RubikCubeAlgos from '../main'
@@ -29,7 +29,9 @@ export class CubeRenderer {
   mainCubeSvg?: SVGSVGElement
   isInvalidInput: boolean
 
+
   constructor(readonly plugin: RubikCubeAlgos,
+              readonly component: MarkdownRenderChild,
               private readonly cubeState: CubeState) {
     this.isInvalidInput = cubeState.codeBlockInterpretationFailed()
   }
@@ -184,8 +186,9 @@ export class CubeRenderer {
 export class CubeRendererPLL extends CubeRenderer {
 
   constructor(plugin: RubikCubeAlgos,
+              component: MarkdownRenderChild,
               private readonly cubeStatePll: CubeStatePll) {
-    super(plugin, cubeStatePll)
+    super(plugin, component, cubeStatePll)
   }
 
   displayCubeForeground(svgElement: SVGSVGElement, viewBoxWidth: number, viewBoxHeight: number): void {
@@ -207,8 +210,9 @@ export class CubeRendererPLL extends CubeRenderer {
 export class CubeRendererOLL extends CubeRenderer {
 
   constructor(plugin: RubikCubeAlgos,
+              component: MarkdownRenderChild,
               private readonly cubeStateOll: CubeStateOll) {
-    super(plugin, cubeStateOll)
+    super(plugin, component, cubeStateOll)
   }
 
   displayCubeForeground(svgElement: SVGSVGElement, viewBoxWidth: number, viewBoxHeight: number): void {
@@ -256,7 +260,8 @@ export class CubeRendererOLL extends CubeRenderer {
   displayAlgorithms(container: HTMLDivElement) {
     const {selectedAlgorithmHash, algorithmToArrows, uniqueIdForRadioButtons} = this.cubeStateOll
     if (selectedAlgorithmHash === undefined) return /* Fail-safe, nothing selected */
-    UiUtils.renderAlgorithmSelect(this.plugin.app, container, algorithmToArrows.getAllItems(), selectedAlgorithmHash, uniqueIdForRadioButtons)
+    UiUtils.renderAlgorithmSelect(this.plugin.app, container, algorithmToArrows.getAllItems(), selectedAlgorithmHash, uniqueIdForRadioButtons,
+      this.component)
   }
 }
 
