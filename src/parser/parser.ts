@@ -3,6 +3,7 @@ import {Dimensions} from '../model/geometry'
 import {RegEx} from './regex-util'
 import {Flags, FlagType} from '../model/flags'
 import {InvalidInput} from '../model/invalid-input-container'
+import {AlgorithmInput} from '../model/types'
 
 export type Result<T> =
   | { success: true; data: T }
@@ -25,13 +26,14 @@ function isAlgorithmStep(value: string): value is AlgorithmStep {
   return (possibleSteps as readonly string[]).includes(value)
 }
 
+
 /**
  * @param line - pre-trimmed line containing algorithm steps, no 'alg:'-prefix, no comments
- * @param completeLine - used to mark part of code block if given input is invalid
+ * @param algorithmInput - used to mark part of code block if given input is invalid
  */
-function toAlgorithm(line: string, completeLine: string): Result<Algorithm> {
+function toAlgorithm(line: string, algorithmInput: AlgorithmInput): Result<Algorithm> {
   if (!RegEx.isAlgorithm(line)) {
-    return {success: false, error: InvalidInput.ofAlgorithm(completeLine)}
+    return {success: false, error: InvalidInput.ofAlgorithm(algorithmInput.completeLine)}
   }
 
   let splitSteps: string[] = line.split(' ')
@@ -42,10 +44,10 @@ function toAlgorithm(line: string, completeLine: string): Result<Algorithm> {
       steps.push(step)
     } else {
       /* This should technically be unreachable if the Regex is perfect */
-      return {success: false, error: new InvalidInput(completeLine, 'Unknown rotation step: ' + step)}
+      return {success: false, error: new InvalidInput(algorithmInput.completeLine, 'Unknown rotation step: ' + step)}
     }
   }
-  return {success: true, data: new Algorithm(steps)}
+  return {success: true, data: new Algorithm(steps, algorithmInput.comment)}
 }
 
 /**

@@ -9,6 +9,8 @@ import {OllFieldColoring} from './oll-field-coloring'
 import {StringUtils} from '../parser/string-utils'
 import {knownOllCases, knownPllCases, PredefinedCaseRubikOll, PredefinedCaseRubikPll} from '../consts/predefined-cases'
 import {InvalidInput} from './invalid-input-container'
+import {isWrappedInDots, removeComments} from './cube-state-builder-utils'
+import {AlgorithmInput} from './types'
 
 export const InputKeys: string[] = [
   /* Algorithm input, 0-n lines */
@@ -39,7 +41,7 @@ export default class CubeStateBuilder {
    * key: input of interest<br>
    * value: complete line for potential error handling
    */
-  algorithmInput = new Map<string, string>()
+  algorithmInput = new Map<string, AlgorithmInput>()
   arrowColor: string
   /** PLL only: User input keyed 'arrows'. E.g. '1+3,4+8' */
   arrowsPll: string[] = []
@@ -78,23 +80,25 @@ export default class CubeStateBuilder {
       let pllCaseData: PredefinedCaseRubikPll | undefined = knownPllCases[this.id]
       if (pllCaseData) {
         if (pllCaseData.setup) {
-          this.setSetup(Parse.toAlgorithm(pllCaseData.setup, pllCaseData.setup))
+          this.setSetup(Parse.toAlgorithm(pllCaseData.setup, {value: '', completeLine: pllCaseData.setup}))
         }
         let res = Parse.toArrows(pllCaseData.arrows, this.id)
         if (res.success) arrows = this.setupArrowCoordinates(res.data)
         else this.pushError(res.error)
         // arrows = this.setupArrowCoordinates(pllCaseData.arrows)
         for (const algorithm of pllCaseData.algorithms) {
-          const result = Parse.toAlgorithm(algorithm, this.id)
+          const result = Parse.toAlgorithm(algorithm, {value: '', completeLine: this.id})
           // const result = Parse.toAlgorithm(row, completeLine)
-          if (result.success) algorithms.add(result.data); else this.pushError(result.error)
+          if (result.success) algorithms.add(result.data)
+          else this.pushError(result.error)
         }
       }
     }
 
-    for (const [row, completeLine] of this.algorithmInput) {
-      const result = Parse.toAlgorithm(row, completeLine)
-      if (result.success) algorithms.add(result.data); else this.pushError(result.error)
+    for (const [row, algorithmInput] of this.algorithmInput) {
+      const result = Parse.toAlgorithm(row, algorithmInput)
+      if (result.success) algorithms.add(result.data)
+      else this.pushError(result.error)
     }
     if (!arrows || this.arrowsPll?.length > 0) {
       arrows = this.setupArrowCoordinates(this.arrowsPll)
@@ -140,14 +144,14 @@ export default class CubeStateBuilder {
       let ollCaseData: PredefinedCaseRubikOll | undefined = knownOllCases[this.id]
       if (ollCaseData) {
         if (ollCaseData.setup) {
-          this.setSetup(Parse.toAlgorithm(ollCaseData.setup, ollCaseData.setup))
+          this.setSetup(Parse.toAlgorithm(ollCaseData.setup, {value: '', completeLine: ollCaseData.setup}))
         }
         let hash: string = StringUtils.cubeHash(this.id, 'oll')
         presetRotation = settings.cubeRotations[hash]
         presetOutline = ollCaseData.ollPattern
         for (const algorithm of ollCaseData.algorithms) {
           if (!this.algorithmInput.has(algorithm))
-            this.algorithmInput.set(algorithm, this.id)
+            this.algorithmInput.set(algorithm, {value: '', completeLine: this.id})
         }
       }
     }
@@ -175,12 +179,6 @@ export default class CubeStateBuilder {
     return cubeState
   }
 
-  private removeComments(input: string | undefined): string | undefined {
-    if (input?.includes('//'))
-      return input.split('//')[0]!.trim()
-    else
-      return input
-  }
 
   private readRawInput() {
     for (const singleLine of this.splitUserInput) {
@@ -188,22 +186,25 @@ export default class CubeStateBuilder {
       if (s.startsWith('//')) continue /* skip comment lines */
       let strings = s.split(':')
       if (!strings[0]) continue  /* skip falsy input (should not happen by now ) */
-      let key: string = this.removeComments(strings[0].trim())!
-      let value: string | undefined = this.removeComments(strings[1]?.trim() ?? undefined)
-      if (InputKeys.includes(key) && value) this.interpretKnownInput(key, value, singleLine)
+      let key: string = removeComments(strings[0].trim()).input!
+      const valueRaw: { input?: string, comment?: string } = removeComments(strings[1]?.trim())
+      if (InputKeys.includes(key) && valueRaw.input)
+        this.interpretKnownInput(key, valueRaw.input, singleLine, valueRaw.comment)
       else this.undeclaredUserInputForOllField.push(key)
     }
   }
 
   /**
    * @param key left of :
-   * @param value right of :
+   * @param value usable part right of :
    * @param completeLine key:value // comment
+   * @param comment comment right of //
    */
-  private interpretKnownInput(key: string, value: string, completeLine: string): void {
+  private interpretKnownInput(key: string, value: string, completeLine: string, comment?: string): void {
+    // let value: string = valueRaw.input
     switch (key) {
       case 'alg':
-        this.algorithmInput.set(value, completeLine)
+        this.algorithmInput.set(value, {value, completeLine, comment})
         break
       case 'arrowColor':
         return this.setArrowColor(Parse.toArrowColor(value, completeLine))
@@ -219,7 +220,7 @@ export default class CubeStateBuilder {
         this.id = value
         break
       case 'setup':
-        return this.setSetup(Parse.toAlgorithm(value, completeLine))
+        return this.setSetup(Parse.toAlgorithm(value, {value: '', completeLine: completeLine, comment: 'setup'}))
       default:
         this.pushError(new InvalidInput(completeLine, `Unknown key '${key}'`))
         break
@@ -267,15 +268,15 @@ export default class CubeStateBuilder {
     let initialAlgorithmSelectionHash = ''
 
     if (this.algorithmInput.size > 0) {
-      for (const [row, completeLine] of this.algorithmInput) {
+      for (const [row, algorithmInput] of this.algorithmInput) {
 
         const [algInput, arrowInput] = row.split(/ *== */)
 
-        const result = Parse.toAlgorithm(algInput!, completeLine)
+        const result = Parse.toAlgorithm(algInput!, algorithmInput)
         if (result.success) {
           let matchingArrows: Arrows = []
           if (arrowInput) {
-            let res = Parse.toArrows(arrowInput, completeLine)
+            let res = Parse.toArrows(arrowInput, algorithmInput.completeLine)
             if (res.success) matchingArrows = this.setupArrowCoordinates(res.data)
             else this.pushError(res.error)
           }
@@ -292,14 +293,6 @@ export default class CubeStateBuilder {
     return initialAlgorithmSelectionHash
   }
 
-  /**
-   * @param str - gets checked
-   * @returns true if given string starts and ends with '.'
-   */
-  private isWrappedInDots(str: string): boolean {
-    return str.startsWith('.') && str.endsWith('.')
-  }
-
   private setupRawOllInput(ollFieldInput: OllFieldColoring): void {
 
     let rawOllInput: string[] = this.undeclaredUserInputForOllField
@@ -311,7 +304,7 @@ export default class CubeStateBuilder {
     const firstRow = rawOllInput[0]!
     const lastRow = rawOllInput[rawOllInput.length - 1]!
 
-    if (!this.isWrappedInDots(firstRow) || !this.isWrappedInDots(lastRow)) {
+    if (!isWrappedInDots(firstRow) || !isWrappedInDots(lastRow)) {
       return this.pushError(new InvalidInput(firstRow, `First '${firstRow}' and last '${lastRow}' line should start and end on a dot ('.')!`))
     }
 
@@ -338,27 +331,33 @@ export default class CubeStateBuilder {
   }
 
   private setArrowColor(result: Result<string>): void {
-    if (result.success) this.arrowColor = result.data; else this.pushError(result.error)
+    if (result.success) this.arrowColor = result.data
+    else this.pushError(result.error)
   }
 
   private setArrowsPll(result: Result<string[]>) {
-    if (result.success) this.arrowsPll = result.data; else this.pushError(result.error)
+    if (result.success) this.arrowsPll = result.data
+    else this.pushError(result.error)
   }
 
   private setCubeColor(result: Result<string>) {
-    if (result.success) this.cubeColor = result.data; else this.pushError(result.error)
+    if (result.success) this.cubeColor = result.data
+    else this.pushError(result.error)
   }
 
   private setDimensions(result: Result<Dimensions>) {
-    if (result.success) this.dimensions = result.data; else this.pushError(result.error)
+    if (result.success) this.dimensions = result.data
+    else this.pushError(result.error)
   }
 
   private setFlags(result: Result<FlagType[]>) {
-    if (result.success) this.flags = result.data; else this.pushError(result.error)
+    if (result.success) this.flags = result.data
+    else this.pushError(result.error)
   }
 
   private setSetup(result: Result<Algorithm>) {
-    if (result.success) this.setup = result.data; else this.pushError(result.error)
+    if (result.success) this.setup = result.data
+    else this.pushError(result.error)
   }
 
   /**

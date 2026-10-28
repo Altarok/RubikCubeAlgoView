@@ -8,7 +8,7 @@ let alg1FRU = createAlgorithm(['F', 'R', 'U'])
 let alg2FLU = createAlgorithm(['F', 'L', 'U'])
 
 function createAlgorithm(steps: AlgorithmStep[]): Algorithm {
-  return new Algorithm(steps)
+  return new Algorithm(steps, 'test object')
 }
 
 describe('Algorithm', () => {

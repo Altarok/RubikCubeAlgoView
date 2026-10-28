@@ -67,7 +67,8 @@ export class Algorithm implements Rotatable {
   algorithmLabel?: HTMLLabelElement
   readonly initialHash: string
 
-  constructor(private steps: AlgorithmStep[]) {
+  constructor(private steps: AlgorithmStep[],
+              readonly comment?: string) {
     this.initialHash = StringUtils.hash(steps.join('') + Algorithm.index++, 1337)
   }
 
@@ -89,7 +90,7 @@ export class Algorithm implements Rotatable {
   }
 
   toString(): string {
-    return this.steps.join(' ')
+    return `${this.steps.join(' ')}${this.comment ? '\u00A0\u00A0\u00A0' + this.comment : ''}`
   }
 }
 
