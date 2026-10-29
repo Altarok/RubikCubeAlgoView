@@ -202,7 +202,7 @@ export class CubeRendererPLL extends CubeRenderer {
   displayAlgorithms(container: HTMLDivElement): void {
     const algorithms: Algorithms = this.cubeStatePll.algorithms
     if (algorithms && algorithms.items.length > 0)   /* Fail-safe, algorithms are optional */
-      UiUtils.renderAlgorithmList(container, algorithms.items)
+      UiUtils.renderAlgorithmList(this.plugin.app, container, algorithms.items, this.component)
   }
 }
 

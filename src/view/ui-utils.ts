@@ -54,13 +54,23 @@ function showInvalidInput(container: HTMLElement, rows: string[], errors: Invali
 /**
  * Renders a simple bullet point list of algorithms (used by PLL).
  */
-function renderAlgorithmList(container: HTMLElement, algorithms: Algorithm[]): void {
+function renderAlgorithmList(app: App,
+                             container: HTMLElement,
+                             algorithms: Algorithm[],
+                             component: Component): void {
   if (algorithms.length === 0) return
 
   const ul = container.createEl('ul')
   algorithms.forEach(item => {
     let li = ul.createEl('li')
-    item.algorithmLabel = li.createEl('label', {text: item.toString()})
+    item.algorithmLabel = li.createEl('label')
+
+    void MarkdownRenderer.render(
+      app,
+      item.toString(),
+      item.algorithmLabel,
+      '',
+      component)
   })
 }
 
@@ -104,7 +114,7 @@ function renderAlgorithmSelect(app: App,
       }
     })
 
-    const radioBtnLabel: HTMLLabelElement = radioDiv.createEl('label', {
+    item.algorithmLabel = radioDiv.createEl('label', {
       cls: 'rubik-cube-algs-algorithms-list',
       attr: {
         for: uniqueId, // allows users to click the text to select the button
@@ -115,12 +125,10 @@ function renderAlgorithmSelect(app: App,
     void MarkdownRenderer.render(
       app,
       item.toString(),
-      radioBtnLabel,
+      item.algorithmLabel,
       '',
-      component
-    )
-    radioDiv.createEl('br')
+      component)
 
-    item.algorithmLabel = radioBtnLabel
+    radioDiv.createEl('br')
   })
 }
