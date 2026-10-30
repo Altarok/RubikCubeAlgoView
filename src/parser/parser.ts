@@ -28,10 +28,12 @@ function isAlgorithmStep(value: string): value is AlgorithmStep {
 
 
 /**
- * @param line - pre-trimmed line containing algorithm steps, no 'alg:'-prefix, no comments
+ * @param inputStr - pre-trimmed line containing algorithm steps, no 'alg:'-prefix, no comments
  * @param algorithmInput - used to mark part of code block if given input is invalid
  */
-function toAlgorithm(line: string, algorithmInput: AlgorithmInput): Result<Algorithm> {
+function toAlgorithm(inputStr: string, algorithmInput: AlgorithmInput): Result<Algorithm> {
+  /* Sanitize all forms of single ticks */
+  const line = inputStr.replace(/[\u0027\u2019\u2018\u2032\u2035\u0060\u00B4\u02B9\u02BC\u02C8\uFF07]/g, "'")
   if (!RegEx.isAlgorithm(line)) {
     return {success: false, error: InvalidInput.ofAlgorithm(algorithmInput.completeLine)}
   }
