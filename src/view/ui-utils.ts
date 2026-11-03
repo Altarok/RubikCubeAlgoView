@@ -51,6 +51,34 @@ function showInvalidInput(container: HTMLElement, rows: string[], errors: Invali
   })
 }
 
+function parseString(text: string, targets: string[]) {
+  let remaining = text
+  const results: Array<{ before: string; match: string; after: string }> = []
+
+  while (remaining.length > 0) {
+    let earliestIndex = -1
+    let matchedSubstr = ''
+
+    for (const target of targets) {
+      const index = remaining.indexOf(target)
+      if (index !== -1 && (earliestIndex === -1 || index < earliestIndex)) {
+        earliestIndex = index
+        matchedSubstr = target
+      }
+    }
+
+    if (earliestIndex === -1) break
+
+    const before = remaining.slice(0, earliestIndex)
+    const after = remaining.slice(earliestIndex + matchedSubstr.length)
+
+    results.push({before, match: matchedSubstr, after})
+    remaining = after
+  }
+
+  return results
+}
+
 /**
  * Renders a simple bullet point list of algorithms (used by PLL).
  */
@@ -60,18 +88,49 @@ function renderAlgorithmList(app: App,
                              component: Component): void {
   if (algorithms.length === 0) return
 
-  const ul = container.createEl('ul')
+  const highlightThis = `R U R' U'`
+
+  const ul: HTMLUListElement = container.createEl('ul')
+
   algorithms.forEach(item => {
+    const markdown = item.toString()
+
+    const matches: { before: string; match: string; after: string }[] = parseString(markdown, [highlightThis])
+    const matchesCount = matches.length
+
+    if (matchesCount === 0) return
+
     let li = ul.createEl('li')
     item.algorithmLabel = li.createEl('label')
 
-    void MarkdownRenderer.render(
-      app,
-      item.toString(),
-      item.algorithmLabel,
-      '',
-      component)
+    matches.forEach((match: { before: string; match: string; after: string }, index: number) => {
+
+      if (match.before) {
+        const span = item.algorithmLabel!.createSpan()
+        addText(app, match.before, span, component)
+      }
+      if (match.match) {
+        const span = item.algorithmLabel!.createSpan({cls: 'rca-highlight'})
+        addText(app, match.match, span, component)
+      }
+      if (index === matchesCount - 1 && match.after) {
+        const span = item.algorithmLabel!.createSpan()
+        addText(app, match.after, span, component)
+      }
+    })
   })
+}
+
+function addText(app: App,
+                 text: string,
+                 container: HTMLElement,
+                 component: Component) {
+  void MarkdownRenderer.render(
+    app,
+    text,
+    container,
+    '',
+    component)
 }
 
 function renderAlgorithmSetup(container: HTMLElement, setupAlgorithm?: Algorithm): void {

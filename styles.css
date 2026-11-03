@@ -371,3 +371,10 @@ h1.rubik-cube-algs-timer-running,
   margin: 0;
   display: inline;
 }
+
+.rca-highlight {
+  background-color: limegreen;
+  color: #000;
+  padding: 1px 1px;
+  border-radius: 2px;
+}
