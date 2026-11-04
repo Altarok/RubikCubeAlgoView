@@ -11,31 +11,25 @@ export class AlgorithmRenderer {
 
   private addText(text: string, container: HTMLElement) {
     void MarkdownRenderer.render(
-      this.app,
+      this.plugin.app,
       text,
       container,
       '',
       this.component)
   }
 
-
-  /**
-   * Renders a simple bullet point list of algorithms (used by PLL).
-   */
+  /** Renders a simple bullet point list of algorithms (used by PLL). */
   renderAlgorithmList(container: HTMLElement,
                       algorithms: Algorithm[]): void {
     if (algorithms.length === 0) return
+    const ul: HTMLUListElement = container.createEl('ul')
 
-
-    algorithms.forEach(item => {
-      const ul: HTMLUListElement = container.createEl('ul')
+    algorithms.forEach(alg => {
       let li = ul.createEl('li')
-      item.algorithmLabel = li.createEl('label')
-      item.algorithmRenderer = this
+      alg.algorithmLabel = li.createEl('label')
+      alg.algorithmRenderer = this
 
-      const markdown = item.toString()
-
-      this.renderTextWithHighlights(markdown, item.algorithmLabel)
+      this.renderTextWithHighlights(alg.toString(), alg.algorithmLabel)
     })
   }
 
@@ -54,11 +48,7 @@ export class AlgorithmRenderer {
         this.addText(match.before, span)
       }
       if (match.match) {
-        const span = container.createSpan({
-          cls: 'rca-highlight'
-          // ,
-          // attr: {backgroundColor: match.color}
-        })
+        const span = container.createSpan({cls: 'rca-highlight'})
         span.style.setProperty('background-color', match.color)
         this.addText(match.match, span)
       }
@@ -97,10 +87,7 @@ export class AlgorithmRenderer {
 
       item.algorithmLabel = radioDiv.createEl('label', {
         cls: 'rubik-cube-algs-algorithms-list',
-        attr: {
-          for: uniqueId, // allows users to click the text to select the button
-          id: 'forBtn' + uniqueId
-        },
+        attr: {for: uniqueId, id: 'forBtn' + uniqueId},  // allows users to click the text to select the button
       })
       item.algorithmRenderer = this
 
@@ -124,7 +111,10 @@ export class AlgorithmRenderer {
       for (const highlight of highlights) {
         const target = highlight.section
 
-        const index = remaining.indexOf(target)
+        const regex = new RegExp(target + '(?=\\b|[\\s\\)])')
+        const match = regex.exec(remaining)
+        const index = match ? match.index : -1
+
         if (index !== -1 && (earliestIndex === -1 || index < earliestIndex)) {
           earliestIndex = index
           matchedSubstr = target
@@ -132,11 +122,8 @@ export class AlgorithmRenderer {
         }
       }
 
-      // if (earliestIndex === -1) break
       if (earliestIndex === -1) {
-        if (results.length === 0) {
-          results.push({before: text, match: '', color: '', after: ''})
-        }
+        if (results.length === 0) results.push({before: text, match: '', color: '', after: ''})
         break
       }
 
@@ -150,9 +137,6 @@ export class AlgorithmRenderer {
     return results
   }
 
-  private get app() {
-    return this.plugin.app
-  }
 
   private get highlights(): SectionHighlight[] {
     return this.settings.highlights
