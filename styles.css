@@ -85,7 +85,7 @@
 
 .rubik-cube-algs-cube-border {
   display: flex;
-  border: 2px solid #666666; /* keep color static; near invisible border around cube */
+  border: 2px solid #666; /* keep color static; near invisible border around cube */
 }
 
 .rubik-cube-algs-cube-background {
@@ -373,7 +373,7 @@ h1.rubik-cube-algs-timer-running,
 }
 
 .rca-highlight {
-  color: #000;
+  color: black;
   padding: 2px;
-  border-radius: 6px 0 6px 0;
+  border-radius: 6px 0;
 }
