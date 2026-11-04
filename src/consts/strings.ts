@@ -107,25 +107,6 @@ const CubeNames = {
   Rubik: 'Rubik Cube'
 } as const
 
-const SettingsUI = {
-  quickStartGuide: {
-    name: 'Quick start guide',
-    desc: 'Use command to add quick start guide to open note.'
-  },
-  examples: {
-    name: 'Code block examples',
-    desc: "Use command to add complete Rubik's Cube algorithm lists to open note."
-  },
-  templates: {
-    name: 'Code block templates',
-    desc: 'Use command to add code block templates for manual.',
-  },
-  hint: {
-    name: 'Hint',
-    desc: 'Reload app or plugin after changing one of those settings!'
-  },
-}
-
 /**
  * Strings (partially) visible to user
  */
@@ -274,6 +255,5 @@ export const Strings = {
   MarkdownCodeBlockNames,
   Commands,
   Events,
-  CssClasses,
-  SettingsUI
+  CssClasses
 } as const

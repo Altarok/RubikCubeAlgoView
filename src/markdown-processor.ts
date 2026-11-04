@@ -8,7 +8,6 @@ import {createBackupColors} from './model/cube-color'
 import {Strings} from './consts/strings'
 
 export class GenericMarkdownProcessor extends MarkdownRenderChild {
-
   constructor(readonly source: string,
               readonly plugin: RubikCubeAlgos,
               readonly element: HTMLElement) {

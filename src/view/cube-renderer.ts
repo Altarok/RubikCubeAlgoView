@@ -1,5 +1,5 @@
 import {CubeState, CubeStateOll, CubeStatePll} from '../model/cube-state'
-import {Algorithms} from '../model/algorithms'
+import {Algorithm, Algorithms} from '../model/algorithms'
 import {OllFieldColoring} from '../model/oll-field-coloring'
 import {SvgUtils} from './svg-utils'
 import {UiUtils} from './ui-utils'
@@ -9,6 +9,7 @@ import {MarkdownRenderChild, setIcon} from 'obsidian'
 import {InvalidInput} from '../model/invalid-input-container'
 import {Strings} from '../consts/strings'
 import RubikCubeAlgos from '../main'
+import {AlgorithmRenderer} from '../renderer/algorithm-md-renderer'
 
 const CssClasses = Strings.CssClasses
 
@@ -29,11 +30,13 @@ export class CubeRenderer {
   mainCubeSvg?: SVGSVGElement
   isInvalidInput: boolean
 
+  protected algorithmRenderer: AlgorithmRenderer
 
   constructor(readonly plugin: RubikCubeAlgos,
               readonly component: MarkdownRenderChild,
               private readonly cubeState: CubeState) {
     this.isInvalidInput = cubeState.codeBlockInterpretationFailed()
+    this.algorithmRenderer = new AlgorithmRenderer(plugin, component)
   }
 
   /**
@@ -139,7 +142,7 @@ export class CubeRenderer {
   private displaySetupAlgorithm() {
     if (!this.layout.setupDiv || this.cubeState.flags.contains('no-setup')) return
 
-    const {setup} = this.cubeState
+    const setup: Algorithm | undefined = this.cubeState.setup
     if (setup === undefined) return /* Fail-safe, nothing selected */
     UiUtils.renderAlgorithmSetup(this.layout.setupDiv, setup)
   }
@@ -202,7 +205,10 @@ export class CubeRendererPLL extends CubeRenderer {
   displayAlgorithms(container: HTMLDivElement): void {
     const algorithms: Algorithms = this.cubeStatePll.algorithms
     if (algorithms && algorithms.items.length > 0)   /* Fail-safe, algorithms are optional */
-      UiUtils.renderAlgorithmList(this.plugin.app, container, algorithms.items, this.component)
+
+      this.algorithmRenderer.renderAlgorithmList(container, algorithms.items)
+
+    // UiUtils.renderAlgorithmList(this.plugin.app, container, algorithms.items, this.component)
   }
 }
 
@@ -260,8 +266,14 @@ export class CubeRendererOLL extends CubeRenderer {
   displayAlgorithms(container: HTMLDivElement) {
     const {selectedAlgorithmHash, algorithmToArrows, uniqueIdForRadioButtons} = this.cubeStateOll
     if (selectedAlgorithmHash === undefined) return /* Fail-safe, nothing selected */
-    UiUtils.renderAlgorithmSelect(this.plugin.app, container, algorithmToArrows.getAllItems(), selectedAlgorithmHash, uniqueIdForRadioButtons,
-      this.component)
+
+    this.algorithmRenderer.renderAlgorithmSelect(container,
+      algorithmToArrows.getAllItems(),
+      selectedAlgorithmHash,
+      uniqueIdForRadioButtons)
+
+    // UiUtils.renderAlgorithmSelect(this.plugin.app, container, algorithmToArrows.getAllItems(), selectedAlgorithmHash, uniqueIdForRadioButtons,
+    //   this.component)
   }
 }
 

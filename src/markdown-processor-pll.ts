@@ -9,8 +9,9 @@ import {CubeStatePll} from './model/cube-state'
 import {Strings} from './consts/strings'
 
 export class MarkdownProcessorPll extends MarkdownRenderChild {
-
-  constructor(readonly source: string, readonly plugin: RubikCubeAlgos, readonly container: HTMLElement) {
+  constructor(readonly source: string,
+              readonly plugin: RubikCubeAlgos,
+              readonly container: HTMLElement) {
     super(container)
     this.display()
   }

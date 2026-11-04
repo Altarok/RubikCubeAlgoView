@@ -1,5 +1,6 @@
 import {Arrows} from './geometry'
 import {StringUtils} from '../parser/string-utils'
+import {AlgorithmRenderer} from '../renderer/algorithm-md-renderer'
 
 export const AlgorithmTypes = ['undefined', 'pll', 'oll'] as const
 export type AlgorithmType = (typeof AlgorithmTypes)[number]
@@ -65,6 +66,7 @@ export class Algorithm implements Rotatable {
   /** Used as salt for hash value */
   static index = 42
   algorithmLabel?: HTMLLabelElement
+  algorithmRenderer?: AlgorithmRenderer
   readonly initialHash: string
 
   constructor(private steps: AlgorithmStep[],
@@ -85,7 +87,11 @@ export class Algorithm implements Rotatable {
     })
 
     if (this.algorithmLabel) {
-      this.algorithmLabel.setText(this.toString())
+      if (this.algorithmRenderer) {
+        this.algorithmRenderer.renderTextWithHighlights(this.toString(), this.algorithmLabel)
+      } else {
+        this.algorithmLabel.setText(this.toString())
+      }
     }
   }
 

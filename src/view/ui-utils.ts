@@ -1,15 +1,12 @@
-import {App, Component, MarkdownRenderer} from 'obsidian'
 import {Strings} from '../consts/strings'
-import {Algorithm} from '../model/algorithms'
 import {InvalidInput} from '../model/invalid-input-container'
+import {Algorithm} from '../model/algorithms'
 
 const CssClasses = Strings.CssClasses
 
 export const UiUtils = {
-  renderAlgorithmList,
-  renderAlgorithmSetup,
-  renderAlgorithmSelect,
-  showInvalidInput
+  showInvalidInput,
+  renderAlgorithmSetup
 }
 
 function findMatchingError(errors: InvalidInput[], row: string): InvalidInput | undefined {
@@ -20,6 +17,16 @@ function findMatchingError(errors: InvalidInput[], row: string): InvalidInput | 
     }
   })
   return res
+}
+
+function renderAlgorithmSetup(container: HTMLElement, setupAlgorithm?: Algorithm): void {
+  if (!setupAlgorithm) return
+
+  // const ul =
+  container.createDiv({text: `Setup: ${setupAlgorithm.toString()}`})
+
+  // let li = ul.createEl('li')
+  // item.algorithmLabel = li.createEl('label', {text: item.toString()})
 }
 
 /**
@@ -48,146 +55,5 @@ function showInvalidInput(container: HTMLElement, rows: string[], errors: Invali
     } else {
       listContainer.createDiv({text: row})
     }
-  })
-}
-
-function parseString(text: string, targets: string[]) {
-  let remaining = text
-  const results: Array<{ before: string; match: string; after: string }> = []
-
-  while (remaining.length > 0) {
-    let earliestIndex = -1
-    let matchedSubstr = ''
-
-    for (const target of targets) {
-      const index = remaining.indexOf(target)
-      if (index !== -1 && (earliestIndex === -1 || index < earliestIndex)) {
-        earliestIndex = index
-        matchedSubstr = target
-      }
-    }
-
-    if (earliestIndex === -1) break
-
-    const before = remaining.slice(0, earliestIndex)
-    const after = remaining.slice(earliestIndex + matchedSubstr.length)
-
-    results.push({before, match: matchedSubstr, after})
-    remaining = after
-  }
-
-  return results
-}
-
-/**
- * Renders a simple bullet point list of algorithms (used by PLL).
- */
-function renderAlgorithmList(app: App,
-                             container: HTMLElement,
-                             algorithms: Algorithm[],
-                             component: Component): void {
-  if (algorithms.length === 0) return
-
-  const highlightThis = `R U R' U'`
-
-  const ul: HTMLUListElement = container.createEl('ul')
-
-  algorithms.forEach(item => {
-    const markdown = item.toString()
-
-    const matches: { before: string; match: string; after: string }[] = parseString(markdown, [highlightThis])
-    const matchesCount = matches.length
-
-    if (matchesCount === 0) return
-
-    let li = ul.createEl('li')
-    item.algorithmLabel = li.createEl('label')
-
-    matches.forEach((match: { before: string; match: string; after: string }, index: number) => {
-
-      if (match.before) {
-        const span = item.algorithmLabel!.createSpan()
-        addText(app, match.before, span, component)
-      }
-      if (match.match) {
-        const span = item.algorithmLabel!.createSpan({cls: 'rca-highlight'})
-        addText(app, match.match, span, component)
-      }
-      if (index === matchesCount - 1 && match.after) {
-        const span = item.algorithmLabel!.createSpan()
-        addText(app, match.after, span, component)
-      }
-    })
-  })
-}
-
-function addText(app: App,
-                 text: string,
-                 container: HTMLElement,
-                 component: Component) {
-  void MarkdownRenderer.render(
-    app,
-    text,
-    container,
-    '',
-    component)
-}
-
-function renderAlgorithmSetup(container: HTMLElement, setupAlgorithm?: Algorithm): void {
-  if (!setupAlgorithm) return
-
-  // const ul =
-  container.createDiv({text: `Setup: ${setupAlgorithm.toString()}`})
-
-  // let li = ul.createEl('li')
-  // item.algorithmLabel = li.createEl('label', {text: item.toString()})
-}
-
-/**
- * Renders a list of algorithms with radio buttons for selection (used by OLL).
- */
-function renderAlgorithmSelect(app: App,
-                               container: HTMLElement,
-                               algorithms: Algorithm[],
-                               selectedIndex: string,
-                               uniqueIdForRadioButtons: string,
-                               component: Component): void {
-  const ul = container.createEl('ul')
-  const radioDiv = ul.createDiv({attr: {id: 'oll-radio-buttons-div'}})
-
-  algorithms.forEach((item, i) => {
-    const isChecked = selectedIndex === item.initialHash
-
-    const uniqueId = item.initialHash
-    // uniqueIdForRadioButtons + i.toString() // unique identifier for EACH element
-
-    // console.log(`draw algorithm (${uniqueId}): ${item.toString()}, checked:${isChecked}`)
-
-    radioDiv.createEl('input', { // create HTMLInputElement
-      attr: {
-        type: 'radio', // radio button
-        name: uniqueIdForRadioButtons, // unique identifier for radio button grp
-        id: uniqueId,
-        value: i.toString(), // consts sent to the script ('backend') when the form is submitted
-        ...(isChecked && {checked: true}) // only add checked attribute if true
-      }
-    })
-
-    item.algorithmLabel = radioDiv.createEl('label', {
-      cls: 'rubik-cube-algs-algorithms-list',
-      attr: {
-        for: uniqueId, // allows users to click the text to select the button
-        id: 'forBtn' + uniqueId
-      },
-    })
-
-    void MarkdownRenderer.render(
-      app,
-      item.toString(),
-      item.algorithmLabel,
-      '',
-      component)
-
-    radioDiv.createEl('br')
   })
 }
