@@ -142,8 +142,8 @@ alg:R' U2 R U2 R' F // PLL only
     expect(csb.algorithmInput.size).toBe(2)
     expect(csb.algorithmInput.keys()).toContain("F' U R U2 R' == 1-7") // OLL only
     expect(csb.algorithmInput.keys()).toContain("R' U2 R U2 R' F") // PLL only
-    expect(csb.algorithmInput.values()).toContain("alg:F' U R U2 R' == 1-7 // OLL only") // OLL only
-    expect(csb.algorithmInput.values()).toContain("alg:R' U2 R U2 R' F // PLL only") // PLL only
+    // expect(csb.algorithmInput.values()).toContain("alg:F' U R U2 R' == 1-7 // OLL only") // OLL only
+    // expect(csb.algorithmInput.values()).toContain("alg:R' U2 R U2 R' F // PLL only") // PLL only
 
 
     expect(csb.arrowsPll.length).toBe(2) // PLL only

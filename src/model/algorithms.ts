@@ -1,6 +1,7 @@
 import {Arrows} from './geometry'
 import {StringUtils} from '../parser/string-utils'
 import {AlgorithmRenderer} from '../renderer/algorithm-md-renderer'
+import {AlgorithmPart, AlgorithmStep, isAlgorithmStep} from './algorithm-types'
 
 export const AlgorithmTypes = ['undefined', 'pll', 'oll'] as const
 export type AlgorithmType = (typeof AlgorithmTypes)[number]
@@ -8,33 +9,6 @@ export type AlgorithmType = (typeof AlgorithmTypes)[number]
 export type Rotatable = {
   rotate: (quarterTurns: number) => void
 }
-
-export const possibleSteps = [
-  "R", "R'", "R2", // right side
-  "r", "r'", "r2", // right side, 2 layers deep ('r' is alternative to 'Rw')
-  "L", "L'", "L2", // left side
-  "l", "l'", "l2", // left side, 2 layers deep ('l' is alternative to 'Lw')
-  "F", "F'", "F2", // front
-  "f", "f'", "f2", // front, 2 layers deep ('f' is alternative to 'Fw')
-  "B", "B'", "B2", // back
-  "b", "b'", "b2", // back, 2 layers deep ('b' is alternative to 'Bw')
-  "U", "U'", "U2", // top
-  "u", "u'", "u2", // top, 2 layers deep ('u' is alternative to 'Uw')
-  "D", "D'", "D2", // bottom
-  "d", "d'", "d2", // bottom, 2 layers deep ('d' is alternative to 'Dw')
-
-  "x", "x'", "x2", // whole cube, around X axis (to the right)
-  "y", "y'", "y2", // "y0", // whole cube, around Y axis (to the top)
-  "z", "z'", "z2", // whole cube, around Z axis (to the front)
-
-  "M", "M'", "M2", // vertical middle layer, around X axis, 90 degrees to the front (like L or R-prime)
-  "S", "S'", "S2", // vertical middle layer, around Z axis, 90 degrees to the right (like F or B-prime)
-  "E", "E'", "E2"  // horizontal middle layer, around Y axis, 90 degrees to the right (like D or U-prime)
-  //,
-  // '(', ')'
-] as const
-
-export type AlgorithmStep = (typeof possibleSteps)[number]
 
 type TurnCubeMap = Record<AlgorithmStep, AlgorithmStep>
 
@@ -57,8 +31,7 @@ const turnCubeLeftMap: TurnCubeMap = {
   "z": "x'", "z'": "x", "z2": "x2", // !! non-linear changes
   "M": "S'", "M'": "S", "M2": "S2", // !! non-linear changes
   "S": "M", "S'": "M'", "S2": "M2", // !! non-linear changes
-  "E": "E", "E'": "E'", "E2": "E2" // ,
-  // '(': '(', ')': ')'
+  "E": "E", "E'": "E'", "E2": "E2"
 }
 
 /**
@@ -72,7 +45,7 @@ export class Algorithm implements Rotatable {
   algorithmRenderer?: AlgorithmRenderer
   readonly initialHash: string
 
-  constructor(private steps: AlgorithmStep[],
+  constructor(private steps: AlgorithmPart[],
               readonly comment?: string) {
     this.initialHash = StringUtils.hash(steps.join('') + Algorithm.index++, 1337)
   }
@@ -84,9 +57,11 @@ export class Algorithm implements Rotatable {
     this.steps = this.steps.map(step => {
       let current = step
       for (let i = 0; i < turns; i++) {
-        current = turnCubeLeftMap[current]
+        current = isAlgorithmStep(current)
+          ? turnCubeLeftMap[current]
+          : current
       }
-      return current
+      return current // as AlgorithmPart
     })
 
     if (this.algorithmLabel) {
@@ -99,7 +74,10 @@ export class Algorithm implements Rotatable {
   }
 
   toString(): string {
-    return `${this.steps.join(' ')}${this.comment ? '\u00A0\u00A0\u00A0' + this.comment : ''}`
+    let algo = this.steps.join(' ')
+    algo = algo.replaceAll('( ','(')
+    algo = algo.replaceAll(' )',')')
+    return `${algo}${this.comment ? '\u00A0\u00A0\u00A0' + this.comment : ''}`
   }
 }
 

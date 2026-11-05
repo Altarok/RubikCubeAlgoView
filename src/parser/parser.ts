@@ -1,9 +1,10 @@
-import {Algorithm, AlgorithmStep, possibleSteps} from '../model/algorithms'
+import {Algorithm} from '../model/algorithms'
 import {Dimensions} from '../model/geometry'
 import {RegEx} from './regex-util'
 import {Flags, FlagType} from '../model/flags'
 import {InvalidInput} from '../model/invalid-input-container'
 import {AlgorithmInput} from '../model/types'
+import {AlgorithmPart, isAlgorithmPart} from '../model/algorithm-types'
 
 export type Result<T> =
   | { success: true; data: T }
@@ -19,15 +20,6 @@ export const Parse = {
 }
 
 /**
- * Type Guard: Tells TS that 'value' is specifically an AlgorithmStep.
- * Validates if a string is a valid Step.
- */
-function isAlgorithmStep(value: string): value is AlgorithmStep {
-  return (possibleSteps as readonly string[]).includes(value)
-}
-
-
-/**
  * @param inputStr - pre-trimmed line containing algorithm steps, no 'alg:'-prefix, no comments
  * @param algorithmInput - used to mark part of code block if given input is invalid
  */
@@ -40,10 +32,10 @@ function toAlgorithm(inputStr: string, algorithmInput: AlgorithmInput): Result<A
   }
 
   let splitSteps: string[] = line.split(' ')
-  let steps: AlgorithmStep[] = []
+  let steps: AlgorithmPart[] = []
 
   for (const step of splitSteps) {
-    if (isAlgorithmStep(step)) {
+    if (isAlgorithmPart(step)) {
       steps.push(step)
     } else {
       /* This should technically be unreachable if the Regex is perfect */

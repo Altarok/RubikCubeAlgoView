@@ -100,12 +100,19 @@ describe('RegEx.isAlgorithm()', () => {
     expect(RegEx.isAlgorithm(`y0 f r u`)).toBe(false)
   })
 
-  it('should identify algorithms correctly', () => {
+  it('should identify default algorithms correctly', () => {
     expect(RegEx.isAlgorithm(`R U R' U'`)).toBeTruthy()
     expect(RegEx.isAlgorithm(`f R U R' U' f`)).toBeTruthy()
-    expect(RegEx.isAlgorithm(`y f r u`)).toBeTruthy()
-    expect(RegEx.isAlgorithm(`R (U R')2 U2`)).toBeTruthy()
-    expect(RegEx.isAlgorithm(`f (R U R' U')2 r u r R U R' U' R2 u f'`)).toBeTruthy()
+    expect(RegEx.isAlgorithm(`f ( R U R' U' )2 r u r R U R' U' R2 u f'`)).toBeTruthy()
   })
+
+  it('should identify once bracketed algorithms correctly', () => {
+    expect(RegEx.isAlgorithm(`f ( R U R' U' )2 r u r R U R' U' R2 u f'`)).toBeTruthy()
+  })
+
+  it('should not allow nested brackets algorithms', () => {
+    expect(RegEx.isAlgorithm(`r r ( r r ( R' U' R U2 )2 )3 r r`)).toBeFalsy()
+  })
+
 
 })

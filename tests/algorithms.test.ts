@@ -1,6 +1,7 @@
 import {beforeEach, describe, expect, it} from 'vitest'
-import {Algorithm, Algorithms, AlgorithmStep, MappedAlgorithm, MappedAlgorithms} from '../src/model/algorithms'
+import {Algorithm, Algorithms, MappedAlgorithm, MappedAlgorithms} from '../src/model/algorithms'
 import {Arrows} from '../src/model/geometry'
+import {AlgorithmStep} from '../src/model/algorithm-types'
 
 const validAlgorithm = ['F', 'R', 'U'] as AlgorithmStep[]
 
@@ -8,7 +9,7 @@ let alg1FRU = createAlgorithm(['F', 'R', 'U'])
 let alg2FLU = createAlgorithm(['F', 'L', 'U'])
 
 function createAlgorithm(steps: AlgorithmStep[]): Algorithm {
-  return new Algorithm(steps, 'test object')
+  return new Algorithm(steps)
 }
 
 describe('Algorithm', () => {
