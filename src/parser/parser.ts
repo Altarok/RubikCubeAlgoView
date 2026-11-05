@@ -34,6 +34,7 @@ function isAlgorithmStep(value: string): value is AlgorithmStep {
 function toAlgorithm(inputStr: string, algorithmInput: AlgorithmInput): Result<Algorithm> {
   /* Sanitize all forms of single ticks */
   const line = inputStr.replace(/[\u0027\u2019\u2018\u2032\u2035\u0060\u00B4\u02B9\u02BC\u02C8\uFF07]/g, "'")
+  // debugger
   if (!RegEx.isAlgorithm(line)) {
     return {success: false, error: InvalidInput.ofAlgorithm(algorithmInput.completeLine)}
   }

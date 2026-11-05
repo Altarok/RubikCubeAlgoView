@@ -30,6 +30,8 @@ export const possibleSteps = [
   "M", "M'", "M2", // vertical middle layer, around X axis, 90 degrees to the front (like L or R-prime)
   "S", "S'", "S2", // vertical middle layer, around Z axis, 90 degrees to the right (like F or B-prime)
   "E", "E'", "E2"  // horizontal middle layer, around Y axis, 90 degrees to the right (like D or U-prime)
+  //,
+  // '(', ')'
 ] as const
 
 export type AlgorithmStep = (typeof possibleSteps)[number]
@@ -55,7 +57,8 @@ const turnCubeLeftMap: TurnCubeMap = {
   "z": "x'", "z'": "x", "z2": "x2", // !! non-linear changes
   "M": "S'", "M'": "S", "M2": "S2", // !! non-linear changes
   "S": "M", "S'": "M'", "S2": "M2", // !! non-linear changes
-  "E": "E", "E'": "E'", "E2": "E2"
+  "E": "E", "E'": "E'", "E2": "E2" // ,
+  // '(': '(', ')': ')'
 }
 
 /**

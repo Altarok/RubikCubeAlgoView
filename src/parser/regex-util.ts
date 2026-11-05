@@ -31,8 +31,11 @@ function isSpecialFlags(input: string): boolean {
  * Rubik's Cube algorithm pattern.
  * Example: "R2 F R U R U' R' F' R U2 R' U2 R"
  */
-const algorithmStepPattern = "[xyzRrLlFfBbUuDdMSE](|'|2)"
-const algorithmRegex = new RegExp(`^(${algorithmStepPattern})( ${algorithmStepPattern})*$`)
+const singleStep = "[xyzRrLlFfBbUuDdMSE](|'|2)"
+// const multipleSteps =    `${singleStep}( ${singleStep})*`
+const bracketedSteps = `\\(${singleStep}( ${singleStep})+\\)[2-9]\\d*`
+const oneOfBoth = `(${singleStep}|${bracketedSteps})`
+const algorithmRegex = new RegExp(`^${oneOfBoth}( ${oneOfBoth})*$`)
 
 function isAlgorithm(input: string): boolean {
   return algorithmRegex.test(input)
