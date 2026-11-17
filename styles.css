@@ -373,7 +373,7 @@ h1.rubik-cube-algs-timer-running,
 }
 
 .rca-highlight {
-  color: black;
-  padding: 2px;
+  padding: 0;
+  margin: 0 1px;
   border-radius: 6px 0;
 }
