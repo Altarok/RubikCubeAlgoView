@@ -21,10 +21,12 @@ export const possibleSteps = [
   "E", "E'", "E2"  // horizontal middle layer, around Y axis, 90 degrees to the right (like D or U-prime)
 ] as const
 
-type Digit = 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+type BracketMultipliers = '' | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+// | 10 | 11 | 12  | 13 | 14 | 15 | 16
+
 export type StartOfBracketedSequence = '('
-export type EndOfBracketedSequence = `)${Digit | `${Digit}${number}`}`
-export type AlgorithmStep =  (typeof possibleSteps)[number]
+export type EndOfBracketedSequence = `)${BracketMultipliers}`
+export type AlgorithmStep = (typeof possibleSteps)[number]
 export type AlgorithmPart = AlgorithmStep | StartOfBracketedSequence | EndOfBracketedSequence
 
 /**
@@ -35,8 +37,11 @@ export function isAlgorithmStep(value: string): value is AlgorithmStep {
   return (possibleSteps as readonly string[]).includes(value)
 }
 
+function isClosingBracket(value: string): value is EndOfBracketedSequence {
+  return /\)\d?/.test(value)
+}
+
+
 export function isAlgorithmPart(value: string): value is AlgorithmPart {
-  return isAlgorithmStep(value)
-  || '(' === value
-  || /\)[2-9]\d*/.test(value)
+  return isAlgorithmStep(value) || '(' === value || isClosingBracket(value)
 }

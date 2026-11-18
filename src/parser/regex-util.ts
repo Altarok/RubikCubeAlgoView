@@ -32,8 +32,8 @@ function isSpecialFlags(input: string): boolean {
  * Example: "R2 F R U R U' R' F' R U2 R' U2 R"
  */
 const singleStep = "[xyzRrLlFfBbUuDdMSE](|'|2)"
-const multipleSteps =      `${singleStep}( ${singleStep})*`
-const bracketedSteps = `\\( ${singleStep}( ${singleStep})+ \\)[2-9]\\d*`
+const multipleSteps = `${singleStep}( ${singleStep})*`
+const bracketedSteps = `\\( ${singleStep}( ${singleStep})+ \\)\\d?`
 const oneOfBoth = `(${multipleSteps}|${bracketedSteps})`
 const algorithmRegex = new RegExp(`^${oneOfBoth}( ${oneOfBoth})*$`)
 
