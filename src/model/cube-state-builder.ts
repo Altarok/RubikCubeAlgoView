@@ -11,6 +11,7 @@ import {knownOllCases, knownPllCases, PredefinedCaseRubikOll, PredefinedCaseRubi
 import {InvalidInput} from './invalid-input-container'
 import {isWrappedInDots, removeComments} from './cube-state-builder-utils'
 import {AlgorithmInput} from './types'
+import { splitOnce } from './string-utils'
 
 export const InputKeys: string[] = [
   /* Algorithm input, 0-n lines */
@@ -184,10 +185,10 @@ export default class CubeStateBuilder {
     for (const singleLine of this.splitUserInput) {
       let s: string = singleLine.trim()
       if (s.startsWith('//')) continue /* skip comment lines */
-      let strings = s.split(':')
-      if (!strings[0]) continue  /* skip falsy input (should not happen by now ) */
-      let key: string = removeComments(strings[0].trim()).input!
-      const valueRaw: { input?: string, comment?: string } = removeComments(strings[1]?.trim())
+      const {left, right} = splitOnce(s,':')
+      if (!left) continue  /* skip falsy input (should not happen by now ) */
+      let key: string = removeComments(left.trim()).input!
+      const valueRaw: { input?: string, comment?: string } = removeComments(right?.trim())
       if (InputKeys.includes(key) && valueRaw.input)
         this.interpretKnownInput(key, valueRaw.input, singleLine, valueRaw.comment)
       else this.undeclaredUserInputForOllField.push(key)
