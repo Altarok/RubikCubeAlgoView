@@ -1,6 +1,6 @@
 {
   "name": "rubik-cube-algorithms",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "private": true,
   "description": "This plugin visualizes Rubik Cube algorithms for Obsidian (https://obsidian.md)",
   "keywords": [
